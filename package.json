@@ -1,0 +1,53 @@
+{
+	"name": "copyscotch",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"author": "Gustavo Morinaga <me@gustavomorinaga.dev>",
+	"description": "My self implementation of Hoppscotch API Client",
+	"license": "MIT",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"lint": "prettier --check . && eslint .",
+		"format": "prettier --write .",
+		"ui:add": "pnpm dlx shadcn-svelte@latest add",
+		"clean": "del-cli ./**/node_modules/ ./**/.svelte-kit/"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "3.0.1",
+		"@sveltejs/kit": "2.0.6",
+		"@sveltejs/vite-plugin-svelte": "3.0.1",
+		"@tanstack/svelte-virtual": "3.0.1",
+		"@typescript-eslint/eslint-plugin": "6.16.0",
+		"@typescript-eslint/parser": "6.16.0",
+		"autoprefixer": "10.4.16",
+		"cssnano": "6.0.2",
+		"del-cli": "5.1.0",
+		"eslint": "8.56.0",
+		"eslint-config-prettier": "9.1.0",
+		"eslint-plugin-svelte": "2.35.1",
+		"postcss": "8.4.32",
+		"postcss-import": "15.1.0",
+		"postcss-load-config": "4.0.1",
+		"prettier": "3.1.1",
+		"prettier-plugin-tailwindcss": "0.5.9",
+		"svelte": "4.2.8",
+		"svelte-check": "3.6.2",
+		"tailwind-scrollbar": "3.0.5",
+		"tailwindcss": "3.4.0",
+		"tslib": "2.6.2",
+		"typescript": "5.3.3",
+		"vite": "5.0.10"
+	},
+	"dependencies": {
+		"bits-ui": "0.11.8",
+		"clsx": "2.0.0",
+		"lucide-svelte": "0.302.0",
+		"tailwind-merge": "2.2.0",
+		"tailwind-variants": "0.1.19"
+	}
+}
