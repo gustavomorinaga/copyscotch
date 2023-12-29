@@ -4,14 +4,18 @@
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { DialogEditRequest, TabRequest } from '$lib/layouts';
 	import { Plus, X } from 'lucide-svelte';
+	import type { ComponentProps } from 'svelte';
+
+	export let form: ComponentProps<DialogEditRequest>['form'];
 
 	const restStore = getRESTStore();
 	$: ({ requests } = $restStore);
 	$: hasOnlyOneRequest = $restStore.requests.length === 1;
+	$: currentRequestID = $restStore.requests.at(0)?.id;
 </script>
 
-<Tabs.Root>
-	<Tabs.List class="w-full justify-start rounded-none">
+<Tabs.Root value={currentRequestID}>
+	<Tabs.List class="flex justify-start rounded-none">
 		{#each requests as request}
 			{@const requestID = request.id}
 			{@const method = request.method.toLowerCase()}
@@ -21,7 +25,7 @@
 				aria-label={request.name}
 				value={request.id}
 			>
-				<DialogEditRequest {requestID} openOnDblClick>
+				<DialogEditRequest {requestID} {form}>
 					<svelte:fragment slot="trigger">
 						<div class="tab-trigger-content">
 							<span class="method" style="color: var(--method-{method}-color)">
@@ -59,8 +63,10 @@
 	</Tabs.List>
 
 	{#each requests as request}
-		<Tabs.Content value={request.id}>
-			<TabRequest />
+		{@const requestID = request.id}
+
+		<Tabs.Content value={requestID}>
+			<TabRequest {requestID} />
 		</Tabs.Content>
 	{/each}
 </Tabs.Root>

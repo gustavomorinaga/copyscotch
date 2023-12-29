@@ -2,6 +2,8 @@
 	import { ViewRest } from '$lib/layouts';
 	import { setRESTStore } from '$lib/stores';
 
+	export let data;
+
 	setRESTStore();
 </script>
 
@@ -10,4 +12,4 @@
 	<meta name="description" content="My self implementation of Hoppscotch API Client" />
 </svelte:head>
 
-<ViewRest />
+<ViewRest form={data.form} />
