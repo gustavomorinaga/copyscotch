@@ -1,5 +1,11 @@
 <script lang="ts">
-	import '../app.pcss';
+	import '$lib/styles/app.pcss';
+	import { Toolbar, Wrapper } from '$lib/layouts';
+	import { Separator } from '$lib/components/ui/separator';
 </script>
 
-<slot />
+<Wrapper>
+	<Toolbar />
+	<Separator orientation="horizontal" />
+	<slot />
+</Wrapper>
