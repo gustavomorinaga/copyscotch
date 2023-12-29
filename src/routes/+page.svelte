@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { ViewRest } from '$lib/layouts';
+	import { setRESTStore } from '$lib/stores';
+
+	setRESTStore();
 </script>
 
 <svelte:head>

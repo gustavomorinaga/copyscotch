@@ -1,39 +1,17 @@
 <script lang="ts">
+	import { getRESTStore } from '$lib/stores';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { DialogEditRequest, TabRequest } from '$lib/layouts';
 	import { Plus, X } from 'lucide-svelte';
-	import type { TRESTRequest } from '$lib/ts';
 
-	let requests: Array<TRESTRequest> = [];
-	if (!requests.length)
-		requests.push({
-			id: Math.random().toString(36).substring(2, 9),
-			name: 'Untitled',
-			url: '',
-			method: 'GET'
-		});
-
-	$: hasOnlyOneRequest = requests.length === 1;
-
-	function addRequest() {
-		const newRequest: TRESTRequest = {
-			id: Math.random().toString(36).substring(2, 9),
-			name: 'Untitled',
-			url: '',
-			method: 'POST'
-		};
-
-		requests = [...requests, newRequest];
-	}
-
-	function closeRequest(id: string) {
-		requests = requests.filter((request) => request.id !== id);
-	}
+	const restStore = getRESTStore();
+	$: ({ requests } = $restStore);
+	$: hasOnlyOneRequest = $restStore.requests.length === 1;
 </script>
 
 <Tabs.Root>
-	<Tabs.List class="flex justify-start">
+	<Tabs.List class="w-full justify-start rounded-none">
 		{#each requests as request}
 			{@const method = request.method.toLowerCase()}
 
@@ -59,7 +37,7 @@
 							size="icon"
 							variant="ghost"
 							class="w-5 h-5"
-							on:click={() => closeRequest(request.id)}
+							on:click={() => restStore.closeRequest(request.id)}
 						>
 							<X class="w-4 h-4" />
 							<div role="textbox" hidden aria-hidden="true">Close</div>
@@ -69,7 +47,13 @@
 			</Tabs.Trigger>
 		{/each}
 
-		<Button size="icon" variant="ghost" class="w-5 h-5 ml-2" title="add" on:click={addRequest}>
+		<Button
+			size="icon"
+			variant="ghost"
+			class="w-5 h-5 ml-2"
+			title="add"
+			on:click={restStore.addRequest}
+		>
 			<Plus class="w-4 h-4" />
 		</Button>
 	</Tabs.List>
