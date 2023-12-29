@@ -33,7 +33,7 @@
 </script>
 
 <Tabs.Root>
-	<Tabs.List class="flex justify-start" tabindex={0}>
+	<Tabs.List class="flex justify-start">
 		{#each requests as request}
 			{@const method = request.method.toLowerCase()}
 
@@ -62,6 +62,7 @@
 							on:click={() => closeRequest(request.id)}
 						>
 							<X class="w-4 h-4" />
+							<div role="textbox" hidden aria-hidden="true">Close</div>
 						</Button>
 					</div>
 				{/if}
