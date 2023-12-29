@@ -13,14 +13,15 @@
 <Tabs.Root>
 	<Tabs.List class="w-full justify-start rounded-none">
 		{#each requests as request}
+			{@const requestID = request.id}
 			{@const method = request.method.toLowerCase()}
 
 			<Tabs.Trigger
-				class="min-w-40 justify-between group/tab-trigger"
+				class="justify-between gap-2 overflow-hidden"
 				aria-label={request.name}
 				value={request.id}
 			>
-				<DialogEditRequest {request} openOnDblClick>
+				<DialogEditRequest {requestID} openOnDblClick>
 					<svelte:fragment slot="trigger">
 						<div class="tab-trigger-content">
 							<span class="method" style="color: var(--method-{method}-color)">
@@ -31,19 +32,18 @@
 					</svelte:fragment>
 				</DialogEditRequest>
 
-				{#if !hasOnlyOneRequest}
-					<div class="tab-trigger-suffix group-hover/tab-trigger:opacity-60">
-						<Button
-							size="icon"
-							variant="ghost"
-							class="w-5 h-5"
-							on:click={() => restStore.closeRequest(request.id)}
-						>
-							<X class="w-4 h-4" />
-							<div role="textbox" hidden aria-hidden="true">Close</div>
-						</Button>
-					</div>
-				{/if}
+				<div class="tab-trigger-suffix">
+					<Button
+						size="icon"
+						variant="ghost"
+						class="w-5 h-5"
+						on:click={() => restStore.closeRequest(request.id)}
+						disabled={hasOnlyOneRequest}
+					>
+						<X class="w-4 h-4" />
+						<div role="tooltip" hidden aria-hidden="true">Close</div>
+					</Button>
+				</div>
 			</Tabs.Trigger>
 		{/each}
 
@@ -70,16 +70,16 @@
 		@apply inline-flex items-center justify-center gap-2;
 
 		& > span.method {
-			@apply text-xs font-medium uppercase;
+			@apply block text-xs font-medium uppercase;
 		}
 
 		& > span.name {
-			@apply text-left text-sm font-semibold;
+			@apply block w-32 truncate text-left text-sm font-semibold;
 		}
 	}
 
 	.tab-trigger-suffix {
 		@apply inline-flex items-center justify-center gap-2;
-		@apply opacity-0 transition-opacity hover:opacity-100;
+		@apply opacity-60 transition-opacity hover:opacity-100;
 	}
 </style>

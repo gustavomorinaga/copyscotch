@@ -32,7 +32,6 @@ export const setRESTStore = (initialData: Partial<TRESTState> = REST_INITIAL_STA
 			}),
 		closeRequest: (id: TRESTRequest['id']) =>
 			restStore.update((state) => {
-				console.log(state.requests);
 				state.requests = state.requests.filter((request) => request.id !== id);
 				return state;
 			})

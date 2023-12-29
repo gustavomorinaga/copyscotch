@@ -1,4 +1,5 @@
 <script lang="ts" context="module">
+	import { getRESTStore } from '$lib/stores';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
@@ -8,27 +9,33 @@
 
 <script lang="ts">
 	type $$Props = Dialog.Props & {
-		request: TRESTRequest;
+		requestID: TRESTRequest['id'];
 		trigger?: Dialog.TriggerProps;
 		openOnDblClick?: boolean;
 	};
 
-	export let request: $$Props['request'];
+	export let requestID: $$Props['requestID'];
 	export let open: $$Props['open'] = false;
 	export let trigger: $$Props['trigger'] = undefined;
 	export let openOnDblClick: $$Props['openOnDblClick'] = false;
 
 	if (openOnDblClick) trigger = { ...trigger, asChild: true };
 
+	const restStore = getRESTStore();
+	let index = $restStore.requests.findIndex(({ id }) => id === requestID);
+	let name = $restStore.requests[index].name;
+
 	function onDblClick() {
 		if (openOnDblClick) open = true;
 	}
 
 	function onCancel() {
+		name = $restStore.requests[index].name;
 		open = false;
 	}
 
 	function onSave() {
+		$restStore.requests[index].name = name;
 		open = false;
 	}
 </script>
@@ -50,7 +57,7 @@
 
 		<div>
 			<Label for="name">Name</Label>
-			<Input type="text" id="name" value={request.name} />
+			<Input type="text" id="name" bind:value={name} />
 		</div>
 
 		<Dialog.Footer>
