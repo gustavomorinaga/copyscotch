@@ -1,1 +1,1 @@
-export { default as ViewRest } from './view-rest.layout.svelte';
+export { default as ViewREST } from './view-rest.layout.svelte';
