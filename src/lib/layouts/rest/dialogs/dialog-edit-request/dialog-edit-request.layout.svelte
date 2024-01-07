@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { getRESTStore } from '$lib/stores';
-	import { editRequestSchema as schema, type TEditRequestSchema } from '$lib/validators';
+	import { editRequestSchema as schema, type TRESTEditRequestSchema } from '$lib/validators';
 	import { Button } from '$lib/components/ui/button';
 	import * as Form from '$lib/components/ui/form';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -10,7 +10,7 @@
 
 <script lang="ts">
 	type $$Props = Dialog.Props & {
-		form: SuperValidated<TEditRequestSchema>;
+		form: SuperValidated<TRESTEditRequestSchema>;
 		requestID: TRESTRequest['id'];
 	};
 
@@ -48,7 +48,7 @@
 			<Dialog.Title>Edit Request</Dialog.Title>
 		</Dialog.Header>
 
-		<Form.Root {form} {schema} let:config>
+		<Form.Root method="POST" action="?/edit" {form} {schema} let:config>
 			<Form.Field {config} name="name">
 				<Form.Item>
 					<Form.Label for="name">Name</Form.Label>

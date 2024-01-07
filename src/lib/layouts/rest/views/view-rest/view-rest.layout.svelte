@@ -6,7 +6,14 @@
 	import { Plus, X } from 'lucide-svelte';
 	import type { ComponentProps } from 'svelte';
 
-	export let form: ComponentProps<DialogEditRequest>['form'];
+	type $$Props = {
+		forms: {
+			mainForm: ComponentProps<TabRequest>['form'];
+			editForm: ComponentProps<DialogEditRequest>['form'];
+		};
+	};
+
+	export let forms: $$Props['forms'];
 
 	const restStore = getRESTStore();
 	$: ({ requests } = $restStore);
@@ -25,7 +32,7 @@
 				aria-label={request.name}
 				value={request.id}
 			>
-				<DialogEditRequest {requestID} {form}>
+				<DialogEditRequest {requestID} form={forms.editForm}>
 					<svelte:fragment slot="trigger">
 						<div class="tab-trigger-content">
 							<span class="method" style="color: var(--method-{method}-color)">
@@ -45,7 +52,7 @@
 						disabled={hasOnlyOneRequest}
 					>
 						<X class="w-4 h-4" />
-						<div role="tooltip" hidden aria-hidden="true">Close</div>
+						<span class="sr-only">Close</span>
 					</Button>
 				</div>
 			</Tabs.Trigger>
@@ -66,7 +73,7 @@
 		{@const requestID = request.id}
 
 		<Tabs.Content value={requestID}>
-			<TabRequest {requestID} />
+			<TabRequest form={forms.mainForm} {requestID} />
 		</Tabs.Content>
 	{/each}
 </Tabs.Root>

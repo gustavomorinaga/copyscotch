@@ -1,14 +1,15 @@
+import { browser } from '$app/environment';
 import { getContext, setContext } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
 import { randomID } from '$lib/utils';
 import type { TRESTRequest } from '$lib/ts';
 
-type TRESTState = { requests: Array<TRESTRequest> };
+type TRESTData = { requests: Array<TRESTRequest> };
 type TRESTActions = {
 	addRequest: () => void;
 	closeRequest: (id: TRESTRequest['id']) => void;
 };
-type TRESTStore = Writable<TRESTState> & TRESTActions;
+type TRESTStore = Writable<TRESTData> & TRESTActions;
 
 const DEFAULT_REQUEST: Omit<TRESTRequest, 'id'> = {
 	name: 'Untitled',
@@ -17,14 +18,17 @@ const DEFAULT_REQUEST: Omit<TRESTRequest, 'id'> = {
 };
 
 const REST_CTX = 'REST_CTX';
-const REST_INITIAL_STATE: TRESTState = {
+const REST_INITIAL_DATA: TRESTData = {
 	requests: [{ ...DEFAULT_REQUEST, id: randomID() }]
 };
 
-export const setRESTStore = (initialData: Partial<TRESTState> = REST_INITIAL_STATE) => {
-	const restStore = writable(initialData as TRESTState);
+export const setRESTStore = (initialData: Partial<TRESTData> = REST_INITIAL_DATA) => {
+	const data: TRESTData = browser
+		? JSON.parse(String(localStorage.getItem('rest'))) ?? initialData
+		: initialData;
+	const restStore = writable(data);
 
-	const actions = {
+	const actions: TRESTActions = {
 		addRequest: () =>
 			restStore.update((state) => {
 				state.requests.push({ ...DEFAULT_REQUEST, id: randomID() });
@@ -36,6 +40,8 @@ export const setRESTStore = (initialData: Partial<TRESTState> = REST_INITIAL_STA
 				return state;
 			})
 	};
+
+	restStore.subscribe((state) => browser && localStorage.setItem('rest', JSON.stringify(state)));
 
 	setContext(REST_CTX, { ...restStore, ...actions });
 	return restStore;
