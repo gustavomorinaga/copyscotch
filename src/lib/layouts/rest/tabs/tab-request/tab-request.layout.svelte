@@ -15,7 +15,7 @@
 	let request = $restStore.requests[index];
 </script>
 
-<div class="flex py-2 px-4 items-center space-x-2">
+<form class="flex py-2 px-4 items-center space-x-2">
 	<Input type="url" id="url" name="url" bind:value={request.url} />
-	<Button>Send</Button>
-</div>
+	<Button type="submit">Send</Button>
+</form>

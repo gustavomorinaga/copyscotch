@@ -15,13 +15,13 @@
 </script>
 
 <Tabs.Root value={currentRequestID}>
-	<Tabs.List class="flex justify-start rounded-none">
+	<Tabs.List class="flex justify-start rounded-none p-0 h-12">
 		{#each requests as request}
 			{@const requestID = request.id}
 			{@const method = request.method.toLowerCase()}
 
 			<Tabs.Trigger
-				class="justify-between gap-2 overflow-hidden"
+				class="relative justify-between gap-2 overflow-hidden h-full before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
 				aria-label={request.name}
 				value={request.id}
 			>
