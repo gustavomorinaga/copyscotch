@@ -5,9 +5,14 @@
 	import { Loader } from 'lucide-svelte';
 
 	export let data;
-	let loading = true;
+	let loading = false;
 
-	setRESTStore();
+	const loadStore = new Promise((resolve) => resolve(setRESTStore()));
+
+	(async () => {
+		loading = true;
+		loadStore.finally(() => (loading = false));
+	})();
 </script>
 
 <svelte:head>
@@ -16,8 +21,8 @@
 </svelte:head>
 
 {#if loading}
-	<Center class="w-full h-full">
-		<Loader class="animate-spin" />
+	<Center>
+		<Loader class="animate-spin w-4 h-4" />
 	</Center>
 {:else}
 	<ViewREST form={data.form} />

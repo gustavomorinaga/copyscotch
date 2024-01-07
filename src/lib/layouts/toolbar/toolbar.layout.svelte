@@ -1,11 +1,30 @@
 <script lang="ts" context="module">
+	import { page } from '$app/stores';
 	import { Button } from '$lib/components/ui/button';
+	import { UploadCloud } from 'lucide-svelte';
+</script>
+
+<script lang="ts">
+	$: isRootPage = $page.url.pathname === '/';
 </script>
 
 <header class="toolbar">
-	<div>
-		<Button size="sm" variant="ghost" href="/" class="uppercase font-bold tracking-wider">
+	<div class="col-span-3">
+		<Button
+			size="sm"
+			variant="ghost"
+			href="/"
+			class="uppercase font-bold"
+			aria-current={isRootPage ? 'page' : 'false'}
+		>
 			Copyscotch
+		</Button>
+	</div>
+
+	<div class="col-span-2">
+		<Button size="sm" variant="secondary" class="ml-auto">
+			<UploadCloud class="w-4 h-4 mr-2" />
+			Save my workspace
 		</Button>
 	</div>
 </header>
@@ -16,7 +35,7 @@
 		@apply bg-background;
 
 		& > div {
-			@apply col-span-2 flex items-center justify-between gap-x-2;
+			@apply flex items-center justify-between gap-x-2;
 		}
 	}
 </style>

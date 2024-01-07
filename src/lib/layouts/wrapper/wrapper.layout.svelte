@@ -4,6 +4,6 @@
 
 <style lang="postcss">
 	main {
-		@apply block h-screen w-screen;
+		@apply flex h-screen w-screen flex-col;
 	}
 </style>
