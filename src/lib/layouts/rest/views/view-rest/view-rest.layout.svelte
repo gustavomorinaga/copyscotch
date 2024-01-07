@@ -18,10 +18,9 @@
 	const restStore = getRESTStore();
 	$: ({ requests } = $restStore);
 	$: hasOnlyOneRequest = $restStore.requests.length === 1;
-	$: currentRequestID = $restStore.requests.at(0)?.id;
 </script>
 
-<Tabs.Root value={currentRequestID}>
+<Tabs.Root value={$restStore.activeRequest}>
 	<Tabs.List class="flex justify-start rounded-none p-0 h-12">
 		{#each requests as request}
 			{@const requestID = request.id}
@@ -31,6 +30,7 @@
 				class="relative justify-between gap-2 overflow-hidden h-full before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
 				aria-label={request.name}
 				value={request.id}
+				on:click={() => restStore.setActiveRequest(request.id)}
 			>
 				<DialogEditRequest {requestID} form={forms.editForm}>
 					<svelte:fragment slot="trigger">
@@ -43,29 +43,26 @@
 					</svelte:fragment>
 				</DialogEditRequest>
 
-				<div class="tab-trigger-suffix">
-					<Button
-						size="icon"
-						variant="ghost"
-						class="w-5 h-5"
-						on:click={() => restStore.closeRequest(request.id)}
-						disabled={hasOnlyOneRequest}
-					>
-						<X class="w-4 h-4" />
-						<span class="sr-only">Close</span>
-					</Button>
-				</div>
+				{#if !hasOnlyOneRequest}
+					<div class="tab-trigger-suffix">
+						<Button
+							size="icon"
+							variant="ghost"
+							class="w-5 h-5"
+							on:click={() => restStore.closeRequest(request.id)}
+							disabled={hasOnlyOneRequest}
+						>
+							<X class="w-4 h-4" />
+							<span class="sr-only">Close</span>
+						</Button>
+					</div>
+				{/if}
 			</Tabs.Trigger>
 		{/each}
 
-		<Button
-			size="icon"
-			variant="ghost"
-			class="w-5 h-5 ml-2"
-			title="add"
-			on:click={restStore.addRequest}
-		>
+		<Button size="icon" variant="ghost" class="w-5 h-5 ml-2" on:click={restStore.addRequest}>
 			<Plus class="w-4 h-4" />
+			<span class="sr-only">Add</span>
 		</Button>
 	</Tabs.List>
 

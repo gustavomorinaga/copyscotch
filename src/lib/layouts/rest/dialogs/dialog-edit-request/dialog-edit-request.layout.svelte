@@ -48,7 +48,7 @@
 			<Dialog.Title>Edit Request</Dialog.Title>
 		</Dialog.Header>
 
-		<Form.Root method="POST" action="?/edit" {form} {schema} let:config>
+		<Form.Root {form} {schema} let:config>
 			<Form.Field {config} name="name">
 				<Form.Item>
 					<Form.Label for="name">Name</Form.Label>

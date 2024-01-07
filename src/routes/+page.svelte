@@ -15,11 +15,6 @@
 	});
 </script>
 
-<svelte:head>
-	<title>Copyscotch • API development ecosystem</title>
-	<meta name="description" content="My self implementation of Hoppscotch API Client" />
-</svelte:head>
-
 {#if loading}
 	<Center>
 		<Loader class="animate-spin w-4 h-4" />

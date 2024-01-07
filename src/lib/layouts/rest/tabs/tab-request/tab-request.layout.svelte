@@ -1,7 +1,5 @@
 <script lang="ts" context="module">
 	import { getRESTStore } from '$lib/stores';
-	import { Button } from '$lib/components/ui/button';
-	import { Input } from '$lib/components/ui/input';
 	import * as Form from '$lib/components/ui/form';
 	import {
 		mainRequestSchema,
@@ -23,21 +21,18 @@
 	const restStore = getRESTStore();
 	let index = $restStore.requests.findIndex(({ id }) => id === requestID);
 	let request = $restStore.requests[index];
+
+	form.data = request;
+	$: if (form.data) restStore.updateRequest(requestID, form.data);
 </script>
 
-<!-- <form method="POST" action="?/send" class="flex py-2 px-4 items-center space-x-2">
-	<Input type="url" id="url" name="url" bind:value={request.url} />
-	<Button type="submit">Send</Button>
-</form> -->
-
-<Form.Root method="POST" action="?/send" {form} schema={mainRequestSchema} let:config class="px-2">
+<Form.Root {form} schema={mainRequestSchema} let:config class="px-2">
 	<Form.Join class="w-full gap-2">
 		<Form.Field {config} name="url">
 			<Form.Item class="grow">
 				<Form.Input type="url" placeholder="URL" />
 			</Form.Item>
 		</Form.Field>
-
 		<Form.Button>Send</Form.Button>
 	</Form.Join>
 </Form.Root>
