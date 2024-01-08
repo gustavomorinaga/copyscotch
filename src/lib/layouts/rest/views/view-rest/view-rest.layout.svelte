@@ -4,16 +4,14 @@
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { DialogEditRequest, TabRequest } from '$lib/layouts';
 	import { Plus, X } from 'lucide-svelte';
-	import type { ComponentProps } from 'svelte';
+	import type { SuperValidated } from 'sveltekit-superforms';
+	import type { TRESTEditRequestSchema } from '$lib/validators';
 
 	type $$Props = {
-		forms: {
-			mainForm: ComponentProps<TabRequest>['form'];
-			editForm: ComponentProps<DialogEditRequest>['form'];
-		};
+		form: SuperValidated<TRESTEditRequestSchema>;
 	};
 
-	export let forms: $$Props['forms'];
+	export let form: $$Props['form'];
 
 	const restStore = getRESTStore();
 	$: ({ requests } = $restStore);
@@ -32,7 +30,7 @@
 				value={request.id}
 				on:click={() => restStore.setActiveRequest(request.id)}
 			>
-				<DialogEditRequest {requestID} form={forms.editForm}>
+				<!-- <DialogEditRequest {requestID}>
 					<svelte:fragment slot="trigger">
 						<div class="tab-trigger-content">
 							<span class="method" style="color: var(--method-{method}-color)">
@@ -41,7 +39,14 @@
 							<span class="name">{request.name}</span>
 						</div>
 					</svelte:fragment>
-				</DialogEditRequest>
+				</DialogEditRequest> -->
+
+				<div class="tab-trigger-content">
+					<span class="method" style="color: var(--method-{method}-color)">
+						{request.method}
+					</span>
+					<span class="name">{request.name}</span>
+				</div>
 
 				{#if !hasOnlyOneRequest}
 					<div class="tab-trigger-suffix">
@@ -70,7 +75,7 @@
 		{@const requestID = request.id}
 
 		<Tabs.Content value={requestID}>
-			<TabRequest form={forms.mainForm} {requestID} />
+			<TabRequest {requestID} {form} />
 		</Tabs.Content>
 	{/each}
 </Tabs.Root>

@@ -2,31 +2,44 @@
 	import { getRESTStore } from '$lib/stores';
 	import * as Form from '$lib/components/ui/form';
 	import {
-		mainRequestSchema,
-		type TRESTRequestSchema,
+		editRequestSchema as schema,
+		type TRESTEditRequestSchema,
 		type TRESTRequestSchemaType
 	} from '$lib/validators';
+	import { superForm } from 'sveltekit-superforms/client';
 	import type { SuperValidated } from 'sveltekit-superforms';
 </script>
 
 <script lang="ts">
 	type $$Props = {
-		form: SuperValidated<TRESTRequestSchema>;
 		requestID: TRESTRequestSchemaType['id'];
+		form: SuperValidated<TRESTEditRequestSchema>;
 	};
 
 	export let form: $$Props['form'];
 	export let requestID: $$Props['requestID'];
 
 	const restStore = getRESTStore();
-	let index = $restStore.requests.findIndex(({ id }) => id === requestID);
-	let request = $restStore.requests[index];
+	const formID = `edit-${requestID}`;
 
-	form.data = request;
-	$: if (form.data) restStore.updateRequest(requestID, form.data);
+	const index = $restStore.requests.findIndex(({ id }) => id === requestID);
+	const request = $restStore.requests[index];
+	form = { ...form, id: formID, data: request };
+
+	const superFrm = superForm(form, {
+		validators: schema,
+		validationMethod: 'onblur',
+		taintedMessage: false
+	});
+
+	$: ({ form: formValue } = superFrm);
+
+	function onChange() {
+		restStore.updateRequest(requestID, $formValue);
+	}
 </script>
 
-<Form.Root {form} schema={mainRequestSchema} let:config class="px-2">
+<Form.Root form={superFrm} {schema} controlled let:config on:change={onChange} class="px-2">
 	<Form.Join class="w-full gap-2">
 		<Form.Field {config} name="url">
 			<Form.Item class="grow">

@@ -11,7 +11,7 @@
 	const loadStore = new Promise((resolve) => resolve(setRESTStore()));
 
 	onMount(async () => {
-		await loadStore.finally(() => (loading = false));
+		await loadStore.finally(() => setTimeout(() => (loading = false), 500));
 	});
 </script>
 
@@ -20,5 +20,5 @@
 		<Loader class="animate-spin w-4 h-4" />
 	</Center>
 {:else}
-	<ViewREST forms={data.forms} />
+	<ViewREST form={data.form} />
 {/if}

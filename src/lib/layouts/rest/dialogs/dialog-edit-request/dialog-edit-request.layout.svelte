@@ -19,6 +19,7 @@
 	export let open: $$Props['open'] = false;
 
 	const restStore = getRESTStore();
+	const formID = `main-${requestID}`;
 	let index = $restStore.requests.findIndex(({ id }) => id === requestID);
 	let request = $restStore.requests[index];
 
@@ -48,7 +49,7 @@
 			<Dialog.Title>Edit Request</Dialog.Title>
 		</Dialog.Header>
 
-		<Form.Root {form} {schema} let:config>
+		<Form.Root {form} {schema} options={{ id: formID, SPA: true }} let:config>
 			<Form.Field {config} name="name">
 				<Form.Item>
 					<Form.Label for="name">Name</Form.Label>

@@ -18,12 +18,9 @@ export const requestSchema = z.object({
 	])
 });
 
-export const mainRequestSchema = requestSchema.omit({ id: true });
-export const editRequestSchema = requestSchema.pick({ name: true });
+export const editRequestSchema = requestSchema;
 
 export type TRESTRequestSchema = typeof requestSchema;
 export type TRESTRequestSchemaType = z.infer<TRESTRequestSchema>;
-export type TRESTMainRequestSchema = typeof mainRequestSchema;
-export type TRESTMainRequestSchemaType = z.infer<TRESTMainRequestSchema>;
 export type TRESTEditRequestSchema = typeof editRequestSchema;
 export type TRESTEditRequestSchemaType = z.infer<TRESTEditRequestSchema>;
