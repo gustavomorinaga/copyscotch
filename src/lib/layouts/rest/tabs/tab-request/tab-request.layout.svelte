@@ -62,27 +62,39 @@
 
 <Form.Root form={superFrm} {schema} controlled let:config on:change={onChange} class="px-2">
 	<Form.Join class="w-full gap-2">
-		<Form.Field {config} name="method">
-			<Form.Item class="w-32">
-				<Form.Select
-					selected={{ value: $formValue.method, label: $formValue.method }}
-					onSelectedChange={(value) => onSelectedChange(value)}
-				>
-					<Form.SelectTrigger />
-					<Form.SelectContent>
-						{#each methodOptions as method}
-							<Form.SelectItem value={method}>{method}</Form.SelectItem>
-						{/each}
-					</Form.SelectContent>
-				</Form.Select>
-			</Form.Item>
-		</Form.Field>
+		<Form.Join class="w-full">
+			<Form.Field {config} name="method">
+				<Form.Item class="w-32">
+					<Form.Select
+						selected={{ value: $formValue.method, label: $formValue.method }}
+						onSelectedChange={(value) => onSelectedChange(value)}
+					>
+						<Form.SelectTrigger
+							class="relative bg-input font-semibold rounded-l-md rounded-r-none focus:z-10"
+						/>
+						<Form.SelectContent>
+							{#each methodOptions as method}
+								{@const methodLowCase = method.toLowerCase()}
 
-		<Form.Field {config} name="url">
-			<Form.Item class="grow">
-				<Form.Input type="url" placeholder="URL" />
-			</Form.Item>
-		</Form.Field>
+								<Form.SelectItem value={method} style="color: var(--method-{methodLowCase}-color)">
+									{method}
+								</Form.SelectItem>
+							{/each}
+						</Form.SelectContent>
+					</Form.Select>
+				</Form.Item>
+			</Form.Field>
+
+			<Form.Field {config} name="url">
+				<Form.Item class="grow">
+					<Form.Input
+						type="url"
+						placeholder="URL"
+						class="relative border-none bg-input rounded-l-none rounded-r-md focus:z-10"
+					/>
+				</Form.Item>
+			</Form.Field>
+		</Form.Join>
 
 		<Form.Button type="submit" disabled={sending}>
 			{#if sending}

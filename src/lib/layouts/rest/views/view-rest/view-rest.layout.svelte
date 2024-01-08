@@ -22,7 +22,7 @@
 	<Tabs.List class="flex justify-start rounded-none p-0 h-12">
 		{#each requests as request}
 			{@const requestID = request.id}
-			{@const method = request.method.toLowerCase()}
+			{@const methodLowCase = request.method.toLowerCase()}
 
 			<Tabs.Trigger
 				class="relative justify-between gap-2 overflow-hidden h-full before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
@@ -33,7 +33,7 @@
 				<DialogEditRequest {requestID} {form}>
 					<svelte:fragment slot="trigger">
 						<div class="tab-trigger-content">
-							<span class="method" style="color: var(--method-{method}-color)">
+							<span class="method" style="color: var(--method-{methodLowCase}-color)">
 								{request.method}
 							</span>
 							<span class="name">{request.name}</span>
