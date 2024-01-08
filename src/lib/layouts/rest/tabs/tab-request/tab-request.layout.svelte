@@ -8,6 +8,7 @@
 	} from '$lib/validators';
 	import { superForm } from 'sveltekit-superforms/client';
 	import type { SuperValidated } from 'sveltekit-superforms';
+	import type { ComponentProps } from 'svelte';
 </script>
 
 <script lang="ts">
@@ -25,6 +26,7 @@
 	const index = $restStore.requests.findIndex(({ id }) => id === requestID);
 	const request = $restStore.requests[index];
 	const uniqueForm = { ...structuredClone(form), id: formID, data: request };
+	const methodOptions = schema.shape.method.options;
 
 	let sending = false;
 
@@ -44,6 +46,12 @@
 		restStore.updateRequest(requestID, $formValue);
 	}
 
+	function onSelectedChange(selected: ComponentProps<Form.Select>['selected']) {
+		restStore.updateRequest(requestID, {
+			method: selected?.value as TRESTRequestSchemaType['method']
+		});
+	}
+
 	async function onSend() {
 		const { url, method } = $formValue;
 		const response = await fetch(url, { method });
@@ -54,11 +62,28 @@
 
 <Form.Root form={superFrm} {schema} controlled let:config on:change={onChange} class="px-2">
 	<Form.Join class="w-full gap-2">
+		<Form.Field {config} name="method">
+			<Form.Item class="w-32">
+				<Form.Select
+					selected={{ value: $formValue.method, label: $formValue.method }}
+					onSelectedChange={(value) => onSelectedChange(value)}
+				>
+					<Form.SelectTrigger />
+					<Form.SelectContent>
+						{#each methodOptions as method}
+							<Form.SelectItem value={method}>{method}</Form.SelectItem>
+						{/each}
+					</Form.SelectContent>
+				</Form.Select>
+			</Form.Item>
+		</Form.Field>
+
 		<Form.Field {config} name="url">
 			<Form.Item class="grow">
 				<Form.Input type="url" placeholder="URL" />
 			</Form.Item>
 		</Form.Field>
+
 		<Form.Button type="submit" disabled={sending}>
 			{#if sending}
 				Cancel
