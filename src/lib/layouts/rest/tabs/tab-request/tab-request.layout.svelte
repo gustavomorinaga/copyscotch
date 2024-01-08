@@ -26,16 +26,29 @@
 	const request = $restStore.requests[index];
 	const uniqueForm = { ...structuredClone(form), id: formID, data: request };
 
+	let sending = false;
+
 	const superFrm = superForm(uniqueForm, {
 		validators: schema,
 		validationMethod: 'onblur',
-		taintedMessage: false
+		taintedMessage: false,
+		onSubmit: () => {
+			sending = true;
+			onSend().finally(() => (sending = false));
+		}
 	});
 
 	$: ({ form: formValue } = superFrm);
 
 	function onChange() {
 		restStore.updateRequest(requestID, $formValue);
+	}
+
+	async function onSend() {
+		const { url, method } = $formValue;
+		const response = await fetch(url, { method });
+
+		return response;
 	}
 </script>
 
@@ -46,6 +59,12 @@
 				<Form.Input type="url" placeholder="URL" />
 			</Form.Item>
 		</Form.Field>
-		<Form.Button>Send</Form.Button>
+		<Form.Button type="submit" disabled={sending}>
+			{#if sending}
+				Cancel
+			{:else}
+				Send
+			{/if}
+		</Form.Button>
 	</Form.Join>
 </Form.Root>

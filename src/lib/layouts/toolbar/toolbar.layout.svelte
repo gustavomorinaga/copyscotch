@@ -22,7 +22,7 @@
 	</div>
 
 	<div class="col-span-2">
-		<Button size="sm" variant="success" class="ml-auto">
+		<Button size="sm" variant="success" class="ml-auto" disabled>
 			<UploadCloud class="w-4 h-4 mr-2" />
 			Save my workspace
 		</Button>
