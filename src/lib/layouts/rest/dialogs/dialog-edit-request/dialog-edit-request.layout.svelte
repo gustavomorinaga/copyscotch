@@ -36,6 +36,7 @@
 	});
 
 	$: ({ form: formValue } = superFrm);
+	$: isActive = $restStore.activeRequest === requestID;
 
 	function onDblClick() {
 		open = true;
@@ -58,23 +59,26 @@
 			<slot name="trigger" />
 		</div>
 	</Dialog.Trigger>
-	<Dialog.Content>
-		<Dialog.Header>
-			<Dialog.Title>Edit Request</Dialog.Title>
-		</Dialog.Header>
 
-		<Form.Root form={superFrm} {schema} controlled let:config>
-			<Form.Field {config} name="name">
-				<Form.Item>
-					<Form.Label for="name">Name</Form.Label>
-					<Form.Input type="text" id="name" name="name" />
-				</Form.Item>
-			</Form.Field>
-		</Form.Root>
+	{#if isActive}
+		<Dialog.Content>
+			<Dialog.Header>
+				<Dialog.Title>Edit Request</Dialog.Title>
+			</Dialog.Header>
 
-		<Dialog.Footer>
-			<Button type="submit" variant="ghost" on:click={onCancel}>Cancel</Button>
-			<Button type="submit" variant="default" on:click={onSave}>Save</Button>
-		</Dialog.Footer>
-	</Dialog.Content>
+			<Form.Root form={superFrm} {schema} controlled let:config>
+				<Form.Field {config} name="name">
+					<Form.Item>
+						<Form.Label for="name">Name</Form.Label>
+						<Form.Input type="text" id="name" name="name" />
+					</Form.Item>
+				</Form.Field>
+			</Form.Root>
+
+			<Dialog.Footer>
+				<Button type="submit" variant="ghost" on:click={onCancel}>Cancel</Button>
+				<Button type="submit" variant="default" on:click={onSave}>Save</Button>
+			</Dialog.Footer>
+		</Dialog.Content>
+	{/if}
 </Dialog.Root>

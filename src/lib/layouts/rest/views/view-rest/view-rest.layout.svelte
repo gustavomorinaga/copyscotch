@@ -19,13 +19,15 @@
 </script>
 
 <Tabs.Root value={$restStore.activeRequest}>
-	<Tabs.List class="flex justify-start rounded-none p-0 h-12">
+	<Tabs.List
+		class="relative flex justify-start rounded-none h-fit p-0 overflow-x-auto scrollbar-thin scrollbar-thumb-secondary"
+	>
 		{#each requests as request}
 			{@const requestID = request.id}
 			{@const methodLowCase = request.method.toLowerCase()}
 
 			<Tabs.Trigger
-				class="relative justify-between gap-2 overflow-hidden h-full before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
+				class="relative justify-between gap-2 h-12 before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
 				aria-label={request.name}
 				value={request.id}
 				on:click={() => restStore.setActiveRequest(request.id)}
@@ -58,7 +60,7 @@
 			</Tabs.Trigger>
 		{/each}
 
-		<Button size="icon" variant="ghost" class="w-5 h-5 ml-2" on:click={restStore.addRequest}>
+		<Button size="icon" variant="ghost" class="w-8 h-8 mx-3" on:click={restStore.addRequest}>
 			<Plus class="w-4 h-4" />
 			<span class="sr-only">Add</span>
 		</Button>
@@ -75,10 +77,10 @@
 
 <style lang="postcss">
 	.tab-trigger-content {
-		@apply inline-flex items-center justify-center gap-2;
+		@apply inline-flex items-baseline justify-center gap-2;
 
 		& > span.method {
-			@apply block text-xs font-medium uppercase;
+			@apply block overscroll-none text-xs font-medium uppercase;
 		}
 
 		& > span.name {
