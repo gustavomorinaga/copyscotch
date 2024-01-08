@@ -1,17 +1,21 @@
 <script lang="ts" context="module">
 	import { getRESTStore } from '$lib/stores';
-	import { editRequestSchema as schema, type TRESTEditRequestSchema } from '$lib/validators';
+	import {
+		editRequestSchema as schema,
+		type TRESTRequestSchemaType,
+		type TRESTEditRequestSchema
+	} from '$lib/validators';
 	import { Button } from '$lib/components/ui/button';
 	import * as Form from '$lib/components/ui/form';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import type { TRESTRequest } from '$lib/ts';
+	import { superForm } from 'sveltekit-superforms/client';
 	import type { SuperValidated } from 'sveltekit-superforms';
 </script>
 
 <script lang="ts">
 	type $$Props = Dialog.Props & {
+		requestID: TRESTRequestSchemaType['id'];
 		form: SuperValidated<TRESTEditRequestSchema>;
-		requestID: TRESTRequest['id'];
 	};
 
 	export let form: $$Props['form'];
@@ -20,8 +24,18 @@
 
 	const restStore = getRESTStore();
 	const formID = `main-${requestID}`;
-	let index = $restStore.requests.findIndex(({ id }) => id === requestID);
-	let request = $restStore.requests[index];
+
+	const index = $restStore.requests.findIndex(({ id }) => id === requestID);
+	const request = $restStore.requests[index];
+	const uniqueForm = { ...structuredClone(form), id: formID, data: request };
+
+	const superFrm = superForm(uniqueForm, {
+		validators: schema,
+		validationMethod: 'onblur',
+		taintedMessage: false
+	});
+
+	$: ({ form: formValue } = superFrm);
 
 	function onDblClick() {
 		open = true;
@@ -33,7 +47,7 @@
 	}
 
 	function onSave() {
-		$restStore.requests[index].name = request.name;
+		restStore.updateRequest(requestID, $formValue);
 		open = false;
 	}
 </script>
@@ -49,7 +63,7 @@
 			<Dialog.Title>Edit Request</Dialog.Title>
 		</Dialog.Header>
 
-		<Form.Root {form} {schema} options={{ id: formID, SPA: true }} let:config>
+		<Form.Root form={superFrm} {schema} controlled let:config>
 			<Form.Field {config} name="name">
 				<Form.Item>
 					<Form.Label for="name">Name</Form.Label>

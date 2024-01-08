@@ -30,7 +30,7 @@
 				value={request.id}
 				on:click={() => restStore.setActiveRequest(request.id)}
 			>
-				<!-- <DialogEditRequest {requestID}>
+				<DialogEditRequest {requestID} {form}>
 					<svelte:fragment slot="trigger">
 						<div class="tab-trigger-content">
 							<span class="method" style="color: var(--method-{method}-color)">
@@ -39,14 +39,7 @@
 							<span class="name">{request.name}</span>
 						</div>
 					</svelte:fragment>
-				</DialogEditRequest> -->
-
-				<div class="tab-trigger-content">
-					<span class="method" style="color: var(--method-{method}-color)">
-						{request.method}
-					</span>
-					<span class="name">{request.name}</span>
-				</div>
+				</DialogEditRequest>
 
 				{#if !hasOnlyOneRequest}
 					<div class="tab-trigger-suffix">

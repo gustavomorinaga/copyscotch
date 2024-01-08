@@ -24,9 +24,9 @@
 
 	const index = $restStore.requests.findIndex(({ id }) => id === requestID);
 	const request = $restStore.requests[index];
-	form = { ...form, id: formID, data: request };
+	const uniqueForm = { ...structuredClone(form), id: formID, data: request };
 
-	const superFrm = superForm(form, {
+	const superFrm = superForm(uniqueForm, {
 		validators: schema,
 		validationMethod: 'onblur',
 		taintedMessage: false
