@@ -28,7 +28,7 @@
 			<ContextMenuEditRequest {requestID}>
 				<Tabs.Trigger
 					class="relative justify-between gap-2 h-12 before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
-					aria-label="{request.name} tab"
+					aria-label={request.name}
 					value={request.id}
 					on:click={() => restStore.setActiveRequest(request.id)}
 				>
@@ -62,9 +62,17 @@
 			</ContextMenuEditRequest>
 		{/each}
 
-		<Button size="icon" variant="ghost" class="w-8 h-8 mx-3" on:click={restStore.addRequest}>
+		<Button
+			size="icon"
+			variant="ghost"
+			class="w-8 h-8 mx-3"
+			tabindex={0}
+			aria-label="Add Request"
+			role="button"
+			on:click={restStore.addRequest}
+		>
 			<Plus class="w-4 h-4" />
-			<span class="sr-only">Add</span>
+			<span class="sr-only">Add Request</span>
 		</Button>
 	</Tabs.List>
 

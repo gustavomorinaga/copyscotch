@@ -41,6 +41,10 @@
 	});
 
 	$: ({ form: formValue } = superFrm);
+	$: if ($restStore.requests) {
+		const updatedRequest = restStore.getRequest(requestID);
+		if (updatedRequest) $formValue = updatedRequest;
+	}
 
 	function onChange() {
 		restStore.updateRequest(requestID, $formValue);
