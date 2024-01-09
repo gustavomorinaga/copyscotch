@@ -1,6 +1,6 @@
-# Google-Like Search Engine
+# Copyscotch
 
-🔍 Simple implementation of a Google-like search engine using [TypeScript](https://www.typescriptlang.org/) and [SvelteKit](https://kit.svelte.dev/).
+🛸 A SvelteKit implementation of Hoppscotch.
 
 <p align="left">
   <a href="./LICENSE" title="Show the MIT License">
@@ -22,38 +22,31 @@
 <kbd>[<img title="English" alt="English" src="https://flagicons.lipis.dev/flags/4x3/us.svg" width="22">](./static/docs/translations/README.en.md)</kbd>
 <kbd>[<img title="Português Brasileiro" alt="Português Brasileiro" src="https://flagicons.lipis.dev/flags/4x3/br.svg" width="22">](./static/docs/translations/README.pt.md)</kbd>
 
+> 🚧 This project is still under development.
+
 ## Introduction
 
-This project is a simple search engine that mimics the Google search engine.
+This project is a implementation of [Hoppscotch](https://hoppscotch.com/) in SvelteKit.
 
-The Google search engine is a very complex system, but I tried to make it as simple as possible. The app is based on a JSON file that contains the data of simple articles that are displayed on the page. The search engine must be able to search for articles by title, description, and content.
+Hoppscotch is an open-source API request builder. It helps you create your requests faster, saving you precious time on your development.
 
-Cases that the search engine must be able to handle:
-
-- Search for articles by title, description, and content.
-- Use search operators to filter the results by:
-  - exact phrase (e.g., "hello world")
-  - any of the words (e.g., hello world)
-  - include keywords (e.g., +hello +world)
-  - exclude keywords (e.g., -hello -world)
-- Register the number of results found.
-- Register the time it took to perform the search.
-- Highlight the keywords in the results.
+> This project is not intended to be an alternative to Hoppscotch, but rather a way to learn how to use SvelteKit and its ecosystem.
 
 ## Tech Stack
 
-| Tool/Service                                      | Category                    | Description                                                                         |
-| ------------------------------------------------- | --------------------------- | ----------------------------------------------------------------------------------- |
-| [Vite](https://vitejs.dev/)                       | Build Tools                 | A build tool that provides a faster development experience for modern web projects. |
-| [CSSNANO](https://cssnano.co/)                    | CSS                         | A modular minifier, built on top of the PostCSS ecosystem.                          |
-| [PostCSS](https://postcss.org)                    | CSS                         | A tool for transforming CSS with JavaScript.                                        |
-| [Tailwind CSS](https://tailwindcss.com/)          | CSS                         | A utility-first CSS framework.                                                      |
-| [ESLint](https://eslint.org/)                     | JavaScript/TypeScript Tools | A tool for identifying and reporting on patterns in ECMAScript/JavaScript code.     |
-| [Prettier](https://prettier.io/)                  | JavaScript/TypeScript Tools | An opinionated code formatter.                                                      |
-| [TypeScript](https://www.typescriptlang.org/)     | JavaScript/TypeScript Tools | A typed superset of JavaScript that compiles to plain JavaScript.                   |
-| [shadcn-svelte](https://www.shadcn-svelte.com/)   | UI Components               | Accessible and customizable components that you can copy and paste into your apps.  |
-| [TanStack Virtual](https://tanstack.com/virtual/) | UI Components               | Headless UI for Virtualizing Large Element Lists                                    |
-| [SvelteKit](https://kit.svelte.dev/)              | Web Frameworks              | A framework for building high-performance web apps.                                 |
+| Tool/Service                                      | Category                    | Description                                                                                                                     |
+| ------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| [Vite](https://vitejs.dev/)                       | Build Tools                 | A build tool that provides a faster development experience for modern web projects.                                             |
+| [cssnano](https://cssnano.co/)                    | CSS                         | A modular minifier, built on top of the PostCSS ecosystem.                                                                      |
+| [PostCSS](https://postcss.org)                    | CSS                         | A tool for transforming CSS with JavaScript.                                                                                    |
+| [Tailwind CSS](https://tailwindcss.com/)          | CSS                         | A utility-first CSS framework.                                                                                                  |
+| [Superforms](https://superforms.rocks/)           | Form Validation             | A SvelteKit library that gives you a comprehensive solution for server and client validation, and client-side display of forms. |
+| [ESLint](https://eslint.org/)                     | JavaScript/TypeScript Tools | A tool for identifying and reporting on patterns in ECMAScript/JavaScript code.                                                 |
+| [Prettier](https://prettier.io/)                  | JavaScript/TypeScript Tools | An opinionated code formatter.                                                                                                  |
+| [TypeScript](https://www.typescriptlang.org/)     | JavaScript/TypeScript Tools | A typed superset of JavaScript that compiles to plain JavaScript.                                                               |
+| [shadcn-svelte](https://www.shadcn-svelte.com/)   | UI Components               | Accessible and customizable components that you can copy and paste into your apps.                                              |
+| [TanStack Virtual](https://tanstack.com/virtual/) | UI Components               | Headless UI for Virtualizing Large Element Lists                                                                                |
+| [SvelteKit](https://kit.svelte.dev/)              | Web Frameworks              | A framework for building high-performance web apps.                                                                             |
 
 ## 📜 License
 
