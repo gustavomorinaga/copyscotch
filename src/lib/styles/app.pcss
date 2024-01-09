@@ -3,6 +3,7 @@
 
 @layer base {
 	:root {
+		--base-font-size: 14px;
 		--method-get-color: #10b981;
 		--method-post-color: #eab308;
 		--method-put-color: #0ea5e9;
@@ -12,7 +13,20 @@
 		--method-options-color: #6366f1;
 	}
 
+	* {
+		@apply overscroll-none;
+	}
+
 	html {
-		font-size: 14px;
+		font-size: var(--base-font-size);
+	}
+
+	body {
+		@apply antialiased;
+	}
+
+	kbd {
+		@apply inline-flex min-h-5 min-w-5 items-center justify-center px-0.5;
+		@apply rounded-md border border-border bg-muted font-sans text-xs shadow;
 	}
 }

@@ -1,11 +1,12 @@
 <script lang="ts" context="module">
 	import { getRESTStore } from '$lib/stores';
-	import * as Form from '$lib/components/ui/form';
+	import { randomID } from '$lib/utils';
 	import {
 		editRequestSchema as schema,
-		type TRESTEditRequestSchema,
-		type TRESTRequestSchemaType
+		type TRESTRequestSchema,
+		type TRESTRequestSchemaInfer
 	} from '$lib/validators';
+	import * as Form from '$lib/components/ui/form';
 	import { superForm } from 'sveltekit-superforms/client';
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import type { ComponentProps } from 'svelte';
@@ -13,18 +14,17 @@
 
 <script lang="ts">
 	type $$Props = {
-		requestID: TRESTRequestSchemaType['id'];
-		form: SuperValidated<TRESTEditRequestSchema>;
+		requestID: TRESTRequestSchemaInfer['id'];
+		form: SuperValidated<TRESTRequestSchema>;
 	};
 
 	export let form: $$Props['form'];
 	export let requestID: $$Props['requestID'];
 
 	const restStore = getRESTStore();
-	const formID = `edit-${requestID}`;
+	const formID = randomID();
 
-	const index = $restStore.requests.findIndex(({ id }) => id === requestID);
-	const request = $restStore.requests[index];
+	const request = restStore.getRequest(requestID) as TRESTRequestSchemaInfer;
 	const uniqueForm = { ...structuredClone(form), id: formID, data: request };
 	const methodOptions = schema.shape.method.options;
 
@@ -34,9 +34,9 @@
 		validators: schema,
 		validationMethod: 'onblur',
 		taintedMessage: false,
-		onSubmit: () => {
+		onSubmit: async () => {
 			sending = true;
-			onSend().finally(() => (sending = false));
+			await onSend().finally(() => (sending = false));
 		}
 	});
 
@@ -48,7 +48,7 @@
 
 	function onSelectedChange(selected: ComponentProps<Form.Select>['selected']) {
 		restStore.updateRequest(requestID, {
-			method: selected?.value as TRESTRequestSchemaType['method']
+			method: selected?.value as TRESTRequestSchemaInfer['method']
 		});
 	}
 
@@ -60,7 +60,7 @@
 	}
 </script>
 
-<Form.Root form={superFrm} {schema} controlled let:config on:change={onChange} class="px-2">
+<Form.Root form={superFrm} {schema} controlled let:config on:change={onChange}>
 	<Form.Join class="w-full gap-2">
 		<Form.Join class="w-full">
 			<Form.Field {config} name="method">

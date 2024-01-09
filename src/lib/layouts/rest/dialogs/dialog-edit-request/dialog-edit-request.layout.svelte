@@ -2,9 +2,10 @@
 	import { getRESTStore } from '$lib/stores';
 	import {
 		editRequestSchema as schema,
-		type TRESTRequestSchemaType,
-		type TRESTEditRequestSchema
+		type TRESTRequestSchemaInfer,
+		type TRESTRequestSchema
 	} from '$lib/validators';
+	import { randomID } from '$lib/utils';
 	import { Button } from '$lib/components/ui/button';
 	import * as Form from '$lib/components/ui/form';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -13,20 +14,18 @@
 </script>
 
 <script lang="ts">
-	type $$Props = Dialog.Props & {
-		requestID: TRESTRequestSchemaType['id'];
-		form: SuperValidated<TRESTEditRequestSchema>;
+	type $$Props = {
+		requestID: TRESTRequestSchemaInfer['id'];
+		form: SuperValidated<TRESTRequestSchema>;
 	};
 
 	export let form: $$Props['form'];
 	export let requestID: $$Props['requestID'];
-	export let open: $$Props['open'] = false;
 
 	const restStore = getRESTStore();
-	const formID = `main-${requestID}`;
+	const formID = randomID();
 
-	const index = $restStore.requests.findIndex(({ id }) => id === requestID);
-	const request = $restStore.requests[index];
+	const request = restStore.getRequest(requestID) as TRESTRequestSchemaInfer;
 	const uniqueForm = { ...structuredClone(form), id: formID, data: request };
 
 	const superFrm = superForm(uniqueForm, {
@@ -37,30 +36,39 @@
 
 	$: ({ form: formValue } = superFrm);
 	$: isActive = $restStore.activeRequest === requestID;
+	$: isPredicted = $restStore.predictedRequest === requestID;
+	$: showContent = $restStore.predictedRequest ? isPredicted : isActive;
+	$: open = $restStore.editRequest === requestID;
+	$: if ($restStore.requests) {
+		const updatedRequest = restStore.getRequest(requestID);
+		if (updatedRequest) $formValue = updatedRequest;
+	}
 
 	function onDblClick() {
-		open = true;
+		restStore.setEditRequest(requestID);
 	}
 
 	function onCancel() {
-		request.name = $restStore.requests[index].name;
-		open = false;
+		superFrm.reset();
+		restStore.setEditRequest(undefined);
+		restStore.setPredictedRequest(undefined);
 	}
 
 	function onSave() {
 		restStore.updateRequest(requestID, $formValue);
-		open = false;
+		restStore.setEditRequest(undefined);
+		restStore.setPredictedRequest(undefined);
 	}
 </script>
 
-<Dialog.Root bind:open>
+<Dialog.Root {open} closeOnOutsideClick={false}>
 	<Dialog.Trigger asChild>
 		<div role="presentation" tabindex="-1" on:dblclick={onDblClick}>
-			<slot name="trigger" />
+			<slot />
 		</div>
 	</Dialog.Trigger>
 
-	{#if isActive}
+	{#if showContent}
 		<Dialog.Content>
 			<Dialog.Header>
 				<Dialog.Title>Edit Request</Dialog.Title>

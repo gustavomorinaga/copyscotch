@@ -2,20 +2,19 @@
 	import { getRESTStore } from '$lib/stores';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tabs from '$lib/components/ui/tabs';
-	import { DialogEditRequest, TabRequest } from '$lib/layouts';
+	import { ContextMenuEditRequest, DialogEditRequest, TabRequest } from '$lib/layouts';
 	import { Plus, X } from 'lucide-svelte';
 	import type { SuperValidated } from 'sveltekit-superforms';
-	import type { TRESTEditRequestSchema } from '$lib/validators';
+	import type { TRESTRequestSchema } from '$lib/validators';
 
-	type $$Props = {
-		form: SuperValidated<TRESTEditRequestSchema>;
-	};
+	type $$Props = { form: SuperValidated<TRESTRequestSchema> };
 
 	export let form: $$Props['form'];
 
 	const restStore = getRESTStore();
+
 	$: ({ requests } = $restStore);
-	$: hasOnlyOneRequest = $restStore.requests.length === 1;
+	$: hasOnlyOneRequest = requests.length === 1;
 </script>
 
 <Tabs.Root value={$restStore.activeRequest}>
@@ -26,38 +25,41 @@
 			{@const requestID = request.id}
 			{@const methodLowCase = request.method.toLowerCase()}
 
-			<Tabs.Trigger
-				class="relative justify-between gap-2 h-12 before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
-				aria-label={request.name}
-				value={request.id}
-				on:click={() => restStore.setActiveRequest(request.id)}
-			>
-				<DialogEditRequest {requestID} {form}>
-					<svelte:fragment slot="trigger">
+			<ContextMenuEditRequest {requestID}>
+				<Tabs.Trigger
+					class="relative justify-between gap-2 h-12 before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
+					aria-label="{request.name} tab"
+					value={request.id}
+					on:click={() => restStore.setActiveRequest(request.id)}
+				>
+					<DialogEditRequest {requestID} {form}>
 						<div class="tab-trigger-content">
 							<span class="method" style="color: var(--method-{methodLowCase}-color)">
 								{request.method}
 							</span>
 							<span class="name">{request.name}</span>
 						</div>
-					</svelte:fragment>
-				</DialogEditRequest>
+					</DialogEditRequest>
 
-				{#if !hasOnlyOneRequest}
-					<div class="tab-trigger-suffix">
-						<Button
-							size="icon"
-							variant="ghost"
-							class="w-5 h-5"
-							on:click={() => restStore.closeRequest(request.id)}
-							disabled={hasOnlyOneRequest}
-						>
-							<X class="w-4 h-4" />
-							<span class="sr-only">Close</span>
-						</Button>
-					</div>
-				{/if}
-			</Tabs.Trigger>
+					{#if !hasOnlyOneRequest}
+						<div class="tab-trigger-suffix">
+							<Button
+								size="icon"
+								variant="ghost"
+								class="w-5 h-5"
+								disabled={hasOnlyOneRequest}
+								on:click={(event) => {
+									event.preventDefault();
+									restStore.closeRequest(request.id);
+								}}
+							>
+								<X class="w-4 h-4" />
+								<span class="sr-only">Close</span>
+							</Button>
+						</div>
+					{/if}
+				</Tabs.Trigger>
+			</ContextMenuEditRequest>
 		{/each}
 
 		<Button size="icon" variant="ghost" class="w-8 h-8 mx-3" on:click={restStore.addRequest}>
@@ -69,7 +71,7 @@
 	{#each requests as request}
 		{@const requestID = request.id}
 
-		<Tabs.Content value={requestID}>
+		<Tabs.Content value={requestID} class="m-0 p-4">
 			<TabRequest {requestID} {form} />
 		</Tabs.Content>
 	{/each}
