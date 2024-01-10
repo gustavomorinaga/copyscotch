@@ -10,6 +10,8 @@
 	import { superForm } from 'sveltekit-superforms/client';
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import type { ComponentProps } from 'svelte';
+
+	type TFormAction = 'send' | 'cancel';
 </script>
 
 <script lang="ts">
@@ -23,24 +25,40 @@
 
 	const restStore = getRESTStore();
 	const formID = randomID();
-
 	const request = restStore.getRequest(requestID) as TRESTRequestSchemaInfer;
 	const uniqueForm = { ...structuredClone(form), id: formID, data: request };
 	const methodOptions = schema.shape.method.options;
 
 	let sending = false;
+	let controller = new AbortController();
 
 	const superFrm = superForm(uniqueForm, {
 		validators: schema,
 		validationMethod: 'onblur',
 		taintedMessage: false,
-		onSubmit: async () => {
-			sending = true;
-			await onSend().finally(() => (sending = false));
+		onSubmit: async (input) => {
+			const actionMap = {
+				send: async () => {
+					sending = true;
+					const { url, method } = $formValue;
+					fetch(url, { method: method, signal: controller.signal }).finally(
+						() => (sending = false)
+					);
+				},
+				cancel: async () => {
+					sending = false;
+					input.cancel();
+					controller.abort();
+					controller = new AbortController();
+				}
+			} as Record<TFormAction, () => Promise<void>>;
+
+			return await actionMap[formAction]();
 		}
 	});
 
 	$: ({ form: formValue } = superFrm);
+	$: formAction = (sending ? 'cancel' : 'send') as TFormAction;
 	$: if ($restStore.requests) {
 		const updatedRequest = restStore.getRequest(requestID);
 		if (updatedRequest) $formValue = updatedRequest;
@@ -55,16 +73,17 @@
 			method: selected?.value as TRESTRequestSchemaInfer['method']
 		});
 	}
-
-	async function onSend() {
-		const { url, method } = $formValue;
-		const response = await fetch(url, { method });
-
-		return response;
-	}
 </script>
 
-<Form.Root form={superFrm} {schema} controlled let:config on:change={onChange}>
+<Form.Root
+	id={formID}
+	form={superFrm}
+	{schema}
+	controlled
+	action="?/{formAction}"
+	let:config
+	on:change={onChange}
+>
 	<Form.Join class="w-full gap-2">
 		<Form.Join class="w-full">
 			<Form.Field {config} name="method">
@@ -100,7 +119,7 @@
 			</Form.Field>
 		</Form.Join>
 
-		<Form.Button type="submit" disabled={sending}>
+		<Form.Button type="submit">
 			{#if sending}
 				Cancel
 			{:else}

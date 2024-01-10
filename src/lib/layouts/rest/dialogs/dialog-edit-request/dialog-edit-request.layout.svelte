@@ -11,6 +11,8 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { superForm } from 'sveltekit-superforms/client';
 	import type { SuperValidated } from 'sveltekit-superforms';
+
+	type TFormAction = 'save' | 'cancel';
 </script>
 
 <script lang="ts">
@@ -24,17 +26,22 @@
 
 	const restStore = getRESTStore();
 	const formID = randomID();
-
 	const request = restStore.getRequest(requestID) as TRESTRequestSchemaInfer;
 	const uniqueForm = { ...structuredClone(form), id: formID, data: request };
 
 	const superFrm = superForm(uniqueForm, {
 		validators: schema,
 		validationMethod: 'onblur',
-		taintedMessage: false
+		taintedMessage: false,
+		onSubmit: (input) => {
+			const formAction = getAction(input.action);
+			const actionMap = { cancel: handleCancel, save: handleSave } as const;
+			return actionMap[formAction]();
+		}
 	});
 
 	$: ({ form: formValue } = superFrm);
+	$: formRef = document.forms.namedItem(formID) as HTMLFormElement;
 	$: isActive = $restStore.activeRequest === requestID;
 	$: isPredicted = $restStore.predictedRequest === requestID;
 	$: showContent = $restStore.predictedRequest ? isPredicted : isActive;
@@ -48,16 +55,28 @@
 		restStore.setEditRequest(requestID);
 	}
 
-	function onCancel() {
+	function handleCancel() {
 		superFrm.reset();
 		restStore.setEditRequest(undefined);
 		restStore.setPredictedRequest(undefined);
 	}
 
-	function onSave() {
+	function handleSave() {
 		restStore.updateRequest(requestID, $formValue);
 		restStore.setEditRequest(undefined);
 		restStore.setPredictedRequest(undefined);
+	}
+
+	function handleKeydownSubmit(event: KeyboardEvent) {
+		if (event.key === 'Enter') {
+			event.preventDefault();
+			document.forms.namedItem(formID)?.requestSubmit();
+		}
+	}
+
+	function getAction(url: URL) {
+		const [action] = [...url.searchParams.keys()];
+		return action.replace('/', '') as TFormAction;
 	}
 </script>
 
@@ -74,18 +93,18 @@
 				<Dialog.Title>Edit Request</Dialog.Title>
 			</Dialog.Header>
 
-			<Form.Root form={superFrm} {schema} controlled let:config>
+			<Form.Root id={formID} form={superFrm} {schema} controlled action="?/save" let:config>
 				<Form.Field {config} name="name">
 					<Form.Item>
 						<Form.Label for="name">Name</Form.Label>
-						<Form.Input type="text" id="name" name="name" />
+						<Form.Input type="text" id="name" name="name" on:keydown={handleKeydownSubmit} />
 					</Form.Item>
 				</Form.Field>
 			</Form.Root>
 
 			<Dialog.Footer>
-				<Button type="submit" variant="ghost" on:click={onCancel}>Cancel</Button>
-				<Button type="submit" variant="default" on:click={onSave}>Save</Button>
+				<Button type="submit" variant="ghost" form={formID} formaction="?/cancel">Cancel</Button>
+				<Button type="submit" variant="default" form={formID}>Save</Button>
 			</Dialog.Footer>
 		</Dialog.Content>
 	{/if}

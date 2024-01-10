@@ -5,7 +5,7 @@
 	import { ContextMenuEditRequest, DialogEditRequest, TabRequest } from '$lib/layouts';
 	import { Plus, X } from 'lucide-svelte';
 	import type { SuperValidated } from 'sveltekit-superforms';
-	import type { TRESTRequestSchema } from '$lib/validators';
+	import type { TRESTRequestSchema, TRESTRequestSchemaInfer } from '$lib/validators';
 
 	type $$Props = { form: SuperValidated<TRESTRequestSchema> };
 
@@ -15,6 +15,14 @@
 
 	$: ({ requests } = $restStore);
 	$: hasOnlyOneRequest = requests.length === 1;
+
+	function handleCloseTab(
+		event: MouseEvent | KeyboardEvent,
+		requestID: TRESTRequestSchemaInfer['id']
+	) {
+		event.preventDefault();
+		restStore.closeRequest(requestID);
+	}
 </script>
 
 <Tabs.Root value={$restStore.activeRequest}>
@@ -47,14 +55,15 @@
 								size="icon"
 								variant="ghost"
 								class="w-5 h-5"
+								role="button"
+								tabindex={0}
+								aria-label="Close Tab"
 								disabled={hasOnlyOneRequest}
-								on:click={(event) => {
-									event.preventDefault();
-									restStore.closeRequest(request.id);
-								}}
+								on:click={(event) => handleCloseTab(event, requestID)}
+								on:keydown={(event) => handleCloseTab(event, requestID)}
 							>
 								<X class="w-4 h-4" />
-								<span class="sr-only">Close</span>
+								<span role="presentation" class="sr-only">Close Tab</span>
 							</Button>
 						</div>
 					{/if}
@@ -66,13 +75,13 @@
 			size="icon"
 			variant="ghost"
 			class="w-8 h-8 mx-3"
+			role="button"
 			tabindex={0}
 			aria-label="Add Request"
-			role="button"
 			on:click={restStore.addRequest}
 		>
 			<Plus class="w-4 h-4" />
-			<span class="sr-only">Add Request</span>
+			<span role="presentation" class="sr-only">Add Request</span>
 		</Button>
 	</Tabs.List>
 

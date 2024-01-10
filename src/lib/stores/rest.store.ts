@@ -34,6 +34,7 @@ const DEFAULT_REQUEST: Omit<TRESTRequestSchemaInfer, 'id'> = {
 const INITIAL_REQUEST = { ...DEFAULT_REQUEST, id: randomID() };
 
 const REST_CTX = 'REST_CTX';
+const REST_STORAGE_KEY = 'collectionsREST';
 const REST_INITIAL_DATA: TRESTData = {
 	requests: [INITIAL_REQUEST],
 	activeRequest: INITIAL_REQUEST.id
@@ -41,7 +42,7 @@ const REST_INITIAL_DATA: TRESTData = {
 
 export const setRESTStore = (initialData: Partial<TRESTData> = REST_INITIAL_DATA) => {
 	const data: TRESTData = browser
-		? JSON.parse(String(localStorage.getItem('rest'))) ?? initialData
+		? JSON.parse(String(localStorage.getItem(REST_STORAGE_KEY))) ?? initialData
 		: initialData;
 	const restStore = writable(data);
 
@@ -140,7 +141,7 @@ export const setRESTStore = (initialData: Partial<TRESTData> = REST_INITIAL_DATA
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	restStore.subscribe(({ editRequest, predictedRequest, ...state }) => {
-		browser && localStorage.setItem('rest', JSON.stringify(state));
+		if (browser) localStorage.setItem(REST_STORAGE_KEY, JSON.stringify(state));
 	});
 
 	setContext(REST_CTX, { ...restStore, ...actions });
