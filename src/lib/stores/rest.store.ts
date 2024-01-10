@@ -34,7 +34,7 @@ const DEFAULT_REQUEST: Omit<TRESTRequestSchemaInfer, 'id'> = {
 	url: 'https://jsonplaceholder.typicode.com/todos/1',
 	method: 'GET'
 };
-const INITIAL_REQUEST = { id: randomID(), ...DEFAULT_REQUEST };
+const INITIAL_REQUEST = { ...DEFAULT_REQUEST, id: randomID() };
 const REST_INITIAL_DATA: TRESTData = {
 	requests: [INITIAL_REQUEST],
 	activeRequest: INITIAL_REQUEST.id
@@ -52,7 +52,11 @@ export const setRESTStore = (
 
 	const store = writable(data, (set, update) => {
 		channel = new BroadcastChannel(REST_STORAGE_KEY);
-		channel.addEventListener('message', ({ data }) => set(data as TRESTDataPersist));
+		channel.addEventListener('message', ({ data }) => {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { editRequest, ...dataPersist } = data as TRESTData;
+			update((state) => ({ ...state, ...dataPersist }));
+		});
 
 		const stopNotifier = start(set, update);
 
@@ -62,10 +66,13 @@ export const setRESTStore = (
 		};
 	});
 
-	function saveData(data: TRESTDataPersist) {
+	function saveData(data: TRESTData) {
 		if (!browser) return;
 
-		localStorage.setItem(REST_STORAGE_KEY, JSON.stringify(data));
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { editRequest, ...dataPersist } = data;
+
+		localStorage.setItem(REST_STORAGE_KEY, JSON.stringify(dataPersist));
 		channel?.postMessage(data);
 	}
 
@@ -118,12 +125,17 @@ export const setRESTStore = (
 		},
 		setEditRequest: (id) => {
 			store.update((state) => {
-				if (!id) return state;
+				if (!id) {
+					state.editRequest = undefined;
+					saveData(state);
+					return state;
+				}
 
 				const index = state.requests.findIndex((request) => request.id === id);
 				if (index === -1) return state;
 
 				state.editRequest = id;
+				saveData(state);
 				return state;
 			});
 		},

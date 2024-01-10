@@ -40,11 +40,18 @@
 		}
 	});
 
+	let open = false;
+
 	$: ({ form: formValue } = superFrm);
-	$: open = $restStore.editRequest === requestID;
+	$: if ($restStore.editRequest === requestID) open = true;
 	$: if ($restStore.activeRequest) {
 		const updatedRequest = restStore.getRequest(requestID);
 		if (updatedRequest) $formValue = updatedRequest;
+	}
+
+	function getAction(url: URL) {
+		const [action] = [...url.searchParams.keys()];
+		return action.replace('/', '') as TFormAction;
 	}
 
 	function onDblClick() {
@@ -54,11 +61,17 @@
 	function handleCancel() {
 		superFrm.reset();
 		restStore.setEditRequest(undefined);
+		open = false;
 	}
 
 	function handleSave() {
 		restStore.updateRequest(requestID, $formValue);
 		restStore.setEditRequest(undefined);
+		open = false;
+	}
+
+	function handleOpenChange(event: boolean) {
+		if (!event) handleCancel();
 	}
 
 	function handleKeydownSubmit(event: KeyboardEvent) {
@@ -67,14 +80,9 @@
 			document.forms.namedItem(formID)?.requestSubmit();
 		}
 	}
-
-	function getAction(url: URL) {
-		const [action] = [...url.searchParams.keys()];
-		return action.replace('/', '') as TFormAction;
-	}
 </script>
 
-<Dialog.Root bind:open closeOnOutsideClick={false}>
+<Dialog.Root bind:open closeOnOutsideClick={false} onOpenChange={handleOpenChange}>
 	<Dialog.Trigger asChild>
 		<div role="presentation" tabindex="-1" on:dblclick={onDblClick}>
 			<slot />
