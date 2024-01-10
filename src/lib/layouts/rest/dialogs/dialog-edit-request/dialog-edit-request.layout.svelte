@@ -41,12 +41,8 @@
 	});
 
 	$: ({ form: formValue } = superFrm);
-	$: formRef = document.forms.namedItem(formID) as HTMLFormElement;
-	$: isActive = $restStore.activeRequest === requestID;
-	$: isPredicted = $restStore.predictedRequest === requestID;
-	$: showContent = $restStore.predictedRequest ? isPredicted : isActive;
 	$: open = $restStore.editRequest === requestID;
-	$: if ($restStore.requests) {
+	$: if ($restStore.activeRequest) {
 		const updatedRequest = restStore.getRequest(requestID);
 		if (updatedRequest) $formValue = updatedRequest;
 	}
@@ -58,13 +54,11 @@
 	function handleCancel() {
 		superFrm.reset();
 		restStore.setEditRequest(undefined);
-		restStore.setPredictedRequest(undefined);
 	}
 
 	function handleSave() {
 		restStore.updateRequest(requestID, $formValue);
 		restStore.setEditRequest(undefined);
-		restStore.setPredictedRequest(undefined);
 	}
 
 	function handleKeydownSubmit(event: KeyboardEvent) {
@@ -80,32 +74,30 @@
 	}
 </script>
 
-<Dialog.Root {open} closeOnOutsideClick={false}>
+<Dialog.Root bind:open closeOnOutsideClick={false}>
 	<Dialog.Trigger asChild>
 		<div role="presentation" tabindex="-1" on:dblclick={onDblClick}>
 			<slot />
 		</div>
 	</Dialog.Trigger>
 
-	{#if showContent}
-		<Dialog.Content>
-			<Dialog.Header>
-				<Dialog.Title>Edit Request</Dialog.Title>
-			</Dialog.Header>
+	<Dialog.Content transitionConfig={{ delay: 1000 }}>
+		<Dialog.Header>
+			<Dialog.Title>Edit Request</Dialog.Title>
+		</Dialog.Header>
 
-			<Form.Root id={formID} form={superFrm} {schema} controlled action="?/save" let:config>
-				<Form.Field {config} name="name">
-					<Form.Item>
-						<Form.Label for="name">Name</Form.Label>
-						<Form.Input type="text" id="name" name="name" on:keydown={handleKeydownSubmit} />
-					</Form.Item>
-				</Form.Field>
-			</Form.Root>
+		<Form.Root id={formID} form={superFrm} {schema} controlled action="?/save" let:config>
+			<Form.Field {config} name="name">
+				<Form.Item>
+					<Form.Label for="name">Name</Form.Label>
+					<Form.Input type="text" id="name" name="name" on:keydown={handleKeydownSubmit} />
+				</Form.Item>
+			</Form.Field>
+		</Form.Root>
 
-			<Dialog.Footer>
-				<Button type="submit" variant="ghost" form={formID} formaction="?/cancel">Cancel</Button>
-				<Button type="submit" variant="default" form={formID}>Save</Button>
-			</Dialog.Footer>
-		</Dialog.Content>
-	{/if}
+		<Dialog.Footer>
+			<Button type="submit" variant="ghost" form={formID} formaction="?/cancel">Cancel</Button>
+			<Button type="submit" variant="default" form={formID}>Save</Button>
+		</Dialog.Footer>
+	</Dialog.Content>
 </Dialog.Root>

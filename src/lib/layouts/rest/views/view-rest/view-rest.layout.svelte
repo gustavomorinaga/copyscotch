@@ -16,6 +16,10 @@
 	$: ({ requests } = $restStore);
 	$: hasOnlyOneRequest = requests.length === 1;
 
+	function handleActiveTab(id: TRESTRequestSchemaInfer['id']) {
+		restStore.setActiveRequest(id);
+	}
+
 	function handleCloseTab(
 		event: MouseEvent | KeyboardEvent,
 		requestID: TRESTRequestSchemaInfer['id']
@@ -38,7 +42,7 @@
 					class="relative justify-between gap-2 h-12 before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
 					aria-label={request.name}
 					value={request.id}
-					on:click={() => restStore.setActiveRequest(request.id)}
+					on:click={() => handleActiveTab(request.id)}
 				>
 					<DialogEditRequest {requestID} {form}>
 						<div class="tab-trigger-content">
