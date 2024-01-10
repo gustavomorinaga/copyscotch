@@ -8,14 +8,12 @@ type TRESTData = {
 	requests: Array<TRESTRequestSchemaInfer>;
 	activeRequest: TRESTRequestSchemaInfer['id'];
 	editRequest?: TRESTRequestSchemaInfer['id'];
-	predictedRequest?: TRESTRequestSchemaInfer['id'];
 };
 type TRESTActions = {
 	addRequest: () => void;
 	getRequest: (id: TRESTRequestSchemaInfer['id']) => TRESTRequestSchemaInfer | undefined;
 	setActiveRequest: (id: TRESTRequestSchemaInfer['id']) => void;
 	setEditRequest: (id: TRESTRequestSchemaInfer['id'] | undefined) => void;
-	setPredictedRequest: (id: TRESTRequestSchemaInfer['id'] | undefined) => void;
 	closeRequest: (id: TRESTRequestSchemaInfer['id']) => void;
 	closeOtherRequests: (id: TRESTRequestSchemaInfer['id']) => void;
 	duplicateRequest: (id: TRESTRequestSchemaInfer['id']) => void;
@@ -103,20 +101,6 @@ export const setRESTStore = (initialData: Partial<TRESTData> = REST_INITIAL_DATA
 				return state;
 			});
 		},
-		setPredictedRequest: (id) => {
-			restStore.update((state) => {
-				if (!id) {
-					state.predictedRequest = undefined;
-					return state;
-				}
-
-				const index = state.requests.findIndex((request) => request.id === id);
-				if (index === -1) return state;
-
-				state.predictedRequest = id;
-				return state;
-			});
-		},
 		closeRequest: (id) => {
 			restStore.update((state) => {
 				const index = state.requests.findIndex((request) => request.id === id);
@@ -140,7 +124,7 @@ export const setRESTStore = (initialData: Partial<TRESTData> = REST_INITIAL_DATA
 	};
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	restStore.subscribe(({ editRequest, predictedRequest, ...state }) => {
+	restStore.subscribe(({ editRequest, ...state }) => {
 		if (browser) localStorage.setItem(REST_STORAGE_KEY, JSON.stringify(state));
 	});
 

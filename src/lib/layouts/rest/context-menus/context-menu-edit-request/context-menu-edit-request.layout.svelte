@@ -82,13 +82,13 @@
 </script>
 
 <ContextMenu.Root bind:open>
-	<ContextMenu.Trigger on:contextmenu={() => restStore.setPredictedRequest(requestID)}>
+	<ContextMenu.Trigger>
 		<slot />
 	</ContextMenu.Trigger>
 	<ContextMenu.Content class="w-64">
 		{#each options as option}
 			{#if !option.showOnlyIf || option.showOnlyIf()}
-				<ContextMenu.Item on:click={option.action}>
+				<ContextMenu.Item inset on:click={option.action}>
 					{#if option.icon}
 						<svelte:component this={option.icon} class="w-4 h-4 mr-2" />
 					{/if}
