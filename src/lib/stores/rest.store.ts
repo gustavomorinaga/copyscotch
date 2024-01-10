@@ -27,15 +27,14 @@ type TRESTActions = {
 };
 type TRESTStore = Writable<TRESTData> & TRESTActions;
 
+const REST_CTX = 'REST_CTX';
+const REST_STORAGE_KEY = 'collectionsREST';
 const DEFAULT_REQUEST: Omit<TRESTRequestSchemaInfer, 'id'> = {
 	name: 'Untitled',
 	url: 'https://jsonplaceholder.typicode.com/todos/1',
 	method: 'GET'
 };
-const INITIAL_REQUEST = { ...DEFAULT_REQUEST, id: randomID() };
-
-const REST_CTX = 'REST_CTX';
-const REST_STORAGE_KEY = 'collectionsREST';
+const INITIAL_REQUEST = { id: randomID(), ...DEFAULT_REQUEST };
 const REST_INITIAL_DATA: TRESTData = {
 	requests: [INITIAL_REQUEST],
 	activeRequest: INITIAL_REQUEST.id
@@ -55,11 +54,11 @@ export const setRESTStore = (
 		channel = new BroadcastChannel(REST_STORAGE_KEY);
 		channel.addEventListener('message', ({ data }) => set(data as TRESTDataPersist));
 
-		const stop = start(set, update);
+		const stopNotifier = start(set, update);
 
 		return () => {
 			channel?.close();
-			if (stop) stop();
+			if (stopNotifier) stopNotifier();
 		};
 	});
 
