@@ -39,7 +39,7 @@
 
 			<ContextMenuEditRequest {requestID}>
 				<Tabs.Trigger
-					class="relative justify-between gap-2 h-12 before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
+					class="relative justify-between gap-2 min-w-52 h-12 before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
 					aria-label={request.name}
 					value={request.id}
 					on:click={() => handleActiveTab(request.id)}
@@ -103,7 +103,7 @@
 		@apply inline-flex items-baseline justify-center gap-2;
 
 		& > span.method {
-			@apply block overscroll-none text-xs font-medium uppercase;
+			@apply block text-xs font-medium uppercase;
 		}
 
 		& > span.name {

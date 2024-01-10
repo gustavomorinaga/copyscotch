@@ -11,7 +11,7 @@
 	const loadStore = new Promise((resolve) => resolve(setRESTStore()));
 
 	onMount(async () => {
-		await loadStore.finally(() => setTimeout(() => (loading = false), 500));
+		await loadStore.finally(() => (loading = false));
 	});
 </script>
 

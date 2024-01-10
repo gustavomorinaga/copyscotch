@@ -1,14 +1,17 @@
 import { browser } from '$app/environment';
 import { getContext, setContext } from 'svelte';
-import { get, writable, type Writable } from 'svelte/store';
+import { get, writable, type StartStopNotifier, type Writable } from 'svelte/store';
 import { randomID } from '$lib/utils';
 import type { TRESTRequestSchemaInfer } from '$lib/validators';
 
-type TRESTData = {
-	requests: Array<TRESTRequestSchemaInfer>;
-	activeRequest: TRESTRequestSchemaInfer['id'];
+type TRESTDataTemp = {
 	editRequest?: TRESTRequestSchemaInfer['id'];
 };
+type TRESTDataPersist = {
+	requests: Array<TRESTRequestSchemaInfer>;
+	activeRequest: TRESTRequestSchemaInfer['id'];
+};
+type TRESTData = TRESTDataPersist & TRESTDataTemp;
 type TRESTActions = {
 	addRequest: () => void;
 	getRequest: (id: TRESTRequestSchemaInfer['id']) => TRESTRequestSchemaInfer | undefined;
@@ -38,36 +41,61 @@ const REST_INITIAL_DATA: TRESTData = {
 	activeRequest: INITIAL_REQUEST.id
 };
 
-export const setRESTStore = (initialData: Partial<TRESTData> = REST_INITIAL_DATA) => {
+export const setRESTStore = (
+	initialData: Partial<TRESTData> = REST_INITIAL_DATA,
+	start: StartStopNotifier<TRESTData> = () => {}
+) => {
+	let channel: BroadcastChannel | null;
+
 	const data: TRESTData = browser
 		? JSON.parse(String(localStorage.getItem(REST_STORAGE_KEY))) ?? initialData
 		: initialData;
-	const restStore = writable(data);
+
+	const store = writable(data, (set, update) => {
+		channel = new BroadcastChannel(REST_STORAGE_KEY);
+		channel.addEventListener('message', ({ data }) => set(data as TRESTDataPersist));
+
+		const stop = start(set, update);
+
+		return () => {
+			channel?.close();
+			if (stop) stop();
+		};
+	});
+
+	function saveData(data: TRESTDataPersist) {
+		if (!browser) return;
+
+		localStorage.setItem(REST_STORAGE_KEY, JSON.stringify(data));
+		channel?.postMessage(data);
+	}
 
 	const actions: TRESTActions = {
 		addRequest: () => {
-			restStore.update((state) => {
+			store.update((state) => {
 				const generatedID = randomID();
 				state.requests.push({ ...DEFAULT_REQUEST, id: generatedID });
 				state.activeRequest = generatedID;
+				saveData(state);
 				return state;
 			});
 		},
 		getRequest: (id) => {
-			const { requests } = get(restStore);
+			const { requests } = get(store);
 			return requests.find((request) => request.id === id);
 		},
 		updateRequest: (id, request) => {
-			restStore.update((state) => {
+			store.update((state) => {
 				const index = state.requests.findIndex((request) => request.id === id);
 				if (index === -1) return state;
 
 				state.requests[index] = { ...state.requests[index], ...request };
+				saveData(state);
 				return state;
 			});
 		},
 		duplicateRequest: (id) => {
-			restStore.update((state) => {
+			store.update((state) => {
 				const index = state.requests.findIndex((request) => request.id === id);
 				if (index === -1) return state;
 
@@ -75,24 +103,23 @@ export const setRESTStore = (initialData: Partial<TRESTData> = REST_INITIAL_DATA
 				const generatedID = randomID();
 				state.requests.splice(index + 1, 0, { ...structuredClone(request), id: generatedID });
 				state.activeRequest = generatedID;
+				saveData(state);
 				return state;
 			});
 		},
 		setActiveRequest: (id) => {
-			restStore.update((state) => {
+			store.update((state) => {
 				const index = state.requests.findIndex((request) => request.id === id);
 				if (index === -1) return state;
 
 				state.activeRequest = id;
+				saveData(state);
 				return state;
 			});
 		},
 		setEditRequest: (id) => {
-			restStore.update((state) => {
-				if (!id) {
-					state.editRequest = undefined;
-					return state;
-				}
+			store.update((state) => {
+				if (!id) return state;
 
 				const index = state.requests.findIndex((request) => request.id === id);
 				if (index === -1) return state;
@@ -102,34 +129,31 @@ export const setRESTStore = (initialData: Partial<TRESTData> = REST_INITIAL_DATA
 			});
 		},
 		closeRequest: (id) => {
-			restStore.update((state) => {
+			store.update((state) => {
 				const index = state.requests.findIndex((request) => request.id === id);
 				if (index === -1) return state;
 
 				state.requests = state.requests.filter((request) => request.id !== id);
 				state.activeRequest = index === 0 ? state.requests[0]?.id : state.requests[index - 1]?.id;
+				saveData(state);
 				return state;
 			});
 		},
 		closeOtherRequests: (id) => {
-			restStore.update((state) => {
+			store.update((state) => {
 				const index = state.requests.findIndex((request) => request.id === id);
 				if (index === -1) return state;
 
 				state.requests = [state.requests[index]];
 				state.activeRequest = id;
+				saveData(state);
 				return state;
 			});
 		}
 	};
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	restStore.subscribe(({ editRequest, ...state }) => {
-		if (browser) localStorage.setItem(REST_STORAGE_KEY, JSON.stringify(state));
-	});
-
-	setContext(REST_CTX, { ...restStore, ...actions });
-	return restStore;
+	setContext(REST_CTX, { ...store, ...actions });
+	return store;
 };
 
 export const getRESTStore = () => getContext<TRESTStore>(REST_CTX);
