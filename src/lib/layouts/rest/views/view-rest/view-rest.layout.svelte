@@ -1,76 +1,68 @@
 <script lang="ts">
-	import { getRESTStore } from '$lib/stores';
+	import { getRESTTabStore } from '$lib/stores';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { ContextMenuEditRequest, DialogEditRequest, TabRequest } from '$lib/layouts';
 	import { Plus, X } from 'lucide-svelte';
 	import type { SuperValidated } from 'sveltekit-superforms';
-	import type { TRESTRequestSchema, TRESTRequestSchemaInfer } from '$lib/validators';
+	import type { TRESTRequestSchema, TRESTRequestInfer } from '$lib/validators';
 
 	type $$Props = { form: SuperValidated<TRESTRequestSchema> };
 
 	export let form: $$Props['form'];
 
-	const restStore = getRESTStore();
+	const tabStore = getRESTTabStore();
+	$: ({ tabs, current } = $tabStore);
 
-	$: ({ requests } = $restStore);
-	$: hasOnlyOneRequest = requests.length === 1;
-
-	function handleActiveTab(id: TRESTRequestSchemaInfer['id']) {
-		restStore.setActiveRequest(id);
+	function handleCurrentTab(id: TRESTRequestInfer['id']) {
+		tabStore.setCurrent(id);
 	}
 
-	function handleCloseTab(
-		event: MouseEvent | KeyboardEvent,
-		requestID: TRESTRequestSchemaInfer['id']
-	) {
+	function handleCloseTab(event: MouseEvent | KeyboardEvent, requestID: TRESTRequestInfer['id']) {
 		event.preventDefault();
-		restStore.closeRequest(requestID);
+		tabStore.close(requestID);
 	}
 </script>
 
-<Tabs.Root value={$restStore.activeRequest}>
+<Tabs.Root value={current}>
 	<Tabs.List
-		class="relative flex justify-start rounded-none h-fit p-0 overflow-x-auto scrollbar-thin scrollbar-thumb-secondary"
+		class="relative flex justify-start rounded-none h-12 p-0 overflow-x-auto scrollbar-thin scrollbar-thumb-secondary"
 	>
-		{#each requests as request}
-			{@const requestID = request.id}
-			{@const methodLowCase = request.method.toLowerCase()}
+		{#each tabs as tab}
+			{@const tabID = tab.id}
+			{@const methodLowCase = tab.method.toLowerCase()}
 
-			<ContextMenuEditRequest {requestID}>
+			<ContextMenuEditRequest requestID={tabID}>
 				<Tabs.Trigger
 					class="relative justify-between gap-2 min-w-52 h-12 before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
-					aria-label={request.name}
-					value={request.id}
-					on:click={() => handleActiveTab(request.id)}
+					aria-label={tab.name}
+					value={tab.id}
+					on:click={() => handleCurrentTab(tab.id)}
 				>
-					<DialogEditRequest {requestID} {form}>
+					<DialogEditRequest requestID={tabID} {form}>
 						<div class="tab-trigger-content">
 							<span class="method" style="color: var(--method-{methodLowCase}-color)">
-								{request.method}
+								{tab.method}
 							</span>
-							<span class="name">{request.name}</span>
+							<span class="name">{tab.name}</span>
 						</div>
 					</DialogEditRequest>
 
-					{#if !hasOnlyOneRequest}
-						<div class="tab-trigger-suffix">
-							<Button
-								size="icon"
-								variant="ghost"
-								class="w-5 h-5"
-								role="button"
-								tabindex={0}
-								aria-label="Close Tab"
-								disabled={hasOnlyOneRequest}
-								on:click={(event) => handleCloseTab(event, requestID)}
-								on:keydown={(event) => handleCloseTab(event, requestID)}
-							>
-								<X class="w-4 h-4" />
-								<span role="presentation" class="sr-only">Close Tab</span>
-							</Button>
-						</div>
-					{/if}
+					<div class="tab-trigger-suffix">
+						<Button
+							size="icon"
+							variant="ghost"
+							class="w-5 h-5"
+							role="button"
+							tabindex={0}
+							aria-label="Close Tab"
+							on:click={(event) => handleCloseTab(event, tabID)}
+							on:keydown={(event) => handleCloseTab(event, tabID)}
+						>
+							<X class="w-4 h-4" />
+							<span role="presentation" class="sr-only">Close Tab</span>
+						</Button>
+					</div>
 				</Tabs.Trigger>
 			</ContextMenuEditRequest>
 		{/each}
@@ -82,18 +74,18 @@
 			role="button"
 			tabindex={0}
 			aria-label="Add Request"
-			on:click={restStore.addRequest}
+			on:click={tabStore.add}
 		>
 			<Plus class="w-4 h-4" />
 			<span role="presentation" class="sr-only">Add Request</span>
 		</Button>
 	</Tabs.List>
 
-	{#each requests as request}
-		{@const requestID = request.id}
+	{#each tabs as tab}
+		{@const tabID = tab.id}
 
-		<Tabs.Content value={requestID} class="m-0 p-4">
-			<TabRequest {requestID} {form} />
+		<Tabs.Content value={tabID} class="m-0 p-4">
+			<TabRequest requestID={tabID} {form} />
 		</Tabs.Content>
 	{/each}
 </Tabs.Root>

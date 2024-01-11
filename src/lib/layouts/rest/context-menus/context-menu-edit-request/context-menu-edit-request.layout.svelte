@@ -1,9 +1,9 @@
 <script lang="ts" context="module">
 	import { onDestroy } from 'svelte';
-	import { getRESTStore } from '$lib/stores';
+	import { getRESTTabStore } from '$lib/stores';
 	import * as ContextMenu from '$lib/components/ui/context-menu';
 	import { Copy, FileEdit, XCircle, XSquare } from 'lucide-svelte';
-	import type { TRESTRequestSchemaInfer } from '$lib/validators';
+	import type { TRESTRequestInfer } from '$lib/validators';
 	import type { ComponentType } from 'svelte';
 
 	type TEditRequestCTXMenuOption = {
@@ -16,14 +16,15 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { requestID: TRESTRequestSchemaInfer['id'] };
+	type $$Props = { requestID: TRESTRequestInfer['id'] };
 
 	export let requestID: $$Props['requestID'];
 	let open = false;
 
-	const restStore = getRESTStore();
+	const restTabStore = getRESTTabStore();
+	$: ({ tabs } = $restTabStore);
 
-	$: hasOnlyOneRequest = $restStore.requests.length === 1;
+	$: hasOnlyOneTab = tabs.length === 1;
 	$: open ? handleAddWindowEvents() : handleRemoveWindowEvents();
 
 	const options = [
@@ -31,27 +32,26 @@
 			label: 'Rename Request',
 			shortcut: 'R',
 			icon: FileEdit,
-			action: () => restStore.setEditRequest(requestID)
+			action: () => restTabStore.setEditing(requestID)
 		},
 		{
 			label: 'Duplicate Tab',
 			shortcut: 'D',
 			icon: Copy,
-			action: () => restStore.duplicateRequest(requestID)
+			action: () => restTabStore.duplicate(requestID)
 		},
 		{
 			label: 'Close Tab',
 			shortcut: 'W',
 			icon: XCircle,
-			action: () => restStore.closeRequest(requestID),
-			showOnlyIf: () => !hasOnlyOneRequest
+			action: () => restTabStore.close(requestID)
 		},
 		{
 			label: 'Close other Tabs',
 			shortcut: 'X',
 			icon: XSquare,
-			action: () => restStore.closeOtherRequests(requestID),
-			showOnlyIf: () => !hasOnlyOneRequest
+			action: () => restTabStore.closeOthers(requestID),
+			showOnlyIf: () => !hasOnlyOneTab
 		}
 	] satisfies Array<TEditRequestCTXMenuOption>;
 

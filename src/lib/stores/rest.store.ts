@@ -1,60 +1,33 @@
 import { browser } from '$app/environment';
 import { getContext, setContext } from 'svelte';
 import { get, writable, type StartStopNotifier, type Writable } from 'svelte/store';
-import { randomID } from '$lib/utils';
-import type { TRESTRequestSchemaInfer } from '$lib/validators';
+import type { TRESTRequestInfer } from '$lib/validators';
 
-type TRESTDataTemp = {
-	editRequest?: TRESTRequestSchemaInfer['id'];
-};
-type TRESTDataPersist = {
-	requests: Array<TRESTRequestSchemaInfer>;
-	activeRequest: TRESTRequestSchemaInfer['id'];
-};
-type TRESTData = TRESTDataPersist & TRESTDataTemp;
+type TRESTData = { requests: Array<TRESTRequestInfer> };
 type TRESTActions = {
-	addRequest: () => void;
-	getRequest: (id: TRESTRequestSchemaInfer['id']) => TRESTRequestSchemaInfer | undefined;
-	setActiveRequest: (id: TRESTRequestSchemaInfer['id']) => void;
-	setEditRequest: (id: TRESTRequestSchemaInfer['id'] | undefined) => void;
-	closeRequest: (id: TRESTRequestSchemaInfer['id']) => void;
-	closeOtherRequests: (id: TRESTRequestSchemaInfer['id']) => void;
-	duplicateRequest: (id: TRESTRequestSchemaInfer['id']) => void;
-	updateRequest: (
-		id: TRESTRequestSchemaInfer['id'],
-		request: Partial<TRESTRequestSchemaInfer>
-	) => void;
+	add: (request: TRESTRequestInfer) => void;
+	get: (id: TRESTRequestInfer['id']) => TRESTRequestInfer | undefined;
+	update: (id: TRESTRequestInfer['id'], request: Partial<TRESTRequestInfer>) => void;
 };
 type TRESTStore = Writable<TRESTData> & TRESTActions;
 
-const REST_CTX = 'REST_CTX';
-const REST_STORAGE_KEY = 'collectionsREST';
-const DEFAULT_REQUEST: Omit<TRESTRequestSchemaInfer, 'id'> = {
-	name: 'Untitled',
-	url: 'https://jsonplaceholder.typicode.com/todos/1',
-	method: 'GET'
-};
-const INITIAL_REQUEST = { ...DEFAULT_REQUEST, id: randomID() };
-const REST_INITIAL_DATA: TRESTData = {
-	requests: [INITIAL_REQUEST],
-	activeRequest: INITIAL_REQUEST.id
-};
+const CTX = 'REST_COLLECTION_CTX';
+const STORAGE_KEY = 'collectionsREST';
+const INITIAL_DATA: TRESTData = { requests: [] };
 
-export const setRESTStore = (
-	initialData: Partial<TRESTData> = REST_INITIAL_DATA,
+export function setRESTStore(
+	initialData: Partial<TRESTData> = INITIAL_DATA,
 	start: StartStopNotifier<TRESTData> = () => {}
-) => {
+) {
 	let channel: BroadcastChannel | null;
 
-	const data: TRESTData = browser
-		? JSON.parse(String(localStorage.getItem(REST_STORAGE_KEY))) ?? initialData
-		: initialData;
+	const storedData = browser ? JSON.parse(String(localStorage.getItem(STORAGE_KEY))) : undefined;
+	const data: TRESTData = storedData ?? initialData;
 
 	const store = writable(data, (set, update) => {
-		channel = new BroadcastChannel(REST_STORAGE_KEY);
+		channel = new BroadcastChannel(STORAGE_KEY);
 		channel.addEventListener('message', ({ data }) => {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { editRequest, ...dataPersist } = data as TRESTData;
+			const dataPersist = data as TRESTData;
 			update((state) => ({ ...state, ...dataPersist }));
 		});
 
@@ -69,28 +42,23 @@ export const setRESTStore = (
 	function saveData(data: TRESTData) {
 		if (!browser) return;
 
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { editRequest, ...dataPersist } = data;
-
-		localStorage.setItem(REST_STORAGE_KEY, JSON.stringify(dataPersist));
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 		channel?.postMessage(data);
 	}
 
 	const actions: TRESTActions = {
-		addRequest: () => {
+		add: (request) => {
 			store.update((state) => {
-				const generatedID = randomID();
-				state.requests.push({ ...DEFAULT_REQUEST, id: generatedID });
-				state.activeRequest = generatedID;
+				state.requests.push(request);
 				saveData(state);
 				return state;
 			});
 		},
-		getRequest: (id) => {
+		get: (id) => {
 			const { requests } = get(store);
 			return requests.find((request) => request.id === id);
 		},
-		updateRequest: (id, request) => {
+		update: (id, request) => {
 			store.update((state) => {
 				const index = state.requests.findIndex((request) => request.id === id);
 				if (index === -1) return state;
@@ -99,72 +67,11 @@ export const setRESTStore = (
 				saveData(state);
 				return state;
 			});
-		},
-		duplicateRequest: (id) => {
-			store.update((state) => {
-				const index = state.requests.findIndex((request) => request.id === id);
-				if (index === -1) return state;
-
-				const request = state.requests[index];
-				const generatedID = randomID();
-				state.requests.splice(index + 1, 0, { ...structuredClone(request), id: generatedID });
-				state.activeRequest = generatedID;
-				saveData(state);
-				return state;
-			});
-		},
-		setActiveRequest: (id) => {
-			store.update((state) => {
-				const index = state.requests.findIndex((request) => request.id === id);
-				if (index === -1) return state;
-
-				state.activeRequest = id;
-				saveData(state);
-				return state;
-			});
-		},
-		setEditRequest: (id) => {
-			store.update((state) => {
-				if (!id) {
-					state.editRequest = undefined;
-					saveData(state);
-					return state;
-				}
-
-				const index = state.requests.findIndex((request) => request.id === id);
-				if (index === -1) return state;
-
-				state.editRequest = id;
-				saveData(state);
-				return state;
-			});
-		},
-		closeRequest: (id) => {
-			store.update((state) => {
-				const index = state.requests.findIndex((request) => request.id === id);
-				if (index === -1) return state;
-
-				state.requests = state.requests.filter((request) => request.id !== id);
-				state.activeRequest = index === 0 ? state.requests[0]?.id : state.requests[index - 1]?.id;
-				saveData(state);
-				return state;
-			});
-		},
-		closeOtherRequests: (id) => {
-			store.update((state) => {
-				const index = state.requests.findIndex((request) => request.id === id);
-				if (index === -1) return state;
-
-				state.requests = [state.requests[index]];
-				state.activeRequest = id;
-				saveData(state);
-				return state;
-			});
 		}
 	};
 
-	setContext(REST_CTX, { ...store, ...actions });
+	setContext(CTX, { ...store, ...actions });
 	return store;
-};
+}
 
-export const getRESTStore = () => getContext<TRESTStore>(REST_CTX);
+export const getRESTStore = () => getContext<TRESTStore>(CTX);

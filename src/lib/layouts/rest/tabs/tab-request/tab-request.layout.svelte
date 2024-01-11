@@ -1,10 +1,10 @@
 <script lang="ts" context="module">
-	import { getRESTStore } from '$lib/stores';
-	import { randomID } from '$lib/utils';
+	import { getRESTTabStore } from '$lib/stores';
+	import { generateUUID } from '$lib/utils';
 	import {
 		editRequestSchema as schema,
 		type TRESTRequestSchema,
-		type TRESTRequestSchemaInfer
+		type TRESTRequestInfer
 	} from '$lib/validators';
 	import * as Form from '$lib/components/ui/form';
 	import { superForm } from 'sveltekit-superforms/client';
@@ -16,16 +16,18 @@
 
 <script lang="ts">
 	type $$Props = {
-		requestID: TRESTRequestSchemaInfer['id'];
+		requestID: TRESTRequestInfer['id'];
 		form: SuperValidated<TRESTRequestSchema>;
 	};
 
 	export let form: $$Props['form'];
 	export let requestID: $$Props['requestID'];
 
-	const restStore = getRESTStore();
-	const formID = randomID();
-	const request = restStore.getRequest(requestID) as TRESTRequestSchemaInfer;
+	const tabStore = getRESTTabStore();
+	$: ({ tabs } = $tabStore);
+
+	const formID = generateUUID();
+	const request = tabStore.get(requestID) as TRESTRequestInfer;
 	const uniqueForm = { ...structuredClone(form), id: formID, data: request };
 	const methodOptions = schema.shape.method.options;
 
@@ -33,6 +35,7 @@
 	let controller = new AbortController();
 
 	const superFrm = superForm(uniqueForm, {
+		SPA: true,
 		validators: schema,
 		validationMethod: 'onblur',
 		taintedMessage: false,
@@ -59,18 +62,18 @@
 
 	$: ({ form: formValue } = superFrm);
 	$: formAction = (sending ? 'cancel' : 'send') as TFormAction;
-	$: if ($restStore.requests) {
-		const updatedRequest = restStore.getRequest(requestID);
+	$: if (tabs) {
+		const updatedRequest = tabStore.get(requestID);
 		if (updatedRequest) $formValue = updatedRequest;
 	}
 
 	function onChange() {
-		restStore.updateRequest(requestID, $formValue);
+		tabStore.update(requestID, $formValue);
 	}
 
 	function onSelectedChange(selected: ComponentProps<Form.Select>['selected']) {
-		restStore.updateRequest(requestID, {
-			method: selected?.value as TRESTRequestSchemaInfer['method']
+		tabStore.update(requestID, {
+			method: selected?.value as TRESTRequestInfer['method']
 		});
 	}
 </script>
@@ -93,7 +96,7 @@
 						onSelectedChange={(value) => onSelectedChange(value)}
 					>
 						<Form.SelectTrigger
-							class="relative bg-input font-semibold rounded-l-md rounded-r-none focus:z-10"
+							class="relative bg-input rounded-l-md rounded-r-none font-semibold focus:z-10"
 						/>
 						<Form.SelectContent>
 							{#each methodOptions as method}
@@ -119,7 +122,7 @@
 			</Form.Field>
 		</Form.Join>
 
-		<Form.Button type="submit">
+		<Form.Button type="submit" class="w-24">
 			{#if sending}
 				Cancel
 			{:else}

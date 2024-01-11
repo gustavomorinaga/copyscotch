@@ -23,6 +23,7 @@
 		"@sveltejs/kit": "2.0.6",
 		"@sveltejs/vite-plugin-svelte": "3.0.1",
 		"@tanstack/svelte-virtual": "3.0.1",
+		"@types/uuid": "^9.0.7",
 		"@typescript-eslint/eslint-plugin": "6.16.0",
 		"@typescript-eslint/parser": "6.16.0",
 		"autoprefixer": "10.4.16",
@@ -44,6 +45,7 @@
 		"tailwindcss": "3.4.0",
 		"tslib": "2.6.2",
 		"typescript": "5.3.3",
+		"uuid": "^9.0.1",
 		"vite": "5.0.10"
 	},
 	"dependencies": {

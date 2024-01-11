@@ -1,18 +1,16 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { setRESTStore } from '$lib/stores';
+	import { setRESTStore, setRESTTabStore } from '$lib/stores';
 	import { Center } from '$lib/components/ui/center';
 	import { ViewREST } from '$lib/layouts';
+	import { executeParallel } from '$lib/utils';
 	import { Loader } from 'lucide-svelte';
 
 	export let data;
 	let loading = true;
 
-	const loadStore = new Promise((resolve) => resolve(setRESTStore()));
-
-	onMount(async () => {
-		await loadStore.finally(() => (loading = false));
-	});
+	(async () => {
+		await executeParallel([setRESTStore, setRESTTabStore]).finally(() => (loading = false));
+	})();
 </script>
 
 {#if loading}

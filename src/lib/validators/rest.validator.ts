@@ -21,4 +21,4 @@ export const requestSchema = z.object({
 export const editRequestSchema = requestSchema;
 
 export type TRESTRequestSchema = typeof requestSchema;
-export type TRESTRequestSchemaInfer = z.infer<TRESTRequestSchema>;
+export type TRESTRequestInfer = z.infer<TRESTRequestSchema>;
