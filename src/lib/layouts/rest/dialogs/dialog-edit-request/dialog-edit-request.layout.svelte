@@ -1,11 +1,6 @@
 <script lang="ts" context="module">
 	import { getRESTTabStore } from '$lib/stores';
-	import {
-		RESTRequestSchema,
-		type TRESTRequestInfer,
-		type TRESTTabInfer,
-		type TRESTRequestSchema
-	} from '$lib/validators';
+	import { RESTRequestSchema, type TRESTTabInfer, type TRESTRequestSchema } from '$lib/validators';
 	import { generateUUID } from '$lib/utils';
 	import { Button } from '$lib/components/ui/button';
 	import * as Form from '$lib/components/ui/form';
@@ -17,20 +12,20 @@
 </script>
 
 <script lang="ts">
-	type $$Props = {
-		tabID: TRESTRequestInfer['id'];
-		form: SuperValidated<TRESTRequestSchema>;
-	};
+	type $$Props = { form: SuperValidated<TRESTRequestSchema> };
 
 	export let form: $$Props['form'];
-	export let tabID: $$Props['tabID'];
 
 	const tabStore = getRESTTabStore();
-	$: ({ current, editing } = $tabStore);
+	$: ({ editing } = $tabStore);
+	$: tab = (editing ? tabStore.get(editing) : {}) as TRESTTabInfer;
 
 	const formID = generateUUID();
-	const { context: request } = tabStore.get(tabID) as TRESTTabInfer;
-	const uniqueForm = { ...structuredClone(form), id: formID, data: request };
+	const uniqueForm: $$Props['form'] = {
+		...structuredClone(form),
+		id: formID,
+		data: { ...tab?.context }
+	};
 
 	const superFrm = superForm(uniqueForm, {
 		SPA: true,
@@ -47,19 +42,12 @@
 	let open = false;
 
 	$: ({ form: formValue } = superFrm);
-	$: if (editing === tabID) open = true;
-	$: if (current) {
-		const updatedTab = tabStore.get(tabID);
-		if (updatedTab) $formValue = updatedTab.context;
-	}
+	$: if (editing && editing === tab.id) open = true;
+	$: if (editing) superFrm.reset({ data: tab.context });
 
 	function getAction(url: URL) {
 		const [action] = [...url.searchParams.keys()];
 		return action.replace('/', '') as TFormAction;
-	}
-
-	function onDblClick() {
-		tabStore.setEditing(tabID);
 	}
 
 	function handleCancel() {
@@ -69,8 +57,9 @@
 	}
 
 	function handleSave() {
-		tabStore.update(tabID, $formValue);
+		tabStore.update(tab.id, $formValue);
 		tabStore.setEditing(undefined);
+		tabStore.setDirty(tab.id, true);
 		open = false;
 	}
 
@@ -86,14 +75,8 @@
 	}
 </script>
 
-<Dialog.Root bind:open closeOnOutsideClick={false} onOpenChange={handleOpenChange}>
-	<Dialog.Trigger asChild>
-		<div role="presentation" tabindex="-1" on:dblclick={onDblClick}>
-			<slot />
-		</div>
-	</Dialog.Trigger>
-
-	<Dialog.Content transitionConfig={{ delay: 1000 }}>
+<Dialog.Root {open} closeOnOutsideClick={false} onOpenChange={handleOpenChange}>
+	<Dialog.Content>
 		<Dialog.Header>
 			<Dialog.Title>Edit Request</Dialog.Title>
 		</Dialog.Header>

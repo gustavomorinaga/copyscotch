@@ -4,7 +4,10 @@ import { get, writable, type StartStopNotifier, type Writable } from 'svelte/sto
 import { generateUUID } from '$lib/utils';
 import type { TRESTTabInfer } from '$lib/validators';
 
-export type TRESTTabDataTemp = { editing?: TRESTTabInfer['context']['id'] };
+export type TRESTTabDataTemp = {
+	editing?: TRESTTabInfer['context']['id'];
+	tainted?: TRESTTabInfer['context']['id'];
+};
 export type TRESTTabDataPersist = {
 	tabs: Array<TRESTTabInfer>;
 	current?: TRESTTabInfer['context']['id'];
@@ -18,6 +21,7 @@ export type TRESTTabActions = {
 	setCurrent: (id: TRESTTabInfer['context']['id'] | undefined) => void;
 	setEditing: (id: TRESTTabInfer['context']['id'] | undefined) => void;
 	setDirty: (id: TRESTTabInfer['context']['id'], dirty: TRESTTabInfer['dirty']) => void;
+	setTainted: (id: TRESTTabInfer['context']['id'] | undefined) => void;
 	close: (id: TRESTTabInfer['context']['id']) => void;
 	closeOthers: (id: TRESTTabInfer['context']['id']) => void;
 	duplicate: (id: TRESTTabInfer['context']['id']) => void;
@@ -42,12 +46,14 @@ export function setRESTTabStore(
 	const data: TRESTTabData = storedData ? JSON.parse(storedData) : initialData;
 
 	const store = writable(data, (set, update) => {
-		channel = new BroadcastChannel(STORAGE_KEY);
-		channel.addEventListener('message', (event) => {
-			const { tabs, current } = event.data as TRESTTabData;
+		function syncData(event: MessageEvent<TRESTTabData>) {
+			const { tabs, current } = event.data;
 			const dataPersist: TRESTTabDataPersist = { tabs, current };
 			update((state) => ({ ...state, ...dataPersist }));
-		});
+		}
+
+		channel = new BroadcastChannel(STORAGE_KEY);
+		channel.addEventListener('message', syncData);
 
 		const stopNotifier = start(set, update);
 
@@ -61,9 +67,9 @@ export function setRESTTabStore(
 		if (!browser) return;
 
 		const { tabs, current } = data;
-		const persistData: TRESTTabDataPersist = { tabs, current };
+		const dataPersist: TRESTTabDataPersist = { tabs, current };
 
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(persistData));
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(dataPersist));
 		channel?.postMessage(data);
 	}
 
@@ -110,7 +116,8 @@ export function setRESTTabStore(
 				const newTab = {
 					...clonedTab,
 					id: newTabID,
-					context: { ...clonedTab.context, id: newRequestID }
+					context: { ...clonedTab.context, id: newRequestID },
+					dirty: false,
 				};
 				state.tabs.splice(index + 1, 0, newTab);
 				state.current = newTab.id;
@@ -155,6 +162,25 @@ export function setRESTTabStore(
 
 			return store.update((state) => {
 				state.tabs[index].dirty = dirty;
+				saveData(state);
+				return state;
+			});
+		},
+		setTainted: (id) => {
+			if (!id) {
+				return store.update((state) => {
+					state.tainted = undefined;
+					saveData(state);
+					return state;
+				});
+			}
+
+			const { tabs } = get(store);
+			const index = tabs.findIndex((tab) => tab.id === id);
+			if (index === -1) return;
+
+			return store.update((state) => {
+				state.tainted = id;
 				saveData(state);
 				return state;
 			});

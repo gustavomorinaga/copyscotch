@@ -5,9 +5,8 @@ import type { TRESTRequestInfer } from '$lib/validators';
 
 type TRESTData = { requests: Array<TRESTRequestInfer> };
 type TRESTActions = {
-	add: (request: TRESTRequestInfer) => void;
 	get: (id: TRESTRequestInfer['id']) => TRESTRequestInfer | undefined;
-	update: (id: TRESTRequestInfer['id'], request: Partial<TRESTRequestInfer>) => void;
+	save: (request: TRESTRequestInfer) => void;
 };
 type TRESTStore = Writable<TRESTData> & TRESTActions;
 
@@ -21,20 +20,21 @@ export function setRESTStore(
 ) {
 	let channel: BroadcastChannel | null;
 
-	const storedData = browser ? JSON.parse(String(localStorage.getItem(STORAGE_KEY))) : undefined;
-	const data: TRESTData = storedData ?? initialData;
+	const storedData = browser ? localStorage.getItem(STORAGE_KEY) : undefined;
+	const data: TRESTData = storedData ? JSON.parse(storedData) : initialData;
 
 	const store = writable(data, (set, update) => {
+		function syncData(event: MessageEvent<TRESTData>) {
+			update((state) => ({ ...state, ...event.data }));
+			channel?.close();
+		}
+
 		channel = new BroadcastChannel(STORAGE_KEY);
-		channel.addEventListener('message', ({ data }) => {
-			const dataPersist = data as TRESTData;
-			update((state) => ({ ...state, ...dataPersist }));
-		});
+		channel.addEventListener('message', syncData);
 
 		const stopNotifier = start(set, update);
 
 		return () => {
-			channel?.close();
 			if (stopNotifier) stopNotifier();
 		};
 	});
@@ -47,23 +47,18 @@ export function setRESTStore(
 	}
 
 	const actions: TRESTActions = {
-		add: (request) => {
-			store.update((state) => {
-				state.requests.push(request);
-				saveData(state);
-				return state;
-			});
-		},
 		get: (id) => {
 			const { requests } = get(store);
 			return requests.find((request) => request.id === id);
 		},
-		update: (id, request) => {
-			store.update((state) => {
-				const index = state.requests.findIndex((request) => request.id === id);
-				if (index === -1) return state;
+		save: (request) => {
+			const { requests } = get(store);
+			const index = requests.findIndex(({ id }) => request.id === id);
+			const isNew = index === -1;
 
-				state.requests[index] = { ...state.requests[index], ...request };
+			return store.update((state) => {
+				if (isNew) state.requests.push(request);
+				else state.requests[index] = request;
 				saveData(state);
 				return state;
 			});

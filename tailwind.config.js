@@ -57,6 +57,9 @@ const config = {
 			},
 			fontFamily: {
 				sans: ['Inter Variable', ...fontFamily.sans]
+			},
+			fontSize: {
+				tiny: '0.750rem'
 			}
 		}
 	}
