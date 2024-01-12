@@ -39,15 +39,14 @@ export function setRESTTabStore(
 ) {
 	let channel: BroadcastChannel | null;
 
-	const storedData = browser ? JSON.parse(String(localStorage.getItem(STORAGE_KEY))) : undefined;
-	const data: TRESTTabData = storedData ?? initialData;
+	const storedData = browser ? localStorage.getItem(STORAGE_KEY) : undefined;
+	const data: TRESTTabData = storedData ? JSON.parse(storedData) : initialData;
 
 	const store = writable(data, (set, update) => {
 		channel = new BroadcastChannel(STORAGE_KEY);
-		channel.addEventListener('message', ({ data }) => {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { editing, ...dataPersist } = data as TRESTTabData;
-			update((state) => ({ ...state, ...dataPersist }));
+		channel.addEventListener('message', (event) => {
+			const data = event.data as TRESTTabData;
+			update((state) => ({ ...state, ...data }));
 		});
 
 		const stopNotifier = start(set, update);
@@ -61,16 +60,20 @@ export function setRESTTabStore(
 	function saveData(data: TRESTTabData) {
 		if (!browser) return;
 
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+		const { tabs, current } = data;
+		const persistData: TRESTTabDataPersist = { tabs, current };
+
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(persistData));
 		channel?.postMessage(data);
 	}
 
 	const actions: TRESTTabActions = {
 		add: () => {
 			store.update((state) => {
-				const id = generateUUID();
-				state.tabs.push({ ...DEFAULT_REQUEST, id });
-				state.current = id;
+				const newID = generateUUID();
+				const tab = { ...DEFAULT_REQUEST, id: newID };
+				state.tabs.push(tab);
+				state.current = tab.id;
 				saveData(state);
 				return state;
 			});
@@ -80,69 +83,84 @@ export function setRESTTabStore(
 			return tabs.find((tab) => tab.id === id);
 		},
 		update: (id, request) => {
-			store.update((state) => {
-				const index = state.tabs.findIndex((tab) => tab.id === id);
-				if (index === -1) return state;
+			const { tabs } = get(store);
+			const index = tabs.findIndex((tab) => tab.id === id);
+			if (index === -1) return;
 
+			store.update((state) => {
 				state.tabs[index] = { ...state.tabs[index], ...request };
 				saveData(state);
 				return state;
 			});
 		},
 		duplicate: (id) => {
-			store.update((state) => {
-				const index = state.tabs.findIndex((tab) => tab.id === id);
-				if (index === -1) return state;
+			const { tabs } = get(store);
+			const index = tabs.findIndex((tab) => tab.id === id);
+			if (index === -1) return;
 
-				const tab = state.tabs[index];
-				const duplicatedTab = { ...structuredClone(tab), id: generateUUID() };
-				state.tabs.splice(index + 1, 0, duplicatedTab);
-				state.current = duplicatedTab.id;
+			store.update((state) => {
+				const newID = generateUUID();
+				const tab = { ...structuredClone(state.tabs[index]), id: newID };
+				state.tabs.splice(index + 1, 0, tab);
+				state.current = tab.id;
 				saveData(state);
 				return state;
 			});
 		},
 		setCurrent: (id) => {
-			store.update((state) => {
-				const index = state.tabs.findIndex((tab) => tab.id === id);
-				if (index === -1) return state;
+			const { tabs, current } = get(store);
+			const index = tabs.findIndex((tab) => tab.id === id);
+			if (index === -1 || current === id) return;
 
+			store.update((state) => {
 				state.current = id;
 				saveData(state);
 				return state;
 			});
 		},
 		setEditing: (id) => {
-			store.update((state) => {
-				const index = state.tabs.findIndex((tab) => tab.id === id);
-				if (index === -1) return state;
+			if (!id) {
+				store.update((state) => {
+					state.editing = undefined;
+					saveData(state);
+					return state;
+				});
+				return;
+			}
 
+			const { tabs } = get(store);
+			const index = tabs.findIndex((tab) => tab.id === id);
+			if (index === -1) return;
+
+			store.update((state) => {
 				state.editing = id;
 				saveData(state);
 				return state;
 			});
 		},
 		close: (id) => {
+			const { tabs, current } = get(store);
+			const index = tabs.findIndex((tab) => tab.id === id);
+			if (index === -1) return;
+
+			const isCurrent = current === id;
+
 			store.update((state) => {
-				const index = state.tabs.findIndex((tab) => tab.id === id);
-				if (index === -1) return state;
+				state.tabs.splice(index, 1);
 
-				const isCurrent = state.current === id;
-				if (isCurrent) state.current = state.tabs.length ? state.tabs[index - 1]?.id : undefined;
-
-				state.tabs = state.tabs.filter((request) => request.id !== id);
-				state.current = index === 0 ? state.tabs[0]?.id : state.tabs[index - 1]?.id;
+				if (isCurrent) state.current = state.tabs.at(-1)?.id;
 
 				saveData(state);
 				return state;
 			});
 		},
 		closeOthers: (id) => {
-			store.update((state) => {
-				const index = state.tabs.findIndex((tab) => tab.id === id);
-				if (index === -1) return state;
+			const { tabs } = get(store);
+			const index = tabs.findIndex((tab) => tab.id === id);
+			if (index === -1) return;
 
-				state.tabs = state.tabs.filter((tab) => tab.id === id);
+			store.update((state) => {
+				state.tabs = [state.tabs[index]];
 				state.current = id;
 				saveData(state);
 				return state;

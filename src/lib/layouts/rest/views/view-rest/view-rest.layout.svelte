@@ -14,13 +14,19 @@
 	const tabStore = getRESTTabStore();
 	$: ({ tabs, current } = $tabStore);
 
-	function handleCurrentTab(id: TRESTRequestInfer['id']) {
+	function handleCurrentTab(event: MouseEvent, id: TRESTRequestInfer['id']) {
+		event.stopPropagation();
 		tabStore.setCurrent(id);
 	}
 
-	function handleCloseTab(event: MouseEvent | KeyboardEvent, requestID: TRESTRequestInfer['id']) {
+	function handleCloseTab(event: MouseEvent | KeyboardEvent, id: TRESTRequestInfer['id']) {
+		event.stopPropagation();
 		event.preventDefault();
-		tabStore.close(requestID);
+
+		const isMouseEvent = event instanceof MouseEvent;
+		const isKeyboardEvent = event instanceof KeyboardEvent && event.key === 'Enter';
+
+		if (isMouseEvent || isKeyboardEvent) tabStore.close(id);
 	}
 </script>
 
@@ -36,8 +42,8 @@
 				<Tabs.Trigger
 					class="relative justify-between gap-2 min-w-52 h-12 before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
 					aria-label={tab.name}
-					value={tab.id}
-					on:click={() => handleCurrentTab(tab.id)}
+					value={tabID}
+					on:click={(event) => handleCurrentTab(event, tabID)}
 				>
 					<DialogEditRequest requestID={tabID} {form}>
 						<div class="tab-trigger-content">
