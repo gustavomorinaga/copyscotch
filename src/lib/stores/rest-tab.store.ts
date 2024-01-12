@@ -45,8 +45,9 @@ export function setRESTTabStore(
 	const store = writable(data, (set, update) => {
 		channel = new BroadcastChannel(STORAGE_KEY);
 		channel.addEventListener('message', (event) => {
-			const data = event.data as TRESTTabData;
-			update((state) => ({ ...state, ...data }));
+			const { tabs, current } = event.data as TRESTTabData;
+			const dataPersist: TRESTTabDataPersist = { tabs, current };
+			update((state) => ({ ...state, ...dataPersist }));
 		});
 
 		const stopNotifier = start(set, update);

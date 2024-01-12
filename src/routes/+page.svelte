@@ -6,17 +6,12 @@
 	import { Loader } from 'lucide-svelte';
 
 	export let data;
-	let loading = true;
-
-	(async () => {
-		await executeParallel([setRESTStore, setRESTTabStore]).finally(() => (loading = false));
-	})();
 </script>
 
-{#if loading}
+{#await executeParallel([setRESTStore, setRESTTabStore])}
 	<Center>
 		<Loader class="animate-spin w-4 h-4" />
 	</Center>
-{:else}
+{:then}
 	<ViewREST form={data.form} />
-{/if}
+{/await}

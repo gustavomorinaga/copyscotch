@@ -8,7 +8,5 @@
 export const executeParallel = async <T extends (...args: Array<any>) => any>(
 	functions: Array<T>
 ) => {
-	return Promise.allSettled(functions.map((fn) => new Promise<T>((resolve) => resolve(fn())))).then(
-		(res) => res.map((promise) => (promise as PromiseFulfilledResult<T>).value)
-	);
+	return Promise.all(functions.map((fn) => new Promise<T>((resolve) => resolve(fn()))));
 };

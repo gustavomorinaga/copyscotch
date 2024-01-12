@@ -16,7 +16,6 @@
 	export let form: $$Props['form'];
 
 	const tabStore = getRESTTabStore();
-	$: ({ tabs, current } = $tabStore);
 
 	const tablistID = 'rest-tablist';
 	let tablistRef: HTMLElement;
@@ -46,7 +45,7 @@
 
 	function scrollToActiveTab() {
 		activeTabRef = tablistRef.querySelector('[data-state="active"]') as HTMLElement;
-		activeTabRef.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+		activeTabRef?.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
 	}
 
 	onMount(() => {
@@ -54,12 +53,12 @@
 	});
 </script>
 
-<Tabs.Root value={current}>
+<Tabs.Root value={$tabStore.current}>
 	<Tabs.List
 		id={tablistID}
 		class="relative flex justify-start rounded-none min-h-12 p-0 pr-16 overflow-hidden scroll-smooth"
 	>
-		{#each tabs as tab}
+		{#each $tabStore.tabs as tab}
 			{@const tabID = tab.id}
 			{@const methodLowCase = tab.method.toLowerCase()}
 
@@ -115,7 +114,7 @@
 		</Button>
 	</Tabs.List>
 
-	{#each tabs as tab}
+	{#each $tabStore.tabs as tab}
 		{@const tabID = tab.id}
 
 		<Tabs.Content value={tabID} class="m-0 p-4">
