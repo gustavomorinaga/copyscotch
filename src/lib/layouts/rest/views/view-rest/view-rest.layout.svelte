@@ -1,12 +1,16 @@
-<script lang="ts">
+<script lang="ts" context="module">
+	import { onMount } from 'svelte';
 	import { getRESTTabStore } from '$lib/stores';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { ContextMenuEditRequest, DialogEditRequest, TabRequest } from '$lib/layouts';
+	import { horizontalScroll } from '$lib/directives';
 	import { Plus, X } from 'lucide-svelte';
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import type { TRESTRequestSchema, TRESTRequestInfer } from '$lib/validators';
+</script>
 
+<script lang="ts">
 	type $$Props = { form: SuperValidated<TRESTRequestSchema> };
 
 	export let form: $$Props['form'];
@@ -14,9 +18,14 @@
 	const tabStore = getRESTTabStore();
 	$: ({ tabs, current } = $tabStore);
 
+	const tablistID = 'rest-tablist';
+	let tablistRef: HTMLElement;
+	let activeTabRef: HTMLElement;
+
 	function handleCurrentTab(event: MouseEvent, id: TRESTRequestInfer['id']) {
 		event.stopPropagation();
 		tabStore.setCurrent(id);
+		scrollToActiveTab();
 	}
 
 	function handleCloseTab(event: MouseEvent | KeyboardEvent, id: TRESTRequestInfer['id']) {
@@ -28,11 +37,27 @@
 
 		if (isMouseEvent || isKeyboardEvent) tabStore.close(id);
 	}
+
+	function setTablistScroll() {
+		tablistRef = document.getElementById(tablistID) as HTMLElement;
+		horizontalScroll(tablistRef);
+		scrollToActiveTab();
+	}
+
+	function scrollToActiveTab() {
+		activeTabRef = tablistRef.querySelector('[data-state="active"]') as HTMLElement;
+		activeTabRef.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+	}
+
+	onMount(() => {
+		setTablistScroll();
+	});
 </script>
 
 <Tabs.Root value={current}>
 	<Tabs.List
-		class="relative flex justify-start rounded-none h-12 p-0 overflow-x-auto scrollbar-thin scrollbar-thumb-secondary"
+		id={tablistID}
+		class="relative flex justify-start rounded-none min-h-12 p-0 pr-16 overflow-hidden scroll-smooth"
 	>
 		{#each tabs as tab}
 			{@const tabID = tab.id}
@@ -40,7 +65,7 @@
 
 			<ContextMenuEditRequest requestID={tabID}>
 				<Tabs.Trigger
-					class="relative justify-between gap-2 min-w-52 h-12 before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
+					class="relative justify-between shrink-0 gap-2 min-w-52 h-12 before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
 					aria-label={tab.name}
 					value={tabID}
 					on:click={(event) => handleCurrentTab(event, tabID)}
@@ -76,7 +101,7 @@
 		<Button
 			size="icon"
 			variant="ghost"
-			class="w-8 h-8 mx-3"
+			class="w-8 h-8 mx-3 shrink-0"
 			role="button"
 			tabindex={0}
 			aria-label="Add Request"

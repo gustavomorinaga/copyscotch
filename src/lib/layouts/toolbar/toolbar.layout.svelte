@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import { page } from '$app/stores';
 	import { Button } from '$lib/components/ui/button';
-	import { UploadCloud } from 'lucide-svelte';
+	// import { UploadCloud } from 'lucide-svelte';
 </script>
 
 <script lang="ts">

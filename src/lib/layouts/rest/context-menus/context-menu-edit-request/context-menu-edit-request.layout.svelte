@@ -82,7 +82,7 @@
 </script>
 
 <ContextMenu.Root bind:open>
-	<ContextMenu.Trigger>
+	<ContextMenu.Trigger class="min-w-fit">
 		<slot />
 	</ContextMenu.Trigger>
 	<ContextMenu.Content class="w-64">
