@@ -21,7 +21,7 @@ export const RESTRequestSchema = z.object({
 export const RESTTabSchema = z.object({
 	id: z.string().uuid(),
 	context: RESTRequestSchema,
-	dirty: z.boolean().optional()
+	dirty: z.boolean()
 });
 
 export type TRESTTabSchema = typeof RESTTabSchema;

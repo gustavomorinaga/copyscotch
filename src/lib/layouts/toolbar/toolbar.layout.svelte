@@ -14,7 +14,7 @@
 			size="sm"
 			variant="ghost"
 			href="/"
-			class="uppercase font-bold"
+			class="font-bold uppercase"
 			aria-current={isRootPage ? 'page' : 'false'}
 		>
 			Copyscotch

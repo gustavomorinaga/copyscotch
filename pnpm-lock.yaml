@@ -44,7 +44,7 @@ devDependencies:
     specifier: 3.0.1
     version: 3.0.1(svelte@4.2.8)
   '@types/uuid':
-    specifier: ^9.0.7
+    specifier: 9.0.7
     version: 9.0.7
   '@typescript-eslint/eslint-plugin':
     specifier: 6.16.0
@@ -82,9 +82,12 @@ devDependencies:
   prettier:
     specifier: 3.1.1
     version: 3.1.1
+  prettier-plugin-svelte:
+    specifier: 3.1.2
+    version: 3.1.2(prettier@3.1.1)(svelte@4.2.8)
   prettier-plugin-tailwindcss:
     specifier: 0.5.10
-    version: 0.5.10(prettier@3.1.1)
+    version: 0.5.10(prettier-plugin-svelte@3.1.2)(prettier@3.1.1)
   svelte:
     specifier: 4.2.8
     version: 4.2.8
@@ -110,7 +113,7 @@ devDependencies:
     specifier: 5.3.3
     version: 5.3.3
   uuid:
-    specifier: ^9.0.1
+    specifier: 9.0.1
     version: 9.0.1
   vite:
     specifier: 5.0.10
@@ -2700,7 +2703,17 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier-plugin-tailwindcss@0.5.10(prettier@3.1.1):
+  /prettier-plugin-svelte@3.1.2(prettier@3.1.1)(svelte@4.2.8):
+    resolution: {integrity: sha512-7xfMZtwgAWHMT0iZc8jN4o65zgbAQ3+O32V6W7pXrqNvKnHnkoyQCGCbKeUyXKZLbYE0YhFRnamfxfkEGxm8qA==}
+    peerDependencies:
+      prettier: ^3.0.0
+      svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
+    dependencies:
+      prettier: 3.1.1
+      svelte: 4.2.8
+    dev: true
+
+  /prettier-plugin-tailwindcss@0.5.10(prettier-plugin-svelte@3.1.2)(prettier@3.1.1):
     resolution: {integrity: sha512-9UGSejqFxGG6brYjFfTYlJ8zs4L/lvZg1AngFfaC5Fs1otSskASv5IWKmjPu5MlABQUtTKtMArKyYr/hWpXSUg==}
     engines: {node: '>=14.21.3'}
     peerDependencies:
@@ -2750,6 +2763,7 @@ packages:
         optional: true
     dependencies:
       prettier: 3.1.1
+      prettier-plugin-svelte: 3.1.2(prettier@3.1.1)(svelte@4.2.8)
     dev: true
 
   /prettier@3.1.1:

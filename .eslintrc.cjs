@@ -25,6 +25,30 @@ module.exports = {
 			parser: 'svelte-eslint-parser',
 			parserOptions: {
 				parser: '@typescript-eslint/parser'
+			},
+			rules: {
+				'@typescript-eslint/no-unused-vars': [
+					'warn',
+					{
+						argsIgnorePattern: '^_',
+						varsIgnorePattern: '^\\$\\$(Props|Events|Slots|Generic)$'
+					}
+				]
+			}
+		},
+		{
+			files: ['*.ts'],
+			parser: '@typescript-eslint/parser',
+			rules: {
+				'@typescript-eslint/ban-types': [
+					'error',
+					{
+						extendDefaults: true,
+						types: {
+							'{}': false
+						}
+					}
+				]
 			}
 		}
 	]

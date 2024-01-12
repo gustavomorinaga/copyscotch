@@ -8,6 +8,6 @@
 	export { className as class };
 </script>
 
-<div class={cn('flex flex-col items-center justify-center gap-2 my-auto', className)}>
+<div class={cn('my-auto flex flex-col items-center justify-center gap-2', className)}>
 	<slot />
 </div>

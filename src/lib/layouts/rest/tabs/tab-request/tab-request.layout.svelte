@@ -61,8 +61,9 @@
 		}
 	});
 
-	$: ({ form: formValue } = superFrm);
+	$: ({ form: formValue, tainted } = superFrm);
 	$: formAction = (sending ? 'cancel' : 'send') as TFormAction;
+	$: tabStore.setDirty(tabID, Boolean($tainted));
 	$: if (tabs) {
 		const updatedTab = tabStore.get(tabID);
 		if (updatedTab) $formValue = updatedTab.context;
@@ -97,7 +98,7 @@
 						onSelectedChange={(value) => onSelectedChange(value)}
 					>
 						<Form.SelectTrigger
-							class="relative bg-input rounded-l-md rounded-r-none font-semibold focus:z-10"
+							class="relative rounded-l-md rounded-r-none bg-input font-semibold focus:z-10"
 						/>
 						<Form.SelectContent>
 							{#each methodOptions as method}
@@ -117,7 +118,7 @@
 					<Form.Input
 						type="url"
 						placeholder="URL"
-						class="relative border-none bg-input rounded-l-none rounded-r-md focus:z-10"
+						class="relative rounded-l-none rounded-r-md border-none bg-input focus:z-10"
 					/>
 				</Form.Item>
 			</Form.Field>

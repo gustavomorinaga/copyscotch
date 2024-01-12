@@ -2,27 +2,31 @@ import { browser } from '$app/environment';
 import { getContext, setContext } from 'svelte';
 import { get, writable, type StartStopNotifier, type Writable } from 'svelte/store';
 import { generateUUID } from '$lib/utils';
-import type { TRESTRequestInfer, TRESTTabInfer } from '$lib/validators';
+import type { TRESTTabInfer } from '$lib/validators';
 
-export type TRESTTabDataTemp = { editing?: TRESTRequestInfer['id'] };
-export type TRESTTabDataPersist = { tabs: Array<TRESTTabInfer>; current?: TRESTRequestInfer['id'] };
+export type TRESTTabDataTemp = { editing?: TRESTTabInfer['context']['id'] };
+export type TRESTTabDataPersist = {
+	tabs: Array<TRESTTabInfer>;
+	current?: TRESTTabInfer['context']['id'];
+};
 export type TRESTTabData = TRESTTabDataPersist & TRESTTabDataTemp;
 export type TRESTTabStore = Writable<TRESTTabData> & TRESTTabActions;
 export type TRESTTabActions = {
 	add: () => void;
-	get: (id: TRESTRequestInfer['id']) => TRESTTabInfer | undefined;
-	update: (id: TRESTRequestInfer['id'], request: Partial<TRESTRequestInfer>) => void;
-	setCurrent: (id: TRESTRequestInfer['id'] | undefined) => void;
-	setEditing: (id: TRESTRequestInfer['id'] | undefined) => void;
-	close: (id: TRESTRequestInfer['id']) => void;
-	closeOthers: (id: TRESTRequestInfer['id']) => void;
-	duplicate: (id: TRESTRequestInfer['id']) => void;
+	get: (id: TRESTTabInfer['context']['id']) => TRESTTabInfer | undefined;
+	update: (id: TRESTTabInfer['context']['id'], request: Partial<TRESTTabInfer['context']>) => void;
+	setCurrent: (id: TRESTTabInfer['context']['id'] | undefined) => void;
+	setEditing: (id: TRESTTabInfer['context']['id'] | undefined) => void;
+	setDirty: (id: TRESTTabInfer['context']['id'], dirty: TRESTTabInfer['dirty']) => void;
+	close: (id: TRESTTabInfer['context']['id']) => void;
+	closeOthers: (id: TRESTTabInfer['context']['id']) => void;
+	duplicate: (id: TRESTTabInfer['context']['id']) => void;
 };
 
 const CTX = 'REST_TAB_CTX';
 const STORAGE_KEY = 'tabStateREST';
 const INITIAL_DATA: TRESTTabData = { tabs: [], current: undefined, editing: undefined };
-const DEFAULT_REQUEST: Omit<TRESTRequestInfer, 'id'> = {
+const DEFAULT_REQUEST: Omit<TRESTTabInfer['context'], 'id'> = {
 	name: 'Untitled',
 	url: 'https://jsonplaceholder.typicode.com/todos/1',
 	method: 'GET'
@@ -70,7 +74,8 @@ export function setRESTTabStore(
 				const newRequestID = generateUUID();
 				const newTab: TRESTTabInfer = {
 					id: newTabID,
-					context: { ...DEFAULT_REQUEST, id: newRequestID }
+					context: { ...DEFAULT_REQUEST, id: newRequestID },
+					dirty: false
 				};
 				state.tabs.push(newTab);
 				state.current = newTab.id;
@@ -139,6 +144,17 @@ export function setRESTTabStore(
 
 			return store.update((state) => {
 				state.editing = id;
+				saveData(state);
+				return state;
+			});
+		},
+		setDirty: (id, dirty) => {
+			const { tabs } = get(store);
+			const index = tabs.findIndex((tab) => tab.id === id);
+			if (index === -1) return;
+
+			return store.update((state) => {
+				state.tabs[index].dirty = dirty;
 				saveData(state);
 				return state;
 			});

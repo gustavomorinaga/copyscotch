@@ -90,7 +90,7 @@
 			{#if !option.showOnlyIf || option.showOnlyIf()}
 				<ContextMenu.Item inset on:click={option.action}>
 					{#if option.icon}
-						<svelte:component this={option.icon} class="w-4 h-4 mr-2" />
+						<svelte:component this={option.icon} class="mr-2 h-4 w-4" />
 					{/if}
 
 					<span>{option.label}</span>

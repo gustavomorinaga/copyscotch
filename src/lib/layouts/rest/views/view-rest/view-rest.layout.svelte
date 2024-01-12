@@ -5,7 +5,7 @@
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { ContextMenuEditRequest, DialogEditRequest, TabRequest } from '$lib/layouts';
 	import { horizontalScroll } from '$lib/directives';
-	import { Plus, X } from 'lucide-svelte';
+	import { Dot, Plus, X } from 'lucide-svelte';
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import type { TRESTRequestSchema, TRESTRequestInfer } from '$lib/validators';
 </script>
@@ -37,6 +37,8 @@
 		if (isMouseEvent || isKeyboardEvent) tabStore.close(id);
 	}
 
+	function handleSaveTab(id: TRESTRequestInfer['id']) {}
+
 	function setTablistScroll() {
 		tablistRef = document.getElementById(tablistID) as HTMLElement;
 		horizontalScroll(tablistRef);
@@ -56,7 +58,7 @@
 <Tabs.Root value={$tabStore.current}>
 	<Tabs.List
 		id={tablistID}
-		class="relative flex justify-start rounded-none min-h-12 p-0 pr-16 overflow-hidden scroll-smooth"
+		class="relative flex min-h-12 justify-start overflow-hidden scroll-smooth rounded-none p-0 pr-16"
 	>
 		{#each $tabStore.tabs as tab}
 			{@const tabID = tab.id}
@@ -64,7 +66,7 @@
 
 			<ContextMenuEditRequest {tabID}>
 				<Tabs.Trigger
-					class="relative justify-between shrink-0 gap-2 min-w-52 h-12 px-5 group/tab-trigger before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
+					class="group/tab-trigger relative h-12 min-w-52 shrink-0 justify-between gap-2 px-5 before:absolute before:inset-x-0 before:top-0 before:h-[.125rem] before:bg-transparent data-[state=active]:before:bg-primary"
 					aria-label={tab.context.name}
 					value={tabID}
 					on:click={(event) => handleCurrentTab(event, tabID)}
@@ -81,19 +83,27 @@
 						</div>
 					</DialogEditRequest>
 
-					<div class="tab-trigger-suffix invisible group-hover/tab-trigger:visible">
+					<div
+						class="tab-trigger-suffix group-hover/tab-trigger:visible"
+						class:invisible={!tab.dirty}
+					>
 						<Button
 							size="icon"
 							variant="ghost"
-							class="w-5 h-5"
+							class="h-5 w-5"
 							role="button"
 							tabindex={-1}
 							aria-label="Close Tab"
 							on:click={(event) => handleCloseTab(event, tabID)}
 							on:keydown={(event) => handleCloseTab(event, tabID)}
 						>
-							<X class="w-4 h-4" />
-							<span role="presentation" class="sr-only">Close Tab</span>
+							{#if tab.dirty}
+								<Dot class="h-4 w-4" style="stroke-width: 6" />
+								<span role="presentation" class="sr-only">Unsaved Changes</span>
+							{:else}
+								<X class="h-4 w-4" />
+								<span role="presentation" class="sr-only">Close Tab</span>
+							{/if}
 						</Button>
 					</div>
 				</Tabs.Trigger>
@@ -103,13 +113,13 @@
 		<Button
 			size="icon"
 			variant="ghost"
-			class="w-8 h-8 mx-3 shrink-0"
+			class="mx-3 h-8 w-8 shrink-0"
 			role="button"
 			tabindex={0}
 			aria-label="Add Request"
 			on:click={tabStore.add}
 		>
-			<Plus class="w-4 h-4" />
+			<Plus class="h-4 w-4" />
 			<span role="presentation" class="sr-only">Add Request</span>
 		</Button>
 	</Tabs.List>

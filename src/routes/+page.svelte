@@ -10,7 +10,7 @@
 
 {#await executeParallel([setRESTStore, setRESTTabStore])}
 	<Center>
-		<Loader class="animate-spin w-4 h-4" />
+		<Loader class="h-4 w-4 animate-spin" />
 	</Center>
 {:then}
 	<ViewREST form={data.form} />
