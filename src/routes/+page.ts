@@ -1,6 +1,6 @@
 import { superValidate } from 'sveltekit-superforms/client';
-import { editRequestSchema } from '$lib/validators';
+import { RESTRequestSchema } from '$lib/validators';
 
 export const load = async () => {
-	return { form: await superValidate(editRequestSchema) };
+	return { form: await superValidate(RESTRequestSchema) };
 };

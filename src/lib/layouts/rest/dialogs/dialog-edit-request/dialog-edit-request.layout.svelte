@@ -1,8 +1,9 @@
 <script lang="ts" context="module">
-	import { getRESTStore, getRESTTabStore } from '$lib/stores';
+	import { getRESTTabStore } from '$lib/stores';
 	import {
-		editRequestSchema as schema,
+		RESTRequestSchema,
 		type TRESTRequestInfer,
+		type TRESTTabInfer,
 		type TRESTRequestSchema
 	} from '$lib/validators';
 	import { generateUUID } from '$lib/utils';
@@ -17,23 +18,23 @@
 
 <script lang="ts">
 	type $$Props = {
-		requestID: TRESTRequestInfer['id'];
+		tabID: TRESTRequestInfer['id'];
 		form: SuperValidated<TRESTRequestSchema>;
 	};
 
 	export let form: $$Props['form'];
-	export let requestID: $$Props['requestID'];
+	export let tabID: $$Props['tabID'];
 
 	const tabStore = getRESTTabStore();
 	$: ({ current, editing } = $tabStore);
 
 	const formID = generateUUID();
-	const request = tabStore.get(requestID) as TRESTRequestInfer;
+	const { context: request } = tabStore.get(tabID) as TRESTTabInfer;
 	const uniqueForm = { ...structuredClone(form), id: formID, data: request };
 
 	const superFrm = superForm(uniqueForm, {
 		SPA: true,
-		validators: schema,
+		validators: RESTRequestSchema,
 		validationMethod: 'onblur',
 		taintedMessage: false,
 		onSubmit: (input) => {
@@ -46,10 +47,10 @@
 	let open = false;
 
 	$: ({ form: formValue } = superFrm);
-	$: if (editing === requestID) open = true;
+	$: if (editing === tabID) open = true;
 	$: if (current) {
-		const updatedRequest = tabStore.get(requestID);
-		if (updatedRequest) $formValue = updatedRequest;
+		const updatedTab = tabStore.get(tabID);
+		if (updatedTab) $formValue = updatedTab.context;
 	}
 
 	function getAction(url: URL) {
@@ -58,7 +59,7 @@
 	}
 
 	function onDblClick() {
-		tabStore.setEditing(requestID);
+		tabStore.setEditing(tabID);
 	}
 
 	function handleCancel() {
@@ -68,7 +69,7 @@
 	}
 
 	function handleSave() {
-		tabStore.update(requestID, $formValue);
+		tabStore.update(tabID, $formValue);
 		tabStore.setEditing(undefined);
 		open = false;
 	}
@@ -97,7 +98,14 @@
 			<Dialog.Title>Edit Request</Dialog.Title>
 		</Dialog.Header>
 
-		<Form.Root id={formID} form={superFrm} {schema} controlled action="?/save" let:config>
+		<Form.Root
+			id={formID}
+			form={superFrm}
+			schema={RESTRequestSchema}
+			controlled
+			action="?/save"
+			let:config
+		>
 			<Form.Field {config} name="name">
 				<Form.Item>
 					<Form.Label for="name">Name</Form.Label>

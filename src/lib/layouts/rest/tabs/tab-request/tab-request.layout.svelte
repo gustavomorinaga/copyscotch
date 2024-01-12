@@ -2,9 +2,10 @@
 	import { getRESTTabStore } from '$lib/stores';
 	import { generateUUID } from '$lib/utils';
 	import {
-		editRequestSchema as schema,
-		type TRESTRequestSchema,
-		type TRESTRequestInfer
+		RESTRequestSchema,
+		type TRESTRequestInfer,
+		type TRESTTabInfer,
+		type TRESTRequestSchema
 	} from '$lib/validators';
 	import * as Form from '$lib/components/ui/form';
 	import { superForm } from 'sveltekit-superforms/client';
@@ -16,27 +17,27 @@
 
 <script lang="ts">
 	type $$Props = {
-		requestID: TRESTRequestInfer['id'];
+		tabID: TRESTTabInfer['id'];
 		form: SuperValidated<TRESTRequestSchema>;
 	};
 
+	export let tabID: $$Props['tabID'];
 	export let form: $$Props['form'];
-	export let requestID: $$Props['requestID'];
 
 	const tabStore = getRESTTabStore();
 	$: ({ tabs } = $tabStore);
 
 	const formID = generateUUID();
-	const request = tabStore.get(requestID) as TRESTRequestInfer;
+	const { context: request } = tabStore.get(tabID) as TRESTTabInfer;
 	const uniqueForm = { ...structuredClone(form), id: formID, data: request };
-	const methodOptions = schema.shape.method.options;
+	const methodOptions = RESTRequestSchema.shape.method.options;
 
 	let sending = false;
 	let controller = new AbortController();
 
 	const superFrm = superForm(uniqueForm, {
 		SPA: true,
-		validators: schema,
+		validators: RESTRequestSchema,
 		validationMethod: 'onblur',
 		taintedMessage: false,
 		onSubmit: async (input) => {
@@ -63,16 +64,16 @@
 	$: ({ form: formValue } = superFrm);
 	$: formAction = (sending ? 'cancel' : 'send') as TFormAction;
 	$: if (tabs) {
-		const updatedRequest = tabStore.get(requestID);
-		if (updatedRequest) $formValue = updatedRequest;
+		const updatedTab = tabStore.get(tabID);
+		if (updatedTab) $formValue = updatedTab.context;
 	}
 
 	function onChange() {
-		tabStore.update(requestID, $formValue);
+		tabStore.update(tabID, $formValue);
 	}
 
 	function onSelectedChange(selected: ComponentProps<Form.Select>['selected']) {
-		tabStore.update(requestID, {
+		tabStore.update(tabID, {
 			method: selected?.value as TRESTRequestInfer['method']
 		});
 	}
@@ -81,7 +82,7 @@
 <Form.Root
 	id={formID}
 	form={superFrm}
-	{schema}
+	schema={RESTRequestSchema}
 	controlled
 	action="?/{formAction}"
 	let:config

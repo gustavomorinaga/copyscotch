@@ -2,20 +2,15 @@ import { browser } from '$app/environment';
 import { getContext, setContext } from 'svelte';
 import { get, writable, type StartStopNotifier, type Writable } from 'svelte/store';
 import { generateUUID } from '$lib/utils';
-import type { TRESTRequestInfer } from '$lib/validators';
+import type { TRESTRequestInfer, TRESTTabInfer } from '$lib/validators';
 
-type TRESTTabStore = Writable<TRESTTabData> & TRESTTabActions;
-type TRESTTabDataTemp = {
-	editing?: TRESTRequestInfer['id'];
-};
-type TRESTTabDataPersist = {
-	tabs: Array<TRESTRequestInfer>;
-	current?: TRESTRequestInfer['id'];
-};
-type TRESTTabData = TRESTTabDataPersist & TRESTTabDataTemp;
-type TRESTTabActions = {
+export type TRESTTabDataTemp = { editing?: TRESTRequestInfer['id'] };
+export type TRESTTabDataPersist = { tabs: Array<TRESTTabInfer>; current?: TRESTRequestInfer['id'] };
+export type TRESTTabData = TRESTTabDataPersist & TRESTTabDataTemp;
+export type TRESTTabStore = Writable<TRESTTabData> & TRESTTabActions;
+export type TRESTTabActions = {
 	add: () => void;
-	get: (id: TRESTRequestInfer['id']) => TRESTRequestInfer | undefined;
+	get: (id: TRESTRequestInfer['id']) => TRESTTabInfer | undefined;
 	update: (id: TRESTRequestInfer['id'], request: Partial<TRESTRequestInfer>) => void;
 	setCurrent: (id: TRESTRequestInfer['id'] | undefined) => void;
 	setEditing: (id: TRESTRequestInfer['id'] | undefined) => void;
@@ -70,11 +65,15 @@ export function setRESTTabStore(
 
 	const actions: TRESTTabActions = {
 		add: () => {
-			store.update((state) => {
-				const newID = generateUUID();
-				const tab = { ...DEFAULT_REQUEST, id: newID };
-				state.tabs.push(tab);
-				state.current = tab.id;
+			return store.update((state) => {
+				const newTabID = generateUUID();
+				const newRequestID = generateUUID();
+				const newTab: TRESTTabInfer = {
+					id: newTabID,
+					context: { ...DEFAULT_REQUEST, id: newRequestID }
+				};
+				state.tabs.push(newTab);
+				state.current = newTab.id;
 				saveData(state);
 				return state;
 			});
@@ -88,8 +87,8 @@ export function setRESTTabStore(
 			const index = tabs.findIndex((tab) => tab.id === id);
 			if (index === -1) return;
 
-			store.update((state) => {
-				state.tabs[index] = { ...state.tabs[index], ...request };
+			return store.update((state) => {
+				Object.assign(state.tabs[index].context, request);
 				saveData(state);
 				return state;
 			});
@@ -99,11 +98,17 @@ export function setRESTTabStore(
 			const index = tabs.findIndex((tab) => tab.id === id);
 			if (index === -1) return;
 
-			store.update((state) => {
-				const newID = generateUUID();
-				const tab = { ...structuredClone(state.tabs[index]), id: newID };
-				state.tabs.splice(index + 1, 0, tab);
-				state.current = tab.id;
+			return store.update((state) => {
+				const newTabID = generateUUID();
+				const newRequestID = generateUUID();
+				const clonedTab = structuredClone(state.tabs[index]);
+				const newTab = {
+					...clonedTab,
+					id: newTabID,
+					context: { ...clonedTab.context, id: newRequestID }
+				};
+				state.tabs.splice(index + 1, 0, newTab);
+				state.current = newTab.id;
 				saveData(state);
 				return state;
 			});
@@ -113,7 +118,7 @@ export function setRESTTabStore(
 			const index = tabs.findIndex((tab) => tab.id === id);
 			if (index === -1 || current === id) return;
 
-			store.update((state) => {
+			return store.update((state) => {
 				state.current = id;
 				saveData(state);
 				return state;
@@ -121,19 +126,18 @@ export function setRESTTabStore(
 		},
 		setEditing: (id) => {
 			if (!id) {
-				store.update((state) => {
+				return store.update((state) => {
 					state.editing = undefined;
 					saveData(state);
 					return state;
 				});
-				return;
 			}
 
 			const { tabs } = get(store);
 			const index = tabs.findIndex((tab) => tab.id === id);
 			if (index === -1) return;
 
-			store.update((state) => {
+			return store.update((state) => {
 				state.editing = id;
 				saveData(state);
 				return state;
@@ -146,7 +150,7 @@ export function setRESTTabStore(
 
 			const isCurrent = current === id;
 
-			store.update((state) => {
+			return store.update((state) => {
 				state.tabs.splice(index, 1);
 
 				if (isCurrent) state.current = state.tabs.at(-1)?.id;
@@ -160,7 +164,7 @@ export function setRESTTabStore(
 			const index = tabs.findIndex((tab) => tab.id === id);
 			if (index === -1) return;
 
-			store.update((state) => {
+			return store.update((state) => {
 				state.tabs = [state.tabs[index]];
 				state.current = id;
 				saveData(state);

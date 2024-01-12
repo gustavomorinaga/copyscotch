@@ -16,9 +16,9 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { requestID: TRESTRequestInfer['id'] };
+	type $$Props = { tabID: TRESTRequestInfer['id'] };
 
-	export let requestID: $$Props['requestID'];
+	export let tabID: $$Props['tabID'];
 	let open = false;
 
 	const restTabStore = getRESTTabStore();
@@ -32,25 +32,25 @@
 			label: 'Rename Request',
 			shortcut: 'R',
 			icon: FileEdit,
-			action: () => restTabStore.setEditing(requestID)
+			action: () => restTabStore.setEditing(tabID)
 		},
 		{
 			label: 'Duplicate Tab',
 			shortcut: 'D',
 			icon: Copy,
-			action: () => restTabStore.duplicate(requestID)
+			action: () => restTabStore.duplicate(tabID)
 		},
 		{
 			label: 'Close Tab',
 			shortcut: 'W',
 			icon: XCircle,
-			action: () => restTabStore.close(requestID)
+			action: () => restTabStore.close(tabID)
 		},
 		{
 			label: 'Close other Tabs',
 			shortcut: 'X',
 			icon: XSquare,
-			action: () => restTabStore.closeOthers(requestID),
+			action: () => restTabStore.closeOthers(tabID),
 			showOnlyIf: () => !hasOnlyOneTab
 		}
 	] satisfies Array<TEditRequestCTXMenuOption>;

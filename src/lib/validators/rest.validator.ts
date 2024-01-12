@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const requestSchema = z.object({
+export const RESTRequestSchema = z.object({
 	id: z.string().uuid(),
 	name: z.string().min(1).max(100),
 	url: z.string().url(),
@@ -18,7 +18,13 @@ export const requestSchema = z.object({
 	])
 });
 
-export const editRequestSchema = requestSchema;
+export const RESTTabSchema = z.object({
+	id: z.string().uuid(),
+	context: RESTRequestSchema,
+	dirty: z.boolean().optional()
+});
 
-export type TRESTRequestSchema = typeof requestSchema;
+export type TRESTTabSchema = typeof RESTTabSchema;
+export type TRESTTabInfer = z.infer<TRESTTabSchema>;
+export type TRESTRequestSchema = typeof RESTRequestSchema;
 export type TRESTRequestInfer = z.infer<TRESTRequestSchema>;

@@ -60,24 +60,24 @@
 	>
 		{#each $tabStore.tabs as tab}
 			{@const tabID = tab.id}
-			{@const methodLowCase = tab.method.toLowerCase()}
+			{@const methodLowCase = tab.context.method.toLowerCase()}
 
-			<ContextMenuEditRequest requestID={tabID}>
+			<ContextMenuEditRequest {tabID}>
 				<Tabs.Trigger
 					class="relative justify-between shrink-0 gap-2 min-w-52 h-12 px-5 group/tab-trigger before:absolute before:top-0 before:inset-x-0 before:h-[.125rem] data-[state=active]:before:bg-primary before:bg-transparent"
-					aria-label={tab.name}
+					aria-label={tab.context.name}
 					value={tabID}
 					on:click={(event) => handleCurrentTab(event, tabID)}
 				>
-					<DialogEditRequest requestID={tabID} {form}>
+					<DialogEditRequest {tabID} {form}>
 						<div class="tab-trigger-prefix">
 							<span class="method" style="color: var(--method-{methodLowCase}-color)">
-								{tab.method}
+								{tab.context.method}
 							</span>
 						</div>
 
 						<div class="tab-trigger-content">
-							<span class="name">{tab.name}</span>
+							<span class="name">{tab.context.name}</span>
 						</div>
 					</DialogEditRequest>
 
@@ -87,7 +87,7 @@
 							variant="ghost"
 							class="w-5 h-5"
 							role="button"
-							tabindex={0}
+							tabindex={-1}
 							aria-label="Close Tab"
 							on:click={(event) => handleCloseTab(event, tabID)}
 							on:keydown={(event) => handleCloseTab(event, tabID)}
@@ -118,7 +118,7 @@
 		{@const tabID = tab.id}
 
 		<Tabs.Content value={tabID} class="m-0 p-4">
-			<TabRequest requestID={tabID} {form} />
+			<TabRequest {tabID} {form} />
 		</Tabs.Content>
 	{/each}
 </Tabs.Root>
