@@ -47,10 +47,12 @@
 	}
 
 	function handleKeyDown(event: KeyboardEvent) {
-		event.preventDefault();
+		const isMainTarget = event.target instanceof HTMLBodyElement;
+		if (!isMainTarget) return;
 		if (!$tabStore.current) return;
 
 		if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+			event.preventDefault();
 			const { context: request } = tabStore.get($tabStore.current) as TRESTTabInfer;
 			restStore.save([request]);
 			tabStore.setDirty([$tabStore.current], false);
@@ -123,20 +125,25 @@
 							<Button
 								size="icon"
 								variant="ghost"
-								class="h-6 w-6"
+								class="relative h-6 w-6"
 								role="button"
 								tabindex={-1}
-								aria-label="Close Tab"
 								on:click={(event) => handleCloseTab(event, tabID)}
 								on:keydown={(event) => handleCloseTab(event, tabID)}
 							>
 								{#if tab.dirty}
-									<Dot class="h-4 w-4" style="stroke-width: 6" />
-									<span role="presentation" class="sr-only">Unsaved Changes</span>
-								{:else}
-									<X class="h-4 w-4" />
-									<span role="presentation" class="sr-only">Close Tab</span>
+									<Dot
+										class="absolute inset-auto group-hover/tab-trigger:invisible"
+										style="stroke-width: 5"
+										aria-hidden="true"
+										focusable="false"
+									/>
 								{/if}
+
+								<X class="h-4 w-4 {tab.dirty && 'invisible group-hover/tab-trigger:visible'}" />
+								<span role="presentation" class="sr-only">
+									{tab.dirty ? 'Unsaved Changes' : 'Close Tab'}
+								</span>
 							</Button>
 						</div>
 					</Tabs.Trigger>

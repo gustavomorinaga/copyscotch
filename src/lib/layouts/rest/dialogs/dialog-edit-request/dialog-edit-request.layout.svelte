@@ -68,6 +68,9 @@
 	}
 
 	function handleKeydownSubmit(event: KeyboardEvent) {
+		const isInputTarget = event.target instanceof HTMLInputElement;
+		if (!isInputTarget) return;
+
 		event.stopPropagation();
 
 		if (event.key === 'Enter') {

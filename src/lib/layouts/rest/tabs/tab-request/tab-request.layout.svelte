@@ -60,7 +60,7 @@
 		}
 	});
 
-	$: ({ form: formValue } = superFrm);
+	$: ({ form: formValue, submitting } = superFrm);
 	$: formAction = (sending ? 'cancel' : 'send') as TFormAction;
 	$: if ($tabStore.tabs) {
 		const updatedTab = tabStore.get(tabID);
@@ -79,10 +79,11 @@
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
-		event.preventDefault();
+		if ($tabStore.current !== tabID || sending) return;
 
 		if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
-			document.forms.namedItem(formID)?.requestSubmit();
+			event.preventDefault();
+			if (!$submitting) document.forms.namedItem(formID)?.requestSubmit();
 		}
 	}
 </script>

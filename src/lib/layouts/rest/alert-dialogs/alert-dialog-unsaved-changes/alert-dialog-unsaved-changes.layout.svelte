@@ -9,7 +9,10 @@
 	const tabStore = getRESTTabStore();
 
 	$: open = $tabStore.tainted?.length > 0;
-	$: isCurrent = $tabStore.current ? $tabStore.tainted?.includes($tabStore.current) : false;
+	$: isCurrent =
+		$tabStore.current &&
+		$tabStore.tainted?.length === 1 &&
+		$tabStore.tainted?.includes($tabStore.current);
 	$: dirtyTabs = $tabStore.tabs.filter((tab) => tab.dirty && $tabStore.tainted?.includes(tab.id));
 
 	function handleDiscard() {
@@ -30,7 +33,7 @@
 		<AlertDialog.Header>
 			<AlertDialog.Title>You have unsaved changes</AlertDialog.Title>
 			<AlertDialog.Description>
-				{#if isCurrent || dirtyTabs.length === 1}
+				{#if isCurrent}
 					Do you want to save changes made in this tab?
 				{:else}
 					Are you sure you want to close all tabs? {dirtyTabs.length} unsaved tabs will be lost.

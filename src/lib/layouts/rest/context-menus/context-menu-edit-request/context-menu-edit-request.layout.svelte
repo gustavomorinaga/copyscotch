@@ -54,8 +54,8 @@
 			icon: XSquare,
 			action: () => {
 				const otherTabs = $tabStore.tabs.filter((tab) => tab.id !== tabID);
-				const hasDirtyTabs = otherTabs.some((tab) => tab.dirty);
-				if (hasDirtyTabs) tabStore.setTainted(otherTabs.map((tab) => tab.id));
+				const dirtyTabs = otherTabs.filter((tab) => tab.dirty);
+				if (dirtyTabs.length) tabStore.setTainted(dirtyTabs.map((tab) => tab.id));
 				else tabStore.close({ ids: [tabID], mode: 'close-others' });
 			},
 			showOnlyIf: () => !hasOnlyOneTab
@@ -64,7 +64,11 @@
 			label: 'Close All',
 			shortcut: 'X',
 			icon: XOctagon,
-			action: () => tabStore.close({ ids: [], mode: 'close-all' }),
+			action: () => {
+				const dirtyTabs = $tabStore.tabs.filter((tab) => tab.dirty);
+				if (dirtyTabs.length) tabStore.setTainted(dirtyTabs.map((tab) => tab.id));
+				else tabStore.close({ ids: [], mode: 'close-all' });
+			},
 			showOnlyIf: () => !hasOnlyOneTab
 		}
 	] satisfies Array<TEditRequestCTXMenuOption>;
