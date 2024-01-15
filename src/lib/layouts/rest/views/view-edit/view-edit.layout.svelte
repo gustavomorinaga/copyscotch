@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { onMount } from 'svelte';
-	import { getRESTTabStore } from '$lib/stores';
+	import { getRESTStore, getRESTTabStore } from '$lib/stores';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import {
@@ -20,6 +20,7 @@
 
 	export let form: $$Props['form'];
 
+	const restStore = getRESTStore();
 	const tabStore = getRESTTabStore();
 
 	const tablistID = 'rest-tablist';
@@ -45,6 +46,17 @@
 		}
 	}
 
+	function handleKeyDown(event: KeyboardEvent) {
+		event.preventDefault();
+		if (!$tabStore.current) return;
+
+		if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+			const { context: request } = tabStore.get($tabStore.current) as TRESTTabInfer;
+			restStore.save([request]);
+			tabStore.setDirty([$tabStore.current], false);
+		}
+	}
+
 	function handleEditing(tabID: TRESTTabInfer['id']) {
 		tabStore.setEditing(tabID);
 	}
@@ -64,6 +76,8 @@
 		setTablistScroll();
 	});
 </script>
+
+<svelte:window on:keydown={handleKeyDown} />
 
 <Tabs.Root value={$tabStore.current} activateOnFocus={false}>
 	<Tabs.List

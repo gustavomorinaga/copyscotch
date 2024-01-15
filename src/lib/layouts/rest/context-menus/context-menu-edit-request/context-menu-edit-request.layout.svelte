@@ -77,17 +77,17 @@
 		{} as Record<string, TEditRequestCTXMenuOption['action']>
 	) satisfies Record<string, TEditRequestCTXMenuOption['action']>;
 
-	function handleKeypress(event: KeyboardEvent) {
+	function handleKeydown(event: KeyboardEvent) {
 		open = false;
 		return actionMap[event.key.toUpperCase()]?.();
 	}
 
 	function handleAddWindowEvents() {
-		window.addEventListener('keypress', handleKeypress);
+		document.addEventListener('keydown', handleKeydown);
 	}
 
 	function handleRemoveWindowEvents() {
-		window.removeEventListener('keypress', handleKeypress);
+		document.removeEventListener('keydown', handleKeydown);
 	}
 
 	onDestroy(() => {

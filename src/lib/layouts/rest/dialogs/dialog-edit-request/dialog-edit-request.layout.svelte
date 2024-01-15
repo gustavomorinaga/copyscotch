@@ -68,6 +68,8 @@
 	}
 
 	function handleKeydownSubmit(event: KeyboardEvent) {
+		event.stopPropagation();
+
 		if (event.key === 'Enter') {
 			event.preventDefault();
 			document.forms.namedItem(formID)?.requestSubmit();

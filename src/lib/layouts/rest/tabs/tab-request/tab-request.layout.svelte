@@ -40,7 +40,7 @@
 		validationMethod: 'onblur',
 		taintedMessage: false,
 		onSubmit: async (input) => {
-			const actionMap = {
+			const formActions = {
 				send: async () => {
 					sending = true;
 					const { url, method } = $formValue;
@@ -49,18 +49,18 @@
 					);
 				},
 				cancel: async () => {
-					sending = false;
 					input.cancel();
 					controller.abort();
 					controller = new AbortController();
+					sending = false;
 				}
 			} as Record<TFormAction, () => Promise<void>>;
 
-			return await actionMap[formAction]();
+			return await formActions[formAction]();
 		}
 	});
 
-	$: ({ form: formValue, tainted } = superFrm);
+	$: ({ form: formValue } = superFrm);
 	$: formAction = (sending ? 'cancel' : 'send') as TFormAction;
 	$: if ($tabStore.tabs) {
 		const updatedTab = tabStore.get(tabID);
@@ -77,7 +77,17 @@
 		tabStore.update(tabID, { method });
 		tabStore.setDirty([tabID], true);
 	}
+
+	function handleKeydown(event: KeyboardEvent) {
+		event.preventDefault();
+
+		if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+			document.forms.namedItem(formID)?.requestSubmit();
+		}
+	}
 </script>
+
+<svelte:window on:keydown={handleKeydown} />
 
 <Form.Root
 	id={formID}
