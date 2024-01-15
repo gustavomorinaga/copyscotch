@@ -8,25 +8,21 @@
 <script lang="ts">
 	const restStore = getRESTStore();
 	const tabStore = getRESTTabStore();
-	$: ({ tainted } = $tabStore);
-	$: tab = (tainted ? tabStore.get(tainted) : {}) as TRESTTabInfer;
 
-	let open = false;
-
-	$: if (tainted && tainted === tab.id) open = true;
+	$: open = $tabStore.tainted?.length > 0;
+	$: isCurrent = $tabStore.current ? $tabStore.tainted.includes($tabStore.current) : false;
+	$: dirtyTabs = $tabStore.tabs.filter((tab) => tab.dirty && $tabStore.tainted.includes(tab.id));
 
 	function handleDiscard() {
+		tabStore.close({ ids: $tabStore.tainted, mode: 'normal' });
 		tabStore.setTainted(undefined);
-		tabStore.close(tab.id);
-		open = false;
 	}
 
-	function handleSave() {
-		restStore.save(tab.context);
-		tabStore.setTainted(undefined);
-		tabStore.close(tab.id);
-		open = false;
-	}
+	// function handleSave() {
+	// 	restStore.save(tab.context);
+	// 	tabStore.setTainted(tabID, false);
+	// 	tabStore.close(tab.id);
+	// }
 </script>
 
 <AlertDialog.Root {open} closeOnOutsideClick={false}>
@@ -34,13 +30,17 @@
 		<AlertDialog.Header>
 			<AlertDialog.Title>You have unsaved changes</AlertDialog.Title>
 			<AlertDialog.Description>
-				Do you want to save changes made in this tab?
+				{#if isCurrent && dirtyTabs.length === 1}
+					Do you want to save changes made in this tab?
+				{:else}
+					Are you sure you want to close all tabs? {dirtyTabs.length} unsaved tabs will be lost.
+				{/if}
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 
 		<AlertDialog.Footer>
 			<Button variant="ghost" on:click={handleDiscard}>No</Button>
-			<Button variant="default" on:click={handleSave}>Yes</Button>
+			<!-- <Button variant="default" on:click={handleSave}>Yes</Button> -->
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>

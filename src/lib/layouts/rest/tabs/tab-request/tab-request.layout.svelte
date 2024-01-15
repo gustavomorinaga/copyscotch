@@ -25,7 +25,6 @@
 	export let form: $$Props['form'];
 
 	const tabStore = getRESTTabStore();
-	$: ({ tabs } = $tabStore);
 
 	const formID = generateUUID();
 	const { context: request } = tabStore.get(tabID) as TRESTTabInfer;
@@ -63,20 +62,20 @@
 
 	$: ({ form: formValue, tainted } = superFrm);
 	$: formAction = (sending ? 'cancel' : 'send') as TFormAction;
-	$: tabStore.setDirty(tabID, Boolean($tainted));
-	$: if (tabs) {
+	$: if ($tabStore.tabs) {
 		const updatedTab = tabStore.get(tabID);
 		if (updatedTab) $formValue = updatedTab.context;
 	}
 
 	function onChange() {
 		tabStore.update(tabID, $formValue);
+		tabStore.setDirty([tabID], true);
 	}
 
 	function onSelectedChange(selected: ComponentProps<Form.Select>['selected']) {
-		tabStore.update(tabID, {
-			method: selected?.value as TRESTRequestInfer['method']
-		});
+		const method = selected?.value as TRESTRequestInfer['method'];
+		tabStore.update(tabID, { method });
+		tabStore.setDirty([tabID], true);
 	}
 </script>
 

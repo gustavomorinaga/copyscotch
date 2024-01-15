@@ -10,14 +10,14 @@ type TRESTActions = {
 };
 type TRESTStore = Writable<TRESTData> & TRESTActions;
 
-const CTX = 'REST_COLLECTION_CTX';
+const CTX = Symbol('REST_COLLECTION_CTX');
 const STORAGE_KEY = 'collectionsREST';
 const INITIAL_DATA: TRESTData = { requests: [] };
 
 export function setRESTStore(
 	initialData: Partial<TRESTData> = INITIAL_DATA,
 	start: StartStopNotifier<TRESTData> = () => {}
-) {
+): TRESTStore {
 	let channel: BroadcastChannel | null;
 
 	const storedData = browser ? localStorage.getItem(STORAGE_KEY) : undefined;
@@ -65,8 +65,8 @@ export function setRESTStore(
 		}
 	};
 
-	setContext(CTX, { ...store, ...actions });
-	return store;
+	const context = { ...store, ...actions } as TRESTStore;
+	return setContext(CTX, context);
 }
 
 export const getRESTStore = () => getContext<TRESTStore>(CTX);

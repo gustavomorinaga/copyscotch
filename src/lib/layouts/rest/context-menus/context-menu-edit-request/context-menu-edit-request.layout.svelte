@@ -2,7 +2,7 @@
 	import { onDestroy } from 'svelte';
 	import { getRESTTabStore } from '$lib/stores';
 	import * as ContextMenu from '$lib/components/ui/context-menu';
-	import { Copy, FileEdit, XCircle, XSquare } from 'lucide-svelte';
+	import { Copy, FileEdit, XCircle, XOctagon, XSquare } from 'lucide-svelte';
 	import type { TRESTRequestInfer } from '$lib/validators';
 	import type { ComponentType } from 'svelte';
 
@@ -21,36 +21,50 @@
 	export let tabID: $$Props['tabID'];
 	let open = false;
 
-	const restTabStore = getRESTTabStore();
-	$: ({ tabs } = $restTabStore);
+	const tabStore = getRESTTabStore();
 
-	$: hasOnlyOneTab = tabs.length === 1;
+	$: hasOnlyOneTab = $tabStore.tabs.length === 1;
 	$: open ? handleAddWindowEvents() : handleRemoveWindowEvents();
 
 	const options = [
 		{
-			label: 'Rename Request',
+			label: 'Rename',
 			shortcut: 'R',
 			icon: FileEdit,
-			action: () => restTabStore.setEditing(tabID)
+			action: () => tabStore.setEditing(tabID)
 		},
 		{
-			label: 'Duplicate Tab',
+			label: 'Duplicate',
 			shortcut: 'D',
 			icon: Copy,
-			action: () => restTabStore.duplicate(tabID)
+			action: () => tabStore.duplicate(tabID)
 		},
 		{
-			label: 'Close Tab',
+			label: 'Close',
 			shortcut: 'W',
 			icon: XCircle,
-			action: () => restTabStore.close(tabID)
+			action: () => {
+				if (tabStore.get(tabID)?.dirty) tabStore.setTainted([tabID]);
+				else tabStore.close({ ids: [tabID], mode: 'normal' });
+			}
 		},
 		{
-			label: 'Close other Tabs',
+			label: 'Close Others',
 			shortcut: 'X',
 			icon: XSquare,
-			action: () => restTabStore.closeOthers(tabID),
+			action: () => {
+				const otherTabs = $tabStore.tabs.filter((tab) => tab.id !== tabID);
+				const hasDirtyTabs = otherTabs.some((tab) => tab.dirty);
+				if (hasDirtyTabs) tabStore.setTainted(otherTabs.map((tab) => tab.id));
+				else tabStore.close({ ids: [tabID], mode: 'close-others' });
+			},
+			showOnlyIf: () => !hasOnlyOneTab
+		},
+		{
+			label: 'Close All',
+			shortcut: 'X',
+			icon: XOctagon,
+			action: () => tabStore.close({ ids: [], mode: 'close-all' }),
 			showOnlyIf: () => !hasOnlyOneTab
 		}
 	] satisfies Array<TEditRequestCTXMenuOption>;

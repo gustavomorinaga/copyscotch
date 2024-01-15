@@ -59,7 +59,7 @@
 	function handleSave() {
 		tabStore.update(tab.id, $formValue);
 		tabStore.setEditing(undefined);
-		tabStore.setDirty(tab.id, true);
+		tabStore.setDirty([tab.id], true);
 		open = false;
 	}
 

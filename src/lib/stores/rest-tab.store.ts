@@ -6,7 +6,7 @@ import type { TRESTTabInfer } from '$lib/validators';
 
 export type TRESTTabDataTemp = {
 	editing?: TRESTTabInfer['context']['id'];
-	tainted?: TRESTTabInfer['context']['id'];
+	tainted: Array<TRESTTabInfer['context']['id']>;
 };
 export type TRESTTabDataPersist = {
 	tabs: Array<TRESTTabInfer>;
@@ -18,18 +18,25 @@ export type TRESTTabActions = {
 	add: () => void;
 	get: (id: TRESTTabInfer['context']['id']) => TRESTTabInfer | undefined;
 	update: (id: TRESTTabInfer['context']['id'], request: Partial<TRESTTabInfer['context']>) => void;
+	duplicate: (id: TRESTTabInfer['context']['id']) => void;
 	setCurrent: (id: TRESTTabInfer['context']['id'] | undefined) => void;
 	setEditing: (id: TRESTTabInfer['context']['id'] | undefined) => void;
-	setDirty: (id: TRESTTabInfer['context']['id'], dirty: TRESTTabInfer['dirty']) => void;
-	setTainted: (id: TRESTTabInfer['context']['id'] | undefined) => void;
-	close: (id: TRESTTabInfer['context']['id']) => void;
-	closeOthers: (id: TRESTTabInfer['context']['id']) => void;
-	duplicate: (id: TRESTTabInfer['context']['id']) => void;
+	setTainted: (ids: Array<TRESTTabInfer['context']['id']> | undefined) => void;
+	setDirty: (ids: Array<TRESTTabInfer['context']['id']>, dirty: TRESTTabInfer['dirty']) => void;
+	close: (props: {
+		ids: Array<TRESTTabInfer['context']['id']>;
+		mode: 'normal' | 'close-others' | 'close-all';
+	}) => void;
 };
 
-const CTX = 'REST_TAB_CTX';
+const CTX = Symbol('REST_TAB_CTX');
 const STORAGE_KEY = 'tabStateREST';
-const INITIAL_DATA: TRESTTabData = { tabs: [], current: undefined, editing: undefined };
+const INITIAL_DATA: TRESTTabData = {
+	tabs: [],
+	current: undefined,
+	editing: undefined,
+	tainted: []
+};
 const DEFAULT_REQUEST: Omit<TRESTTabInfer['context'], 'id'> = {
 	name: 'Untitled',
 	url: 'https://jsonplaceholder.typicode.com/todos/1',
@@ -39,7 +46,7 @@ const DEFAULT_REQUEST: Omit<TRESTTabInfer['context'], 'id'> = {
 export function setRESTTabStore(
 	initialData: Partial<TRESTTabData> = INITIAL_DATA,
 	start: StartStopNotifier<TRESTTabData> = () => {}
-) {
+): TRESTTabStore {
 	let channel: BroadcastChannel | null;
 
 	const storedData = browser ? localStorage.getItem(STORAGE_KEY) : undefined;
@@ -117,7 +124,7 @@ export function setRESTTabStore(
 					...clonedTab,
 					id: newTabID,
 					context: { ...clonedTab.context, id: newRequestID },
-					dirty: false,
+					dirty: false
 				};
 				state.tabs.splice(index + 1, 0, newTab);
 				state.current = newTab.id;
@@ -155,68 +162,72 @@ export function setRESTTabStore(
 				return state;
 			});
 		},
-		setDirty: (id, dirty) => {
+		setDirty: (ids, dirty) => {
 			const { tabs } = get(store);
-			const index = tabs.findIndex((tab) => tab.id === id);
-			if (index === -1) return;
+			console.log({ ids, tabs, dirty });
+			for (const tab of tabs) if (ids.includes(tab.id)) tab.dirty = dirty;
 
 			return store.update((state) => {
-				state.tabs[index].dirty = dirty;
+				state.tabs = tabs;
 				saveData(state);
 				return state;
 			});
 		},
-		setTainted: (id) => {
-			if (!id) {
+		setTainted: (ids) => {
+			if (!ids) {
 				return store.update((state) => {
-					state.tainted = undefined;
+					state.tainted = [];
 					saveData(state);
 					return state;
 				});
 			}
 
 			const { tabs } = get(store);
-			const index = tabs.findIndex((tab) => tab.id === id);
-			if (index === -1) return;
+			const tainted = ids.filter((id) => tabs.some((tab) => tab.id === id));
 
 			return store.update((state) => {
-				state.tainted = id;
+				state.tainted = tainted;
 				saveData(state);
 				return state;
 			});
 		},
-		close: (id) => {
-			const { tabs, current } = get(store);
-			const index = tabs.findIndex((tab) => tab.id === id);
-			if (index === -1) return;
+		close: ({ ids, mode } = { ids: [], mode: 'normal' }) => {
+			const { current } = get(store);
+			const hasCurrent = current ? ids.includes(current) : false;
 
-			const isCurrent = current === id;
+			const closeActions: Record<typeof mode, () => void> = {
+				normal: () => {
+					return store.update((state) => {
+						state.tabs = state.tabs.filter((tab) => !ids.includes(tab.id));
+						if (hasCurrent) state.current = state.tabs.at(-1)?.id;
+						saveData(state);
+						return state;
+					});
+				},
+				'close-others': () => {
+					return store.update((state) => {
+						state.tabs = state.tabs.filter((tab) => ids.includes(tab.id));
+						if (!hasCurrent) state.current = state.tabs.at(-1)?.id;
+						saveData(state);
+						return state;
+					});
+				},
+				'close-all': () => {
+					return store.update((state) => {
+						state.tabs = [];
+						state.current = undefined;
+						saveData(state);
+						return state;
+					});
+				}
+			};
 
-			return store.update((state) => {
-				state.tabs.splice(index, 1);
-
-				if (isCurrent) state.current = state.tabs.at(-1)?.id;
-
-				saveData(state);
-				return state;
-			});
-		},
-		closeOthers: (id) => {
-			const { tabs } = get(store);
-			const index = tabs.findIndex((tab) => tab.id === id);
-			if (index === -1) return;
-
-			return store.update((state) => {
-				state.tabs = [state.tabs[index]];
-				state.current = id;
-				saveData(state);
-				return state;
-			});
+			return closeActions[mode]();
 		}
 	};
 
-	setContext(CTX, { ...store, ...actions });
-	return store;
+	const context = { ...store, ...actions } as TRESTTabStore;
+	return setContext(CTX, context);
 }
 
 export const getRESTTabStore = () => getContext<TRESTTabStore>(CTX);
