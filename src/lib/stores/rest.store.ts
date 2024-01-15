@@ -6,7 +6,7 @@ import type { TRESTRequestInfer } from '$lib/validators';
 type TRESTData = { requests: Array<TRESTRequestInfer> };
 type TRESTActions = {
 	get: (id: TRESTRequestInfer['id']) => TRESTRequestInfer | undefined;
-	save: (request: TRESTRequestInfer) => void;
+	save: (requests: Array<TRESTRequestInfer>) => void;
 };
 type TRESTStore = Writable<TRESTData> & TRESTActions;
 
@@ -51,14 +51,24 @@ export function setRESTStore(
 			const { requests } = get(store);
 			return requests.find((request) => request.id === id);
 		},
-		save: (request) => {
-			const { requests } = get(store);
-			const index = requests.findIndex(({ id }) => request.id === id);
-			const isNew = index === -1;
+		save: (requests) => {
+			const { requests: savedRequests } = get(store);
+
+			const newRequests = requests.filter(
+				(request) => !savedRequests.find(({ id }) => id === request.id)
+			);
+			const updatedRequests = requests.filter((request) =>
+				savedRequests.find(({ id }) => id === request.id)
+			);
 
 			return store.update((state) => {
-				if (isNew) state.requests.push(request);
-				else state.requests[index] = request;
+				if (newRequests.length) state.requests.push(...newRequests);
+				if (updatedRequests.length)
+					for (const request of updatedRequests) {
+						const index = state.requests.findIndex(({ id }) => id === request.id);
+						state.requests[index] = request;
+					}
+
 				saveData(state);
 				return state;
 			});

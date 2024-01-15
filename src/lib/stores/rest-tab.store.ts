@@ -164,7 +164,6 @@ export function setRESTTabStore(
 		},
 		setDirty: (ids, dirty) => {
 			const { tabs } = get(store);
-			console.log({ ids, tabs, dirty });
 			for (const tab of tabs) if (ids.includes(tab.id)) tab.dirty = dirty;
 
 			return store.update((state) => {
