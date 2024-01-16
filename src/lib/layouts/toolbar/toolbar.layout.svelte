@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
 	import { page } from '$app/stores';
+	import { DialogOptions } from '$lib/layouts';
 	import { Button } from '$lib/components/ui/button';
 	// import { UploadCloud } from 'lucide-svelte';
 </script>
@@ -21,6 +22,12 @@
 		>
 			Copyscotch
 		</Button>
+	</div>
+
+	<div class="col-span-2 flex items-center justify-between gap-x-2">
+		<div class="ml-auto">
+			<DialogOptions />
+		</div>
 	</div>
 
 	<!-- <div class="col-span-2 flex items-center justify-between gap-x-2">
