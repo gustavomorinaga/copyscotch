@@ -55,7 +55,7 @@
 			action: () => {
 				const otherTabs = $tabStore.tabs.filter((tab) => tab.id !== tabID);
 				const dirtyTabs = otherTabs.filter((tab) => tab.dirty);
-				if (dirtyTabs.length) tabStore.setTainted(dirtyTabs.map((tab) => tab.id));
+				if (dirtyTabs.length) tabStore.setTainted(otherTabs.map((tab) => tab.id));
 				else tabStore.close({ ids: [tabID], mode: 'close-others' });
 			},
 			showOnlyIf: () => !hasOnlyOneTab
@@ -66,7 +66,7 @@
 			icon: XOctagon,
 			action: () => {
 				const dirtyTabs = $tabStore.tabs.filter((tab) => tab.dirty);
-				if (dirtyTabs.length) tabStore.setTainted(dirtyTabs.map((tab) => tab.id));
+				if (dirtyTabs.length) tabStore.setTainted($tabStore.tabs.map((tab) => tab.id));
 				else tabStore.close({ ids: [], mode: 'close-all' });
 			},
 			showOnlyIf: () => !hasOnlyOneTab
