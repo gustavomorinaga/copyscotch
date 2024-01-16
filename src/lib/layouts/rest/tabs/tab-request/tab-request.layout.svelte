@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getRESTTabStore } from '$lib/stores';
+	import { getRESTStore, getRESTTabStore } from '$lib/stores';
 	import { generateUUID } from '$lib/utils';
 	import {
 		RESTRequestSchema,
@@ -8,11 +8,12 @@
 		type TRESTRequestSchema
 	} from '$lib/validators';
 	import * as Form from '$lib/components/ui/form';
+	import { Save } from 'lucide-svelte';
 	import { superForm } from 'sveltekit-superforms/client';
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import type { ComponentProps } from 'svelte';
 
-	type TFormAction = 'send' | 'cancel';
+	type TFormAction = 'send' | 'cancel' | 'save';
 </script>
 
 <script lang="ts">
@@ -24,6 +25,7 @@
 	export let tabID: $$Props['tabID'];
 	export let form: $$Props['form'];
 
+	const restStore = getRESTStore();
 	const tabStore = getRESTTabStore();
 
 	const formID = generateUUID();
@@ -31,6 +33,7 @@
 	const uniqueForm = { ...structuredClone(form), id: formID, data: request };
 	const methodOptions = RESTRequestSchema.shape.method.options;
 
+	let formAction: TFormAction = 'send';
 	let controller = new AbortController();
 
 	const superFrm = superForm(uniqueForm, {
@@ -38,7 +41,7 @@
 		validators: RESTRequestSchema,
 		validationMethod: 'onblur',
 		taintedMessage: false,
-		onSubmit: async (input) => {
+		onSubmit: async () => {
 			const formActions = {
 				send: async () => {
 					tabStore.setResult(tabID, { response: undefined, sending: true });
@@ -60,9 +63,13 @@
 						.finally(() => tabStore.setResult(tabID, { sending: false }));
 				},
 				cancel: async () => {
-					input.cancel();
 					controller.abort();
 					controller = new AbortController();
+				},
+				save: async () => {
+					restStore.save([$formValue]);
+					tabStore.update(tabID, $formValue);
+					tabStore.setDirty([tabID], false);
 				}
 			} as Record<TFormAction, () => Promise<void>>;
 
@@ -72,7 +79,6 @@
 
 	$: ({ form: formValue, submitting } = superFrm);
 	$: sending = $tabStore.results.find((result) => result.id === tabID)?.sending;
-	$: formAction = (sending ? 'cancel' : 'send') as TFormAction;
 	$: if ($tabStore.tabs) {
 		const updatedTab = tabStore.get(tabID);
 		if (updatedTab) $formValue = updatedTab.context;
@@ -145,12 +151,26 @@
 			</Form.Field>
 		</Form.Join>
 
-		<Form.Button type="submit" class="w-24">
+		<Form.Button
+			type="submit"
+			class="w-24"
+			on:click={() => (formAction = sending ? 'cancel' : 'send')}
+		>
 			{#if sending}
 				Cancel
 			{:else}
 				Send
 			{/if}
+		</Form.Button>
+
+		<Form.Button
+			type="submit"
+			variant="secondary"
+			class="w-32"
+			on:click={() => (formAction = 'save')}
+		>
+			<Save class="mr-2 h-4 w-4" />
+			Save
 		</Form.Button>
 	</Form.Join>
 </Form.Root>
