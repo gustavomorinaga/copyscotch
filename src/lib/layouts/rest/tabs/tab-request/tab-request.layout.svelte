@@ -56,10 +56,15 @@
 							const { ok, status, headers } = response;
 
 							Promise.all([response.clone().json(), response.clone().blob()]).then(([json, blob]) =>
-								tabStore.setResult(tabID, { response: { ok, status, headers, json, blob, time } })
+								tabStore.setResult(tabID, {
+									response: { ok, status, headers, json, blob, time }
+								})
 							);
 						})
-						.catch(() => tabStore.setResult(tabID, { response: undefined }))
+						.catch((error) => {
+							const isDOMException = error instanceof DOMException;
+							tabStore.setResult(tabID, { response: isDOMException ? undefined : error });
+						})
 						.finally(() => tabStore.setResult(tabID, { sending: false }));
 				},
 				cancel: async () => {
@@ -96,11 +101,14 @@
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
-		if ($tabStore.current !== tabID || sending) return;
+		if ($tabStore.current !== tabID) return;
 
 		if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
 			event.preventDefault();
-			if (!$submitting) document.forms.namedItem(formID)?.requestSubmit();
+			if ($submitting) return;
+
+			formAction = sending ? 'cancel' : 'send';
+			document.forms.namedItem(formID)?.requestSubmit();
 		}
 	}
 </script>
