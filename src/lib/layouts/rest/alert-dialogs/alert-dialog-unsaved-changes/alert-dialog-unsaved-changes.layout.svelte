@@ -42,7 +42,7 @@
 		</AlertDialog.Header>
 
 		<AlertDialog.Footer>
-			<Button variant="ghost" on:click={handleDiscard}>No</Button>
+			<Button variant="secondary" on:click={handleDiscard}>No</Button>
 			<Button variant="default" on:click={handleSave}>Yes</Button>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>

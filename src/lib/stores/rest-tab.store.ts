@@ -4,29 +4,39 @@ import { get, writable, type StartStopNotifier, type Writable } from 'svelte/sto
 import { generateUUID } from '$lib/utils';
 import type { TRESTTabInfer } from '$lib/validators';
 
+export type TRESTTabStore = Writable<TRESTTabData> & TRESTTabActions;
+export type TRESTTabData = TRESTTabDataPersist & TRESTTabDataTemp;
 export type TRESTTabDataTemp = {
 	editing?: TRESTTabInfer['context']['id'];
 	tainted: Array<TRESTTabInfer['context']['id']>;
+	results: Array<TRESTResult>;
 };
 export type TRESTTabDataPersist = {
 	tabs: Array<TRESTTabInfer>;
 	current?: TRESTTabInfer['context']['id'];
 };
-export type TRESTTabData = TRESTTabDataPersist & TRESTTabDataTemp;
-export type TRESTTabStore = Writable<TRESTTabData> & TRESTTabActions;
 export type TRESTTabActions = {
 	add: () => void;
 	get: (id: TRESTTabInfer['context']['id']) => TRESTTabInfer | undefined;
 	update: (id: TRESTTabInfer['context']['id'], request: Partial<TRESTTabInfer['context']>) => void;
 	duplicate: (id: TRESTTabInfer['context']['id']) => void;
-	setCurrent: (id: TRESTTabInfer['context']['id'] | undefined) => void;
-	setEditing: (id: TRESTTabInfer['context']['id'] | undefined) => void;
-	setTainted: (ids: Array<TRESTTabInfer['context']['id']> | undefined) => void;
+	setCurrent: (id?: TRESTTabInfer['context']['id']) => void;
+	setEditing: (id?: TRESTTabInfer['context']['id']) => void;
+	setTainted: (ids?: Array<TRESTTabInfer['context']['id']>) => void;
 	setDirty: (ids: Array<TRESTTabInfer['context']['id']>, dirty: TRESTTabInfer['dirty']) => void;
+	setResult: (
+		id: TRESTTabInfer['context']['id'],
+		result?: Partial<Pick<TRESTResult, 'response' | 'sending'>>
+	) => void;
 	close: (props: {
 		ids: Array<TRESTTabInfer['context']['id']>;
 		mode: 'normal' | 'close-others' | 'close-all';
 	}) => void;
+};
+export type TRESTResult = Pick<TRESTTabInfer['context'], 'id'> & {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	response: Pick<Response, 'ok' | 'status' | 'headers'> & { time: number; json: any; blob: Blob };
+	sending: boolean;
 };
 
 const CTX = Symbol('REST_TAB_CTX');
@@ -35,7 +45,8 @@ const INITIAL_DATA: TRESTTabData = {
 	tabs: [],
 	current: undefined,
 	editing: undefined,
-	tainted: []
+	tainted: [],
+	results: []
 };
 const DEFAULT_REQUEST: Omit<TRESTTabInfer['context'], 'id'> = {
 	name: 'Untitled',
@@ -50,7 +61,9 @@ export function setRESTTabStore(
 	let channel: BroadcastChannel | null;
 
 	const storedData = browser ? localStorage.getItem(STORAGE_KEY) : undefined;
-	const data: TRESTTabData = storedData ? JSON.parse(storedData) : initialData;
+	const data: TRESTTabData = storedData
+		? { ...initialData, ...JSON.parse(storedData) }
+		: initialData;
 
 	const store = writable(data, (set, update) => {
 		function syncData(event: MessageEvent<TRESTTabData>) {
@@ -75,9 +88,11 @@ export function setRESTTabStore(
 
 		const { tabs, current } = data;
 		const dataPersist: TRESTTabDataPersist = { tabs, current };
+		const stringifiedData = JSON.stringify(dataPersist);
+		const parsedData = JSON.parse(stringifiedData);
 
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(dataPersist));
-		channel?.postMessage(data);
+		localStorage.setItem(STORAGE_KEY, stringifiedData);
+		channel?.postMessage(parsedData);
 	}
 
 	const actions: TRESTTabActions = {
@@ -186,6 +201,30 @@ export function setRESTTabStore(
 
 			return store.update((state) => {
 				state.tainted = tainted;
+				saveData(state);
+				return state;
+			});
+		},
+		setResult: (id, result = { response: undefined, sending: false }) => {
+			const { results } = get(store);
+			const index = results.findIndex((result) => result.id === id);
+
+			if (index === -1) {
+				return store.update((state) => {
+					state.results.push({ id, ...result } as TRESTResult);
+					saveData(state);
+					return state;
+				});
+			} else if (!result) {
+				return store.update((state) => {
+					results.splice(index, 1);
+					saveData(state);
+					return state;
+				});
+			}
+
+			return store.update((state) => {
+				state.results[index] = { ...state.results[index], ...result };
 				saveData(state);
 				return state;
 			});

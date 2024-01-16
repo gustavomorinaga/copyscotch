@@ -81,7 +81,7 @@
 
 <svelte:window on:keydown={handleKeyDown} />
 
-<Tabs.Root value={$tabStore.current} activateOnFocus={false}>
+<Tabs.Root value={$tabStore.current} activateOnFocus={false} class="h-[50dvh]">
 	<Tabs.List
 		id={tablistID}
 		class="relative flex min-h-12 justify-start overflow-hidden scroll-smooth rounded-none p-0 pr-16"

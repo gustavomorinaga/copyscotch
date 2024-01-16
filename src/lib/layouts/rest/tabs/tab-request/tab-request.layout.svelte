@@ -31,7 +31,6 @@
 	const uniqueForm = { ...structuredClone(form), id: formID, data: request };
 	const methodOptions = RESTRequestSchema.shape.method.options;
 
-	let sending = false;
 	let controller = new AbortController();
 
 	const superFrm = superForm(uniqueForm, {
@@ -42,17 +41,28 @@
 		onSubmit: async (input) => {
 			const formActions = {
 				send: async () => {
-					sending = true;
+					tabStore.setResult(tabID, { response: undefined, sending: true });
+
 					const { url, method } = $formValue;
-					fetch(url, { method: method, signal: controller.signal }).finally(
-						() => (sending = false)
-					);
+					const start = performance.now();
+
+					fetch(url, { method: method, signal: controller.signal })
+						.then((response) => {
+							const end = performance.now();
+							const time = end - start;
+							const { ok, status, headers } = response;
+
+							Promise.all([response.clone().json(), response.clone().blob()]).then(([json, blob]) =>
+								tabStore.setResult(tabID, { response: { ok, status, headers, json, blob, time } })
+							);
+						})
+						.catch(() => tabStore.setResult(tabID, { response: undefined }))
+						.finally(() => tabStore.setResult(tabID, { sending: false }));
 				},
 				cancel: async () => {
 					input.cancel();
 					controller.abort();
 					controller = new AbortController();
-					sending = false;
 				}
 			} as Record<TFormAction, () => Promise<void>>;
 
@@ -61,6 +71,7 @@
 	});
 
 	$: ({ form: formValue, submitting } = superFrm);
+	$: sending = $tabStore.results.find((result) => result.id === tabID)?.sending;
 	$: formAction = (sending ? 'cancel' : 'send') as TFormAction;
 	$: if ($tabStore.tabs) {
 		const updatedTab = tabStore.get(tabID);

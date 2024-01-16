@@ -6,6 +6,6 @@
 
 <Wrapper>
 	<Toolbar />
-	<Separator orientation="horizontal" />
+	<Separator orientation="horizontal" role="presentation" />
 	<slot />
 </Wrapper>

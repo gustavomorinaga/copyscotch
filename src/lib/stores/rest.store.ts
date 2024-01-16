@@ -3,12 +3,12 @@ import { getContext, setContext } from 'svelte';
 import { get, writable, type StartStopNotifier, type Writable } from 'svelte/store';
 import type { TRESTRequestInfer } from '$lib/validators';
 
+type TRESTStore = Writable<TRESTData> & TRESTActions;
 type TRESTData = { requests: Array<TRESTRequestInfer> };
 type TRESTActions = {
 	get: (id: TRESTRequestInfer['id']) => TRESTRequestInfer | undefined;
 	save: (requests: Array<TRESTRequestInfer>) => void;
 };
-type TRESTStore = Writable<TRESTData> & TRESTActions;
 
 const CTX = Symbol('REST_COLLECTION_CTX');
 const STORAGE_KEY = 'collectionsREST';
