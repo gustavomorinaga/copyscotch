@@ -5,7 +5,7 @@
 export const horizontalScroll = (node: HTMLElement) => {
 	function handleScroll(event: WheelEvent) {
 		event.preventDefault();
-		node.scrollTo({ left: node.scrollLeft + event.deltaY, behavior: 'smooth' });
+		node.scrollTo({ left: node.scrollLeft + event.deltaY, behavior: 'instant' });
 	}
 
 	node.addEventListener('wheel', handleScroll);

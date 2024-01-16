@@ -71,7 +71,7 @@
 
 	function scrollToActiveTab() {
 		activeTabRef = tablistRef.querySelector('[data-state="active"]') as HTMLElement;
-		activeTabRef?.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+		activeTabRef.scrollIntoView({ inline: 'center', behavior: 'smooth' });
 	}
 
 	onMount(() => {
@@ -84,7 +84,7 @@
 <Tabs.Root value={$tabStore.current} activateOnFocus={false} class="h-[50dvh]">
 	<Tabs.List
 		id={tablistID}
-		class="relative flex min-h-12 justify-start overflow-hidden scroll-smooth rounded-none p-0 pr-16"
+		class="relative flex min-h-12 touch-pan-x justify-start overflow-x-auto overflow-y-hidden scroll-smooth rounded-none p-0 pr-16 sm:overflow-x-hidden"
 	>
 		{#each $tabStore.tabs as tab}
 			{@const tabID = tab.id}
