@@ -103,7 +103,9 @@
 						value={tabID}
 						on:click={(event) => handleCurrentTab(event, tabID)}
 					>
-						<div class="inline-flex select-none items-baseline justify-center">
+						<div
+							class="my-auto inline-flex select-none items-baseline justify-center self-baseline"
+						>
 							<span
 								class="block text-left text-tiny font-medium uppercase"
 								style="color: var(--method-{methodLowCase}-color)"
@@ -112,7 +114,9 @@
 							</span>
 						</div>
 
-						<div class="inline-flex select-none items-baseline justify-center">
+						<div
+							class="my-auto inline-flex select-none items-baseline justify-center self-baseline"
+						>
 							<span class="block w-32 truncate text-left text-sm font-semibold">
 								{tab.context.name}
 							</span>

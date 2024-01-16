@@ -17,6 +17,8 @@
 </script>
 
 <script lang="ts">
+	import { Join } from '$lib/components/ui/form';
+
 	type $$Props = {
 		tabID: TRESTTabInfer['id'];
 		form: SuperValidated<TRESTRequestSchema>;
@@ -123,9 +125,10 @@
 	action="?/{formAction}"
 	let:config
 	on:change={onChange}
+	class="sticky top-0 z-20"
 >
-	<Form.Join class="w-full gap-2">
-		<Form.Join class="w-full">
+	<Form.Join class="flex flex-col gap-2 sm:flex-row">
+		<Form.Join class="min-w-[12rem] whitespace-nowrap">
 			<Form.Field {config} name="method">
 				<Form.Item class="w-32">
 					<Form.Select
@@ -149,7 +152,7 @@
 			</Form.Field>
 
 			<Form.Field {config} name="url">
-				<Form.Item class="grow">
+				<Form.Item class="flex-1">
 					<Form.Input
 						type="url"
 						placeholder="URL"
@@ -159,26 +162,23 @@
 			</Form.Field>
 		</Form.Join>
 
-		<Form.Button
-			type="submit"
-			class="w-24"
-			on:click={() => (formAction = sending ? 'cancel' : 'send')}
-		>
-			{#if sending}
-				Cancel
-			{:else}
-				Send
-			{/if}
-		</Form.Button>
+		<Form.Join class="flex-none gap-2">
+			<Form.Button
+				type="submit"
+				class="flex-1 sm:w-24"
+				on:click={() => (formAction = sending ? 'cancel' : 'send')}
+			>
+				{#if sending}
+					Cancel
+				{:else}
+					Send
+				{/if}
+			</Form.Button>
 
-		<Form.Button
-			type="submit"
-			variant="secondary"
-			class="w-32"
-			on:click={() => (formAction = 'save')}
-		>
-			<Save class="mr-2 h-4 w-4" />
-			Save
-		</Form.Button>
+			<Form.Button type="submit" variant="secondary" on:click={() => (formAction = 'save')}>
+				<Save class="mr-2 h-4 w-4" />
+				Save
+			</Form.Button>
+		</Form.Join>
 	</Form.Join>
 </Form.Root>

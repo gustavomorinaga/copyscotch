@@ -4,6 +4,7 @@
 	import { Center } from '$lib/components/ui/center';
 	import { Loader } from 'lucide-svelte';
 	import { formatBytes } from '$lib/utils';
+	import httpStatus from 'http-status';
 </script>
 
 <script lang="ts">
@@ -12,6 +13,7 @@
 	$: currentResult = $tabStore.results.find(({ id }) => id === $tabStore.current) as TRESTResult;
 	$: isSending = currentResult?.sending;
 	$: hasResponse = Boolean(currentResult?.response);
+	$: isSuccess = currentResult?.response?.status >= 200 && currentResult?.response?.status < 300;
 </script>
 
 <Separator orientation="horizontal" role="presentation" />
@@ -26,17 +28,25 @@
 			<div class="inline-flex flex-1 space-x-4">
 				<span>
 					<span class="text-muted-foreground">Status: </span>
-					<span class="text-success">{currentResult.response.status}</span>
+					<span class={isSuccess ? 'text-success' : 'text-destructive'}>
+						{currentResult.response.status}&nbsp; • &nbsp;{httpStatus[
+							currentResult.response.status
+						]}
+					</span>
 				</span>
 
 				<span>
 					<span class="text-muted-foreground">Time: </span>
-					<span class="text-success">{Math.floor(currentResult.response.time)} ms</span>
+					<span class={isSuccess ? 'text-success' : 'text-destructive'}>
+						{Math.floor(currentResult.response.time)} ms
+					</span>
 				</span>
 
 				<span>
 					<span class="text-muted-foreground">Size: </span>
-					<span class="text-success">{formatBytes(currentResult.response.blob.size, 2)}</span>
+					<span class={isSuccess ? 'text-success' : 'text-destructive'}>
+						{formatBytes(currentResult.response.blob.size, 2)}
+					</span>
 				</span>
 			</div>
 		</header>
