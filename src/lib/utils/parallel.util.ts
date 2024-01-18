@@ -6,6 +6,6 @@
  * @param functions - An array of functions to execute in parallel.
  * @returns A promise that resolves to an array of the results of the executed functions.
  */
-export const executeParallel = <T extends (...args: any) => any>(functions: Array<T>) => {
+export function executeParallel<T extends (...args: any) => any>(functions: Array<T>) {
 	return Promise.all(functions.map((fn) => new Promise<ReturnType<T>>((resolve) => resolve(fn()))));
-};
+}

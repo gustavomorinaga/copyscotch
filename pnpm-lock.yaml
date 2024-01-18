@@ -49,6 +49,9 @@ devDependencies:
   '@tanstack/svelte-virtual':
     specifier: 3.0.1
     version: 3.0.1(svelte@4.2.8)
+  '@types/lodash.find':
+    specifier: 4.6.9
+    version: 4.6.9
   '@types/uuid':
     specifier: 9.0.7
     version: 9.0.7
@@ -79,6 +82,9 @@ devDependencies:
   http-status:
     specifier: 1.7.3
     version: 1.7.3
+  lodash.find:
+    specifier: 4.6.0
+    version: 4.6.0
   postcss:
     specifier: 8.4.33
     version: 8.4.33
@@ -812,6 +818,16 @@ packages:
 
   /@types/json-schema@7.0.15:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
+    dev: true
+
+  /@types/lodash.find@4.6.9:
+    resolution: {integrity: sha512-v1qcNZs0ksl0+BO+aflReb8oIDHLc+rSc4n+RYZ3pMaxIFw2/mcW/wlTYFqrh+8dY1ZqRbX22ytFfUgs4sAXtw==}
+    dependencies:
+      '@types/lodash': 4.14.202
+    dev: true
+
+  /@types/lodash@4.14.202:
+    resolution: {integrity: sha512-OvlIYQK9tNneDlS0VN54LLd5uiPCBOp7gS5Z0f1mjoJYBrtStzgmJBxONW3U6OZqdtNzZPmn9BS/7WI7BFFcFQ==}
     dev: true
 
   /@types/minimist@1.2.5:
@@ -2141,6 +2157,10 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-locate: 5.0.0
+    dev: true
+
+  /lodash.find@4.6.0:
+    resolution: {integrity: sha512-yaRZoAV3Xq28F1iafWN1+a0rflOej93l1DQUejs3SZ41h2O9UJBoS9aueGjPDgAl4B6tPC0NuuchLKaDQQ3Isg==}
     dev: true
 
   /lodash.memoize@4.1.2:
