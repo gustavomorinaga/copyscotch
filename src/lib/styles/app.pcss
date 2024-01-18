@@ -1,9 +1,12 @@
 @import './theme.pcss';
 @import '@fontsource-variable/inter';
+@import '@fontsource-variable/roboto-mono';
 
 @layer base {
 	:root {
 		--base-font-size: 14px;
+		--font-sans: 'Inter Variable', sans-serif;
+		--font-mono: 'Roboto Mono Variable', monospace;
 		--method-get-color: #10b981;
 		--method-post-color: #eab308;
 		--method-put-color: #0ea5e9;
@@ -15,6 +18,28 @@
 
 	* {
 		@apply min-h-0 min-w-0 overscroll-none;
+
+		&:where(.overflow-auto, .overflow-x-auto, .overflow-y-auto) {
+			@apply scrollbar scrollbar-thumb-secondary;
+
+			&::-webkit-scrollbar-thumb {
+				background-clip: content-box;
+				border: 4px solid transparent;
+				border-radius: 1rem;
+			}
+		}
+
+		&:where(.overflow-x-auto) {
+			&::-webkit-scrollbar-track {
+				border-top: 1px solid hsl(var(--border) / 1);
+			}
+		}
+
+		&:where(.overflow-y-auto) {
+			&::-webkit-scrollbar-track {
+				border-left: 1px solid hsl(var(--border) / 1);
+			}
+		}
 	}
 
 	html {

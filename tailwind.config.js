@@ -60,7 +60,8 @@ const config = {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			fontFamily: {
-				sans: ['Inter Variable', ...fontFamily.sans]
+				sans: ['var(--font-sans)', ...fontFamily.sans],
+				mono: ['var(--font-mono)', ...fontFamily.mono]
 			},
 			fontSize: {
 				tiny: '0.750rem'

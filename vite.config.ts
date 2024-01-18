@@ -5,5 +5,8 @@ export default defineConfig({
 	plugins: [sveltekit()],
 	build: {
 		sourcemap: true
+	},
+	optimizeDeps: {
+		exclude: ['svelte-codemirror-editor', 'codemirror', '@codemirror/lang-json']
 	}
 });
