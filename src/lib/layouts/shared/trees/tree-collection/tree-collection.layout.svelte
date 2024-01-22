@@ -1,36 +1,40 @@
 <script lang="ts" context="module">
-	import { Button } from '$lib/components/ui/button';
+	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { Folder, FolderOpen, MoreVertical } from 'lucide-svelte';
 	import type { TRESTCollectionInfer } from '$lib/validators';
+
+	type TTree = TRESTCollectionInfer & { open: boolean };
 </script>
 
 <script lang="ts">
 	type $$Props = { folders: Array<TRESTCollectionInfer> };
 
 	export let folders: $$Props['folders'] = [];
+
+	const tree: Array<TTree> = folders.map((folder) => ({ ...folder, open: false }));
 </script>
 
 <ul class="flex flex-col">
-	{#each folders as folder}
+	{#each tree as branch}
 		<li>
-			<Collapsible.Root class="flex flex-col">
-				<Collapsible.Trigger class="inline-flex items-center">
+			<Collapsible.Root class="flex flex-col" bind:open={branch.open}>
+				<Collapsible.Trigger class={buttonVariants({ size: 'sm', variant: 'text', class: 'px-0' })}>
 					<div class="flex flex-1 items-center justify-center">
-						{#if false}
-							<FolderOpen class="mx-2 h-5 w-5" />
+						{#if branch.open}
+							<FolderOpen class="mx-4 h-5 w-5" />
 						{:else}
-							<Folder class="mx-2 h-5 w-5" />
+							<Folder class="mx-4 h-5 w-5" />
 						{/if}
 						<span class="flex flex-1 py-2 pr-2">
-							<span class="truncate text-sm">{folder.name}</span>
+							<span class="truncate text-sm">{branch.name}</span>
 						</span>
 					</div>
 					<div class="flex items-center">
 						<Button
 							size="icon"
 							variant="ghost"
-							class="h-6 w-6"
+							class="h-6 w-6 text-accent-foreground"
 							on:click={(event) => event.stopPropagation()}
 						>
 							<MoreVertical class="h-4 w-4" />
@@ -39,15 +43,21 @@
 				</Collapsible.Trigger>
 				<Collapsible.Content class="flex">
 					<div
-						class="ml-[1.175rem] flex w-0.5 transform bg-accent transition hover:scale-x-125 hover:bg-muted-foreground"
+						class="ml-6 flex w-0.5 transform cursor-ns-resize bg-accent transition hover:scale-x-125 hover:bg-muted-foreground"
+						role="presentation"
+						aria-hidden="true"
+						on:click={(event) => {
+							event.stopPropagation();
+							branch.open = false;
+						}}
 					/>
 
 					<ul class="flex flex-1 flex-col">
-						{#if folder.folders.length}
-							<svelte:self folders={folder.folders} />
+						{#if branch.folders.length}
+							<svelte:self folders={branch.folders} />
 						{/if}
 
-						{#each folder.requests as request}
+						{#each branch.requests as request}
 							{@const methodLowCase = request.method.toLowerCase()}
 
 							<li class="flex-1">
