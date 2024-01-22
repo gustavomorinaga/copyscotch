@@ -7,7 +7,9 @@ import type { TRESTCollectionInfer, TRESTRequestInfer } from '$lib/validators';
 type TRESTStore = Writable<TRESTData> & TRESTActions;
 type TRESTData = Array<TRESTCollectionInfer>;
 type TRESTActions = {
+	getCollection: (id: TRESTCollectionInfer['id']) => TRESTCollectionInfer | undefined;
 	getRequest: (id: TRESTRequestInfer['id']) => TRESTRequestInfer | undefined;
+	saveCollection: (collection: TRESTCollectionInfer) => void;
 	saveRequests: (requests: Array<TRESTRequestInfer>) => void;
 };
 
@@ -48,9 +50,17 @@ export function setRESTStore(
 	// }
 
 	const actions: TRESTActions = {
+		getCollection: (id) => {
+			const collections = get(store);
+			return collections.find((collection) => collection.id === id);
+		},
 		getRequest: (id) => {
 			const collections = get(store);
 			return findNested<TRESTRequestInfer>(collections, { requests: { id } });
+		},
+		saveCollection: (collection) => {
+			console.log(collection);
+			return;
 		},
 		saveRequests: (requests) => {
 			console.log(requests);

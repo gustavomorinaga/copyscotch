@@ -166,7 +166,7 @@
 			role="button"
 			tabindex={0}
 			aria-label="Add Request"
-			on:click={tabStore.add}
+			on:click={() => tabStore.add()}
 		>
 			<Plus class="h-4 w-4" />
 			<span role="presentation" class="sr-only">Add Request</span>

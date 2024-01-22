@@ -16,7 +16,7 @@ export type TRESTTabDataPersist = {
 	current?: TRESTTabInfer['context']['id'];
 };
 export type TRESTTabActions = {
-	add: () => void;
+	add: (request?: TRESTTabInfer['context']) => void;
 	get: (id: TRESTTabInfer['context']['id']) => TRESTTabInfer | undefined;
 	update: (id: TRESTTabInfer['context']['id'], request: Partial<TRESTTabInfer['context']>) => void;
 	duplicate: (id: TRESTTabInfer['context']['id']) => void;
@@ -96,15 +96,17 @@ export function setRESTTabStore(
 	}
 
 	const actions: TRESTTabActions = {
-		add: () => {
-			return store.update((state) => {
+		add: (request) => {
+			let newTab: TRESTTabInfer;
+
+			if (request) {
+				newTab = { id: request.id, context: request, dirty: false };
+			} else {
 				const newTabID = generateUUID();
-				const newRequestID = generateUUID();
-				const newTab: TRESTTabInfer = {
-					id: newTabID,
-					context: { ...DEFAULT_REQUEST, id: newRequestID },
-					dirty: false
-				};
+				newTab = { id: newTabID, context: { ...DEFAULT_REQUEST, id: newTabID }, dirty: false };
+			}
+
+			return store.update((state) => {
 				state.tabs.push(newTab);
 				state.current = newTab.id;
 				saveData(state);

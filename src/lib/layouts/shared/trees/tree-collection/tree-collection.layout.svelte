@@ -1,4 +1,5 @@
 <script lang="ts" context="module">
+	import { getRESTTabStore } from '$lib/stores';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { Folder, FolderOpen, MoreVertical } from 'lucide-svelte';
@@ -11,8 +12,9 @@
 	type $$Props = { folders: Array<TRESTCollectionInfer> };
 
 	export let folders: $$Props['folders'] = [];
-
 	const tree: Array<TTree> = folders.map((folder) => ({ ...folder, open: false }));
+
+	const tabStore = getRESTTabStore();
 </script>
 
 <ul class="flex flex-col">
@@ -61,7 +63,15 @@
 							{@const methodLowCase = request.method.toLowerCase()}
 
 							<li class="flex-1">
-								<Button size="sm" variant="text" class="w-full flex-1 px-0">
+								<Button
+									size="sm"
+									variant="text"
+									class="w-full flex-1 px-0"
+									on:click={(event) => {
+										event.stopPropagation();
+										if (!tabStore.get(request.id)) tabStore.add(request);
+									}}
+								>
 									<div class="flex flex-1 items-center justify-center">
 										<span
 											class="pointer-events-none flex w-16 items-center justify-center truncate px-2 text-tiny"

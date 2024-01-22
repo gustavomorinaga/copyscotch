@@ -10,7 +10,7 @@
 </script>
 
 <Center>
-	<Button size="sm" variant="outline" on:click={tabStore.add}>
+	<Button size="sm" variant="outline" on:click={() => tabStore.add()}>
 		<Plus class="mr-2 h-4 w-4" />
 		New Request
 	</Button>
