@@ -1,18 +1,19 @@
 import { browser } from '$app/environment';
 import { getContext, setContext } from 'svelte';
 import { get, writable, type StartStopNotifier, type Writable } from 'svelte/store';
-import type { TRESTRequestInfer } from '$lib/validators';
+import { findNested } from '$lib/utils';
+import type { TRESTCollectionInfer, TRESTRequestInfer } from '$lib/validators';
 
 type TRESTStore = Writable<TRESTData> & TRESTActions;
-type TRESTData = { requests: Array<TRESTRequestInfer> };
+type TRESTData = Array<TRESTCollectionInfer>;
 type TRESTActions = {
-	get: (id: TRESTRequestInfer['id']) => TRESTRequestInfer | undefined;
-	save: (requests: Array<TRESTRequestInfer>) => void;
+	getRequest: (id: TRESTRequestInfer['id']) => TRESTRequestInfer | undefined;
+	saveRequests: (requests: Array<TRESTRequestInfer>) => void;
 };
 
 const CTX = Symbol('REST_COLLECTION_CTX');
 const STORAGE_KEY = 'collectionsREST';
-const INITIAL_DATA: TRESTData = { requests: [] };
+const INITIAL_DATA: TRESTData = [];
 
 export function setRESTStore(
 	initialData: Partial<TRESTData> = INITIAL_DATA,
@@ -39,39 +40,48 @@ export function setRESTStore(
 		};
 	});
 
-	function saveData(data: TRESTData) {
-		if (!browser) return;
+	// function saveData(data: TRESTData) {
+	// 	if (!browser) return;
 
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-		channel?.postMessage(data);
-	}
+	// 	localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+	// 	channel?.postMessage(data);
+	// }
 
 	const actions: TRESTActions = {
-		get: (id) => {
-			const { requests } = get(store);
-			return requests.find((request) => request.id === id);
+		getRequest: (id) => {
+			const collections = get(store);
+			return findNested<TRESTRequestInfer>(collections, { requests: { id } });
 		},
-		save: (requests) => {
-			const { requests: savedRequests } = get(store);
+		saveRequests: (requests) => {
+			console.log(requests);
+			return;
 
-			const newRequests = requests.filter(
-				(request) => !savedRequests.find(({ id }) => id === request.id)
-			);
-			const updatedRequests = requests.filter((request) =>
-				savedRequests.find(({ id }) => id === request.id)
-			);
+			// return store.update((state) => {
+			// 	state = [...state, { id: generateUUID(), name: 'New Collection', requests, folders: [] }];
+			// 	saveData(state);
+			// 	return state;
+			// });
 
-			return store.update((state) => {
-				if (newRequests.length) state.requests.push(...newRequests);
-				if (updatedRequests.length)
-					for (const request of updatedRequests) {
-						const index = state.requests.findIndex(({ id }) => id === request.id);
-						state.requests[index] = request;
-					}
+			// const { requests: savedRequests } = get(store);
 
-				saveData(state);
-				return state;
-			});
+			// const newRequests = requests.filter(
+			// 	(request) => !savedRequests.find(({ id }) => id === request.id)
+			// );
+			// const updatedRequests = requests.filter((request) =>
+			// 	savedRequests.find(({ id }) => id === request.id)
+			// );
+
+			// return store.update((state) => {
+			// 	if (newRequests.length) state.requests.push(...newRequests);
+			// 	if (updatedRequests.length)
+			// 		for (const request of updatedRequests) {
+			// 			const index = state.requests.findIndex(({ id }) => id === request.id);
+			// 			state.requests[index] = request;
+			// 		}
+
+			// 	saveData(state);
+			// 	return state;
+			// });
 		}
 	};
 

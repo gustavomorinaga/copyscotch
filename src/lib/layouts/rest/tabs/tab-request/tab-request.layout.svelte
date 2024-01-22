@@ -74,7 +74,7 @@
 					controller = new AbortController();
 				},
 				save: async () => {
-					restStore.save([$formValue]);
+					restStore.saveRequests([$formValue]);
 					tabStore.update(tabID, $formValue);
 					tabStore.setDirty([tabID], false);
 				}

@@ -1,6 +1,7 @@
 <script lang="ts" context="module">
 	import { getRESTTabStore } from '$lib/stores';
-	import { ViewEdit, ViewResponse, ViewWelcome } from '$lib/layouts';
+	import * as Sidenav from '$lib/components/ui/sidenav';
+	import { SidenavREST, ViewEdit, ViewResponse, ViewWelcome } from '$lib/layouts';
 	import type { TRESTRequestSchema } from '$lib/validators';
 	import type { SuperValidated } from 'sveltekit-superforms';
 </script>
@@ -13,9 +14,17 @@
 	const tabStore = getRESTTabStore();
 </script>
 
-{#if $tabStore.tabs.length}
-	<ViewEdit {form} />
-	<ViewResponse />
-{:else}
-	<ViewWelcome />
-{/if}
+<Sidenav.Root>
+	<Sidenav.Nav>
+		<SidenavREST />
+	</Sidenav.Nav>
+	<Sidenav.Separator orientation="vertical" />
+	<Sidenav.Content>
+		{#if $tabStore.tabs.length}
+			<ViewEdit {form} />
+			<ViewResponse />
+		{:else}
+			<ViewWelcome />
+		{/if}
+	</Sidenav.Content>
+</Sidenav.Root>

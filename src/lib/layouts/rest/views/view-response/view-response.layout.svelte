@@ -30,9 +30,9 @@
 	$: status = getStatusType(currentResult?.response?.status);
 </script>
 
-<Separator orientation="horizontal" role="presentation" />
+<Separator orientation="horizontal" />
 
-<section class="relative flex h-[50dvh] flex-col overflow-y-auto">
+<section class="relative flex h-full flex-1 flex-col overflow-y-auto">
 	{#if isSending}
 		<Center>
 			<Loader class="h-4 w-4 animate-spin" />
@@ -77,7 +77,7 @@
 			<CodeMirror value={formatBody(currentResult.response.json)} lang="json" />
 		</div>
 	{:else}
-		<Center>
+		<Center class="select-none">
 			<span class="inline-flex space-x-4 text-sm text-muted-foreground">
 				<span>Send request</span>
 				<div class="space-x-1">

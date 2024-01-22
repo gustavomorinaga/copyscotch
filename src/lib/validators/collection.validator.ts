@@ -12,5 +12,6 @@ export const RESTCollectionSchema: z.ZodType<TFolderInfer> = RESTBaseFolderSchem
 });
 
 export type TFolderInfer = z.infer<typeof RESTBaseFolderSchema> & { folders: Array<TFolderInfer> };
+export type TFolderSchema = typeof RESTBaseFolderSchema;
 export type TRESTCollectionSchema = typeof RESTCollectionSchema;
 export type TRESTCollectionInfer = z.infer<TRESTCollectionSchema>;

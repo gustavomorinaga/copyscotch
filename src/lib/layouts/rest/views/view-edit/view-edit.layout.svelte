@@ -54,7 +54,7 @@
 		if ((event.ctrlKey || event.metaKey) && event.key === 's') {
 			event.preventDefault();
 			const { context: request } = tabStore.get($tabStore.current) as TRESTTabInfer;
-			restStore.save([request]);
+			restStore.saveRequests([request]);
 			tabStore.setDirty([$tabStore.current], false);
 		}
 	}
@@ -81,7 +81,11 @@
 
 <svelte:window on:keydown={handleKeyDown} />
 
-<Tabs.Root value={$tabStore.current} activateOnFocus={false} class="h-[50dvh]">
+<Tabs.Root
+	value={$tabStore.current}
+	activateOnFocus={false}
+	class="relative flex h-full flex-1 flex-col"
+>
 	<Tabs.List
 		id={tablistID}
 		class="relative flex min-h-12 touch-pan-x justify-start overflow-x-auto overflow-y-hidden scroll-smooth rounded-none p-0 pr-16 sm:overflow-x-hidden"
@@ -172,7 +176,7 @@
 	{#each $tabStore.tabs as tab}
 		{@const tabID = tab.id}
 
-		<Tabs.Content value={tabID} class="m-0 p-4">
+		<Tabs.Content value={tabID} class="m-0 bg-background p-4">
 			<TabRequest {tabID} {form} />
 		</Tabs.Content>
 	{/each}

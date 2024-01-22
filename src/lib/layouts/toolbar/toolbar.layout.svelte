@@ -10,7 +10,7 @@
 </script>
 
 <header
-	class="grid grid-cols-5 grid-rows-1 gap-2 overflow-x-auto overflow-y-hidden bg-background p-2"
+	class="grid h-14 grid-cols-5 grid-rows-1 gap-2 overflow-x-auto overflow-y-hidden bg-background p-2"
 >
 	<div class="col-span-3 flex items-center justify-between gap-x-2">
 		<Button

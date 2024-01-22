@@ -1,3 +1,3 @@
-<main class="flex h-screen w-screen flex-col">
+<div class="flex h-screen w-screen flex-col">
 	<slot />
-</main>
+</div>
