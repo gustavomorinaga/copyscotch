@@ -76,7 +76,7 @@
 				save: async () => {
 					restStore.saveRequests([$formValue]);
 					tabStore.update(tabID, $formValue);
-					tabStore.setDirty([tabID], false);
+					// tabStore.setDirty([tabID], false);
 				}
 			} as Record<TFormAction, () => Promise<void>>;
 

@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 import { getContext, setContext } from 'svelte';
 import { get, writable, type StartStopNotifier, type Writable } from 'svelte/store';
-import { findNested } from '$lib/utils';
+import { findNested, updateNested } from '$lib/utils';
 import type { TRESTCollectionInfer, TRESTRequestInfer } from '$lib/validators';
 
 type TRESTStore = Writable<TRESTData> & TRESTActions;
@@ -56,42 +56,22 @@ export function setRESTStore(
 		},
 		getRequest: (id) => {
 			const collections = get(store);
-			return findNested<TRESTRequestInfer>(collections, { requests: { id } });
+			return findNested(collections, { id });
 		},
 		saveCollection: (collection) => {
 			console.log(collection);
 			return;
 		},
 		saveRequests: (requests) => {
-			console.log(requests);
-			return;
+			// find existent requests and update them
+			// if not existent, add them
 
-			// return store.update((state) => {
-			// 	state = [...state, { id: generateUUID(), name: 'New Collection', requests, folders: [] }];
-			// 	saveData(state);
-			// 	return state;
-			// });
+			const collections = get(store);
 
-			// const { requests: savedRequests } = get(store);
-
-			// const newRequests = requests.filter(
-			// 	(request) => !savedRequests.find(({ id }) => id === request.id)
-			// );
-			// const updatedRequests = requests.filter((request) =>
-			// 	savedRequests.find(({ id }) => id === request.id)
-			// );
-
-			// return store.update((state) => {
-			// 	if (newRequests.length) state.requests.push(...newRequests);
-			// 	if (updatedRequests.length)
-			// 		for (const request of updatedRequests) {
-			// 			const index = state.requests.findIndex(({ id }) => id === request.id);
-			// 			state.requests[index] = request;
-			// 		}
-
-			// 	saveData(state);
-			// 	return state;
-			// });
+			for (const request of requests) {
+				const updated = updateNested(collections, { id: request.id }, { requests: [request] });
+				console.log(updated);
+			}
 		}
 	};
 

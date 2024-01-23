@@ -55,7 +55,7 @@
 			event.preventDefault();
 			const { context: request } = tabStore.get($tabStore.current) as TRESTTabInfer;
 			restStore.saveRequests([request]);
-			tabStore.setDirty([$tabStore.current], false);
+			// tabStore.setDirty([$tabStore.current], false);
 		}
 	}
 
