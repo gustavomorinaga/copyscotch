@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { dialogStore } from '.';
+	import { dialogEditCollectionStore as dialogStore } from '.';
 	import { getRESTStore } from '$lib/stores';
 	import { generateUUID } from '$lib/utils';
 	import { RESTBaseFolderSchema, type TRESTCollectionInfer } from '$lib/validators';
@@ -37,11 +37,12 @@
 	}
 
 	function handleCancel() {
-		$dialogStore.collection = undefined;
-		$dialogStore.open = false;
+		dialogStore.set({ mode: 'create', open: false, collection: undefined });
 	}
 
 	function handleSave() {
+		if (!$dialogStore.collection) return;
+
 		const saveAction = {
 			create: () => {
 				const data = {
@@ -56,9 +57,7 @@
 		};
 
 		saveAction[$dialogStore.mode]();
-
-		$dialogStore.collection = undefined;
-		$dialogStore.open = false;
+		dialogStore.set({ mode: 'create', open: false, collection: undefined });
 	}
 
 	function handleOpenChange(event: boolean) {

@@ -7,12 +7,12 @@
 		TabRequest,
 		ContextMenuEditRequest,
 		DialogEditRequest,
-		AlertDialogUnsavedChanges
+		AlertDialogUnsavedChanges,
+		dialogEditRequestStore as dialogStore
 	} from '$lib/layouts/rest';
 	import { horizontalScroll } from '$lib/directives';
 	import { Dot, Plus, X } from 'lucide-svelte';
-	import type { SuperValidated } from 'sveltekit-superforms';
-	import type { TRESTRequestSchema, TRESTTabInfer } from '$lib/validators';
+	import type { TRESTTabInfer } from '$lib/validators';
 </script>
 
 <script lang="ts">
@@ -56,7 +56,8 @@
 	}
 
 	function handleEditing(tabID: TRESTTabInfer['id']) {
-		tabStore.setEditing(tabID);
+		const { context: request } = tabStore.get(tabID) as TRESTTabInfer;
+		dialogStore.set({ mode: 'edit', open: true, request });
 	}
 
 	function setTablistScroll() {
@@ -178,5 +179,5 @@
 	{/each}
 </Tabs.Root>
 
-<!-- <DialogEditRequest {form} /> -->
+<DialogEditRequest />
 <AlertDialogUnsavedChanges />

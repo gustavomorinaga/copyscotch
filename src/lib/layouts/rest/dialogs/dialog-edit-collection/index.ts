@@ -8,10 +8,10 @@ type TCollectionDialogStore = {
 	mode: 'create' | 'edit';
 };
 
-const dialogStore = writable<TCollectionDialogStore>({
+const dialogEditCollectionStore = writable<TCollectionDialogStore>({
 	open: false,
 	collection: undefined,
 	mode: 'create'
 });
 
-export { Dialog as DialogEditCollection, dialogStore };
+export { Dialog as DialogEditCollection, dialogEditCollectionStore };

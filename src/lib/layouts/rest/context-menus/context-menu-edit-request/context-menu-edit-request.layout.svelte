@@ -2,8 +2,9 @@
 	import { onDestroy } from 'svelte';
 	import { getRESTTabStore } from '$lib/stores';
 	import * as ContextMenu from '$lib/components/ui/context-menu';
+	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest';
 	import { Copy, FileEdit, XCircle, XOctagon, XSquare } from 'lucide-svelte';
-	import type { TRESTRequestInfer } from '$lib/validators';
+	import type { TRESTRequestInfer, TRESTTabInfer } from '$lib/validators';
 	import type { ComponentType } from 'svelte';
 
 	type TEditRequestCTXMenuOption = {
@@ -31,7 +32,10 @@
 			label: 'Rename',
 			shortcut: 'R',
 			icon: FileEdit,
-			action: () => tabStore.setEditing(tabID)
+			action: () => {
+				const { context: request } = tabStore.get(tabID) as TRESTTabInfer;
+				dialogStore.set({ mode: 'edit', open: true, request });
+			}
 		},
 		{
 			label: 'Duplicate',

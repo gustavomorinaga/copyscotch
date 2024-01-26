@@ -1,37 +1,24 @@
 <script lang="ts" context="module">
+	import { dialogEditRequestStore as dialogStore } from '.';
 	import { getRESTTabStore } from '$lib/stores';
 	import { RESTRequestSchema, type TRESTTabInfer, type TRESTRequestSchema } from '$lib/validators';
 	import { generateUUID } from '$lib/utils';
 	import { Button } from '$lib/components/ui/button';
 	import * as Form from '$lib/components/ui/form';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import { superForm } from 'sveltekit-superforms/client';
-	import type { SuperValidated } from 'sveltekit-superforms';
+	import { defaults, superForm } from 'sveltekit-superforms';
+	import { zod } from 'sveltekit-superforms/adapters';
 
 	type TFormAction = 'save' | 'cancel';
 </script>
 
 <script lang="ts">
-	type $$Props = { form: SuperValidated<TRESTRequestSchema> };
-
-	export let form: $$Props['form'];
-
 	const tabStore = getRESTTabStore();
-	$: ({ editing } = $tabStore);
-	$: tab = (editing ? tabStore.get(editing) : {}) as TRESTTabInfer;
 
-	const formID = generateUUID();
-	const uniqueForm: $$Props['form'] = {
-		...structuredClone(form),
-		id: formID,
-		data: { ...tab?.context }
-	};
-
-	const superFrm = superForm(uniqueForm, {
+	const superFrm = superForm(defaults(zod(RESTRequestSchema)), {
 		SPA: true,
-		validators: RESTRequestSchema,
+		validators: zod(RESTRequestSchema),
 		validationMethod: 'onblur',
-		taintedMessage: false,
 		onSubmit: (input) => {
 			const formAction = getAction(input.action);
 			const actionMap = { cancel: handleCancel, save: handleSave } as const;
@@ -39,11 +26,9 @@
 		}
 	});
 
-	let open = false;
-
-	$: ({ form: formValue } = superFrm);
-	$: if (editing && editing === tab.id) open = true;
-	$: if (editing) superFrm.reset({ data: tab.context });
+	$: ({ form: formValue, formId, allErrors } = superFrm);
+	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
+	$: superFrm.reset({ data: $dialogStore.request });
 
 	function getAction(url: URL) {
 		const [action] = [...url.searchParams.keys()];
@@ -51,16 +36,23 @@
 	}
 
 	function handleCancel() {
-		superFrm.reset();
-		tabStore.setEditing(undefined);
-		open = false;
+		dialogStore.set({ mode: 'create', open: false, request: undefined });
 	}
 
 	function handleSave() {
-		tabStore.update(tab.id, $formValue);
-		tabStore.setEditing(undefined);
-		tabStore.setDirty([tab.id], true);
-		open = false;
+		if (!$dialogStore.request) return;
+
+		const { id: requestID } = $dialogStore.request;
+
+		const saveAction = {
+			create: () => console.log($formValue),
+			edit: () => console.log($formValue)
+		};
+
+		saveAction[$dialogStore.mode]();
+		tabStore.update(requestID, $formValue);
+		tabStore.setDirty([requestID], true);
+		dialogStore.set({ mode: 'create', open: false, request: undefined });
 	}
 
 	function handleOpenChange(event: boolean) {
@@ -75,19 +67,23 @@
 
 		if (event.key === 'Enter') {
 			event.preventDefault();
-			document.forms.namedItem(formID)?.requestSubmit();
+			$formId && document.forms.namedItem($formId)?.requestSubmit();
 		}
 	}
 </script>
 
-<Dialog.Root {open} closeOnOutsideClick={false} onOpenChange={handleOpenChange}>
+<Dialog.Root
+	bind:open={$dialogStore.open}
+	closeOnOutsideClick={false}
+	onOpenChange={handleOpenChange}
+>
 	<Dialog.Content>
 		<Dialog.Header>
 			<Dialog.Title>Edit Request</Dialog.Title>
 		</Dialog.Header>
 
 		<Form.Root
-			id={formID}
+			id={$formId}
 			form={superFrm}
 			schema={RESTRequestSchema}
 			controlled
@@ -103,8 +99,8 @@
 		</Form.Root>
 
 		<Dialog.Footer>
-			<Button type="submit" variant="ghost" form={formID} formaction="?/cancel">Cancel</Button>
-			<Button type="submit" variant="default" form={formID}>Save</Button>
+			<Button type="submit" variant="ghost" form={$formId} formaction="?/cancel">Cancel</Button>
+			<Button type="submit" variant="default" form={$formId} disabled={isInvalid}>Save</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

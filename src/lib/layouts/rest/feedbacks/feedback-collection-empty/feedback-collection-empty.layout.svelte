@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { dialogStore } from '$lib/layouts/rest';
+	import { dialogEditCollectionStore as dialogStore } from '$lib/layouts/rest';
 	import { Center } from '$lib/components/ui/center';
 	import { Button } from '$lib/components/ui/button';
 	import { FolderDown, Plus } from 'lucide-svelte';

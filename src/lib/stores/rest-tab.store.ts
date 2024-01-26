@@ -7,7 +7,6 @@ import type { TRESTTabInfer } from '$lib/validators';
 export type TRESTTabStore = Writable<TRESTTabData> & TRESTTabActions;
 export type TRESTTabData = TRESTTabDataPersist & TRESTTabDataTemp;
 export type TRESTTabDataTemp = {
-	editing?: TRESTTabInfer['context']['id'];
 	tainted: Array<TRESTTabInfer['context']['id']>;
 	results: Array<TRESTResult>;
 };
@@ -21,7 +20,6 @@ export type TRESTTabActions = {
 	update: (id: TRESTTabInfer['context']['id'], request: Partial<TRESTTabInfer['context']>) => void;
 	duplicate: (id: TRESTTabInfer['context']['id']) => void;
 	setCurrent: (id?: TRESTTabInfer['context']['id']) => void;
-	setEditing: (id?: TRESTTabInfer['context']['id']) => void;
 	setTainted: (ids?: Array<TRESTTabInfer['context']['id']>) => void;
 	setDirty: (ids: Array<TRESTTabInfer['context']['id']>, dirty: TRESTTabInfer['dirty']) => void;
 	setResult: (
@@ -44,7 +42,6 @@ const STORAGE_KEY = 'tabStateREST';
 const INITIAL_DATA: TRESTTabData = {
 	tabs: [],
 	current: undefined,
-	editing: undefined,
 	tainted: [],
 	results: []
 };
@@ -157,25 +154,6 @@ export function setRESTTabStore(
 
 			return store.update((state) => {
 				state.current = id;
-				saveData(state);
-				return state;
-			});
-		},
-		setEditing: (id) => {
-			if (!id) {
-				return store.update((state) => {
-					state.editing = undefined;
-					saveData(state);
-					return state;
-				});
-			}
-
-			const { tabs } = get(store);
-			const index = tabs.findIndex((tab) => tab.id === id);
-			if (index === -1) return;
-
-			return store.update((state) => {
-				state.editing = id;
 				saveData(state);
 				return state;
 			});

@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { dialogStore } from '$lib/layouts/rest';
+	import { dialogEditCollectionStore as dialogStore } from '$lib/layouts/rest';
 	import { TreeExpand } from '../tree-expand';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Collapsible from '$lib/components/ui/collapsible';
