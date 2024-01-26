@@ -11,7 +11,7 @@
 	}
 </script>
 
-<div class="inline-flex items-center gap-2">
+<div class="inline-flex h-8 items-center gap-2">
 	<Button size="sm" variant="text" on:click={handleNewCollection}>
 		<Plus class="mr-2 h-4 w-4" />
 		New
