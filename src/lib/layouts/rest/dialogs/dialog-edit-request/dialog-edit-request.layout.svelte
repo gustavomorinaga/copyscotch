@@ -79,7 +79,13 @@
 >
 	<Dialog.Content>
 		<Dialog.Header>
-			<Dialog.Title>Edit Request</Dialog.Title>
+			<Dialog.Title>
+				{#if $dialogStore.mode === 'create'}
+					Create Request
+				{:else if $dialogStore.mode === 'edit'}
+					Edit Request
+				{/if}
+			</Dialog.Title>
 		</Dialog.Header>
 
 		<Form.Root

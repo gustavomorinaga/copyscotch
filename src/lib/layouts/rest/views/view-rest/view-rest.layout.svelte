@@ -1,7 +1,13 @@
 <script lang="ts" context="module">
 	import { getSettingsStore, getRESTTabStore } from '$lib/stores';
 	import * as Sidenav from '$lib/components/ui/sidenav';
-	import { SidenavREST, ViewEdit, ViewResponse, ViewWelcome } from '$lib/layouts/rest';
+	import {
+		DialogEditRequest,
+		SidenavREST,
+		ViewEdit,
+		ViewResponse,
+		ViewWelcome
+	} from '$lib/layouts/rest';
 </script>
 
 <script lang="ts">
@@ -27,3 +33,5 @@
 		{/if}
 	</Sidenav.Content>
 </Sidenav.Root>
+
+<DialogEditRequest />

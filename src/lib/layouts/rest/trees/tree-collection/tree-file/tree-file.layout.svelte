@@ -1,9 +1,18 @@
 <script lang="ts" context="module">
 	import { getRESTTabStore } from '$lib/stores';
+	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import { MoreVertical, Trash2 } from 'lucide-svelte';
+	import { Edit, MoreVertical, Trash2 } from 'lucide-svelte';
+	import type { ComponentType } from 'svelte';
 	import type { TRESTRequestInfer } from '$lib/validators';
+
+	type TFileMenuOption = {
+		label: string;
+		shortcut?: string;
+		icon?: ComponentType;
+		action: () => void;
+	};
 </script>
 
 <script lang="ts">
@@ -13,6 +22,21 @@
 	export let openOptions: $$Props['openOptions'] = false;
 
 	const tabStore = getRESTTabStore();
+
+	const options = [
+		{
+			label: 'Edit',
+			shortcut: 'E',
+			icon: Edit,
+			action: () => dialogStore.set({ mode: 'edit', open: true, request: file })
+		},
+		{
+			label: 'Delete',
+			shortcut: 'D',
+			icon: Trash2,
+			action: () => {}
+		}
+	] satisfies Array<TFileMenuOption>;
 </script>
 
 <Button
@@ -21,7 +45,7 @@
 	class="w-full flex-1 px-0"
 	on:click={(event) => {
 		event.stopPropagation();
-		if (!tabStore.get(file.id)) tabStore.add(file);
+		tabStore.get(file.id) ? tabStore.setCurrent(file.id) : tabStore.add(file);
 	}}
 >
 	<div
@@ -57,11 +81,13 @@
 					<MoreVertical class="h-4 w-4" />
 				</Button>
 			</DropdownMenu.Trigger>
-			<DropdownMenu.Content>
-				<DropdownMenu.Item>
-					<Trash2 class="mr-2 h-4 w-4" />
-					Delete
-				</DropdownMenu.Item>
+			<DropdownMenu.Content class="w-64">
+				{#each options as option}
+					<DropdownMenu.Item inset on:click={option.action}>
+						<svelte:component this={option.icon} class="mr-2 h-4 w-4" />
+						{option.label}
+					</DropdownMenu.Item>
+				{/each}
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 	</div>

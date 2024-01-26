@@ -31,11 +31,7 @@
 			label: 'Edit',
 			shortcut: 'E',
 			icon: Edit,
-			action: () => {
-				$dialogStore.collection = folder;
-				$dialogStore.open = true;
-				$dialogStore.mode = 'edit';
-			}
+			action: () => dialogStore.set({ mode: 'edit', open: true, collection: folder })
 		},
 		{
 			label: 'Delete',
@@ -77,9 +73,9 @@
 						<MoreVertical class="h-4 w-4" />
 					</Button>
 				</DropdownMenu.Trigger>
-				<DropdownMenu.Content>
+				<DropdownMenu.Content class="w-64">
 					{#each options as option}
-						<DropdownMenu.Item on:click={option.action}>
+						<DropdownMenu.Item inset on:click={option.action}>
 							<svelte:component this={option.icon} class="mr-2 h-4 w-4" />
 							{option.label}
 						</DropdownMenu.Item>

@@ -6,7 +6,6 @@
 	import {
 		TabRequest,
 		ContextMenuEditRequest,
-		DialogEditRequest,
 		AlertDialogUnsavedChanges,
 		dialogEditRequestStore as dialogStore
 	} from '$lib/layouts/rest';
@@ -179,5 +178,4 @@
 	{/each}
 </Tabs.Root>
 
-<DialogEditRequest />
 <AlertDialogUnsavedChanges />
