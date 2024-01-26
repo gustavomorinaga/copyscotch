@@ -16,10 +16,6 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { form: SuperValidated<TRESTRequestSchema> };
-
-	export let form: $$Props['form'];
-
 	const restStore = getRESTStore();
 	const tabStore = getRESTTabStore();
 
@@ -177,10 +173,10 @@
 		{@const tabID = tab.id}
 
 		<Tabs.Content value={tabID} class="m-0 bg-background p-4">
-			<TabRequest {tabID} {form} />
+			<!-- <TabRequest {tabID} {form} /> -->
 		</Tabs.Content>
 	{/each}
 </Tabs.Root>
 
-<DialogEditRequest {form} />
+<!-- <DialogEditRequest {form} /> -->
 <AlertDialogUnsavedChanges />

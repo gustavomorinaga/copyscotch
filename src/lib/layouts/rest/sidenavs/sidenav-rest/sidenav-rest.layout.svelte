@@ -2,12 +2,19 @@
 	import { getRESTStore } from '$lib/stores';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
-	import { FeedbackCollectionEmpty, TreeCollection } from '$lib/layouts';
+	import { FeedbackCollectionEmpty } from '$lib/layouts/rest/feedbacks';
+	import { DialogEditCollection, dialogStore } from '$lib/layouts/rest/dialogs';
+	import { TreeCollection } from '$lib/layouts/rest/trees';
 	import { ChevronRight, Plus } from 'lucide-svelte';
 </script>
 
 <script lang="ts">
 	const restStore = getRESTStore();
+
+	function handleNewCollection() {
+		$dialogStore.open = true;
+		$dialogStore.mode = 'create';
+	}
 </script>
 
 <div
@@ -21,7 +28,7 @@
 <Separator orientation="horizontal" />
 
 <div class="inline-flex items-center gap-2">
-	<Button size="sm" variant="text">
+	<Button size="sm" variant="text" on:click={handleNewCollection}>
 		<Plus class="mr-2 h-4 w-4" />
 		New
 	</Button>
@@ -36,3 +43,5 @@
 		<FeedbackCollectionEmpty />
 	{/if}
 </div>
+
+<DialogEditCollection />

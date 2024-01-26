@@ -7,9 +7,10 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { file: TRESTRequestInfer };
+	type $$Props = { file: TRESTRequestInfer; openOptions?: boolean };
 
 	export let file: $$Props['file'];
+	export let openOptions: $$Props['openOptions'] = false;
 
 	const tabStore = getRESTTabStore();
 </script>
@@ -23,7 +24,15 @@
 		if (!tabStore.get(file.id)) tabStore.add(file);
 	}}
 >
-	<div class="flex flex-1 items-center justify-center">
+	<div
+		role="button"
+		tabindex="0"
+		class="flex flex-1 items-center justify-center"
+		on:contextmenu={(event) => {
+			event.preventDefault();
+			openOptions = true;
+		}}
+	>
 		<span
 			class="pointer-events-none flex w-16 items-center justify-center truncate px-2 text-tiny"
 			style="color: var(--method-{file.method.toLowerCase()}-color)"
@@ -36,7 +45,7 @@
 	</div>
 
 	<div class="flex items-center">
-		<DropdownMenu.Root>
+		<DropdownMenu.Root bind:open={openOptions}>
 			<DropdownMenu.Trigger let:builder>
 				<Button
 					builders={[builder]}
