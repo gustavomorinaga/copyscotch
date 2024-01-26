@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
+	import { dialogStore } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
-	import { dialogStore } from '$lib/layouts/rest/dialogs';
 	import { Plus } from 'lucide-svelte';
 </script>
 

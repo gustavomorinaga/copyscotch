@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { page } from '$app/stores';
-	import { DialogOptions } from '$lib/layouts';
+	import { DialogOptions } from '$lib/layouts/shared';
 	import { Button } from '$lib/components/ui/button';
 	// import { UploadCloud } from 'lucide-svelte';
 </script>

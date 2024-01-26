@@ -45,7 +45,7 @@
 		const saveAction = {
 			create: () => {
 				const data = { ...$dialogStore.collection, ...$formValue, id: generateUUID() };
-				restStore.saveCollection(data);
+				// restStore.saveCollection(data);
 			},
 			edit: () => console.log($formValue)
 		};

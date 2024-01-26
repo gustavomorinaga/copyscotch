@@ -1,10 +1,10 @@
 <script lang="ts" context="module">
+	import { dialogStore } from '$lib/layouts/rest';
+	import { TreeExpand } from '../tree-expand';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Edit, Folder, FolderOpen, MoreVertical, Trash2 } from 'lucide-svelte';
-	import { TreeExpand } from '$lib/layouts/rest/trees';
-	import { dialogStore } from '$lib/layouts/rest/dialogs';
 	import type { ComponentType } from 'svelte';
 	import type { TFolderInfer } from '$lib/validators';
 

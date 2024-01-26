@@ -8,7 +8,7 @@
 		ContextMenuEditRequest,
 		DialogEditRequest,
 		AlertDialogUnsavedChanges
-	} from '$lib/layouts';
+	} from '$lib/layouts/rest';
 	import { horizontalScroll } from '$lib/directives';
 	import { Dot, Plus, X } from 'lucide-svelte';
 	import type { SuperValidated } from 'sveltekit-superforms';
@@ -128,7 +128,7 @@
 						>
 							<Button
 								size="icon"
-								variant="ghost"
+								variant="text"
 								class="relative h-6 w-6"
 								role="button"
 								tabindex={-1}
