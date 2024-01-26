@@ -22,7 +22,7 @@
 
 	function handleSave() {
 		const requests = dirtyTabs.map((tab) => tab.context);
-		restStore.save(requests);
+		// restStore.save(requests);
 		tabStore.close({ ids: $tabStore.tainted, mode: 'normal' });
 		tabStore.setTainted(undefined);
 	}
