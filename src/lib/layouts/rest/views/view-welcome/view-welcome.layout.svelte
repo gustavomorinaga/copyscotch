@@ -9,9 +9,16 @@
 	const tabStore = getRESTTabStore();
 </script>
 
-<Center>
-	<Button size="sm" variant="outline" on:click={() => tabStore.add()}>
-		<Plus class="mr-2 h-4 w-4" />
-		New Request
-	</Button>
-</Center>
+<div
+	role="button"
+	tabindex="0"
+	class="flex h-full cursor-default select-none flex-col"
+	on:dblclick={() => tabStore.add()}
+>
+	<Center>
+		<Button size="sm" variant="outline" on:click={() => tabStore.add()}>
+			<Plus class="mr-2 h-4 w-4" />
+			New Request
+		</Button>
+	</Center>
+</div>
