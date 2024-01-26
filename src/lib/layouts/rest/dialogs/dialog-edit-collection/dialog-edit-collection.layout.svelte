@@ -2,7 +2,7 @@
 	import { dialogStore } from '.';
 	import { getRESTStore } from '$lib/stores';
 	import { generateUUID } from '$lib/utils';
-	import { RESTBaseFolderSchema } from '$lib/validators';
+	import { RESTBaseFolderSchema, type TRESTCollectionInfer } from '$lib/validators';
 	import { Button } from '$lib/components/ui/button';
 	import * as Form from '$lib/components/ui/form';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -44,8 +44,13 @@
 	function handleSave() {
 		const saveAction = {
 			create: () => {
-				const data = { ...$dialogStore.collection, ...$formValue, id: generateUUID() };
-				// restStore.saveCollection(data);
+				const data = {
+					...$formValue,
+					id: generateUUID(),
+					requests: [],
+					folders: []
+				} as TRESTCollectionInfer;
+				restStore.saveCollection(data);
 			},
 			edit: () => console.log($formValue)
 		};

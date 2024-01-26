@@ -43,12 +43,12 @@ export function setRESTStore(
 		};
 	});
 
-	// function saveData(data: TRESTData) {
-	// 	if (!browser) return;
+	function saveData(data: TRESTData) {
+		if (!browser) return;
 
-	// 	localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-	// 	channel?.postMessage(data);
-	// }
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+		channel?.postMessage(data);
+	}
 
 	const actions: TRESTActions = {
 		getCollection: (id) => {
@@ -60,8 +60,12 @@ export function setRESTStore(
 			return findNested(collections, { id });
 		},
 		saveCollection: (collection) => {
-			console.log(collection);
-			return;
+			return store.update((state) => {
+				const index = state.findIndex(({ id }) => id === collection.id);
+				index !== -1 ? (state[index] = collection) : state.push(collection);
+				saveData(state);
+				return state;
+			});
 		},
 		saveRequests: (requests) => {
 			// find existent requests and update them
