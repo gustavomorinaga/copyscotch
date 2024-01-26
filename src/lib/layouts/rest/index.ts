@@ -1,3 +1,4 @@
+export * from './toolbars';
 export * from './tabs';
 export * from './dialogs';
 export * from './alert-dialogs';
