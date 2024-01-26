@@ -24,6 +24,7 @@ export function setRESTStore(
 	let channel: BroadcastChannel | null;
 
 	const storedData = browser ? localStorage.getItem(STORAGE_KEY) : undefined;
+	if (!storedData) localStorage.setItem(STORAGE_KEY, JSON.stringify(initialData));
 	const data: TRESTData = storedData ? JSON.parse(storedData) : initialData;
 
 	const store = writable(data, (set, update) => {

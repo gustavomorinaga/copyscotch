@@ -61,6 +61,7 @@ export function setRESTTabStore(
 	let channel: BroadcastChannel | null;
 
 	const storedData = browser ? localStorage.getItem(STORAGE_KEY) : undefined;
+	if (!storedData) localStorage.setItem(STORAGE_KEY, JSON.stringify(initialData));
 	const data: TRESTTabData = storedData
 		? { ...initialData, ...JSON.parse(storedData) }
 		: initialData;
