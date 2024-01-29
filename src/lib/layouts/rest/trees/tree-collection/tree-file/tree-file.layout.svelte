@@ -16,6 +16,8 @@
 </script>
 
 <script lang="ts">
+	import { Dot } from 'lucide-svelte';
+
 	type $$Props = { file: TRESTRequestInfer; openOptions?: boolean };
 
 	export let file: $$Props['file'];
@@ -37,6 +39,8 @@
 			action: () => {}
 		}
 	] satisfies Array<TFileMenuOption>;
+
+	$: current = $tabStore.current === file.id;
 </script>
 
 <Button
@@ -63,8 +67,21 @@
 		>
 			{file.method}
 		</span>
-		<span class="flex flex-1 py-2 pr-2">
+		<span class="flex flex-1 items-center py-2 pr-2">
 			<span class="truncate text-sm">{file.name}</span>
+			{#if current}
+				<div class="relative mx-3 flex h-2 w-2 flex-shrink-0 items-center justify-center">
+					<div
+						class="absolute inset-0 inline-flex flex-shrink-0 animate-ping rounded-full bg-success opacity-75"
+					/>
+					<Dot
+						class="relative inline-flex h-2 w-2 text-success"
+						style="stroke-width: 16"
+						aria-hidden="true"
+						focusable="false"
+					/>
+				</div>
+			{/if}
 		</span>
 	</div>
 

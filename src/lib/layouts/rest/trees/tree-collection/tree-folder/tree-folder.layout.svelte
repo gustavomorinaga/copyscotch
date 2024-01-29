@@ -1,5 +1,8 @@
 <script lang="ts" context="module">
-	import { dialogEditCollectionStore as dialogStore } from '$lib/layouts/rest';
+	import {
+		dialogEditCollectionStore as dialogStore,
+		treeCollectionStore as treeStore
+	} from '$lib/layouts/rest';
 	import { TreeExpand } from '../tree-expand';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Collapsible from '$lib/components/ui/collapsible';
@@ -42,9 +45,14 @@
 	] satisfies Array<TFolderMenuOption>;
 
 	$: fileStatus = (open ? 'open' : 'closed') as TFolderStatus;
+	$: if ($treeStore.collapse) open = false;
+
+	function onOpenChange() {
+		if ($treeStore.collapse) $treeStore.collapse = false;
+	}
 </script>
 
-<Collapsible.Root class="flex flex-col" bind:open>
+<Collapsible.Root class="flex flex-col" bind:open {onOpenChange}>
 	<Collapsible.Trigger class={buttonVariants({ size: 'sm', variant: 'text', class: 'px-0' })}>
 		<div
 			role="button"

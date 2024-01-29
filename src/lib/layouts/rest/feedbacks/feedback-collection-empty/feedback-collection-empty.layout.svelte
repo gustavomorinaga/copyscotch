@@ -7,8 +7,7 @@
 
 <script lang="ts">
 	function handleNewCollection() {
-		$dialogStore.open = true;
-		$dialogStore.mode = 'create';
+		dialogStore.set({ mode: 'create', open: true, collection: undefined });
 	}
 </script>
 

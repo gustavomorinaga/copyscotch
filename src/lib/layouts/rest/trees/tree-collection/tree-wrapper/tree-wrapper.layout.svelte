@@ -5,14 +5,15 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { folders: Array<TRESTCollectionInfer> };
+	type $$Props = { folders: Array<TRESTCollectionInfer>; open?: boolean };
 
 	export let folders: $$Props['folders'] = [];
+	export let open: $$Props['open'] = false;
 </script>
 
 <ul class="flex flex-col">
 	{#each folders as folder}
-		<TreeFolder {folder}>
+		<TreeFolder {folder} {open}>
 			<ul class="flex flex-1 flex-col">
 				{#if folder.folders.length}
 					<svelte:self folders={folder.folders} />
