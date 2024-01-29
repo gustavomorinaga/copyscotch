@@ -1,8 +1,7 @@
 <script lang="ts" context="module">
 	import { dialogEditRequestStore as dialogStore } from '.';
 	import { getRESTTabStore } from '$lib/stores';
-	import { RESTRequestSchema, type TRESTTabInfer, type TRESTRequestSchema } from '$lib/validators';
-	import { generateUUID } from '$lib/utils';
+	import { RESTRequestSchema } from '$lib/validators';
 	import { Button } from '$lib/components/ui/button';
 	import * as Form from '$lib/components/ui/form';
 	import * as Dialog from '$lib/components/ui/dialog';

@@ -1,48 +1,34 @@
 <script lang="ts" context="module">
 	import { getRESTStore, getRESTTabStore } from '$lib/stores';
 	import { generateUUID } from '$lib/utils';
-	import {
-		RESTRequestSchema,
-		type TRESTRequestInfer,
-		type TRESTTabInfer,
-		type TRESTRequestSchema
-	} from '$lib/validators';
+	import { RESTRequestSchema, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
 	import * as Form from '$lib/components/ui/form';
 	import { Save } from 'lucide-svelte';
-	import { superForm } from 'sveltekit-superforms/client';
-	import type { SuperValidated } from 'sveltekit-superforms';
+	import { defaults, superForm } from 'sveltekit-superforms';
+	import { zod } from 'sveltekit-superforms/adapters';
 	import type { ComponentProps } from 'svelte';
 
 	type TFormAction = 'send' | 'cancel' | 'save';
 </script>
 
 <script lang="ts">
-	import { Join } from '$lib/components/ui/form';
-
-	type $$Props = {
-		tabID: TRESTTabInfer['id'];
-		form: SuperValidated<TRESTRequestSchema>;
-	};
+	type $$Props = { tabID: TRESTTabInfer['id'] };
 
 	export let tabID: $$Props['tabID'];
-	export let form: $$Props['form'];
 
 	const restStore = getRESTStore();
 	const tabStore = getRESTTabStore();
 
 	const formID = generateUUID();
-	const { context: request } = tabStore.get(tabID) as TRESTTabInfer;
-	const uniqueForm = { ...structuredClone(form), id: formID, data: request };
 	const methodOptions = RESTRequestSchema.shape.method.options;
 
 	let formAction: TFormAction = 'send';
 	let controller = new AbortController();
 
-	const superFrm = superForm(uniqueForm, {
+	const superFrm = superForm(defaults(zod(RESTRequestSchema)), {
 		SPA: true,
-		validators: RESTRequestSchema,
+		validators: zod(RESTRequestSchema),
 		validationMethod: 'onblur',
-		taintedMessage: false,
 		onSubmit: async () => {
 			const formActions = {
 				send: async () => {
@@ -76,7 +62,7 @@
 				save: async () => {
 					restStore.saveRequests([$formValue]);
 					tabStore.update(tabID, $formValue);
-					// tabStore.setDirty([tabID], false);
+					tabStore.setDirty([tabID], false);
 				}
 			} as Record<TFormAction, () => Promise<void>>;
 

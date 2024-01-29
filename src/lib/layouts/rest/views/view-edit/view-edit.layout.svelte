@@ -173,7 +173,7 @@
 		{@const tabID = tab.id}
 
 		<Tabs.Content value={tabID} class="m-0 bg-background p-4">
-			<!-- <TabRequest {tabID} {form} /> -->
+			<TabRequest {tabID} />
 		</Tabs.Content>
 	{/each}
 </Tabs.Root>
