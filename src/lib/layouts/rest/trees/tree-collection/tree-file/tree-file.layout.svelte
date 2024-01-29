@@ -1,44 +1,20 @@
 <script lang="ts" context="module">
 	import { getRESTTabStore } from '$lib/stores';
-	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest';
+	import { DropdownMenuRequestOptions } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import { Edit, MoreVertical, Trash2 } from 'lucide-svelte';
-	import type { ComponentType } from 'svelte';
+	import { MoreVertical } from 'lucide-svelte';
 	import type { TRESTRequestInfer } from '$lib/validators';
-
-	type TFileMenuOption = {
-		label: string;
-		shortcut?: string;
-		icon?: ComponentType;
-		action: () => void;
-	};
 </script>
 
 <script lang="ts">
 	import { Dot } from 'lucide-svelte';
 
-	type $$Props = { file: TRESTRequestInfer; openOptions?: boolean };
+	type $$Props = { file: TRESTRequestInfer };
 
 	export let file: $$Props['file'];
-	export let openOptions: $$Props['openOptions'] = false;
+	let openOptions: boolean = false;
 
 	const tabStore = getRESTTabStore();
-
-	const options = [
-		{
-			label: 'Edit',
-			shortcut: 'E',
-			icon: Edit,
-			action: () => dialogStore.set({ mode: 'edit', open: true, request: file })
-		},
-		{
-			label: 'Delete',
-			shortcut: 'D',
-			icon: Trash2,
-			action: () => {}
-		}
-	] satisfies Array<TFileMenuOption>;
 
 	$: current = $tabStore.current === file.id;
 </script>
@@ -46,7 +22,7 @@
 <Button
 	size="sm"
 	variant="text"
-	class="w-full flex-1 px-0"
+	class="group/file w-full flex-1 px-0"
 	on:click={(event) => {
 		event.stopPropagation();
 		tabStore.get(file.id) ? tabStore.setCurrent(file.id) : tabStore.add(file);
@@ -86,26 +62,17 @@
 	</div>
 
 	<div class="flex items-center">
-		<DropdownMenu.Root bind:open={openOptions}>
-			<DropdownMenu.Trigger let:builder>
-				<Button
-					builders={[builder]}
-					size="icon"
-					variant="ghost"
-					class="h-6 w-6 text-accent-foreground"
-					on:click={(event) => event.stopPropagation()}
-				>
-					<MoreVertical class="h-4 w-4" />
-				</Button>
-			</DropdownMenu.Trigger>
-			<DropdownMenu.Content class="w-64">
-				{#each options as option}
-					<DropdownMenu.Item inset on:click={option.action}>
-						<svelte:component this={option.icon} class="mr-2 h-4 w-4" />
-						{option.label}
-					</DropdownMenu.Item>
-				{/each}
-			</DropdownMenu.Content>
-		</DropdownMenu.Root>
+		<DropdownMenuRequestOptions request={file} bind:open={openOptions} let:builder>
+			<Button
+				builders={[builder]}
+				size="icon"
+				variant="text"
+				class="h-6 w-6"
+				on:click={(event) => event.stopPropagation()}
+			>
+				<MoreVertical class="h-4 w-4" />
+				<span class="sr-only">More options</span>
+			</Button>
+		</DropdownMenuRequestOptions>
 	</div>
 </Button>

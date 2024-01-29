@@ -1,48 +1,25 @@
 <script lang="ts" context="module">
 	import {
-		dialogEditCollectionStore as dialogStore,
+		DropdownMenuCollectionOptions,
 		treeCollectionStore as treeStore
 	} from '$lib/layouts/rest';
 	import { TreeExpand } from '../tree-expand';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Collapsible from '$lib/components/ui/collapsible';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import { Edit, Folder, FolderOpen, MoreVertical, Trash2 } from 'lucide-svelte';
-	import type { ComponentType } from 'svelte';
+	import { Folder, FilePlus, FolderOpen, FolderPlus, MoreVertical } from 'lucide-svelte';
 	import type { TFolderInfer } from '$lib/validators';
 
 	type TFolderStatus = 'open' | 'closed';
-	type TFolderMenuOption = {
-		label: string;
-		shortcut?: string;
-		icon?: ComponentType;
-		action: () => void;
-	};
 
 	const folderIcon = { open: FolderOpen, closed: Folder } as const;
 </script>
 
 <script lang="ts">
-	type $$Props = { folder: TFolderInfer; open?: boolean; openOptions?: boolean };
+	type $$Props = { folder: TFolderInfer; open?: boolean };
 
 	export let folder: $$Props['folder'];
 	export let open: $$Props['open'] = false;
-	export let openOptions: $$Props['openOptions'] = false;
-
-	const options = [
-		{
-			label: 'Edit',
-			shortcut: 'E',
-			icon: Edit,
-			action: () => dialogStore.set({ mode: 'edit', open: true, collection: folder })
-		},
-		{
-			label: 'Delete',
-			shortcut: 'D',
-			icon: Trash2,
-			action: () => {}
-		}
-	] satisfies Array<TFolderMenuOption>;
+	let openOptions: boolean = false;
 
 	$: fileStatus = (open ? 'open' : 'closed') as TFolderStatus;
 	$: if ($treeStore.collapse) open = false;
@@ -53,7 +30,9 @@
 </script>
 
 <Collapsible.Root class="flex flex-col" bind:open {onOpenChange}>
-	<Collapsible.Trigger class={buttonVariants({ size: 'sm', variant: 'text', class: 'px-0' })}>
+	<Collapsible.Trigger
+		class={buttonVariants({ size: 'sm', variant: 'text', class: 'group/folder px-0' })}
+	>
 		<div
 			role="button"
 			tabindex="0"
@@ -68,28 +47,39 @@
 				<span class="truncate text-sm">{folder.name}</span>
 			</span>
 		</div>
-		<div class="flex items-center">
-			<DropdownMenu.Root bind:open={openOptions}>
-				<DropdownMenu.Trigger let:builder>
-					<Button
-						builders={[builder]}
-						size="icon"
-						variant="ghost"
-						class="h-6 w-6 text-accent-foreground"
-						on:click={(event) => event.stopPropagation()}
-					>
-						<MoreVertical class="h-4 w-4" />
-					</Button>
-				</DropdownMenu.Trigger>
-				<DropdownMenu.Content class="w-64">
-					{#each options as option}
-						<DropdownMenu.Item inset on:click={option.action}>
-							<svelte:component this={option.icon} class="mr-2 h-4 w-4" />
-							{option.label}
-						</DropdownMenu.Item>
-					{/each}
-				</DropdownMenu.Content>
-			</DropdownMenu.Root>
+		<div class="flex items-center gap-2">
+			<Button
+				size="icon"
+				variant="text"
+				class="invisible h-6 w-6 group-hover/folder:visible"
+				on:click={(event) => event.stopPropagation()}
+			>
+				<FilePlus class="h-4 w-4" />
+				<span class="sr-only">New request</span>
+			</Button>
+
+			<Button
+				size="icon"
+				variant="text"
+				class="invisible h-6 w-6 group-hover/folder:visible"
+				on:click={(event) => event.stopPropagation()}
+			>
+				<FolderPlus class="h-4 w-4" />
+				<span class="sr-only">New folder</span>
+			</Button>
+
+			<DropdownMenuCollectionOptions collection={folder} bind:open={openOptions} let:builder>
+				<Button
+					builders={[builder]}
+					size="icon"
+					variant="text"
+					class="h-6 w-6"
+					on:click={(event) => event.stopPropagation()}
+				>
+					<MoreVertical class="h-4 w-4" />
+					<span class="sr-only">More options</span>
+				</Button>
+			</DropdownMenuCollectionOptions>
 		</div>
 	</Collapsible.Trigger>
 	<Collapsible.Content class="flex">
