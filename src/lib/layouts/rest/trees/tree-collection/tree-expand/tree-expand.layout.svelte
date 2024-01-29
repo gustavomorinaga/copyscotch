@@ -5,7 +5,7 @@
 </script>
 
 <div
-	class="ml-6 flex w-0.5 transform cursor-ns-resize bg-accent transition hover:scale-x-125 hover:bg-muted-foreground"
+	class="ml-6 flex w-0.5 transform cursor-ns-resize bg-muted transition hover:scale-x-125 hover:bg-accent"
 	role="presentation"
 	aria-hidden="true"
 	on:click|stopPropagation={() => (open = false)}
