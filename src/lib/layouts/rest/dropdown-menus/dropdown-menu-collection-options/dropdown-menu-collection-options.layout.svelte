@@ -1,5 +1,8 @@
 <script lang="ts" context="module">
-	import { dialogEditCollectionStore as dialogStore } from '$lib/layouts/rest';
+	import {
+		dialogEditCollectionStore as dialogStore,
+		type TCollectionDialogStore
+	} from '$lib/layouts/rest';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Edit, Trash2 } from 'lucide-svelte';
 	import type { ComponentType } from 'svelte';
@@ -14,9 +17,14 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { collection: TRESTCollectionInfer; open?: boolean };
+	type $$Props = {
+		collection: TRESTCollectionInfer;
+		type: TCollectionDialogStore['type'];
+		open?: boolean;
+	};
 
 	export let collection: $$Props['collection'];
+	export let type: $$Props['type'] = 'collection';
 	export let open: $$Props['open'] = false;
 
 	const options = [
@@ -24,7 +32,7 @@
 			label: 'Edit',
 			shortcut: 'E',
 			icon: Edit,
-			action: () => dialogStore.set({ mode: 'edit', open: true, collection })
+			action: () => dialogStore.set({ mode: 'edit', type, open: true, collection })
 		},
 		{
 			label: 'Delete',

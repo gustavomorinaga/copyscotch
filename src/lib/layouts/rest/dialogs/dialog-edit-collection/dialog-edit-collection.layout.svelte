@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { dialogEditCollectionStore as dialogStore } from '.';
+	import { dialogEditCollectionStore as dialogStore, type TCollectionDialogStore } from '.';
 	import { getRESTStore } from '$lib/stores';
 	import { generateUUID } from '$lib/utils';
 	import { RESTBaseFolderSchema, type TRESTCollectionInfer } from '$lib/validators';
@@ -10,6 +10,15 @@
 	import { zod } from 'sveltekit-superforms/adapters';
 
 	type TFormAction = 'save' | 'cancel';
+	type TDialogProp = Record<
+		TCollectionDialogStore['type'],
+		Record<TCollectionDialogStore['mode'], { title: string }>
+	>;
+
+	const dialogPropMap: TDialogProp = {
+		collection: { create: { title: 'Create Collection' }, edit: { title: 'Edit Collection' } },
+		folder: { create: { title: 'Create Folder' }, edit: { title: 'Edit Folder' } }
+	} as const;
 </script>
 
 <script lang="ts">
@@ -30,6 +39,7 @@
 	$: ({ form: formValue, formId, allErrors } = superFrm);
 	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
 	$: superFrm.reset({ id: $dialogStore.collection?.id, data: $dialogStore.collection });
+	$: ({ title } = dialogPropMap[$dialogStore.type][$dialogStore.mode]);
 
 	function getAction(url: URL) {
 		const [action] = [...url.searchParams.keys()];
@@ -37,7 +47,7 @@
 	}
 
 	function handleCancel() {
-		dialogStore.set({ mode: 'create', open: false, collection: undefined });
+		dialogStore.set({ mode: 'create', type: 'collection', open: false, collection: undefined });
 	}
 
 	function handleSave() {
@@ -57,7 +67,7 @@
 		};
 
 		saveAction[$dialogStore.mode]();
-		dialogStore.set({ mode: 'create', open: false, collection: undefined });
+		dialogStore.set({ mode: 'create', type: 'collection', open: false, collection: undefined });
 	}
 
 	function handleOpenChange(event: boolean) {
@@ -84,13 +94,7 @@
 >
 	<Dialog.Content>
 		<Dialog.Header>
-			<Dialog.Title>
-				{#if $dialogStore.mode === 'create'}
-					Create Collection
-				{:else if $dialogStore.mode === 'edit'}
-					Edit Collection
-				{/if}
-			</Dialog.Title>
+			<Dialog.Title>{title}</Dialog.Title>
 		</Dialog.Header>
 
 		<Form.Root

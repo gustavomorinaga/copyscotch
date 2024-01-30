@@ -9,7 +9,7 @@
 
 <script lang="ts">
 	function handleNewCollection() {
-		dialogStore.set({ mode: 'create', open: true, collection: undefined });
+		dialogStore.set({ mode: 'create', type: 'collection', open: true, collection: undefined });
 	}
 
 	function handleCollapseAll() {
