@@ -27,7 +27,7 @@
 
 	$: ({ form: formValue, formId, allErrors } = superFrm);
 	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
-	$: superFrm.reset({ data: $dialogStore.request });
+	$: superFrm.reset({ id: $dialogStore.request?.id, data: $dialogStore.request });
 
 	function getAction(url: URL) {
 		const [action] = [...url.searchParams.keys()];

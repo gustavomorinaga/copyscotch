@@ -1,6 +1,5 @@
 <script lang="ts" context="module">
 	import { getRESTStore, getRESTTabStore } from '$lib/stores';
-	import { generateUUID } from '$lib/utils';
 	import { RESTRequestSchema, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
 	import * as Form from '$lib/components/ui/form';
 	import { Save } from 'lucide-svelte';
@@ -19,13 +18,13 @@
 	const restStore = getRESTStore();
 	const tabStore = getRESTTabStore();
 
-	const formID = generateUUID();
 	const methodOptions = RESTRequestSchema.shape.method.options;
 
 	let formAction: TFormAction = 'send';
 	let controller = new AbortController();
 
 	const superFrm = superForm(defaults(zod(RESTRequestSchema)), {
+		id: tabID,
 		SPA: true,
 		validators: zod(RESTRequestSchema),
 		validationMethod: 'onblur',
@@ -37,7 +36,7 @@
 					const { url, method } = $formValue;
 					const start = performance.now();
 
-					fetch(url, { method: method, signal: controller.signal })
+					fetch(url, { method, signal: controller.signal })
 						.then((response) => {
 							const end = performance.now();
 							const time = end - start;
@@ -70,7 +69,7 @@
 		}
 	});
 
-	$: ({ form: formValue, submitting } = superFrm);
+	$: ({ form: formValue, formId, submitting } = superFrm);
 	$: sending = $tabStore.results.find((result) => result.id === tabID)?.sending;
 	$: if ($tabStore.tabs) {
 		const updatedTab = tabStore.get(tabID);
@@ -96,7 +95,7 @@
 			if ($submitting) return;
 
 			formAction = sending ? 'cancel' : 'send';
-			document.forms.namedItem(formID)?.requestSubmit();
+			$formId && document.forms.namedItem($formId)?.requestSubmit();
 		}
 	}
 </script>
@@ -104,7 +103,7 @@
 <svelte:window on:keydown={handleKeydown} />
 
 <Form.Root
-	id={formID}
+	id={$formId}
 	form={superFrm}
 	schema={RESTRequestSchema}
 	controlled

@@ -29,7 +29,7 @@
 
 	$: ({ form: formValue, formId, allErrors } = superFrm);
 	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
-	$: superFrm.reset({ data: $dialogStore.collection });
+	$: superFrm.reset({ id: $dialogStore.collection?.id, data: $dialogStore.collection });
 
 	function getAction(url: URL) {
 		const [action] = [...url.searchParams.keys()];
