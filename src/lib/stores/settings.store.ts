@@ -11,7 +11,7 @@ type TSettingsActions = {
 
 const CTX = Symbol('SETTINGS_CTX');
 const STORAGE_KEY = 'settings';
-const INITIAL_DATA: TSettingsData = { sidebar: 'open' };
+const INITIAL_DATA: TSettingsData = { sidebar: 'open', lineWrapping: false };
 
 export function setSettingsStore(
 	initialData: Partial<TSettingsData> = INITIAL_DATA,
@@ -50,11 +50,12 @@ export function setSettingsStore(
 		save: (settings) => {
 			store.update((state) => {
 				const newState = { ...state, ...settings };
-				saveData(newState);
 				return newState;
 			});
 		}
 	};
+
+	store.subscribe((state) => saveData(state));
 
 	const context = { ...store, ...actions } as TSettingsStore;
 	return setContext(CTX, context);

@@ -15,9 +15,7 @@
 
 	export let tabID: $$Props['tabID'];
 
-	const restStore = getRESTStore();
-	const tabStore = getRESTTabStore();
-
+	const [restStore, tabStore] = [getRESTStore(), getRESTTabStore()];
 	const methodOptions = RESTRequestSchema.shape.method.options;
 
 	let formAction: TFormAction = 'send';
@@ -28,45 +26,7 @@
 		SPA: true,
 		validators: zod(RESTRequestSchema),
 		validationMethod: 'onblur',
-		onSubmit: async () => {
-			const formActions = {
-				send: async () => {
-					tabStore.setResult(tabID, { response: undefined, sending: true });
-
-					const { url, method } = $formValue;
-					const start = performance.now();
-
-					fetch(url, { method, signal: controller.signal })
-						.then((response) => {
-							const end = performance.now();
-							const time = end - start;
-							const { ok, status, headers } = response;
-
-							Promise.all([response.clone().json(), response.clone().blob()]).then(([json, blob]) =>
-								tabStore.setResult(tabID, {
-									response: { ok, status, headers, json, blob, time }
-								})
-							);
-						})
-						.catch((error) => {
-							const isDOMException = error instanceof DOMException;
-							tabStore.setResult(tabID, { response: isDOMException ? undefined : error });
-						})
-						.finally(() => tabStore.setResult(tabID, { sending: false }));
-				},
-				cancel: async () => {
-					controller.abort();
-					controller = new AbortController();
-				},
-				save: async () => {
-					restStore.saveRequests([$formValue]);
-					tabStore.update(tabID, $formValue);
-					tabStore.setDirty([tabID], false);
-				}
-			} as Record<TFormAction, () => Promise<void>>;
-
-			return await formActions[formAction]();
-		}
+		onSubmit: handleFormSubmit
 	});
 
 	$: ({ form: formValue, formId, submitting } = superFrm);
@@ -97,6 +57,46 @@
 			formAction = sending ? 'cancel' : 'send';
 			$formId && document.forms.namedItem($formId)?.requestSubmit();
 		}
+	}
+
+	async function handleFormSubmit() {
+		const ACTIONS = {
+			send: async () => {
+				tabStore.setResult(tabID, { response: undefined, sending: true });
+
+				const { url, method } = $formValue;
+				const start = performance.now();
+
+				fetch(url, { method, signal: controller.signal })
+					.then((response) => {
+						const end = performance.now();
+						const time = end - start;
+						const { ok, status, headers } = response;
+
+						Promise.all([response.clone().json(), response.clone().blob()]).then(([json, blob]) =>
+							tabStore.setResult(tabID, {
+								response: { ok, status, headers, json, blob, time }
+							})
+						);
+					})
+					.catch((error) => {
+						const isDOMException = error instanceof DOMException;
+						tabStore.setResult(tabID, { response: isDOMException ? undefined : error });
+					})
+					.finally(() => tabStore.setResult(tabID, { sending: false }));
+			},
+			cancel: async () => {
+				controller.abort();
+				controller = new AbortController();
+			},
+			save: async () => {
+				restStore.saveRequests([$formValue]);
+				tabStore.update(tabID, $formValue);
+				tabStore.setDirty([tabID], false);
+			}
+		} as Record<TFormAction, () => Promise<void>>;
+
+		return await ACTIONS[formAction]();
 	}
 </script>
 

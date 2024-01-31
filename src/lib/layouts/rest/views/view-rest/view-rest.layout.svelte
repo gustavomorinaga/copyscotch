@@ -11,8 +11,7 @@
 </script>
 
 <script lang="ts">
-	const settingsStore = getSettingsStore();
-	const tabStore = getRESTTabStore();
+	const [settingsStore, tabStore] = [getSettingsStore(), getRESTTabStore()];
 
 	$: openSidebar = $settingsStore.sidebar === 'open';
 </script>

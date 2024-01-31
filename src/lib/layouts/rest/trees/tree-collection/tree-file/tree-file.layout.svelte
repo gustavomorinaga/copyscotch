@@ -46,9 +46,9 @@
 		<span class="flex flex-1 items-center py-2 pr-2">
 			<span class="truncate text-sm">{file.name}</span>
 			{#if current}
-				<div class="relative mx-3 flex h-2 w-2 flex-shrink-0 items-center justify-center">
+				<div class="relative mx-3 flex h-2 w-2 shrink-0 items-center justify-center">
 					<div
-						class="absolute inset-0 inline-flex flex-shrink-0 animate-ping rounded-full bg-success opacity-75"
+						class="absolute inset-0 inline-flex shrink-0 animate-ping rounded-full bg-success opacity-75"
 					/>
 					<Dot
 						class="relative inline-flex h-2 w-2 text-success"
