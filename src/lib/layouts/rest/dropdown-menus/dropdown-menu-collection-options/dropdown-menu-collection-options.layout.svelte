@@ -27,7 +27,7 @@
 	export let type: $$Props['type'] = 'collection';
 	export let open: $$Props['open'] = false;
 
-	const options = [
+	const OPTIONS = [
 		{
 			label: 'Edit',
 			shortcut: 'E',
@@ -48,7 +48,7 @@
 		<slot {builder} />
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-64">
-		{#each options as option}
+		{#each OPTIONS as option}
 			<DropdownMenu.Item inset on:click={option.action}>
 				<svelte:component this={option.icon} class="mr-2 h-4 w-4" />
 				{option.label}

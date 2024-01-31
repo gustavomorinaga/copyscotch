@@ -24,6 +24,7 @@
 
 	function handleCurrentTab(event: MouseEvent, tabID: TRESTTabInfer['id']) {
 		event.stopPropagation();
+
 		tabStore.setCurrent(tabID);
 		scrollToActiveTab();
 	}
@@ -50,7 +51,7 @@
 			event.preventDefault();
 			const { context: request } = tabStore.get($tabStore.current) as TRESTTabInfer;
 			restStore.saveRequests([request]);
-			// tabStore.setDirty([$tabStore.current], false);
+			tabStore.setDirty([$tabStore.current], false);
 		}
 	}
 

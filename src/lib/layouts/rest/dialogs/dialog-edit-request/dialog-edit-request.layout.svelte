@@ -43,12 +43,12 @@
 
 		const { id: requestID } = $dialogStore.request;
 
-		const saveAction = {
+		const ACTIONS = {
 			create: () => console.log($formValue),
 			edit: () => console.log($formValue)
 		};
 
-		saveAction[$dialogStore.mode]();
+		ACTIONS[$dialogStore.mode]();
 		tabStore.update(requestID, $formValue);
 		tabStore.setDirty([requestID], true);
 		dialogStore.set({ mode: 'create', open: false, request: undefined });
