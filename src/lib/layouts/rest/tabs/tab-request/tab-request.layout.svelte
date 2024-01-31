@@ -26,6 +26,7 @@
 		SPA: true,
 		validators: zod(RESTRequestSchema),
 		validationMethod: 'onblur',
+		resetForm: false,
 		onSubmit: handleFormSubmit
 	});
 
