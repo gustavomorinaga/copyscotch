@@ -15,8 +15,7 @@
 </script>
 
 <script lang="ts">
-	const restStore = getRESTStore();
-	const tabStore = getRESTTabStore();
+	const [restStore, tabStore] = [getRESTStore(), getRESTTabStore()];
 
 	const tablistID = 'rest-tablist';
 	let tablistRef: HTMLElement;

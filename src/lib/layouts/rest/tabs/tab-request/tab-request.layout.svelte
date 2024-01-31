@@ -15,9 +15,7 @@
 
 	export let tabID: $$Props['tabID'];
 
-	const restStore = getRESTStore();
-	const tabStore = getRESTTabStore();
-
+	const [restStore, tabStore] = [getRESTStore(), getRESTTabStore()];
 	const methodOptions = RESTRequestSchema.shape.method.options;
 
 	let formAction: TFormAction = 'send';

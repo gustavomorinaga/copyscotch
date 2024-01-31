@@ -5,8 +5,7 @@
 </script>
 
 <script lang="ts">
-	const restStore = getRESTStore();
-	const tabStore = getRESTTabStore();
+	const [restStore, tabStore] = [getRESTStore(), getRESTTabStore()];
 
 	$: open = $tabStore.tainted?.length > 0;
 	$: isCurrent =
