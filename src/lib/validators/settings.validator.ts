@@ -1,8 +1,7 @@
 import { z } from 'zod';
 
 export const SettingsSchema = z.object({
-	sidebar: z.enum(['open', 'closed']),
-	lineWrapping: z.boolean()
+	sidebar: z.enum(['open', 'closed'])
 });
 
 export type TSettingsSchema = typeof SettingsSchema;

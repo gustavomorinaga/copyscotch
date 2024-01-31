@@ -1,6 +1,5 @@
 <script lang="ts" context="module">
-	import { getSettingsStore, getRESTTabStore, type TRESTResult } from '$lib/stores';
-	import { ToolbarResponse } from '$lib/layouts/rest';
+	import { getRESTTabStore, type TRESTResult } from '$lib/stores';
 	import { Separator } from '$lib/components/ui/separator';
 	import { Center } from '$lib/components/ui/center';
 	import { CodeMirror } from '$lib/components/ui/codemirror';
@@ -12,7 +11,7 @@
 </script>
 
 <script lang="ts">
-	const [settingsStore, tabStore] = [getSettingsStore(), getRESTTabStore()];
+	const tabStore = getRESTTabStore();
 
 	function getStatusType(status: number): TStatus {
 		if (status >= 200 && status < 300) return 'success';
@@ -69,14 +68,13 @@
 		</div>
 
 		<div class="flex flex-1 flex-col">
-			<ToolbarResponse />
+			<div
+				class="sticky top-12 z-10 flex h-10 shrink-0 items-center justify-between overflow-x-auto border-y border-border bg-background pl-4"
+			>
+				<span class="truncate text-sm font-semibold text-muted-foreground">Body Response</span>
+			</div>
 
-			<CodeMirror
-				lang="json"
-				editable={false}
-				lineWrapping={$settingsStore.lineWrapping}
-				value={formatBody(currentResult.response.json)}
-			/>
+			<CodeMirror value={formatBody(currentResult.response.json)} lang="json" />
 		</div>
 	{:else}
 		<Center class="select-none">

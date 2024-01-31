@@ -27,7 +27,7 @@
 	$: hasOnlyOneTab = $tabStore.tabs.length === 1;
 	$: open ? handleAddWindowEvents() : handleRemoveWindowEvents();
 
-	const OPTIONS = [
+	const options = [
 		{
 			label: 'Rename',
 			shortcut: 'R',
@@ -77,7 +77,7 @@
 		}
 	] satisfies Array<TEditRequestCTXMenuOption>;
 
-	const ACTIONS = OPTIONS.reduce(
+	const actionMap = options.reduce(
 		(acc, option) => {
 			acc[option.shortcut] = option.action;
 			return acc;
@@ -87,7 +87,7 @@
 
 	function handleKeydown(event: KeyboardEvent) {
 		open = false;
-		return ACTIONS[event.key.toUpperCase()]?.();
+		return actionMap[event.key.toUpperCase()]?.();
 	}
 
 	function handleAddWindowEvents() {
@@ -108,7 +108,7 @@
 		<slot />
 	</ContextMenu.Trigger>
 	<ContextMenu.Content class="w-64">
-		{#each OPTIONS as option}
+		{#each options as option}
 			{#if !option.showOnlyIf || option.showOnlyIf()}
 				<ContextMenu.Item inset on:click={option.action}>
 					{#if option.icon}

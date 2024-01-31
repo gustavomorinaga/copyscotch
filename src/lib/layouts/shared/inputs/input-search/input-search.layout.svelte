@@ -11,7 +11,6 @@
 
 	let className: $$Props['class'] = undefined;
 	export let value: $$Props['value'] = undefined;
-	export { className as class };
 </script>
 
 <div class="relative inline-flex items-center">

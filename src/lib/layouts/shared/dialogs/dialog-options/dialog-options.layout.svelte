@@ -10,8 +10,10 @@
 		icon: ComponentType;
 		link: Pick<HTMLAnchorElement, 'href' | 'target'>;
 	};
+</script>
 
-	const OPTIONS: Array<TOption> = [
+<script lang="ts">
+	const options: Array<TOption> = [
 		{
 			title: 'GitHub',
 			description: 'View the source code on GitHub',
@@ -35,7 +37,7 @@
 		</Dialog.Header>
 
 		<div class="flex flex-col space-y-2">
-			{#each OPTIONS as option}
+			{#each options as option}
 				<Button
 					variant="ghost"
 					href={option.link.href}

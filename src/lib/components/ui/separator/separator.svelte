@@ -5,7 +5,6 @@
 	type $$Props = SeparatorPrimitive.Props;
 
 	let className: $$Props['class'] = undefined;
-	export let el: $$Props['el'] = undefined;
 	export let orientation: $$Props['orientation'] = 'horizontal';
 	export let decorative: $$Props['decorative'] = undefined;
 	export { className as class };
@@ -22,5 +21,4 @@
 	{...$$restProps}
 	role="presentation"
 	aria-hidden="true"
-	bind:el
 />

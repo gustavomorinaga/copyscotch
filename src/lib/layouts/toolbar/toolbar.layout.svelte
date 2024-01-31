@@ -2,7 +2,6 @@
 	import { page } from '$app/stores';
 	import { DialogOptions } from '$lib/layouts/shared';
 	import { Button } from '$lib/components/ui/button';
-	import { Separator } from '$lib/components/ui/separator';
 	// import { UploadCloud } from 'lucide-svelte';
 </script>
 
@@ -38,5 +37,3 @@
 		</Button>
 	</div> -->
 </header>
-
-<Separator orientation="horizontal" />

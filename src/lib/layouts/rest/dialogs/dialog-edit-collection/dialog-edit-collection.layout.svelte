@@ -15,23 +15,9 @@
 		Record<TCollectionDialogStore['mode'], { title: string }>
 	>;
 
-	const DIALOG_PROPS: TDialogProp = {
-		collection: {
-			create: {
-				title: 'Create Collection'
-			},
-			edit: {
-				title: 'Edit Collection'
-			}
-		},
-		folder: {
-			create: {
-				title: 'Create Folder'
-			},
-			edit: {
-				title: 'Edit Folder'
-			}
-		}
+	const dialogPropMap: TDialogProp = {
+		collection: { create: { title: 'Create Collection' }, edit: { title: 'Edit Collection' } },
+		folder: { create: { title: 'Create Folder' }, edit: { title: 'Edit Folder' } }
 	} as const;
 </script>
 
@@ -45,15 +31,15 @@
 		onSubmit: (input) => {
 			input.cancel();
 			const formAction = getAction(input.action);
-			const ACTIONS = { cancel: handleCancel, save: handleSave } as const;
-			return ACTIONS[formAction]();
+			const actionMap = { cancel: handleCancel, save: handleSave } as const;
+			return actionMap[formAction]();
 		}
 	});
 
 	$: ({ form: formValue, formId, allErrors } = superFrm);
 	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
 	$: superFrm.reset({ id: $dialogStore.collection?.id, data: $dialogStore.collection });
-	$: ({ title } = DIALOG_PROPS[$dialogStore.type][$dialogStore.mode]);
+	$: ({ title } = dialogPropMap[$dialogStore.type][$dialogStore.mode]);
 
 	function getAction(url: URL) {
 		const [action] = [...url.searchParams.keys()];
