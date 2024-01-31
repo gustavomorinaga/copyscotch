@@ -50,11 +50,12 @@ export function setSettingsStore(
 		save: (settings) => {
 			store.update((state) => {
 				const newState = { ...state, ...settings };
-				saveData(newState);
 				return newState;
 			});
 		}
 	};
+
+	store.subscribe((state) => saveData(state));
 
 	const context = { ...store, ...actions } as TSettingsStore;
 	return setContext(CTX, context);
