@@ -7,7 +7,8 @@ export const toggleVariants = tv({
 		variant: {
 			default: 'bg-transparent',
 			outline: 'bg-transparent border border-input hover:bg-accent hover:text-accent-foreground',
-			primary: 'bg-transparent data-[state=on]:bg-transparent data-[state=on]:text-primary'
+			primary:
+				'bg-transparent data-[state=on]:bg-transparent data-[state=on]:text-primary data-[state=on]:hover:text-primary'
 		},
 		size: {
 			default: 'h-10 px-3',
