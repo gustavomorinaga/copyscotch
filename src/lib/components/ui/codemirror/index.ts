@@ -15,7 +15,6 @@ export const theme: ThemeSpec = {
 		caretColor: 'hsl(var(--secondary-foreground) / 1)',
 		fontFamily: 'var(--font-mono)',
 		color: 'hsl(var(--secondary-foreground) / 1)',
-		backgroundColor: 'hsl(var(--background) / 1)',
 		height: '100%'
 	},
 	'.cm-cursor': {
@@ -25,9 +24,9 @@ export const theme: ThemeSpec = {
 		position: 'absolute'
 	},
 	'.cm-selectionBackground': {
-		backgroundColor: 'hsl(var(--accent) / 1)',
-		color: 'hsl(var(--accent-foreground) / 1)',
-		borderRadius: '2px'
+		backgroundColor: 'hsl(var(--primary) / 1) !important',
+		color: 'hsl(var(--primary-foreground) / 1)',
+		borderRadius: '0px'
 	},
 	'.cm-panels': {
 		backgroundColor: 'hsl(var(--primary) / 1)',
@@ -101,7 +100,7 @@ export const theme: ThemeSpec = {
 	'.cm-tooltip-autocomplete ul li[aria-selected] .cm-completionLabel': {
 		color: 'hsl(var(--accent-foreground) / 1)'
 	},
-	'.cm-activeLine': { backgroundColor: 'hsl(var(--muted) / 1)' },
+	'.cm-activeLine': { backgroundColor: 'transparent' },
 	'.cm-searchMatch': {
 		outline: '1px solid hsl(var(--accent) / 1)',
 		backgroundColor: 'hsl(var(--border) / 1)',

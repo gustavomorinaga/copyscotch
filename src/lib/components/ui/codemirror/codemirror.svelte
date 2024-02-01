@@ -14,7 +14,7 @@
 
 <CodeMirror
 	class={cn('flex h-full w-full flex-1 flex-col', className)}
-	lang={lang && langs[lang]?.()}
+	lang={lang && langs[lang]()}
 	styles={theme}
 	{...$$restProps}
 	bind:value

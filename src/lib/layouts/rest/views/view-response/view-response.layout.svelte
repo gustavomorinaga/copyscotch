@@ -5,6 +5,16 @@
 	import { Center } from '$lib/components/ui/center';
 	import { CodeMirror } from '$lib/components/ui/codemirror';
 	import { Loader } from 'lucide-svelte';
+	import type { ComponentProps } from 'svelte';
+
+	const CODEMIRROR_CONFIG: ComponentProps<CodeMirror> = {
+		lang: 'json',
+		editable: true,
+		readonly: true,
+		useTab: false,
+		tabSize: 2,
+		nodebounce: true
+	} as const;
 </script>
 
 <script lang="ts">
@@ -12,8 +22,7 @@
 
 	function formatBody(body: any) {
 		const replacer = null;
-		const tabSize = 2;
-		return JSON.stringify(body, replacer, tabSize);
+		return JSON.stringify(body, replacer, CODEMIRROR_CONFIG.tabSize);
 	}
 
 	$: result = $tabStore.results.find(({ id }) => id === $tabStore.current) as TRESTResult;
@@ -35,8 +44,7 @@
 			<ToolbarResponse />
 
 			<CodeMirror
-				lang="json"
-				editable={false}
+				{...CODEMIRROR_CONFIG}
 				lineWrapping={$settingsStore.lineWrapping}
 				value={formatBody(result.response.json)}
 			/>
