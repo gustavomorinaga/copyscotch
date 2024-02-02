@@ -18,21 +18,17 @@
 		SPA: true,
 		validators: zod(RESTRequestSchema),
 		validationMethod: 'onblur',
-		onSubmit: (input) => {
-			const formAction = getAction(input.action);
-			const actionMap = { cancel: handleCancel, save: handleSave } as const;
-			return actionMap[formAction]();
-		}
+		onSubmit: handleFormSubmit
 	});
+
+	let action: TFormAction = 'save';
 
 	$: ({ form: formValue, formId, allErrors } = superFrm);
 	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
-	$: superFrm.reset({ id: $dialogStore.request?.id, data: $dialogStore.request });
-
-	function getAction(url: URL) {
-		const [action] = [...url.searchParams.keys()];
-		return action.replace('/', '') as TFormAction;
-	}
+	$: superFrm.reset({
+		id: `edit-request-${$dialogStore.request?.id}`,
+		data: $dialogStore.request
+	});
 
 	function handleCancel() {
 		dialogStore.set({ mode: 'create', open: false, request: undefined });
@@ -43,15 +39,20 @@
 
 		const { id: requestID } = $dialogStore.request;
 
-		const ACTIONS = {
+		const MODES = {
 			create: () => console.log($formValue),
 			edit: () => console.log($formValue)
 		};
 
-		ACTIONS[$dialogStore.mode]();
+		MODES[$dialogStore.mode]();
 		tabStore.update(requestID, $formValue);
 		tabStore.setDirty([requestID], true);
 		dialogStore.set({ mode: 'create', open: false, request: undefined });
+	}
+
+	function handleFormSubmit() {
+		const ACTIONS = { cancel: handleCancel, save: handleSave } as const;
+		return ACTIONS[action]();
 	}
 
 	function handleOpenChange(event: boolean) {
@@ -92,7 +93,7 @@
 			form={superFrm}
 			schema={RESTRequestSchema}
 			controlled
-			action="?/save"
+			action="?/{action}"
 			let:config
 		>
 			<Form.Field {config} name="name">
@@ -104,8 +105,18 @@
 		</Form.Root>
 
 		<Dialog.Footer>
-			<Button type="submit" variant="ghost" form={$formId} formaction="?/cancel">Cancel</Button>
-			<Button type="submit" variant="default" form={$formId} disabled={isInvalid}>Save</Button>
+			<Button type="submit" variant="ghost" form={$formId} on:click={() => (action = 'cancel')}>
+				Cancel
+			</Button>
+			<Button
+				type="submit"
+				variant="default"
+				form={$formId}
+				disabled={isInvalid}
+				on:click={() => (action = 'cancel')}
+			>
+				Save
+			</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

@@ -18,11 +18,11 @@
 	const [restStore, tabStore] = [getRESTStore(), getRESTTabStore()];
 	const methodOptions = RESTRequestSchema.shape.method.options;
 
-	let formAction: TFormAction = 'send';
+	let action: TFormAction = 'send';
 	let controller = new AbortController();
 
 	const superFrm = superForm(defaults(zod(RESTRequestSchema)), {
-		id: tabID,
+		id: `tab-request-${tabID}`,
 		SPA: true,
 		validators: zod(RESTRequestSchema),
 		validationMethod: 'onblur',
@@ -55,7 +55,7 @@
 			event.preventDefault();
 			if ($submitting) return;
 
-			formAction = sending ? 'cancel' : 'send';
+			action = sending ? 'cancel' : 'send';
 			$formId && document.forms.namedItem($formId)?.requestSubmit();
 		}
 	}
@@ -97,7 +97,7 @@
 			}
 		} as Record<TFormAction, () => Promise<void>>;
 
-		return await ACTIONS[formAction]();
+		return await ACTIONS[action]();
 	}
 </script>
 
@@ -108,7 +108,7 @@
 	form={superFrm}
 	schema={RESTRequestSchema}
 	controlled
-	action="?/{formAction}"
+	action="?/{action}"
 	let:config
 	on:change={onChange}
 	class="sticky top-0 z-20"
@@ -152,7 +152,7 @@
 			<Form.Button
 				type="submit"
 				class="flex-1 sm:w-24"
-				on:click={() => (formAction = sending ? 'cancel' : 'send')}
+				on:click={() => (action = sending ? 'cancel' : 'send')}
 			>
 				{#if sending}
 					Cancel
@@ -161,7 +161,7 @@
 				{/if}
 			</Form.Button>
 
-			<Form.Button type="submit" variant="secondary" on:click={() => (formAction = 'save')}>
+			<Form.Button type="submit" variant="secondary" on:click={() => (action = 'save')}>
 				<Save class="mr-2 h-4 w-4" />
 				Save
 			</Form.Button>

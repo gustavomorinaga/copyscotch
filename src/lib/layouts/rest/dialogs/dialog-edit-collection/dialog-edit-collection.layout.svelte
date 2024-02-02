@@ -44,15 +44,18 @@
 		validationMethod: 'onblur',
 		onSubmit: (input) => {
 			input.cancel();
-			const formAction = getAction(input.action);
+			const action = getAction(input.action);
 			const ACTIONS = { cancel: handleCancel, save: handleSave } as const;
-			return ACTIONS[formAction]();
+			return ACTIONS[action]();
 		}
 	});
 
 	$: ({ form: formValue, formId, allErrors } = superFrm);
 	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
-	$: superFrm.reset({ id: $dialogStore.collection?.id, data: $dialogStore.collection });
+	$: superFrm.reset({
+		id: `edit-collection-${$dialogStore.collection?.id}`,
+		data: $dialogStore.collection
+	});
 	$: ({ title } = DIALOG_PROPS[$dialogStore.type][$dialogStore.mode]);
 
 	function getAction(url: URL) {
