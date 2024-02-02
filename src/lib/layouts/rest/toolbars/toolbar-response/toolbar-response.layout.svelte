@@ -1,11 +1,46 @@
 <script lang="ts" context="module">
-	import { getSettingsStore } from '$lib/stores';
+	import { getSettingsStore, getRESTTabStore, type TRESTResult } from '$lib/stores';
+	import { Button } from '$lib/components/ui/button';
 	import { Toggle } from '$lib/components/ui/toggle';
-	import { WrapText } from 'lucide-svelte';
+	import { Check, Copy, WrapText } from 'lucide-svelte';
+	import type { ComponentType } from 'svelte';
+
+	type TClipboardState = 'default' | 'copied';
+
+	const CLIPBOARD_CONFIG = { replacer: null, space: 2 };
+	const CLIPBOARD_STATES: Record<TClipboardState, { icon: ComponentType; label: string }> = {
+		default: {
+			icon: Copy,
+			label: 'Copy'
+		},
+		copied: {
+			icon: Check,
+			label: 'Copied'
+		}
+	} as const;
 </script>
 
 <script lang="ts">
-	const settingsStore = getSettingsStore();
+	const [settingsStore, tabStore] = [getSettingsStore(), getRESTTabStore()];
+
+	let clipboardState: TClipboardState = 'default';
+
+	$: result = $tabStore.results.find(({ id }) => id === $tabStore.current) as TRESTResult;
+
+	function handleClipboard() {
+		const { replacer, space } = CLIPBOARD_CONFIG;
+		const value = JSON.stringify(result.response.json, replacer, space);
+		return navigator.clipboard.writeText(value).then(handleCopyDone, handleCopyError);
+	}
+
+	function handleCopyDone() {
+		clipboardState = 'copied';
+		setTimeout(() => (clipboardState = 'default'), 1000);
+	}
+
+	function handleCopyError() {
+		console.error('Failed to copy to clipboard');
+	}
 </script>
 
 <div
@@ -28,5 +63,16 @@
 			<WrapText class="h-4 w-4" />
 			<span class="sr-only">Line Wrapping</span>
 		</Toggle>
+
+		<Button
+			size="sm"
+			variant="text"
+			class="rounded-none"
+			disabled={clipboardState === 'copied'}
+			on:click={handleClipboard}
+		>
+			<svelte:component this={CLIPBOARD_STATES[clipboardState].icon} class="h-4 w-4" />
+			<span class="sr-only">{CLIPBOARD_STATES[clipboardState].label}</span>
+		</Button>
 	</div>
 </div>
