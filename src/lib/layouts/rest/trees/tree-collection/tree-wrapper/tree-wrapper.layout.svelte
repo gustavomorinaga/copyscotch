@@ -1,6 +1,7 @@
 <script lang="ts" context="module">
 	import { TreeFolder } from '../tree-folder';
 	import { TreeFile } from '../tree-file';
+	import { FeedbackFolderEmpty } from '$lib/layouts/rest';
 	import type { TRESTCollectionInfer } from '$lib/validators';
 </script>
 
@@ -18,16 +19,30 @@
 
 <ul class="flex flex-col">
 	{#each folders as folder}
-		<TreeFolder {folder} {open} {type}>
-			<ul class="flex flex-1 flex-col">
-				{#if folder.folders.length}
-					<svelte:self type="folder" folders={folder.folders} />
-				{/if}
+		{@const isEmpty = !folder.folders.length && !folder.requests.length}
 
-				{#each folder.requests as request}
-					<TreeFile file={request} />
-				{/each}
-			</ul>
-		</TreeFolder>
+		<li class="flex flex-col">
+			<TreeFolder {folder} {open} {type}>
+				<ul class="flex flex-1 flex-col">
+					{#if isEmpty}
+						<li class="flex flex-col">
+							<FeedbackFolderEmpty />
+						</li>
+					{:else}
+						{#if folder.folders.length}
+							<li class="flex flex-col">
+								<svelte:self type="folder" folders={folder.folders} />
+							</li>
+						{/if}
+
+						{#each folder.requests as request}
+							<li class="flex">
+								<TreeFile file={request} />
+							</li>
+						{/each}
+					{/if}
+				</ul>
+			</TreeFolder>
+		</li>
 	{/each}
 </ul>
