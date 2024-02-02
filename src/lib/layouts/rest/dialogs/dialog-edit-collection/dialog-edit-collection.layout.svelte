@@ -65,17 +65,15 @@
 	}
 
 	function handleSave() {
-		if (!$dialogStore.collection) return;
-
 		const saveAction = {
 			create: () => {
-				const data = {
-					...$formValue,
+				const initialData: Pick<TRESTCollectionInfer, 'id' | 'requests' | 'folders'> = {
 					id: generateUUID(),
 					requests: [],
 					folders: []
-				} as TRESTCollectionInfer;
-				restStore.saveCollection(data);
+				};
+				const collection: TRESTCollectionInfer = { ...$formValue, ...initialData };
+				restStore.saveCollection(collection);
 			},
 			edit: () => console.log($formValue)
 		};
