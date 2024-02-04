@@ -32,8 +32,13 @@ export type TRESTTabActions = {
 	}) => void;
 };
 export type TRESTResult = Pick<TRESTTabInfer['context'], 'id'> & {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	response: Pick<Response, 'ok' | 'status' | 'headers'> & { time: number; json: any; blob: Blob };
+	response: Pick<Response, 'ok' | 'status' | 'headers'> & {
+		blob: Blob;
+		raw: string;
+		time: number;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		json?: any;
+	};
 	sending: boolean;
 };
 
@@ -218,6 +223,7 @@ export function setRESTTabStore(
 				normal: () => {
 					return store.update((state) => {
 						state.tabs = state.tabs.filter((tab) => !ids.includes(tab.id));
+						state.results = state.results.filter((result) => !ids.includes(result.id));
 						if (hasCurrent) state.current = state.tabs.at(-1)?.id;
 						saveData(state);
 						return state;
@@ -226,6 +232,7 @@ export function setRESTTabStore(
 				'close-others': () => {
 					return store.update((state) => {
 						state.tabs = state.tabs.filter((tab) => ids.includes(tab.id));
+						state.results = state.results.filter((result) => ids.includes(result.id));
 						if (!hasCurrent) state.current = state.tabs.at(-1)?.id;
 						saveData(state);
 						return state;
@@ -234,6 +241,7 @@ export function setRESTTabStore(
 				'close-all': () => {
 					return store.update((state) => {
 						state.tabs = [];
+						state.results = [];
 						state.current = undefined;
 						saveData(state);
 						return state;

@@ -8,6 +8,8 @@
 	import type { ComponentProps } from 'svelte';
 
 	type TFormAction = 'send' | 'cancel' | 'save';
+
+	const RESPONSE_TYPES = ['application/json', 'text/html', 'text/plain'];
 </script>
 
 <script lang="ts">
@@ -60,9 +62,9 @@
 		}
 	}
 
-	async function handleFormSubmit() {
-		const ACTIONS = {
-			send: async () => {
+	function handleFormSubmit() {
+		const ACTIONS: Record<TFormAction, () => void> = {
+			send: () => {
 				tabStore.setResult(tabID, { response: undefined, sending: true });
 
 				const { url, method } = $formValue;
@@ -74,11 +76,30 @@
 						const time = end - start;
 						const { ok, status, headers } = response;
 
-						Promise.all([response.clone().json(), response.clone().blob()]).then(([json, blob]) =>
-							tabStore.setResult(tabID, {
-								response: { ok, status, headers, json, blob, time }
-							})
-						);
+						response
+							.clone()
+							.blob()
+							.then((blob) => {
+								if (!RESPONSE_TYPES.includes(blob.type)) return;
+
+								if (blob.type === 'application/json') {
+									Promise.all([response.clone().json(), response.clone().text()]).then(
+										([json, raw]) =>
+											tabStore.setResult(tabID, {
+												response: { ok, status, headers, blob, json, time, raw }
+											})
+									);
+								} else {
+									response
+										.clone()
+										.text()
+										.then((raw) =>
+											tabStore.setResult(tabID, {
+												response: { ok, status, headers, blob, time, raw }
+											})
+										);
+								}
+							});
 					})
 					.catch((error) => {
 						const isDOMException = error instanceof DOMException;
@@ -90,14 +111,14 @@
 				controller.abort();
 				controller = new AbortController();
 			},
-			save: async () => {
+			save: () => {
 				restStore.saveRequests([$formValue]);
 				tabStore.update(tabID, $formValue);
 				tabStore.setDirty([tabID], false);
 			}
-		} as Record<TFormAction, () => Promise<void>>;
+		};
 
-		return await ACTIONS[action]();
+		return ACTIONS[action]();
 	}
 </script>
 

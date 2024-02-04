@@ -1,8 +1,9 @@
 import Root from './codemirror.svelte';
+import { html } from '@codemirror/lang-html';
 import { json } from '@codemirror/lang-json';
 import type { ThemeSpec } from 'svelte-codemirror-editor';
 
-export const langs = { json } as const;
+export const langs = { html, json } as const;
 
 export const theme: ThemeSpec = {
 	'&': {

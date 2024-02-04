@@ -7,6 +7,11 @@ export default defineConfig({
 		sourcemap: true
 	},
 	optimizeDeps: {
-		exclude: ['svelte-codemirror-editor', 'codemirror', '@codemirror/lang-json']
+		exclude: [
+			'svelte-codemirror-editor',
+			'codemirror',
+			'@codemirror/lang-html',
+			'@codemirror/lang-json'
+		]
 	}
 });

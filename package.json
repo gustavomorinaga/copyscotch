@@ -20,6 +20,7 @@
 	},
 	"devDependencies": {
 		"@codemirror/lang-json": "6.0.1",
+		"@codemirror/lang-html": "6.4.8",
 		"@fontsource-variable/inter": "5.0.16",
 		"@fontsource-variable/roboto-mono": "5.0.17",
 		"@sveltejs/adapter-auto": "3.1.1",
