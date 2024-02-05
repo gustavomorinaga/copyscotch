@@ -40,13 +40,18 @@
 		const { id: requestID } = $dialogStore.request;
 
 		const MODES = {
-			create: () => console.log($formValue),
-			edit: () => console.log($formValue)
+			create: () => {},
+			edit: () => {
+				const tab = tabStore.get(requestID);
+				if (!tab) return;
+
+				tabStore.update(requestID, $formValue);
+				tabStore.setDirty([requestID], true);
+			}
 		};
 
 		MODES[$dialogStore.mode]();
-		tabStore.update(requestID, $formValue);
-		tabStore.setDirty([requestID], true);
+
 		dialogStore.set({ mode: 'create', open: false, request: undefined });
 	}
 
