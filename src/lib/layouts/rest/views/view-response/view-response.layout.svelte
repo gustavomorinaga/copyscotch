@@ -1,7 +1,6 @@
 <script lang="ts" context="module">
 	import { getSettingsStore, getRESTTabStore, type TRESTResult } from '$lib/stores';
 	import { ToolbarResponse, ToolbarResponseStatus, ViewInstructions } from '$lib/layouts/rest';
-	import { Separator } from '$lib/components/ui/separator';
 	import { Center } from '$lib/components/ui/center';
 	import { CodeMirror } from '$lib/components/ui/codemirror';
 	import { Loader } from 'lucide-svelte';
@@ -41,8 +40,6 @@
 		return JSON.stringify(body, replacer, CODEMIRROR_CONFIG.tabSize);
 	}
 </script>
-
-<Separator orientation="horizontal" />
 
 <section class="relative flex h-full flex-1 flex-col overflow-y-auto">
 	{#if isSending}

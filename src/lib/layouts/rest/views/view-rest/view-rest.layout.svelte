@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
 	import { getSettingsStore, getRESTTabStore } from '$lib/stores';
+	import { Separator } from '$lib/components/ui/separator';
 	import * as Sidenav from '$lib/components/ui/sidenav';
 	import {
 		DialogEditRequest,
@@ -13,20 +14,28 @@
 <script lang="ts">
 	const [settingsStore, tabStore] = [getSettingsStore(), getRESTTabStore()];
 
-	$: openSidebar = $settingsStore.sidebar === 'open';
+	$: orientation = $settingsStore.layout;
+	$: openSidenav = $settingsStore.sidebar === 'open';
 </script>
 
 <Sidenav.Root>
-	{#if openSidebar}
+	{#if openSidenav}
 		<Sidenav.Nav>
 			<SidenavREST />
 		</Sidenav.Nav>
 		<Sidenav.Separator orientation="vertical" />
 	{/if}
-	<Sidenav.Content class={!openSidebar ? 'w-full' : undefined}>
+	<Sidenav.Content class={!openSidenav ? 'w-full' : undefined}>
 		{#if $tabStore.tabs.length}
-			<ViewEdit />
-			<ViewResponse />
+			<div
+				class="flex h-full"
+				class:flex-col={orientation === 'horizontal'}
+				class:flex-row={orientation === 'vertical'}
+			>
+				<ViewEdit />
+				<Separator {orientation} />
+				<ViewResponse />
+			</div>
 		{:else}
 			<ViewWelcome />
 		{/if}
