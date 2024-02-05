@@ -9,12 +9,10 @@
 	type $$Props = {
 		folders: Array<TRESTCollectionInfer>;
 		type: 'collection' | 'folder';
-		open?: boolean;
 	};
 
 	export let folders: $$Props['folders'] = [];
 	export let type: $$Props['type'] = 'collection';
-	export let open: $$Props['open'] = false;
 </script>
 
 <ul class="flex flex-col">
@@ -22,7 +20,7 @@
 		{@const isEmpty = !folder.folders.length && !folder.requests.length}
 
 		<li class="flex flex-col">
-			<TreeFolder {folder} {open} {type}>
+			<TreeFolder {folder} {type}>
 				<ul class="flex flex-1 flex-col">
 					{#if isEmpty}
 						<li class="flex flex-col">

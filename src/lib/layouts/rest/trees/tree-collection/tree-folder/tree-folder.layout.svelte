@@ -46,22 +46,25 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { folder: TFolderInfer; type: 'collection' | 'folder'; open?: boolean };
+	type $$Props = {
+		folder: TFolderInfer & { open?: boolean };
+		type: 'collection' | 'folder';
+		open?: boolean;
+	};
 
 	export let folder: $$Props['folder'];
 	export let type: $$Props['type'] = 'collection';
-	export let open: $$Props['open'] = false;
 	let openOptions: boolean = false;
 
-	$: status = (open ? 'open' : 'closed') as TFolderStatus;
-	$: if ($treeStore.collapse) open = false;
+	$: status = (folder.open ? 'open' : 'closed') as TFolderStatus;
+	$: if ($treeStore.collapse) folder.open = false;
 
 	function onOpenChange() {
 		if ($treeStore.collapse) $treeStore.collapse = false;
 	}
 </script>
 
-<Collapsible.Root class="flex flex-col" bind:open {onOpenChange}>
+<Collapsible.Root class="flex flex-col" bind:open={folder.open} {onOpenChange}>
 	<Collapsible.Trigger
 		class={buttonVariants({ size: 'sm', variant: 'text', class: 'group/folder px-0' })}
 	>
@@ -110,7 +113,7 @@
 		</div>
 	</Collapsible.Trigger>
 	<Collapsible.Content class="flex">
-		<TreeExpand bind:open />
+		<TreeExpand bind:open={folder.open} />
 		<slot />
 	</Collapsible.Content>
 </Collapsible.Root>

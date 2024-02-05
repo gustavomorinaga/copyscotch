@@ -12,5 +12,5 @@
 </script>
 
 <div class="flex flex-col p-2">
-	<TreeWrapper type="collection" folders={collections} {open} />
+	<TreeWrapper type="collection" folders={collections.map((rest) => ({ ...rest, open }))} />
 </div>
