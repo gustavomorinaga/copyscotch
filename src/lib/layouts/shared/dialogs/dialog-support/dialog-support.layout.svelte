@@ -25,9 +25,8 @@
 </script>
 
 <Dialog.Root closeOnOutsideClick={false}>
-	<Dialog.Trigger class={buttonVariants({ variant: 'ghost', size: 'icon' })}>
-		<LifeBuoy class="h-5 w-5" />
-		<span role="presentation" class="sr-only">Options</span>
+	<Dialog.Trigger asChild let:builder>
+		<slot {builder} />
 	</Dialog.Trigger>
 	<Dialog.Content class="sm:max-w-md">
 		<Dialog.Header>

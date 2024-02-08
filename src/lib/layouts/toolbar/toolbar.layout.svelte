@@ -1,8 +1,9 @@
 <script lang="ts" context="module">
 	import { page } from '$app/stores';
-	import { DialogOptions } from '$lib/layouts/shared';
+	import { DialogSupport } from '$lib/layouts/shared';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
+	import { LifeBuoy } from 'lucide-svelte';
 	// import { UploadCloud } from 'lucide-svelte';
 </script>
 
@@ -27,7 +28,12 @@
 
 	<div class="col-span-2 flex items-center justify-between gap-x-2">
 		<div class="ml-auto">
-			<DialogOptions />
+			<DialogSupport let:builder>
+				<Button builders={[builder]} size="icon" variant="ghost">
+					<LifeBuoy class="h-5 w-5" />
+					<span role="presentation" class="sr-only">Support</span>
+				</Button>
+			</DialogSupport>
 		</div>
 	</div>
 
