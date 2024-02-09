@@ -19,12 +19,12 @@
 
 <Sidenav.Root>
 	{#if openSidenav}
-		<Sidenav.Nav>
+		<Sidenav.Nav class="w-3/12">
 			<SidenavREST />
 		</Sidenav.Nav>
 		<Sidenav.Separator orientation="vertical" />
 	{/if}
-	<Sidenav.Content class={!openSidenav ? 'w-full' : undefined}>
+	<Sidenav.Content class={!openSidenav ? 'w-full' : 'w-9/12'}>
 		{#if $tabStore.tabs.length}
 			<div
 				class="flex h-full"
