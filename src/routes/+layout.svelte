@@ -19,7 +19,7 @@
 			</Center>
 		{:then}
 			<Sidenav.Root>
-				<Sidenav.Nav>
+				<Sidenav.Nav class="overflow-hidden">
 					<SidenavRoutes />
 				</Sidenav.Nav>
 				<Sidenav.Separator orientation="vertical" />
