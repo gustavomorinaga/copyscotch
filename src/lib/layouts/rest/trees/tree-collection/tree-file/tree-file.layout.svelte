@@ -2,6 +2,7 @@
 	import { getRESTTabStore } from '$lib/stores';
 	import { DropdownMenuRequestOptions } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { MoreVertical } from 'lucide-svelte';
 	import type { TRESTRequestInfer } from '$lib/validators';
 </script>
@@ -62,17 +63,28 @@
 	</div>
 
 	<div class="flex items-center">
-		<DropdownMenuRequestOptions request={file} bind:open={openOptions} let:builder>
-			<Button
-				builders={[builder]}
-				size="icon"
-				variant="text"
-				class="h-6 w-6"
-				on:click={(event) => event.stopPropagation()}
-			>
-				<MoreVertical class="h-4 w-4" />
-				<span class="sr-only">More options</span>
-			</Button>
+		<DropdownMenuRequestOptions
+			request={file}
+			bind:open={openOptions}
+			let:builder={dropdownBuilder}
+		>
+			<Tooltip.Root>
+				<Tooltip.Trigger asChild let:builder={tooltipBuilder}>
+					<Button
+						builders={[dropdownBuilder, tooltipBuilder]}
+						size="icon"
+						variant="text"
+						class="h-6 w-6"
+						on:click={(event) => event.stopPropagation()}
+					>
+						<MoreVertical class="h-4 w-4" />
+						<span class="sr-only">More options</span>
+					</Button>
+				</Tooltip.Trigger>
+				<Tooltip.Content side="top" class="select-none">
+					<span>More</span>
+				</Tooltip.Content>
+			</Tooltip.Root>
 		</DropdownMenuRequestOptions>
 	</div>
 </Button>

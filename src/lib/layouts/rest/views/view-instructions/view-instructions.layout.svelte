@@ -1,33 +1,23 @@
 <script lang="ts" context="module">
 	import { Button } from '$lib/components/ui/button';
 	import { Center } from '$lib/components/ui/center';
+	import * as Shortcut from '$lib/components/ui/shortcut';
+	import { LINKS, SHORTCUTS, UNICODES } from '$lib/maps';
 	import { ExternalLink } from 'lucide-svelte';
-	import type { HTMLAnchorAttributes } from 'svelte/elements';
-
-	type TLink = Record<string, HTMLAnchorAttributes>;
-
-	const LINKS = {
-		doc: {
-			title: 'Documentation',
-			href: 'https://github.com/gustavomorinaga/copyscotch',
-			target: '_blank',
-			rel: 'noopener noreferrer'
-		}
-	} satisfies TLink;
 </script>
 
 <Center class="select-none">
-	<span class="inline-flex space-x-4 text-sm text-muted-foreground">
-		<span>Send request</span>
-		<div class="space-x-1">
-			<kbd>Ctrl</kbd>
-			<kbd>&ldca;</kbd>
-		</div>
-	</span>
+	<Shortcut.Root>
+		<span class="mr-4">Send request</span>
+		{#each SHORTCUTS.send.modifier as modifier}
+			<Shortcut.Key>{modifier}</Shortcut.Key>
+		{/each}
+		<Shortcut.Key>{@html UNICODES[SHORTCUTS.send.key]}</Shortcut.Key>
+	</Shortcut.Root>
 
 	<span class="mt-4 inline-flex">
-		<Button variant="outline" {...LINKS.doc}>
-			Documentation
+		<Button variant="outline" {...LINKS.doc} title={undefined}>
+			{LINKS.doc.title}
 			<ExternalLink class="ml-2 h-4 w-4" />
 		</Button>
 	</span>

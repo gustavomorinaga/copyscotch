@@ -2,31 +2,36 @@
 	import { getSettingsStore } from '$lib/stores';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
+	import * as Tooltip from '$lib/components/ui/tooltip';
+	import { BREAKPOINTS } from '$lib/maps';
 	import { Columns, Rows, PanelLeftClose, PanelLeftOpen } from 'lucide-svelte';
 	import type { ComponentType } from 'svelte';
 	import type { TSettingsInfer } from '$lib/validators';
 
-	type TSettingOption = { icon: ComponentType; label: string };
+	type TSettingOption = { icon: ComponentType; title: string; tooltip?: string };
 
-	const MOBILE_BREAKPOINT = 640;
 	const LAYOUT: Record<TSettingsInfer['layout'], TSettingOption> = {
 		horizontal: {
 			icon: Columns,
-			label: 'Switch to horizontal layout'
+			title: 'Switch to horizontal layout',
+			tooltip: 'Horizontal Layout'
 		},
 		vertical: {
 			icon: Rows,
-			label: 'Switch to vertical layout'
+			title: 'Switch to vertical layout',
+			tooltip: 'Vertical Layout'
 		}
 	};
 	const SIDEBAR: Record<TSettingsInfer['sidebar'], TSettingOption> = {
 		open: {
 			icon: PanelLeftClose,
-			label: 'Hide sidebar'
+			title: 'Hide sidebar',
+			tooltip: 'Hide Sidebar'
 		},
 		closed: {
 			icon: PanelLeftOpen,
-			label: 'Show sidebar'
+			title: 'Show sidebar',
+			tooltip: 'Show Sidebar'
 		}
 	} as const;
 </script>
@@ -37,7 +42,7 @@
 	$: layoutProps = LAYOUT[$settingsStore.layout];
 	$: sidebarProps = SIDEBAR[$settingsStore.sidebar];
 	$: innerWidth = 0;
-	$: isMobile = innerWidth < MOBILE_BREAKPOINT;
+	$: isMobile = innerWidth < BREAKPOINTS.sm;
 	$: {
 		$settingsStore.sidebar = isMobile ? 'closed' : 'open';
 	}
@@ -59,14 +64,40 @@
 	<footer
 		class="flex h-8 w-full items-center justify-end overflow-x-auto overflow-y-hidden bg-background"
 	>
-		<Button size="icon" variant="text" class="h-8 w-8" on:click={handleLayoutToggle}>
-			<svelte:component this={layoutProps.icon} class="h-5 w-5" />
-			<span class="sr-only">{layoutProps.label}</span>
-		</Button>
+		<Tooltip.Root>
+			<Tooltip.Trigger asChild let:builder>
+				<Button
+					builders={[builder]}
+					size="icon"
+					variant="text"
+					class="h-8 w-8"
+					on:click={handleLayoutToggle}
+				>
+					<svelte:component this={layoutProps.icon} class="h-5 w-5" />
+					<span class="sr-only">{layoutProps.title}</span>
+				</Button>
+			</Tooltip.Trigger>
+			<Tooltip.Content side="top" class="select-none">
+				<span>{layoutProps.tooltip}</span>
+			</Tooltip.Content>
+		</Tooltip.Root>
 
-		<Button size="icon" variant="text" class="h-8 w-8" on:click={handleSidebarToggle}>
-			<svelte:component this={sidebarProps.icon} class="h-5 w-5" />
-			<span class="sr-only">{sidebarProps.label}</span>
-		</Button>
+		<Tooltip.Root>
+			<Tooltip.Trigger asChild let:builder>
+				<Button
+					builders={[builder]}
+					size="icon"
+					variant="text"
+					class="h-8 w-8"
+					on:click={handleSidebarToggle}
+				>
+					<svelte:component this={sidebarProps.icon} class="h-5 w-5" />
+					<span class="sr-only">{sidebarProps.title}</span>
+				</Button>
+			</Tooltip.Trigger>
+			<Tooltip.Content side="top" class="select-none">
+				<span>{sidebarProps.tooltip}</span>
+			</Tooltip.Content>
+		</Tooltip.Root>
 	</footer>
 {/if}

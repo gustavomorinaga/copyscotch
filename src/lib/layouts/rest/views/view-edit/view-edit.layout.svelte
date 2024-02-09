@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { getRESTStore, getRESTTabStore } from '$lib/stores';
 	import { Button } from '$lib/components/ui/button';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import {
 		TabRequest,
@@ -126,47 +127,65 @@
 							class="inline-flex select-none items-baseline justify-center group-hover/tab-trigger:visible"
 							class:invisible={!tab.dirty}
 						>
-							<Button
-								size="icon"
-								variant="text"
-								class="relative h-6 w-6"
-								role="button"
-								tabindex={-1}
-								on:click={(event) => handleCloseTab(event, tabID)}
-								on:keydown={(event) => handleCloseTab(event, tabID)}
-							>
-								{#if tab.dirty}
-									<Dot
-										class="absolute inset-auto group-hover/tab-trigger:invisible"
-										style="stroke-width: 5"
-										aria-hidden="true"
-										focusable="false"
-									/>
-								{/if}
+							<Tooltip.Root>
+								<Tooltip.Trigger asChild let:builder>
+									<Button
+										builders={[builder]}
+										size="icon"
+										variant="text"
+										class="relative h-6 w-6"
+										role="button"
+										tabindex={-1}
+										on:click={(event) => handleCloseTab(event, tabID)}
+										on:keydown={(event) => handleCloseTab(event, tabID)}
+									>
+										{#if tab.dirty}
+											<Dot
+												class="absolute inset-auto group-hover/tab-trigger:invisible"
+												style="stroke-width: 5"
+												aria-hidden="true"
+												focusable="false"
+											/>
+										{/if}
 
-								<X class="h-4 w-4 {tab.dirty && 'invisible group-hover/tab-trigger:visible'}" />
-								<span role="presentation" class="sr-only">
-									{tab.dirty ? 'Unsaved Changes' : 'Close Tab'}
-								</span>
-							</Button>
+										<X class="h-4 w-4 {tab.dirty && 'invisible group-hover/tab-trigger:visible'}" />
+										<span role="presentation" class="sr-only">
+											Close Tab
+											{#if tab.dirty}
+												- Unsaved Changes
+											{/if}
+										</span>
+									</Button>
+								</Tooltip.Trigger>
+								<Tooltip.Content side="top" class="select-none">
+									<span>Close</span>
+								</Tooltip.Content>
+							</Tooltip.Root>
 						</div>
 					</Tabs.Trigger>
 				</div>
 			</ContextMenuEditRequest>
 		{/each}
 
-		<Button
-			size="icon"
-			variant="ghost"
-			class="mx-3 h-8 w-8 shrink-0"
-			role="button"
-			tabindex={0}
-			aria-label="Add Request"
-			on:click={() => tabStore.add()}
-		>
-			<Plus class="h-4 w-4" />
-			<span role="presentation" class="sr-only">Add Request</span>
-		</Button>
+		<Tooltip.Root>
+			<Tooltip.Trigger asChild let:builder>
+				<Button
+					builders={[builder]}
+					size="icon"
+					variant="ghost"
+					class="mx-3 h-8 w-8 shrink-0"
+					role="button"
+					tabindex={0}
+					on:click={() => tabStore.add()}
+				>
+					<Plus class="h-4 w-4" />
+					<span role="presentation" class="sr-only">New Tab</span>
+				</Button>
+			</Tooltip.Trigger>
+			<Tooltip.Content side="top" class="select-none">
+				<span>New</span>
+			</Tooltip.Content>
+		</Tooltip.Root>
 	</Tabs.List>
 
 	{#each $tabStore.tabs as tab}

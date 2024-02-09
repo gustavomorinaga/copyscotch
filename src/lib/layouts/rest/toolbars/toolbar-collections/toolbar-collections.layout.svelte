@@ -4,6 +4,7 @@
 		treeCollectionStore as treeStore
 	} from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { Plus, MinusSquare } from 'lucide-svelte';
 </script>
 
@@ -26,9 +27,22 @@
 	</div>
 
 	<div class="flex gap-2">
-		<Button size="icon" variant="text" class="mx-2 h-6 w-6" on:click={handleCollapseAll}>
-			<MinusSquare class="h-4 w-4" />
-			<span class="sr-only">Collapse All</span>
-		</Button>
+		<Tooltip.Root>
+			<Tooltip.Trigger asChild let:builder>
+				<Button
+					builders={[builder]}
+					size="icon"
+					variant="text"
+					class="mx-2 h-6 w-6"
+					on:click={handleCollapseAll}
+				>
+					<MinusSquare class="h-4 w-4" />
+					<span class="sr-only">Collapse All</span>
+				</Button>
+			</Tooltip.Trigger>
+			<Tooltip.Content side="top" class="select-none">
+				<span>Collapse All</span>
+			</Tooltip.Content>
+		</Tooltip.Root>
 	</div>
 </div>

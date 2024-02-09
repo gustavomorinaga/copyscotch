@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
-	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import { ChevronRight, Github, LifeBuoy } from 'lucide-svelte';
+	import { ChevronRight, Github } from 'lucide-svelte';
 	import type { ComponentType } from 'svelte';
 
 	type TOption = {
@@ -30,7 +30,7 @@
 	</Dialog.Trigger>
 	<Dialog.Content class="sm:max-w-md">
 		<Dialog.Header>
-			<Dialog.Title>Options</Dialog.Title>
+			<Dialog.Title>Support</Dialog.Title>
 		</Dialog.Header>
 
 		<div class="flex flex-col space-y-2">

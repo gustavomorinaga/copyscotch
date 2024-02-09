@@ -3,6 +3,7 @@
 	import { DialogSupport } from '$lib/layouts/shared';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { LifeBuoy } from 'lucide-svelte';
 	// import { UploadCloud } from 'lucide-svelte';
 </script>
@@ -28,11 +29,18 @@
 
 	<div class="col-span-2 flex items-center justify-between gap-x-2">
 		<div class="ml-auto">
-			<DialogSupport let:builder>
-				<Button builders={[builder]} size="icon" variant="ghost">
-					<LifeBuoy class="h-5 w-5" />
-					<span role="presentation" class="sr-only">Support</span>
-				</Button>
+			<DialogSupport let:builder={triggerBuilder}>
+				<Tooltip.Root>
+					<Tooltip.Trigger asChild let:builder={tooltipBuilder}>
+						<Button builders={[triggerBuilder, tooltipBuilder]} size="icon" variant="ghost">
+							<LifeBuoy class="h-5 w-5" />
+							<span role="presentation" class="sr-only">Support</span>
+						</Button>
+					</Tooltip.Trigger>
+					<Tooltip.Content side="bottom" class="select-none">
+						<span>Support</span>
+					</Tooltip.Content>
+				</Tooltip.Root>
 			</DialogSupport>
 		</div>
 	</div>

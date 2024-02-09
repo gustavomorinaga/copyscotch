@@ -2,6 +2,7 @@
 	import { getSettingsStore, getRESTTabStore, type TRESTResult } from '$lib/stores';
 	import { Button } from '$lib/components/ui/button';
 	import { Toggle } from '$lib/components/ui/toggle';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { Check, Copy, WrapText } from 'lucide-svelte';
 	import type { ComponentType } from 'svelte';
 
@@ -64,15 +65,23 @@
 			<span class="sr-only">Line Wrapping</span>
 		</Toggle>
 
-		<Button
-			size="sm"
-			variant="text"
-			class="rounded-none"
-			disabled={clipboardState === 'copied'}
-			on:click={handleClipboard}
-		>
-			<svelte:component this={CLIPBOARD_STATES[clipboardState].icon} class="h-4 w-4" />
-			<span class="sr-only">{CLIPBOARD_STATES[clipboardState].label}</span>
-		</Button>
+		<Tooltip.Root closeOnPointerDown={false}>
+			<Tooltip.Trigger asChild let:builder>
+				<Button
+					builders={[builder]}
+					size="sm"
+					variant="text"
+					class="rounded-none"
+					disabled={clipboardState === 'copied'}
+					on:click={handleClipboard}
+				>
+					<svelte:component this={CLIPBOARD_STATES[clipboardState].icon} class="h-4 w-4" />
+					<span class="sr-only">{CLIPBOARD_STATES[clipboardState].label}</span>
+				</Button>
+			</Tooltip.Trigger>
+			<Tooltip.Content side="top" class="select-none">
+				<span>{CLIPBOARD_STATES[clipboardState].label}</span>
+			</Tooltip.Content>
+		</Tooltip.Root>
 	</div>
 </div>

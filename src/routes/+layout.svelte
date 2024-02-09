@@ -7,7 +7,7 @@
 	import { Loader } from 'lucide-svelte';
 </script>
 
-<Wrapper>
+<Wrapper class="overflow-hidden">
 	<Toolbar />
 
 	<main class="flex flex-auto flex-col">
