@@ -11,6 +11,6 @@
 	let open = !$treeStore.collapse;
 </script>
 
-<div class="flex flex-col p-2">
+<div class="-ml-2 flex flex-col p-2">
 	<TreeWrapper type="collection" folders={collections.map((rest) => ({ ...rest, open }))} />
 </div>

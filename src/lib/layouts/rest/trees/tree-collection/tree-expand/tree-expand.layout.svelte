@@ -26,5 +26,5 @@
 	bind:el
 	orientation="vertical"
 	decorative={false}
-	class="ml-6 w-[2px] cursor-ns-resize hover:bg-accent"
+	class="ml-6 h-auto w-[2px] cursor-ns-resize hover:bg-accent"
 />
