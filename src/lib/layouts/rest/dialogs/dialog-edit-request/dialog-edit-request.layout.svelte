@@ -118,7 +118,7 @@
 				variant="default"
 				form={$formId}
 				disabled={isInvalid}
-				on:click={() => (action = 'cancel')}
+				on:click={() => (action = 'save')}
 			>
 				Save
 			</Button>
