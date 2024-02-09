@@ -2,13 +2,12 @@
 	import { getSettingsStore, getRESTTabStore } from '$lib/stores';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Sidenav from '$lib/components/ui/sidenav';
-	import {
-		DialogEditRequest,
-		SidenavREST,
-		ViewEdit,
-		ViewResponse,
-		ViewWelcome
-	} from '$lib/layouts/rest';
+	import { DialogEditRequest, SidenavREST, ViewWelcome } from '$lib/layouts/rest';
+
+	const LAZY_COMPONENTS = [
+		import('$lib/layouts/rest/views/view-edit').then((m) => m.ViewEdit),
+		import('$lib/layouts/rest/views/view-response').then((m) => m.ViewResponse)
+	] as const;
 </script>
 
 <script lang="ts">
@@ -32,9 +31,11 @@
 				class:flex-col={orientation === 'horizontal'}
 				class:flex-row={orientation === 'vertical'}
 			>
-				<ViewEdit />
-				<Separator {orientation} />
-				<ViewResponse />
+				{#await Promise.all(LAZY_COMPONENTS) then [ViewEdit, ViewResponse]}
+					<ViewEdit />
+					<Separator {orientation} />
+					<ViewResponse />
+				{/await}
 			</div>
 		{:else}
 			<ViewWelcome />

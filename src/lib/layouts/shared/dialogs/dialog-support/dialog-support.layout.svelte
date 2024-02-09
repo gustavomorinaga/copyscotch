@@ -1,27 +1,22 @@
 <script lang="ts" context="module">
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
+	import { LINKS } from '$lib/maps';
 	import { ChevronRight, Github } from 'lucide-svelte';
 	import type { ComponentType } from 'svelte';
 
-	type TOption = {
-		title: string;
+	type TOption = (typeof LINKS)[keyof typeof LINKS] & {
 		description: string;
 		icon: ComponentType;
-		link: Pick<HTMLAnchorElement, 'href' | 'target'>;
 	};
 
-	const OPTIONS: Array<TOption> = [
+	const OPTIONS = [
 		{
-			title: 'GitHub',
+			...LINKS.github,
 			description: 'View the source code on GitHub',
-			icon: Github,
-			link: {
-				href: 'https://github.com/gustavomorinaga/copyscotch',
-				target: '_blank'
-			}
+			icon: Github
 		}
-	];
+	] satisfies Array<TOption>;
 </script>
 
 <Dialog.Root closeOnOutsideClick={false}>
@@ -37,9 +32,9 @@
 			{#each OPTIONS as option}
 				<Button
 					variant="ghost"
-					href={option.link.href}
-					target={option.link.target ?? '_self'}
-					rel={option.link.target === '_blank' ? 'noopener noreferrer' : undefined}
+					href={option.href}
+					target={option.target ?? '_self'}
+					rel={option.rel}
 					class="h-fit shrink-0"
 				>
 					<div class="mr-4 inline-flex items-center self-start">

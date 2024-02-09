@@ -6,10 +6,10 @@ export type TLink = HTMLAnchorAttributes;
  * Represents a collection of links.
  */
 export const LINKS = {
-	doc: {
-		title: 'Documentation',
+	github: {
+		title: 'GitHub',
 		href: 'https://github.com/gustavomorinaga/copyscotch',
 		target: '_blank',
 		rel: 'noopener noreferrer'
 	}
-} as const satisfies Record<string, TLink>;
+} satisfies Record<string, TLink>;

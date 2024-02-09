@@ -1,12 +1,9 @@
 <script lang="ts" context="module">
 	import { getSettingsStore, getRESTTabStore, type TRESTResult } from '$lib/stores';
-	import { ToolbarResponse, ToolbarResponseStatus, ViewInstructions } from '$lib/layouts/rest';
+	import { ViewInstructions } from '$lib/layouts/rest';
 	import { Center } from '$lib/components/ui/center';
-	import { CodeMirror } from '$lib/components/ui/codemirror';
 	import { Loader } from 'lucide-svelte';
-	import type { ComponentProps } from 'svelte';
-
-	type TCodeMirror = ComponentProps<CodeMirror>;
+	import type { Props as TCodeMirror } from '$lib/components/ui/codemirror';
 
 	const CODEMIRROR_CONFIG: TCodeMirror = {
 		editable: true,
@@ -21,6 +18,14 @@
 		'text/html': 'html',
 		'text/plain': undefined
 	} as const;
+
+	const LAZY_COMPONENTS = [
+		import('$lib/components/ui/codemirror').then((m) => m.CodeMirror),
+		import('$lib/layouts/rest/toolbars/toolbar-response').then((m) => m.ToolbarResponse),
+		import('$lib/layouts/rest/toolbars/toolbar-response-status').then(
+			(m) => m.ToolbarResponseStatus
+		)
+	] as const;
 </script>
 
 <script lang="ts">
@@ -42,23 +47,25 @@
 </script>
 
 <section class="relative flex h-full flex-1 flex-col overflow-y-auto">
-	{#if isSending}
+	{#if isSending && !hasResponse}
 		<Center>
 			<Loader class="h-4 w-4 animate-spin" />
 		</Center>
 	{:else if hasResponse}
-		<ToolbarResponseStatus />
+		{#await Promise.all(LAZY_COMPONENTS) then [CodeMirror, ToolbarResponse, ToolbarResponseStatus]}
+			<ToolbarResponseStatus />
 
-		<div class="flex flex-1 flex-col">
-			<ToolbarResponse />
+			<div class="flex flex-1 flex-col">
+				<ToolbarResponse />
 
-			<CodeMirror
-				{...CODEMIRROR_CONFIG}
-				lang={RESPONSE_TYPES[result.response.blob.type]}
-				lineWrapping={$settingsStore.lineWrapping}
-				{value}
-			/>
-		</div>
+				<CodeMirror
+					{...CODEMIRROR_CONFIG}
+					lang={RESPONSE_TYPES[result.response.blob.type]}
+					lineWrapping={$settingsStore.lineWrapping}
+					{value}
+				/>
+			</div>
+		{/await}
 	{:else}
 		<ViewInstructions />
 	{/if}
