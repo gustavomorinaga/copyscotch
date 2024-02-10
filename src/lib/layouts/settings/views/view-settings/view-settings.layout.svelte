@@ -1,20 +1,25 @@
 <script lang="ts" context="module">
 	import { getSettingsStore } from '$lib/stores';
 	import * as Form from '$lib/components/ui/form';
-	import * as ToggleGroup from '$lib/components/ui/toggle-group';
-	import { ThemeSchema } from '$lib/validators';
+	import {
+		ThemeSchema,
+		BackgroundColorEnum,
+		AccentColorEnum,
+		type TThemeInfer
+	} from '$lib/validators';
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { Cloud, Monitor, Moon, Sun } from 'lucide-svelte';
+	import { systemPrefersMode } from '$lib/components/mode-watcher';
 
-	const ICONS = { system: Monitor, light: Sun, dark: Cloud, black: Moon } as const;
+	const THEME_ICONS = { system: Monitor, light: Sun, dark: Cloud, black: Moon } as const;
 </script>
 
 <script lang="ts">
 	const settingsStore = getSettingsStore();
 
-	const backgroundOptions = ThemeSchema.shape.backgroundColor.options;
-	const accentOptions = ThemeSchema.shape.accentColor.options;
+	const { options: backgroundOptions } = BackgroundColorEnum;
+	const { options: accentOptions } = AccentColorEnum;
 
 	const settingsForm = superForm(defaults(zod(ThemeSchema)), {
 		SPA: true,
@@ -25,15 +30,25 @@
 
 	$: ({ form: formValue } = settingsForm);
 	$: if ($settingsStore) {
+		$formValue.backgroundColor = $settingsStore.backgroundColor;
+		$formValue.accentColor = $settingsStore.accentColor;
 		$formValue.expandNavigation = $settingsStore.navigation === 'expand';
 		$formValue.sidebarOnLeft = $settingsStore.sidebar === 'open';
 	}
 
-	function onChangeNavigation(checked: boolean) {
+	function handleBackgroundColor(value: string) {
+		settingsStore.save({ backgroundColor: value as TThemeInfer['backgroundColor'] });
+	}
+
+	function handleAccentColor(value: string) {
+		settingsStore.save({ accentColor: value as TThemeInfer['accentColor'] });
+	}
+
+	function handleNavigation(checked: boolean) {
 		$settingsStore.navigation = checked ? 'expand' : 'collapse';
 	}
 
-	function onChangeSidebar(checked: boolean) {
+	function handleSidebar(checked: boolean) {
 		$settingsStore.sidebar = checked ? 'open' : 'closed';
 	}
 </script>
@@ -54,19 +69,60 @@
 
 			<div class="space-y-8 p-8 md:col-span-2">
 				<Form.Fieldset>
-					<Form.Legend class="mb-4">Background</Form.Legend>
+					<Form.Field {config} name="backgroundColor" let:value>
+						<Form.Legend class="mb-0">Background</Form.Legend>
+						<span class="mb-4 text-sm capitalize text-muted-foreground">
+							{value}
 
-					<Form.Field {config} name="backgroundColor">
-						<Form.Item>
-							<ToggleGroup.Root type="single" class="justify-start">
-								{#each backgroundOptions as option}
-									<ToggleGroup.Item value={option}>
-										<svelte:component this={ICONS[option]} class="h-4 w-4" />
-										<span class="sr-only capitalize">{option}</span>
-									</ToggleGroup.Item>
-								{/each}
-							</ToggleGroup.Root>
-						</Form.Item>
+							{#if value === 'system'}
+								({$systemPrefersMode || 'light'})
+							{/if}
+						</span>
+
+						<Form.RadioGroup
+							orientation="horizontal"
+							class="flex flex-1"
+							onValueChange={handleBackgroundColor}
+						>
+							{#each backgroundOptions as option}
+								<Form.Label
+									for={option}
+									class="inline-flex cursor-pointer rounded-md p-2 [&:has([data-state=checked])]:bg-accent [&:has([data-state=checked])]:text-primary"
+								>
+									<Form.RadioItem id={option} value={option} class="!sr-only" />
+									<svelte:component this={THEME_ICONS[option]} class="h-5 w-5" />
+								</Form.Label>
+							{/each}
+						</Form.RadioGroup>
+					</Form.Field>
+				</Form.Fieldset>
+
+				<Form.Fieldset>
+					<Form.Field {config} name="accentColor" let:value>
+						<Form.Legend class="mb-0">Accent Color</Form.Legend>
+						<span class="mb-4 text-sm capitalize text-muted-foreground">{value}</span>
+
+						<Form.RadioGroup
+							orientation="horizontal"
+							class="flex flex-1"
+							onValueChange={handleAccentColor}
+						>
+							{#each accentOptions as option}
+								{@const color = `hsl(var(--${option}) / 1)`}
+
+								<Form.Label
+									for={option}
+									class="inline-flex cursor-pointer rounded-md p-2 [&:has([data-state=checked])]:bg-accent"
+								>
+									<Form.RadioItem
+										id={option}
+										value={option}
+										class="h-5 w-5"
+										style="color: {color}; border-color: {color};"
+									/>
+								</Form.Label>
+							{/each}
+						</Form.RadioGroup>
 					</Form.Field>
 				</Form.Fieldset>
 
@@ -76,14 +132,14 @@
 					<Form.Join class="flex-col gap-4">
 						<Form.Field {config} name="expandNavigation">
 							<Form.Item class="flex items-center gap-2 space-y-0">
-								<Form.Switch onCheckedChange={onChangeNavigation} />
+								<Form.Switch onCheckedChange={handleNavigation} />
 								<Form.Label>Expand navigation</Form.Label>
 							</Form.Item>
 						</Form.Field>
 
 						<Form.Field {config} name="sidebarOnLeft">
 							<Form.Item class="flex items-center gap-2 space-y-0">
-								<Form.Switch onCheckedChange={onChangeSidebar} />
+								<Form.Switch onCheckedChange={handleSidebar} />
 								<Form.Label>Sidebar on left</Form.Label>
 							</Form.Item>
 						</Form.Field>

@@ -7,7 +7,10 @@
 	import * as Sidenav from '$lib/components/ui/sidenav';
 	import { executeParallel } from '$lib/utils';
 	import { Loader } from 'lucide-svelte';
+	import { ModeWatcher } from 'mode-watcher';
 </script>
+
+<ModeWatcher />
 
 <Wrapper class="overflow-hidden">
 	<Toolbar />
