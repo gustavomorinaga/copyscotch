@@ -1,1 +1,5 @@
-<h1>Themes</h1>
+<script lang="ts">
+	import { ViewSettings } from '$lib/layouts/settings';
+</script>
+
+<ViewSettings />

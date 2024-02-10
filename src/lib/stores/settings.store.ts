@@ -12,6 +12,8 @@ type TSettingsActions = {
 const CTX = Symbol('SETTINGS_CTX');
 const STORAGE_KEY = 'settings';
 const INITIAL_DATA: TSettingsData = {
+	backgroundColor: 'system',
+	accentColor: 'blue',
 	layout: 'vertical',
 	navigation: 'collapse',
 	sidebar: 'open',
