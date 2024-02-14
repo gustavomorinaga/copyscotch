@@ -13,8 +13,10 @@
 
 <div class="flex flex-col p-2">
 	<Center>
-		<p class="mt-2 max-w-sm whitespace-normal text-center text-tiny text-muted-foreground">
-			Collection are empty
+		<p
+			class="mt-2 max-w-sm select-none whitespace-normal text-center text-tiny text-muted-foreground"
+		>
+			Folder are empty
 		</p>
 
 		<div class="mt-4 flex flex-col items-center space-y-4">

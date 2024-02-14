@@ -13,7 +13,9 @@
 
 <div class="flex flex-col p-2">
 	<Center>
-		<p class="mt-2 max-w-sm whitespace-normal text-center text-tiny text-muted-foreground">
+		<p
+			class="mt-2 max-w-sm select-none whitespace-normal text-center text-tiny text-muted-foreground"
+		>
 			Collections are empty
 		</p>
 

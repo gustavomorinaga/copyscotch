@@ -129,7 +129,7 @@
 				</Form.Fieldset>
 
 				<Form.Fieldset>
-					<Form.Legend class="mb-4">Layout</Form.Legend>
+					<Form.Legend class="mb-4 select-none">Layout</Form.Legend>
 
 					<Form.Join class="flex-col gap-4">
 						<Form.Field {config} name="expandNavigation">
