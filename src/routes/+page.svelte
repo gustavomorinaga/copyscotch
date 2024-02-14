@@ -6,6 +6,10 @@
 	import { Loader } from 'lucide-svelte';
 </script>
 
+<svelte:head>
+	<title>Copyscotch &bull; API development ecosystem</title>
+</svelte:head>
+
 {#await executeParallel([setRESTStore, setRESTTabStore])}
 	<Center>
 		<Loader class="h-4 w-4 animate-spin" />
