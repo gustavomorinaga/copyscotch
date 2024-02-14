@@ -28,8 +28,8 @@
 		{#if $tabStore.tabs.length}
 			<div
 				class="flex h-full"
-				class:flex-col={orientation === 'horizontal'}
-				class:flex-row={orientation === 'vertical'}
+				class:flex-col={orientation === 'vertical'}
+				class:flex-row={orientation === 'horizontal'}
 			>
 				{#await Promise.all(LAZY_COMPONENTS) then [ViewEdit, ViewResponse]}
 					<ViewEdit />
