@@ -12,14 +12,14 @@
 
 	const LAYOUT: Record<TSettingsInfer['layout'], TSettingOption> = {
 		horizontal: {
-			icon: Columns,
-			title: 'Switch to horizontal layout',
-			tooltip: 'Horizontal Layout'
-		},
-		vertical: {
 			icon: Rows,
 			title: 'Switch to vertical layout',
 			tooltip: 'Vertical Layout'
+		},
+		vertical: {
+			icon: Columns,
+			title: 'Switch to horizontal layout',
+			tooltip: 'Horizontal Layout'
 		}
 	};
 	const SIDEBAR: Record<TSettingsInfer['sidebar'], TSettingOption> = {
@@ -43,6 +43,7 @@
 	$: sidebarProps = SIDEBAR[$settingsStore.sidebar];
 	$: innerWidth = 0;
 	$: isMobile = innerWidth < BREAKPOINTS.sm;
+	$: if (isMobile) $settingsStore.layout = 'vertical';
 	$: {
 		$settingsStore.sidebar = isMobile ? 'closed' : 'open';
 	}

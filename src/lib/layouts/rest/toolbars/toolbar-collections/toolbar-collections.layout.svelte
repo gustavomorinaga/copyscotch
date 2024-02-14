@@ -1,4 +1,5 @@
 <script lang="ts" context="module">
+	import { getRESTStore } from '$lib/stores';
 	import {
 		dialogEditCollectionStore as dialogStore,
 		treeCollectionStore as treeStore
@@ -9,6 +10,8 @@
 </script>
 
 <script lang="ts">
+	const restStore = getRESTStore();
+
 	function handleNewCollection() {
 		dialogStore.set({ mode: 'create', type: 'collection', open: true, collection: undefined });
 	}
@@ -34,6 +37,7 @@
 					size="icon"
 					variant="text"
 					class="mx-2 h-6 w-6"
+					disabled={!$restStore.length}
 					on:click={handleCollapseAll}
 				>
 					<MinusSquare class="h-4 w-4" />

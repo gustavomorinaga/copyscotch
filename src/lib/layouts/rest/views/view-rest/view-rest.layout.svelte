@@ -29,11 +29,11 @@
 		{#if $tabStore.tabs.length}
 			<div
 				class="flex h-full"
-				class:flex-col={orientation === 'horizontal'}
-				class:flex-row={orientation === 'vertical'}
+				class:flex-col={orientation === 'vertical'}
+				class:flex-row={orientation === 'horizontal'}
 			>
 				<ViewEdit />
-				<Separator {orientation} />
+				<Separator orientation={orientation === 'horizontal' ? 'vertical' : 'horizontal'} />
 				<ViewResponse />
 			</div>
 		{:else}
