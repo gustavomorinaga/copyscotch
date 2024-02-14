@@ -5,9 +5,9 @@
 	import { SidenavRoutes } from '$lib/layouts/shared';
 	import { Center } from '$lib/components/ui/center';
 	import * as Sidenav from '$lib/components/ui/sidenav';
+	import { ModeWatcher } from '$lib/components/mode-watcher';
 	import { executeParallel } from '$lib/utils';
 	import { Loader } from 'lucide-svelte';
-	import { ModeWatcher } from 'mode-watcher';
 </script>
 
 <ModeWatcher />

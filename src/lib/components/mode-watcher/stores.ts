@@ -1,6 +1,7 @@
 import { writable, derived } from 'svelte/store';
 import { withoutTransition } from './without-transition';
 import type { Mode, ThemeColors } from './types';
+import type { TSettingsInfer } from '$lib/validators';
 
 // saves having to branch for server vs client
 const noopStorage = {
@@ -14,12 +15,12 @@ const noopStorage = {
 const isBrowser = typeof document !== 'undefined';
 
 // the modes that are supported, used for validation & type derivation
-export const modes = ['dark', 'light', 'system'] as const;
+export const modes = ['black', 'dark', 'light', 'system'] as const;
 
 /**
  * The key used to store the mode in localStorage.
  */
-export const localStorageKey = 'mode-watcher-mode';
+export const localStorageKey = 'settings';
 /**
  * Writable store that represents the user's preferred mode (`"dark"`, `"light"` or `"system"`)
  */
@@ -42,7 +43,8 @@ function createUserPrefersMode() {
 	const defaultValue = 'system';
 
 	const storage = isBrowser ? localStorage : noopStorage;
-	const initialValue = storage.getItem(localStorageKey);
+	const stored = storage.getItem(localStorageKey);
+	const initialValue = (JSON.parse(stored as string) as TSettingsInfer)?.backgroundColor;
 
 	let value = isValidMode(initialValue) ? initialValue : defaultValue;
 
@@ -76,7 +78,7 @@ function createSystemMode() {
 	const defaultValue = undefined;
 	let track = true;
 
-	const { subscribe, set } = writable<'dark' | 'light' | undefined>(defaultValue, () => {
+	const { subscribe, set } = writable<'dark' | 'light' | 'black' | undefined>(defaultValue, () => {
 		if (!isBrowser) return;
 
 		const handler = (e: MediaQueryListEvent) => {
@@ -124,16 +126,24 @@ function createDerivedMode() {
 				const htmlEl = document.documentElement;
 				const themeColorEl = document.querySelector('meta[name="theme-color"]');
 				if (derivedMode === 'light') {
-					htmlEl.classList.remove('dark');
+					htmlEl.classList.remove('black', 'dark');
 					htmlEl.style.colorScheme = 'light';
 					if (themeColorEl && $themeColors) {
 						themeColorEl.setAttribute('content', $themeColors.light);
 					}
-				} else {
+				} else if (derivedMode === 'dark') {
+					htmlEl.classList.remove('black');
 					htmlEl.classList.add('dark');
 					htmlEl.style.colorScheme = 'dark';
 					if (themeColorEl && $themeColors) {
 						themeColorEl.setAttribute('content', $themeColors.dark);
+					}
+				} else if (derivedMode === 'black') {
+					htmlEl.classList.remove('dark');
+					htmlEl.classList.add('black');
+					htmlEl.style.colorScheme = 'black';
+					if (themeColorEl && $themeColors) {
+						themeColorEl.setAttribute('content', $themeColors.black);
 					}
 				}
 			});

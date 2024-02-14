@@ -1,15 +1,16 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import {
-		systemPrefersMode,
-		setMode,
-		localStorageKey,
 		mode,
-		themeColors as themeColorsStore,
-		setInitialMode
-	} from './mode.js';
-	import type { Mode, ThemeColors } from './types.js';
-	import { isValidMode } from './stores.js';
+		localStorageKey,
+		setMode,
+		setInitialMode,
+		systemPrefersMode,
+		themeColors as themeColorsStore
+	} from './mode';
+	import { isValidMode } from './stores';
+	import type { Mode, ThemeColors } from './types';
+	import type { TSettingsInfer } from '$lib/validators';
 
 	export let track = true;
 	export let defaultMode: Mode = 'system';
@@ -21,7 +22,9 @@
 		const unsubscriber = mode.subscribe(() => {});
 		systemPrefersMode.tracking(track);
 		systemPrefersMode.query();
-		const localStorageMode = localStorage.getItem(localStorageKey);
+		const { backgroundColor: localStorageMode } = JSON.parse(
+			localStorage.getItem(localStorageKey) as string
+		) as TSettingsInfer;
 		setMode(isValidMode(localStorageMode) ? localStorageMode : defaultMode);
 
 		return () => {

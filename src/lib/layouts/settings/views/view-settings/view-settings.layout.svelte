@@ -70,8 +70,8 @@
 			<div class="space-y-8 p-8 md:col-span-2">
 				<Form.Fieldset>
 					<Form.Field {config} name="backgroundColor" let:value>
-						<Form.Legend class="mb-0">Background</Form.Legend>
-						<span class="mb-4 text-sm capitalize text-muted-foreground">
+						<Form.Legend class="mb-0 select-none">Background</Form.Legend>
+						<span class="mb-4 select-none text-sm capitalize text-muted-foreground">
 							{value}
 
 							{#if value === 'system'}
@@ -91,6 +91,7 @@
 								>
 									<Form.RadioItem id={option} value={option} class="!sr-only" />
 									<svelte:component this={THEME_ICONS[option]} class="h-5 w-5" />
+									<span class="sr-only capitalize">{option}</span>
 								</Form.Label>
 							{/each}
 						</Form.RadioGroup>
@@ -99,8 +100,8 @@
 
 				<Form.Fieldset>
 					<Form.Field {config} name="accentColor" let:value>
-						<Form.Legend class="mb-0">Accent Color</Form.Legend>
-						<span class="mb-4 text-sm capitalize text-muted-foreground">{value}</span>
+						<Form.Legend class="mb-0 select-none">Accent Color</Form.Legend>
+						<span class="mb-4 select-none text-sm capitalize text-muted-foreground">{value}</span>
 
 						<Form.RadioGroup
 							orientation="horizontal"
@@ -120,6 +121,7 @@
 										class="h-5 w-5"
 										style="color: {color}; border-color: {color};"
 									/>
+									<span class="sr-only capitalize">{option}</span>
 								</Form.Label>
 							{/each}
 						</Form.RadioGroup>
