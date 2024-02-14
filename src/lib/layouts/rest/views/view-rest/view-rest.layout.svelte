@@ -33,7 +33,7 @@
 			>
 				{#await Promise.all(LAZY_COMPONENTS) then [ViewEdit, ViewResponse]}
 					<ViewEdit />
-					<Separator {orientation} />
+					<Separator orientation={orientation === 'horizontal' ? 'vertical' : 'horizontal'} />
 					<ViewResponse />
 				{/await}
 			</div>
