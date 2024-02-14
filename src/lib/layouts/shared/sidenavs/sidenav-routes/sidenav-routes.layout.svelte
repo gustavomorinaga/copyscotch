@@ -40,10 +40,8 @@
 			variant="ghost"
 			href={path}
 			aria-current={isCurrentRoute ? 'page' : undefined}
-			class={`relative flex-col text-muted-foreground after:absolute after:inset-0 after:w-[2px] hover:bg-muted
-				${isCurrentRoute ? 'bg-muted text-accent-foreground after:bg-primary' : 'after:bg-transparent'}
-				${$settingsStore.navigation === 'expand' ? 'h-20 w-24' : 'h-14 w-14'}
-			`}
+			data-expanded={$settingsStore.navigation === 'expand'}
+			class="relative h-14 w-14 flex-col text-muted-foreground after:absolute after:inset-0 after:w-[2px] after:bg-transparent aria-[current=page]:bg-muted aria-[current=page]:text-accent-foreground aria-[current=page]:after:bg-primary aria-[current=page]:after:[view-transition-name:active-page] data-[expanded=true]:h-20 data-[expanded=true]:w-24 hover:bg-muted"
 		>
 			<svelte:component this={icon} class="h-5 w-5" />
 			<span class="mt-2 text-xs" class:sr-only={$settingsStore.navigation === 'collapse'}>

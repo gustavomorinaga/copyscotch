@@ -12,6 +12,7 @@
 </script>
 
 <ModeWatcher />
+<ViewTransition />
 
 <Wrapper class="overflow-hidden">
 	<Toolbar />
@@ -27,11 +28,9 @@
 					<SidenavRoutes />
 				</Sidenav.Nav>
 				<Sidenav.Separator orientation="vertical" />
-				<ViewTransition let:style>
-					<Sidenav.Content {style}>
-						<slot />
-					</Sidenav.Content>
-				</ViewTransition>
+				<Sidenav.Content class="[view-transition-name:content]">
+					<slot />
+				</Sidenav.Content>
 			</Sidenav.Root>
 		{/await}
 	</main>
