@@ -39,6 +39,7 @@
 			size="icon"
 			variant="ghost"
 			href={path}
+			aria-current={isCurrentRoute ? 'page' : undefined}
 			class={`relative flex-col text-muted-foreground after:absolute after:inset-0 after:w-[2px] hover:bg-muted
 				${isCurrentRoute ? 'bg-muted text-accent-foreground after:bg-primary' : 'after:bg-transparent'}
 				${$settingsStore.navigation === 'expand' ? 'h-20 w-24' : 'h-14 w-14'}
