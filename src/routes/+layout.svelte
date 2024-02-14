@@ -6,6 +6,7 @@
 	import { Center } from '$lib/components/ui/center';
 	import * as Sidenav from '$lib/components/ui/sidenav';
 	import { ModeWatcher } from '$lib/components/mode-watcher';
+	import { ViewTransition } from '$lib/components/view-transition';
 	import { executeParallel } from '$lib/utils';
 	import { Loader } from 'lucide-svelte';
 </script>
@@ -26,9 +27,11 @@
 					<SidenavRoutes />
 				</Sidenav.Nav>
 				<Sidenav.Separator orientation="vertical" />
-				<Sidenav.Content>
-					<slot />
-				</Sidenav.Content>
+				<ViewTransition let:style>
+					<Sidenav.Content {style}>
+						<slot />
+					</Sidenav.Content>
+				</ViewTransition>
 			</Sidenav.Root>
 		{/await}
 	</main>
