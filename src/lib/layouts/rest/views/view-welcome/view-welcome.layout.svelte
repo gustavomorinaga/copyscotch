@@ -10,8 +10,8 @@
 </script>
 
 <div
-	role="button"
-	tabindex="0"
+	role="presentation"
+	tabindex="-1"
 	class="flex h-full cursor-default select-none flex-col"
 	on:dblclick={() => tabStore.add()}
 >

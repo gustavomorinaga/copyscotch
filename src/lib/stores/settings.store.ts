@@ -1,17 +1,25 @@
 import { browser } from '$app/environment';
 import { getContext, setContext } from 'svelte';
 import { writable, type StartStopNotifier, type Writable } from 'svelte/store';
+import { setBackground, setTheme } from '$lib/utils';
 import type { TSettingsInfer } from '$lib/validators';
 
 type TSettingsStore = Writable<TSettingsData> & TSettingsActions;
 type TSettingsData = TSettingsInfer;
 type TSettingsActions = {
-	save: (settings: TSettingsData) => void;
+	save: (settings: Partial<TSettingsData>) => void;
 };
 
 const CTX = Symbol('SETTINGS_CTX');
 const STORAGE_KEY = 'settings';
-const INITIAL_DATA: TSettingsData = { layout: 'vertical', sidebar: 'open', lineWrapping: false };
+const INITIAL_DATA: TSettingsData = {
+	backgroundColor: 'system',
+	accentColor: 'green',
+	layout: 'vertical',
+	navigation: 'collapse',
+	sidebar: 'open',
+	lineWrapping: false
+};
 
 export function setSettingsStore(
 	initialData: Partial<TSettingsData> = INITIAL_DATA,
@@ -22,6 +30,8 @@ export function setSettingsStore(
 	const storedData = browser ? localStorage.getItem(STORAGE_KEY) : undefined;
 	if (!storedData) localStorage.setItem(STORAGE_KEY, JSON.stringify(initialData));
 	const data: TSettingsData = storedData ? JSON.parse(storedData) : initialData;
+
+	setTheme(data.accentColor);
 
 	const store = writable(data, (set, update) => {
 		function syncData(event: MessageEvent<TSettingsData>) {
@@ -49,6 +59,14 @@ export function setSettingsStore(
 	const actions: TSettingsActions = {
 		save: (settings) => {
 			store.update((state) => {
+				if (settings.backgroundColor && settings.backgroundColor !== state.backgroundColor) {
+					setBackground(settings.backgroundColor);
+				}
+
+				if (settings.accentColor && settings.accentColor !== state.accentColor) {
+					setTheme(settings.accentColor);
+				}
+
 				const newState = { ...state, ...settings };
 				return newState;
 			});

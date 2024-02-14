@@ -16,6 +16,8 @@ import RadioGroup from './form-radio-group.svelte';
 import Select from './form-select.svelte';
 import SelectTrigger from './form-select-trigger.svelte';
 import Button from './form-button.svelte';
+import Fieldset from './form-fieldset.svelte';
+import Legend from './form-legend.svelte';
 
 const Root = FormPrimitive.Root;
 const Field = FormPrimitive.Field;
@@ -57,6 +59,8 @@ export {
 	SelectTrigger,
 	NativeSelect,
 	NativeRadio,
+	Fieldset,
+	Legend,
 	//
 	Root as Form,
 	Field as FormField,
@@ -81,5 +85,7 @@ export {
 	SelectItem as FormSelectItem,
 	SelectSeparator as FormSelectSeparator,
 	SelectTrigger as FormSelectTrigger,
-	Button as FormButton
+	Button as FormButton,
+	Fieldset as FormFieldset,
+	Legend as FormLegend
 };

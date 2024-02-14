@@ -8,6 +8,6 @@
 	export { className as class };
 </script>
 
-<aside class={cn('flex h-full w-1/5 flex-col', className)}>
+<aside class={cn('flex h-full w-fit flex-col', className)}>
 	<slot />
 </aside>

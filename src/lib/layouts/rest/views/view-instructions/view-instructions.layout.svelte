@@ -16,8 +16,8 @@
 	</Shortcut.Root>
 
 	<span class="mt-4 inline-flex">
-		<Button variant="outline" {...LINKS.doc} title={undefined}>
-			{LINKS.doc.title}
+		<Button variant="outline" {...LINKS.github} title={undefined}>
+			Documentation
 			<ExternalLink class="ml-2 h-4 w-4" />
 		</Button>
 	</span>

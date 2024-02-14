@@ -1,7 +1,10 @@
 import Root from './codemirror.svelte';
 import { html } from '@codemirror/lang-html';
 import { json } from '@codemirror/lang-json';
+import type { ComponentProps } from 'svelte';
 import type { ThemeSpec } from 'svelte-codemirror-editor';
+
+type Props = ComponentProps<Root>;
 
 export const langs = { html, json } as const;
 
@@ -150,4 +153,9 @@ export const theme: ThemeSpec = {
 	}
 };
 
-export { Root, Root as CodeMirror };
+export {
+	Root,
+	type Props,
+	//
+	Root as CodeMirror
+};

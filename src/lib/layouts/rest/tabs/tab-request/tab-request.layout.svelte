@@ -1,6 +1,11 @@
 <script lang="ts" context="module">
 	import { getRESTStore, getRESTTabStore } from '$lib/stores';
-	import { RESTRequestSchema, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
+	import {
+		RESTRequestSchema,
+		MethodEnum,
+		type TRESTRequestInfer,
+		type TRESTTabInfer
+	} from '$lib/validators';
 	import * as Shortcut from '$lib/components/ui/shortcut';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Form from '$lib/components/ui/form';
@@ -19,7 +24,7 @@
 	export let tabID: $$Props['tabID'];
 
 	const [restStore, tabStore] = [getRESTStore(), getRESTTabStore()];
-	const methodOptions = RESTRequestSchema.shape.method.options;
+	const { options: methodOptions } = MethodEnum;
 
 	let action: TFormAction = 'send';
 	let controller = new AbortController();
@@ -113,7 +118,7 @@
 				controller = new AbortController();
 			},
 			save: () => {
-				restStore.saveRequests([$formValue]);
+				restStore.saveRequests([$formValue as TRESTRequestInfer]);
 				tabStore.update(tabID, $formValue);
 				tabStore.setDirty([tabID], false);
 			}
