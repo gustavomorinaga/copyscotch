@@ -1,4 +1,5 @@
 <script lang="ts">
+	import '$lib/styles/view-transition.pcss';
 	import { onNavigate } from '$app/navigation';
 
 	onNavigate((navigation) => {
@@ -14,19 +15,3 @@
 		});
 	});
 </script>
-
-<style lang="postcss" global>
-	::view-transition-old(root),
-	::view-transition-new(root) {
-		animation-duration: 150ms;
-		animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-	}
-
-	@media (prefers-reduced-motion) {
-		::view-transition-group(root),
-		::view-transition-old(root),
-		::view-transition-new(root) {
-			animation: none !important;
-		}
-	}
-</style>
