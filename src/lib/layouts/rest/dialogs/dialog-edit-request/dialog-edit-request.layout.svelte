@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import { dialogEditRequestStore as dialogStore } from '.';
-	import { getRESTTabStore } from '$lib/stores';
-	import { RESTRequestSchema } from '$lib/validators';
+	import { getRESTStore, getRESTTabStore } from '$lib/stores';
+	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/validators';
 	import { Button } from '$lib/components/ui/button';
 	import * as Form from '$lib/components/ui/form';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -12,47 +12,51 @@
 </script>
 
 <script lang="ts">
-	const tabStore = getRESTTabStore();
+	const [restStore, tabStore] = [getRESTStore(), getRESTTabStore()];
 
 	const superFrm = superForm(defaults(zod(RESTRequestSchema)), {
 		SPA: true,
 		validators: zod(RESTRequestSchema),
 		validationMethod: 'onblur',
-		onSubmit: handleFormSubmit
+		resetForm: true,
+		onSubmit: (input) => {
+			input.cancel();
+			return handleFormSubmit();
+		}
 	});
 
 	let action: TFormAction = 'save';
 
 	$: ({ form: formValue, formId, allErrors } = superFrm);
 	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
-	$: superFrm.reset({
-		id: `edit-request-${$dialogStore.request?.id}`,
-		data: $dialogStore.request
-	});
+	$: superFrm.reset({ data: $dialogStore.request });
 
 	function handleCancel() {
-		dialogStore.set({ mode: 'create', open: false, request: undefined });
+		dialogStore.set({ mode: 'create', open: false, collectionID: '', request: undefined });
 	}
 
 	function handleSave() {
-		if (!$dialogStore.request) return;
-
-		const { id: requestID } = $dialogStore.request;
-
 		const MODES = {
-			create: () => {},
+			create: () => {
+				if (!$dialogStore.collectionID) return;
+
+				restStore.saveRequests($dialogStore.collectionID, [$formValue as TRESTRequestInfer]);
+			},
 			edit: () => {
+				const { id: requestID } = $dialogStore.request as TRESTRequestInfer;
+				if (!requestID) return;
+
 				const tab = tabStore.get(requestID);
 				if (!tab) return;
 
-				tabStore.update(requestID, $formValue);
+				tabStore.update(requestID, $formValue as TRESTRequestInfer);
 				tabStore.setDirty([requestID], true);
 			}
 		};
 
 		MODES[$dialogStore.mode]();
 
-		dialogStore.set({ mode: 'create', open: false, request: undefined });
+		dialogStore.set({ mode: 'create', open: false, collectionID: undefined, request: undefined });
 	}
 
 	function handleFormSubmit() {

@@ -1,16 +1,15 @@
 import { browser } from '$app/environment';
 import { getContext, setContext } from 'svelte';
 import { get, writable, type StartStopNotifier, type Writable } from 'svelte/store';
-import { findNested, updateNested } from '$lib/utils';
-import type { TRESTCollectionInfer, TRESTRequestInfer } from '$lib/validators';
+import { RESTRepository } from '$lib/repositories';
+import type { TFolderInfer, TFileInfer } from '$lib/validators';
 
 type TRESTStore = Writable<TRESTData> & TRESTActions;
-type TRESTData = Array<TRESTCollectionInfer>;
+type TRESTData = Array<TFolderInfer>;
 type TRESTActions = {
-	getCollection: (id: TRESTCollectionInfer['id']) => TRESTCollectionInfer | undefined;
-	getRequest: (id: TRESTRequestInfer['id']) => TRESTRequestInfer | undefined;
-	saveCollection: (collection: TRESTCollectionInfer) => void;
-	saveRequests: (requests: Array<TRESTRequestInfer>) => void;
+	getFolder: (id: TFolderInfer['id']) => TFolderInfer | undefined;
+	getFile: (id: TFileInfer['id']) => TFileInfer | undefined;
+	createFolder: (parentID: TFolderInfer['id'], folder: TFolderInfer) => void;
 };
 
 const CTX = Symbol('REST_COLLECTION_CTX');
@@ -51,32 +50,18 @@ export function setRESTStore(
 	}
 
 	const actions: TRESTActions = {
-		getCollection: (id) => {
+		getFolder: (id) => {
 			const collections = get(store);
-			return collections.find((collection) => collection.id === id);
+			return RESTRepository.findFolder(collections, { id });
 		},
-		getRequest: (id) => {
+		getFile: (id) => {
 			const collections = get(store);
-			return findNested(collections, { id });
+			return RESTRepository.findFile(collections, { id });
 		},
-		saveCollection: (collection) => {
-			return store.update((state) => {
-				const index = state.findIndex(({ id }) => id === collection.id);
-				index !== -1 ? (state[index] = collection) : state.push(collection);
-				saveData(state);
-				return state;
-			});
-		},
-		saveRequests: (requests) => {
-			// find existent requests and update them
-			// if not existent, add them
-
+		createFolder: (parentID, folder) => {
 			const collections = get(store);
-
-			for (const request of requests) {
-				const updated = updateNested(collections, { id: request.id }, { requests: [request] });
-				console.log(updated);
-			}
+			const newCollections = RESTRepository.createFolder(collections, { id: parentID }, folder);
+			saveData(newCollections);
 		}
 	};
 

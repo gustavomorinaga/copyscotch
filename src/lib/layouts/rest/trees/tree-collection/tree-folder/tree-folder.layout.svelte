@@ -18,7 +18,7 @@
 		title: string;
 		tooltip?: string;
 		icon?: ComponentType;
-		action: () => void;
+		action: (folderID: TFolderInfer['id']) => void;
 	};
 
 	const ICONS = { open: FolderOpen, closed: Folder } as const;
@@ -27,10 +27,11 @@
 			title: 'New request',
 			tooltip: 'New Request',
 			icon: FilePlus,
-			action: () =>
+			action: (folderID) =>
 				dialogEditRequestStore.set({
 					mode: 'create',
 					open: true,
+					collectionID: folderID,
 					request: undefined
 				})
 		},
@@ -97,7 +98,7 @@
 							class="invisible h-6 w-6 group-hover/folder:visible"
 							on:click={(event) => {
 								event.stopPropagation();
-								option.action();
+								option.action(folder.id);
 							}}
 						>
 							<svelte:component this={option.icon} class="h-4 w-4" />

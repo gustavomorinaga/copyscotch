@@ -1,15 +1,17 @@
 import { writable } from 'svelte/store';
-import type { TRESTRequestInfer } from '$lib/validators';
+import type { TRESTCollectionInfer, TRESTRequestInfer } from '$lib/validators';
 import Dialog from './dialog-edit-request.layout.svelte';
 
 export type TRequestDialogStore = {
 	open: boolean;
+	collectionID?: TRESTCollectionInfer['id'];
 	request?: TRESTRequestInfer;
 	mode: 'create' | 'edit';
 };
 
 const dialogEditRequestStore = writable<TRequestDialogStore>({
 	open: false,
+	collectionID: undefined,
 	request: undefined,
 	mode: 'create'
 });

@@ -126,22 +126,22 @@ function createDerivedMode() {
 				const htmlEl = document.documentElement;
 				const themeColorEl = document.querySelector('meta[name="theme-color"]');
 				if (derivedMode === 'light') {
-					htmlEl.classList.remove('black', 'dark');
 					htmlEl.style.colorScheme = 'light';
+					htmlEl.classList.remove('black', 'dark');
 					if (themeColorEl && $themeColors) {
 						themeColorEl.setAttribute('content', $themeColors.light);
 					}
 				} else if (derivedMode === 'dark') {
+					htmlEl.style.colorScheme = 'dark';
 					htmlEl.classList.remove('black');
 					htmlEl.classList.add('dark');
-					htmlEl.style.colorScheme = 'dark';
 					if (themeColorEl && $themeColors) {
 						themeColorEl.setAttribute('content', $themeColors.dark);
 					}
 				} else if (derivedMode === 'black') {
+					htmlEl.style.colorScheme = 'dark';
 					htmlEl.classList.remove('dark');
 					htmlEl.classList.add('black');
-					htmlEl.style.colorScheme = 'black';
 					if (themeColorEl && $themeColors) {
 						themeColorEl.setAttribute('content', $themeColors.black);
 					}
