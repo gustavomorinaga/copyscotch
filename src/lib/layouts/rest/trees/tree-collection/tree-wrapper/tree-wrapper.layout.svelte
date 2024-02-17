@@ -24,7 +24,7 @@
 				<ul class="flex flex-1 flex-col">
 					{#if isEmpty}
 						<li class="flex flex-col">
-							<FeedbackFolderEmpty />
+							<FeedbackFolderEmpty {folder} />
 						</li>
 					{:else}
 						{#if folder.folders.length}

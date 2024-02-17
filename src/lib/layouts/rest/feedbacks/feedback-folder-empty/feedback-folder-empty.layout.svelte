@@ -3,11 +3,22 @@
 	import { Center } from '$lib/components/ui/center';
 	import { Button } from '$lib/components/ui/button';
 	import { Plus } from 'lucide-svelte';
+	import type { TFolderInfer } from '$lib/validators';
 </script>
 
 <script lang="ts">
+	type $$Props = { folder: TFolderInfer };
+
+	export let folder: $$Props['folder'];
+
 	function handleNewFolder() {
-		dialogStore.set({ mode: 'create', type: 'folder', open: true, collection: undefined });
+		dialogStore.set({
+			mode: 'create',
+			type: 'folder',
+			open: true,
+			parentID: folder.id,
+			collection: undefined
+		});
 	}
 </script>
 
