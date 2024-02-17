@@ -103,7 +103,8 @@ export function setRESTTabStore(
 			let newTab: TRESTTabInfer;
 
 			if (request) {
-				newTab = { id: request.id, context: request, dirty: false };
+				const clonedRequest = structuredClone(request);
+				newTab = { id: clonedRequest.id, context: clonedRequest, dirty: false };
 			} else {
 				const newTabID = generateUUID();
 				newTab = { id: newTabID, context: { ...DEFAULT_REQUEST, id: newTabID }, dirty: false };
