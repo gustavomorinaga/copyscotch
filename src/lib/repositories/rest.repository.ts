@@ -67,6 +67,51 @@ export function findFile(
 }
 
 /**
+ * Filters a tree of collections, folders, and requests based on a search term.
+ * @param collections - The array of collections to filter.
+ * @param term - The search term to filter by, which can be the name of a collection or a request.
+ * @returns The filtered array of collections that match the search term.
+ */
+export function filterTree(
+	collections: Array<TFolderInfer>,
+	term: TFolderInfer['name'] | TFileInfer['name']
+): Array<TFolderInfer> {
+	const filterText = term.toLowerCase();
+	const filteredCollections = [];
+
+	const isMatch = (text: string) => text.toLowerCase().includes(filterText);
+
+	for (const collection of collections) {
+		const filteredFiles = [];
+		const filteredFolders = [];
+		for (const request of collection.requests) {
+			if (isMatch(request.name)) filteredFiles.push(request);
+		}
+		for (const folder of collection.folders) {
+			if (isMatch(folder.name)) filteredFolders.push(folder);
+			const filteredFolderFiles = [];
+			for (const request of folder.requests) {
+				if (isMatch(request.name)) filteredFolderFiles.push(request);
+			}
+			if (filteredFolderFiles.length > 0) {
+				const filteredFolder = Object.assign({}, folder);
+				filteredFolder.requests = filteredFolderFiles;
+				filteredFolders.push(filteredFolder);
+			}
+		}
+
+		if (filteredFiles.length + filteredFolders.length > 0 || isMatch(collection.name)) {
+			const filteredCollection = Object.assign({}, collection);
+			filteredCollection.requests = filteredFiles;
+			filteredCollection.folders = filteredFolders;
+			filteredCollections.push(filteredCollection);
+		}
+	}
+
+	return filteredCollections;
+}
+
+/**
  * Creates a new folder in the tree structure based on the given criteria.
  *
  * @param folders - The array of folders representing the tree structure.

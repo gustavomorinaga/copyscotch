@@ -20,8 +20,9 @@
 			'peer/search h-8 border-none bg-transparent py-2 pl-4 pr-8 text-sm focus-visible:z-10',
 			className
 		)}
-		type="text"
+		type="search"
 		placeholder="Search"
+		autocomplete="off"
 		bind:value
 		on:blur
 		on:change

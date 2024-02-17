@@ -25,8 +25,8 @@
 	const searchTerm = writable('');
 
 	const filteredCollections = derived([restStore, searchTerm], ([$collections, $term]) => {
-		if (!searchTerm) return structuredClone($collections);
-		return structuredClone($collections.filter((collection) => collection.name.includes($term)));
+		if (!$term) return structuredClone($collections);
+		return structuredClone(restStore.filterTree($term));
 	});
 </script>
 
