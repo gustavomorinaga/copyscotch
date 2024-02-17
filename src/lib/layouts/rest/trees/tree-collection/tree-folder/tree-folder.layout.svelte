@@ -65,8 +65,10 @@
 
 	$: status = (open ? 'open' : 'closed') as TFolderStatus;
 	$: if ($treeStore.collapse) open = false;
+	$: if ($treeStore.expand) open = true;
 
 	function onOpenChange() {
+		if ($treeStore.expand) $treeStore.expand = false;
 		if ($treeStore.collapse) $treeStore.collapse = false;
 	}
 </script>

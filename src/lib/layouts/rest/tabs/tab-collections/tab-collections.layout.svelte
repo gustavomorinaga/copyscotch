@@ -4,6 +4,7 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { FeedbackNotFound, InputSearch } from '$lib/layouts/shared';
 	import {
+		treeCollectionStore as treeStore,
 		DialogEditCollection,
 		FeedbackCollectionEmpty,
 		ToolbarCollections
@@ -30,6 +31,8 @@
 		if (!$term) return $tree;
 		return RESTRepository.filterTree($tree, $term);
 	});
+
+	$: $treeStore.expand = Boolean($searchTerm);
 </script>
 
 <Separator orientation="horizontal" />
