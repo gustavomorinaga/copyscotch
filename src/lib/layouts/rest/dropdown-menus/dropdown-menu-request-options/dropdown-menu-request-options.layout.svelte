@@ -1,5 +1,8 @@
 <script lang="ts" context="module">
-	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest';
+	import {
+		alertDialogRequestDeletionStore as requestDeletionDialogStore,
+		dialogEditRequestStore as requestDialogStore
+	} from '$lib/layouts/rest';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Edit, Trash2 } from 'lucide-svelte';
 	import type { ComponentType } from 'svelte';
@@ -24,13 +27,13 @@
 			label: 'Edit',
 			shortcut: 'E',
 			icon: Edit,
-			action: () => dialogStore.set({ mode: 'edit', open: true, request })
+			action: () => requestDialogStore.set({ mode: 'edit', open: true, request })
 		},
 		{
 			label: 'Delete',
 			shortcut: 'D',
 			icon: Trash2,
-			action: () => {}
+			action: () => requestDeletionDialogStore.set({ open: true, requestID: request.id })
 		}
 	] satisfies Array<TFileMenuOption>;
 </script>

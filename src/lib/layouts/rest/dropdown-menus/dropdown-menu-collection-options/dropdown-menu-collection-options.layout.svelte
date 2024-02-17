@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
 	import {
+		alertDialogCollectionDeletionStore as collectionDeletionDialogStore,
 		dialogEditCollectionStore as collectionDialogStore,
 		dialogEditRequestStore as requestDialogStore,
 		type TCollectionDialogStore
@@ -64,7 +65,7 @@
 			label: 'Delete',
 			shortcut: 'D',
 			icon: Trash2,
-			action: () => {}
+			action: () => collectionDeletionDialogStore.set({ open: true, collectionID: collection.id })
 		}
 	] satisfies Array<TFolderMenuOption>;
 </script>

@@ -6,9 +6,18 @@
 	import {
 		DialogEditCollection,
 		FeedbackCollectionEmpty,
-		ToolbarCollections,
-		TreeCollection
+		ToolbarCollections
 	} from '$lib/layouts/rest';
+
+	const LAZY_COMPONENTS = [
+		import('$lib/layouts/rest/trees/tree-collection').then((m) => m.TreeCollection),
+		import('$lib/layouts/rest/alert-dialogs/alert-dialog-collection-deletion').then(
+			(m) => m.AlertDialogCollectionDeletion
+		),
+		import('$lib/layouts/rest/alert-dialogs/alert-dialog-request-deletion').then(
+			(m) => m.AlertDialogRequestDeletion
+		)
+	] as const;
 </script>
 
 <script lang="ts">
@@ -32,7 +41,11 @@
 <Separator orientation="horizontal" />
 
 {#if $filteredCollections.length}
-	<TreeCollection collections={$filteredCollections} />
+	{#await Promise.all(LAZY_COMPONENTS) then [TreeCollection, AlertDialogCollectionDeletion, AlertDialogRequestDeletion]}
+		<TreeCollection collections={$filteredCollections} />
+		<AlertDialogCollectionDeletion />
+		<AlertDialogRequestDeletion />
+	{/await}
 {:else if $searchTerm}
 	<FeedbackNotFound term={$searchTerm} />
 {:else}

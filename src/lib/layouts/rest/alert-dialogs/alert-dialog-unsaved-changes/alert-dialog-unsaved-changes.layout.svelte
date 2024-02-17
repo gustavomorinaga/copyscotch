@@ -1,6 +1,5 @@
 <script lang="ts" context="module">
 	import { getRESTStore, getRESTTabStore } from '$lib/stores';
-	import { Button } from '$lib/components/ui/button';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 </script>
 
@@ -41,8 +40,8 @@
 		</AlertDialog.Header>
 
 		<AlertDialog.Footer>
-			<Button variant="secondary" on:click={handleDiscard}>No</Button>
-			<Button variant="default" on:click={handleSave}>Yes</Button>
+			<AlertDialog.Cancel on:click={handleDiscard}>No</AlertDialog.Cancel>
+			<AlertDialog.Action on:click={handleSave}>Yes</AlertDialog.Action>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>
