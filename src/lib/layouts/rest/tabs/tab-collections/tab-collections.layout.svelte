@@ -8,6 +8,7 @@
 		FeedbackCollectionEmpty,
 		ToolbarCollections
 	} from '$lib/layouts/rest';
+	import { RESTRepository } from '$lib/repositories';
 
 	const LAZY_COMPONENTS = [
 		import('$lib/layouts/rest/trees/tree-collection').then((m) => m.TreeCollection),
@@ -22,11 +23,12 @@
 
 <script lang="ts">
 	const restStore = getRESTStore();
-	const searchTerm = writable('');
 
-	const filteredCollections = derived([restStore, searchTerm], ([$collections, $term]) => {
-		if (!$term) return structuredClone($collections);
-		return structuredClone(restStore.filterTree($term));
+	const searchTerm = writable('');
+	const tree = derived(restStore, ($collections) => structuredClone($collections));
+	const filteredCollections = derived([tree, searchTerm], ([$tree, $term]) => {
+		if (!$term) return $tree;
+		return RESTRepository.filterTree($tree, $term);
 	});
 </script>
 

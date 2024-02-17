@@ -10,7 +10,6 @@ type TRESTData = Array<TFolderInfer>;
 type TRESTActions = {
 	getFolder: (id: TFolderInfer['id']) => TFolderInfer | undefined;
 	getFile: (id: TFileInfer['id']) => TFileInfer | undefined;
-	filterTree: (term: TFolderInfer['name'] | TFileInfer['name']) => Array<TFolderInfer>;
 	createFolder: (folder: TFolderInfer, parentID?: TFolderInfer['id']) => void;
 	createFile: (file: TFileInfer, parentID: TFolderInfer['id']) => void;
 	updateFolder: (folder: TFolderInfer) => void;
@@ -74,10 +73,6 @@ export function setRESTStore(
 		getFile: (id) => {
 			const collections = get(store);
 			return RESTRepository.findFile(collections, { id });
-		},
-		filterTree(term) {
-			const collections = get(store);
-			return RESTRepository.filterTree(collections, term);
 		},
 		createFolder: (folder, parentID) => {
 			const collections = get(store);
