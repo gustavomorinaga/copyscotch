@@ -27,7 +27,7 @@
 			label: 'Edit',
 			shortcut: 'E',
 			icon: Edit,
-			action: () => requestDialogStore.set({ mode: 'edit', open: true, request })
+			action: () => requestDialogStore.set({ mode: 'edit', open: true, request, forceSave: true })
 		},
 		{
 			label: 'Delete',

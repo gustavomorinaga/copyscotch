@@ -47,8 +47,10 @@
 				const { id: requestID } = $dialogStore.request as TRESTRequestInfer;
 				if (!requestID) return;
 
-				const request: TRESTRequestInfer = { ...$dialogStore.request, name: $formValue.name };
-				restStore.updateFile(request);
+				if ($dialogStore.forceSave) {
+					const request: TRESTRequestInfer = { ...$dialogStore.request, name: $formValue.name };
+					restStore.updateFile(request);
+				}
 
 				const tab = tabStore.get(requestID);
 				if (!tab) return;

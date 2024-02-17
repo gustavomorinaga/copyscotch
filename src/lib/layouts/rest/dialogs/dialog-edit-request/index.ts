@@ -4,16 +4,18 @@ import Dialog from './dialog-edit-request.layout.svelte';
 
 export type TRequestDialogStore = {
 	open: boolean;
+	mode: 'create' | 'edit';
 	collectionID?: TRESTCollectionInfer['id'];
 	request?: TRESTRequestInfer;
-	mode: 'create' | 'edit';
+	forceSave?: boolean;
 };
 
 const dialogEditRequestStore = writable<TRequestDialogStore>({
 	open: false,
+	mode: 'create',
 	collectionID: undefined,
 	request: undefined,
-	mode: 'create'
+	forceSave: false
 });
 
 export { Dialog as DialogEditRequest, dialogEditRequestStore };
