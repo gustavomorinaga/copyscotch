@@ -50,7 +50,7 @@
 		if ((event.ctrlKey || event.metaKey) && event.key === 's') {
 			event.preventDefault();
 			const { context: request } = tabStore.get($tabStore.current) as TRESTTabInfer;
-			restStore.saveRequests([request]);
+			restStore.updateFile(request);
 			tabStore.setDirty([$tabStore.current], false);
 		}
 	}

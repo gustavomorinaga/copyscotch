@@ -113,7 +113,13 @@
 			<Form.Field {config} name="name">
 				<Form.Item>
 					<Form.Label for="name">Name</Form.Label>
-					<Form.Input type="text" id="name" name="name" on:keydown={handleKeydownSubmit} />
+					<Form.Input
+						type="text"
+						id="name"
+						name="name"
+						autocomplete="off"
+						on:keydown={handleKeydownSubmit}
+					/>
 				</Form.Item>
 			</Form.Field>
 		</Form.Root>

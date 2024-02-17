@@ -4,6 +4,7 @@ export * from './dialogs';
 export * from './alert-dialogs';
 export * from './context-menus';
 export * from './dropdown-menus';
+export * from './popovers';
 export * from './sidenavs';
 export * from './trees';
 export * from './feedbacks';

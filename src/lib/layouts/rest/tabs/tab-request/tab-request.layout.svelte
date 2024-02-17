@@ -6,11 +6,13 @@
 		type TRESTRequestInfer,
 		type TRESTTabInfer
 	} from '$lib/validators';
+	import { PopoverSaveOptions } from '$lib/layouts/rest';
+	import { Button } from '$lib/components/ui/button';
 	import * as Shortcut from '$lib/components/ui/shortcut';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Form from '$lib/components/ui/form';
 	import { RESPONSE_TYPES, SHORTCUTS, UNICODES } from '$lib/maps';
-	import { Save } from 'lucide-svelte';
+	import { ChevronDown, Save } from 'lucide-svelte';
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import type { ComponentProps } from 'svelte';
@@ -202,28 +204,49 @@
 				</Tooltip.Content>
 			</Tooltip.Root>
 
-			<Tooltip.Root>
-				<Tooltip.Trigger asChild let:builder>
-					<Form.Button
-						builders={[builder]}
-						type="submit"
-						variant="secondary"
-						on:click={() => (action = 'save')}
-					>
-						<Save class="mr-2 h-4 w-4" />
-						Save
-					</Form.Button>
-				</Tooltip.Trigger>
-				<Tooltip.Content side="top" class="select-none">
-					<Shortcut.Root>
-						<span class="mr-4">Save</span>
-						{#each SHORTCUTS.save.modifier as modifier}
-							<Shortcut.Key>{modifier}</Shortcut.Key>
-						{/each}
-						<Shortcut.Key>{SHORTCUTS.save.key}</Shortcut.Key>
-					</Shortcut.Root>
-				</Tooltip.Content>
-			</Tooltip.Root>
+			<Form.Join class="flex-none">
+				<Tooltip.Root>
+					<Tooltip.Trigger asChild let:builder>
+						<Form.Button
+							builders={[builder]}
+							type="submit"
+							variant="secondary"
+							class="rounded-r-none"
+							on:click={() => (action = 'save')}
+						>
+							<Save class="mr-2 h-4 w-4" />
+							Save
+						</Form.Button>
+					</Tooltip.Trigger>
+					<Tooltip.Content side="top" class="select-none">
+						<Shortcut.Root>
+							<span class="mr-4">Save</span>
+							{#each SHORTCUTS.save.modifier as modifier}
+								<Shortcut.Key>{modifier}</Shortcut.Key>
+							{/each}
+							<Shortcut.Key>{SHORTCUTS.save.key}</Shortcut.Key>
+						</Shortcut.Root>
+					</Tooltip.Content>
+				</Tooltip.Root>
+
+				<PopoverSaveOptions {tabID} let:builder={popoverBuilder}>
+					<Tooltip.Root>
+						<Tooltip.Trigger asChild let:builder={tooltipBuilder}>
+							<Button
+								builders={[popoverBuilder, tooltipBuilder]}
+								size="icon"
+								variant="secondary"
+								class="rounded-l-none"
+							>
+								<ChevronDown class="h-4 w-4" />
+							</Button>
+						</Tooltip.Trigger>
+						<Tooltip.Content side="top" class="select-none">
+							<span>Options</span>
+						</Tooltip.Content>
+					</Tooltip.Root>
+				</PopoverSaveOptions>
+			</Form.Join>
 		</Form.Join>
 	</Form.Join>
 </Form.Root>
