@@ -4,6 +4,7 @@ import Dialog from './dialog-edit-collection.layout.svelte';
 
 export type TCollectionDialogStore = {
 	open: boolean;
+	parentID?: TRESTCollectionInfer['id'];
 	collection?: TRESTCollectionInfer;
 	mode: 'create' | 'edit';
 	type: 'collection' | 'folder';
@@ -11,6 +12,7 @@ export type TCollectionDialogStore = {
 
 const dialogEditCollectionStore = writable<TCollectionDialogStore>({
 	open: false,
+	parentID: undefined,
 	collection: undefined,
 	mode: 'create',
 	type: 'collection'

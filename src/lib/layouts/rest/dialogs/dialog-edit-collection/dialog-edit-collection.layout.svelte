@@ -44,11 +44,11 @@
 		validationMethod: 'onblur',
 		onSubmit: (input) => {
 			input.cancel();
-			const action = getAction(input.action);
-			const ACTIONS = { cancel: handleCancel, save: handleSave } as const;
-			return ACTIONS[action]();
+			return handleFormSubmit();
 		}
 	});
+
+	let action: TFormAction = 'save';
 
 	$: ({ form: formValue, formId, allErrors } = superFrm);
 	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
@@ -58,17 +58,12 @@
 	});
 	$: ({ title } = DIALOG_PROPS[$dialogStore.type][$dialogStore.mode]);
 
-	function getAction(url: URL) {
-		const [action] = [...url.searchParams.keys()];
-		return action.replace('/', '') as TFormAction;
-	}
-
 	function handleCancel() {
 		dialogStore.set({ mode: 'create', type: 'collection', open: false, collection: undefined });
 	}
 
 	function handleSave() {
-		const saveAction = {
+		const ACTIONS = {
 			create: () => {
 				const initialData: Pick<TRESTCollectionInfer, 'id' | 'requests' | 'folders'> = {
 					id: generateUUID(),
@@ -76,13 +71,26 @@
 					folders: []
 				};
 				const collection: TRESTCollectionInfer = { ...$formValue, ...initialData };
-				restStore.saveCollection(collection);
+				restStore.createFolder(collection, $dialogStore.parentID);
 			},
-			edit: () => console.log($formValue)
+			edit: () => {
+				if (!$dialogStore.collection) return;
+
+				const collection: TRESTCollectionInfer = {
+					...$dialogStore.collection,
+					name: $formValue.name
+				};
+				restStore.updateFolder(collection);
+			}
 		};
 
-		saveAction[$dialogStore.mode]();
+		ACTIONS[$dialogStore.mode]();
 		dialogStore.set({ mode: 'create', type: 'collection', open: false, collection: undefined });
+	}
+
+	function handleFormSubmit() {
+		const ACTIONS = { cancel: handleCancel, save: handleSave } as const;
+		return ACTIONS[action]();
 	}
 
 	function handleOpenChange(event: boolean) {
@@ -129,8 +137,18 @@
 		</Form.Root>
 
 		<Dialog.Footer>
-			<Button type="submit" variant="ghost" form={$formId} formaction="?/cancel">Cancel</Button>
-			<Button type="submit" variant="default" form={$formId} disabled={isInvalid}>Save</Button>
+			<Button type="submit" variant="ghost" form={$formId} on:click={() => (action = 'cancel')}>
+				Cancel
+			</Button>
+			<Button
+				type="submit"
+				variant="default"
+				form={$formId}
+				disabled={isInvalid}
+				on:click={() => (action = 'save')}
+			>
+				Save
+			</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

@@ -36,15 +36,19 @@
 	}
 
 	function handleSave() {
-		const MODES = {
+		const ACTIONS = {
 			create: () => {
 				if (!$dialogStore.collectionID) return;
-
-				restStore.saveRequests($dialogStore.collectionID, [$formValue as TRESTRequestInfer]);
+				restStore.createFile($formValue as TRESTRequestInfer, $dialogStore.collectionID);
 			},
 			edit: () => {
+				if (!$dialogStore.request) return;
+
 				const { id: requestID } = $dialogStore.request as TRESTRequestInfer;
 				if (!requestID) return;
+
+				const request: TRESTRequestInfer = { ...$dialogStore.request, name: $formValue.name };
+				restStore.updateFile(request);
 
 				const tab = tabStore.get(requestID);
 				if (!tab) return;
@@ -54,8 +58,7 @@
 			}
 		};
 
-		MODES[$dialogStore.mode]();
-
+		ACTIONS[$dialogStore.mode]();
 		dialogStore.set({ mode: 'create', open: false, collectionID: undefined, request: undefined });
 	}
 

@@ -2,6 +2,7 @@ import { browser } from '$app/environment';
 import { getContext, setContext } from 'svelte';
 import { get, writable, type StartStopNotifier, type Writable } from 'svelte/store';
 import { RESTRepository } from '$lib/repositories';
+import { generateUUID } from '$lib/utils';
 import type { TFolderInfer, TFileInfer } from '$lib/validators';
 
 type TRESTStore = Writable<TRESTData> & TRESTActions;
@@ -9,12 +10,27 @@ type TRESTData = Array<TFolderInfer>;
 type TRESTActions = {
 	getFolder: (id: TFolderInfer['id']) => TFolderInfer | undefined;
 	getFile: (id: TFileInfer['id']) => TFileInfer | undefined;
-	createFolder: (parentID: TFolderInfer['id'], folder: TFolderInfer) => void;
+	createFolder: (folder: TFolderInfer, parentID?: TFolderInfer['id']) => void;
+	createFile: (file: TFileInfer, parentID: TFolderInfer['id']) => void;
+	updateFolder: (folder: TFolderInfer) => void;
+	updateFile: (file: TFileInfer) => void;
+	removeFolder: (id: TFolderInfer['id']) => void;
+	removeFile: (id: TFileInfer['id']) => void;
 };
 
 const CTX = Symbol('REST_COLLECTION_CTX');
 const STORAGE_KEY = 'collectionsREST';
 const INITIAL_DATA: TRESTData = [];
+const DEFAULT_FOLDER: Omit<TFolderInfer, 'id'> = {
+	name: 'Untitled',
+	folders: [],
+	requests: []
+};
+const DEFAULT_FILE: Omit<TFileInfer, 'id'> = {
+	name: 'Untitled',
+	url: 'https://jsonplaceholder.typicode.com/todos/1',
+	method: 'GET'
+};
 
 export function setRESTStore(
 	initialData: Partial<TRESTData> = INITIAL_DATA,
@@ -58,10 +74,68 @@ export function setRESTStore(
 			const collections = get(store);
 			return RESTRepository.findFile(collections, { id });
 		},
-		createFolder: (parentID, folder) => {
+		createFolder: (folder, parentID) => {
 			const collections = get(store);
-			const newCollections = RESTRepository.createFolder(collections, { id: parentID }, folder);
-			saveData(newCollections);
+			const term: Partial<TFolderInfer> = parentID ? { id: parentID } : {};
+			const newFolder: TFolderInfer = { ...DEFAULT_FOLDER, id: generateUUID(), name: folder.name };
+			const newCollections = RESTRepository.createFolder(collections, term, newFolder);
+
+			return store.update((state) => {
+				state = newCollections;
+				saveData(state);
+				return state;
+			});
+		},
+		createFile: (file, parentID) => {
+			const collections = get(store);
+			const newFile: TFileInfer = { ...DEFAULT_FILE, id: generateUUID(), name: file.name };
+			const newCollections = RESTRepository.createFile(collections, { id: parentID }, newFile);
+
+			return store.update((state) => {
+				state = newCollections;
+				saveData(state);
+				return state;
+			});
+		},
+		updateFolder(folder) {
+			const collections = get(store);
+			const newCollections = RESTRepository.updateFolder(collections, { id: folder.id }, folder);
+
+			return store.update((state) => {
+				state = newCollections;
+				saveData(state);
+				return state;
+			});
+		},
+		updateFile(file) {
+			const collections = get(store);
+			const newCollections = RESTRepository.updateFile(collections, { id: file.id }, file);
+
+			return store.update((state) => {
+				state = newCollections;
+				saveData(state);
+				return state;
+			});
+		},
+		removeFolder(id) {
+			const collections = get(store);
+			const newCollections = RESTRepository.removeFolder(collections, { id });
+
+			return store.update((state) => {
+				state = newCollections;
+				saveData(state);
+				return state;
+			});
+		},
+		removeFile(id) {
+			const collections = get(store);
+			const newCollections = RESTRepository.removeFile(collections, { id });
+
+			return store.update((state) => {
+				state = newCollections;
+				saveData(state);
+				return state;
+			});
 		}
 	};
 

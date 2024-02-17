@@ -39,11 +39,12 @@
 			title: 'New folder',
 			tooltip: 'New Folder',
 			icon: FolderPlus,
-			action: () =>
+			action: (folderID) =>
 				dialogEditCollectionStore.set({
 					mode: 'create',
 					type: 'folder',
 					open: true,
+					parentID: folderID,
 					collection: undefined
 				})
 		}

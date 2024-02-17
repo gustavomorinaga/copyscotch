@@ -81,6 +81,8 @@ export function createFolder(
 ): Array<TFolderInfer> {
 	const termEntries = Object.entries(term);
 
+	if (!termEntries.length) return [...folders, newFolder];
+
 	return folders.map((folder) => {
 		const found = termEntries.every(([key, value]) => folder[key as keyof TFolderInfer] === value);
 		if (found) {
