@@ -53,7 +53,7 @@
 	}
 </script>
 
-<div class="container h-full">
+<div class="container h-full bg-background">
 	<section class="flex flex-1 flex-col">
 		<Form.Root
 			form={settingsForm}

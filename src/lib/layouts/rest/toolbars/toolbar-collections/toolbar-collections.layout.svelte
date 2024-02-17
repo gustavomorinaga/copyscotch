@@ -21,7 +21,7 @@
 	}
 </script>
 
-<div class="inline-flex h-8 w-full flex-1 items-center justify-between">
+<div class="inline-flex h-8 w-full flex-1 items-center justify-between bg-background">
 	<div class="flex gap-2">
 		<Button size="sm" variant="text" class="h-6" on:click={handleNewCollection}>
 			<Plus class="mr-2 h-4 w-4" />

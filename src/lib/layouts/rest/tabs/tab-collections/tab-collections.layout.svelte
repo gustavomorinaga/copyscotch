@@ -23,7 +23,7 @@
 
 <Separator orientation="horizontal" />
 
-<InputSearch bind:value={$searchTerm} />
+<InputSearch class="bg-background" bind:value={$searchTerm} />
 
 <Separator orientation="horizontal" />
 

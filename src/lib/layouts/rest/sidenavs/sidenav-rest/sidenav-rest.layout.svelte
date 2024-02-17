@@ -65,8 +65,8 @@
 
 	<Separator orientation="vertical" />
 
-	<div class="flex h-full w-full flex-1 flex-col">
-		<Breadcrumb.Root class="w-full select-none">
+	<div class="flex h-full w-full flex-1 flex-col bg-black/5">
+		<Breadcrumb.Root class="w-full select-none bg-background">
 			<Breadcrumb.Item>My Workspace</Breadcrumb.Item>
 			<Breadcrumb.Separator />
 			<Breadcrumb.Item current class="capitalize">{currentTab}</Breadcrumb.Item>

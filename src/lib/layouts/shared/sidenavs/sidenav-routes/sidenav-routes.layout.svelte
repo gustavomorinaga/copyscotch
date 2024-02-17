@@ -31,7 +31,7 @@
 	$: currentRoute = $page.route.id;
 </script>
 
-<div class="flex h-full flex-1 flex-col">
+<div class="flex h-full flex-1 flex-col bg-background">
 	{#each ROUTES as { title, path, icon }}
 		{@const isCurrentRoute = currentRoute === path}
 
