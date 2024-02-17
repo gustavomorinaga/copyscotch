@@ -118,7 +118,7 @@
 				controller = new AbortController();
 			},
 			save: () => {
-				// restStore.saveRequests([$formValue as TRESTRequestInfer]);
+				restStore.updateFile($formValue as TRESTRequestInfer);
 				tabStore.update(tabID, $formValue);
 				tabStore.setDirty([tabID], false);
 			}

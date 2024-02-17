@@ -56,7 +56,7 @@
 				if (!tab) return;
 
 				tabStore.update(requestID, $formValue as TRESTRequestInfer);
-				tabStore.setDirty([requestID], true);
+				if (!$dialogStore.forceSave) tabStore.setDirty([requestID], true);
 			}
 		};
 
