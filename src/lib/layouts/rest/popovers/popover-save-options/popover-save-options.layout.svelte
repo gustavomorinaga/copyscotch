@@ -19,7 +19,9 @@
 	// TODO - Add name validation using superforms
 
 	function handleOnInput(event: InputEvent) {
-		tabStore.update(tabID, { name: (event.target as HTMLInputElement).value });
+		const name = (event.target as HTMLInputElement).value.trim();
+		tabStore.setDirty([tabID], true);
+		tabStore.update(tabID, { name });
 	}
 </script>
 
