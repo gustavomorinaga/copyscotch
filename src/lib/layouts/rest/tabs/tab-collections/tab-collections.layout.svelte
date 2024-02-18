@@ -35,15 +35,15 @@
 	$: $treeStore.expand = Boolean($searchTerm);
 </script>
 
-<Separator orientation="horizontal" />
+<div class="sticky top-8 z-10 inline-flex w-full flex-1 flex-col">
+	<InputSearch class="bg-background" bind:value={$searchTerm} />
+	<Separator orientation="horizontal" />
+</div>
 
-<InputSearch class="bg-background" bind:value={$searchTerm} />
-
-<Separator orientation="horizontal" />
-
-<ToolbarCollections />
-
-<Separator orientation="horizontal" />
+<div class="sticky top-16 z-10 inline-flex w-full flex-1 flex-col">
+	<ToolbarCollections />
+	<Separator orientation="horizontal" />
+</div>
 
 {#if $filteredCollections.length}
 	{#await Promise.all(LAZY_COMPONENTS) then [TreeCollection, AlertDialogCollectionDeletion, AlertDialogRequestDeletion]}
