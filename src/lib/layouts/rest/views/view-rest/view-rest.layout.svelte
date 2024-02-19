@@ -1,7 +1,9 @@
 <script lang="ts" context="module">
 	import { getSettingsStore, getRESTTabStore } from '$lib/stores';
+	import { BREAKPOINTS } from '$lib/maps';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Sidenav from '$lib/components/ui/sidenav';
+	import { screenStore } from '$lib/components/screen-watcher';
 	import { DialogEditRequest, SidenavREST, ViewWelcome } from '$lib/layouts/rest';
 
 	const LAZY_COMPONENTS = [
@@ -15,14 +17,16 @@
 
 	$: orientation = $settingsStore.layout;
 	$: openSidenav = $settingsStore.sidebar === 'open';
+	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
+	$: if (isMobile) $settingsStore.layout = 'vertical';
 </script>
 
 <Sidenav.Root>
 	{#if openSidenav}
-		<Sidenav.Nav class="w-3/12">
+		<Sidenav.Nav class="w-3/12 {isMobile ? 'invisible' : 'visible'}">
 			<SidenavREST />
 		</Sidenav.Nav>
-		<Sidenav.Separator orientation="vertical" />
+		<Sidenav.Separator orientation="vertical" class={isMobile ? 'invisible' : 'visible'} />
 	{/if}
 	<Sidenav.Content class={!openSidenav ? 'w-full' : 'w-9/12'}>
 		{#if $tabStore.tabs.length}

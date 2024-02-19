@@ -3,6 +3,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';
+	import { screenStore } from '$lib/components/screen-watcher';
 	import { BREAKPOINTS } from '$lib/maps';
 	import {
 		Columns,
@@ -61,12 +62,7 @@
 	$: layoutProps = LAYOUT[$settingsStore.layout];
 	$: navigationProps = NAVIGATION[$settingsStore.navigation];
 	$: sidebarProps = SIDEBAR[$settingsStore.sidebar];
-	$: innerWidth = 0;
-	$: isMobile = innerWidth < BREAKPOINTS.sm;
-	$: if (isMobile) $settingsStore.layout = 'vertical';
-	$: {
-		$settingsStore.sidebar = isMobile ? 'closed' : 'open';
-	}
+	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
 
 	function handleLayoutToggle() {
 		$settingsStore.layout = $settingsStore.layout === 'horizontal' ? 'vertical' : 'horizontal';
@@ -80,8 +76,6 @@
 		$settingsStore.sidebar = $settingsStore.sidebar === 'open' ? 'closed' : 'open';
 	}
 </script>
-
-<svelte:window bind:innerWidth />
 
 {#if !isMobile}
 	<Separator orientation="horizontal" />

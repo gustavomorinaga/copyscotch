@@ -43,8 +43,8 @@ function createUserPrefersMode() {
 	const defaultValue = 'system';
 
 	const storage = isBrowser ? localStorage : noopStorage;
-	const stored = storage.getItem(localStorageKey);
-	const initialValue = (JSON.parse(stored as string) as TSettingsInfer)?.backgroundColor;
+	const stored = JSON.parse(storage.getItem(localStorageKey) as string) as TSettingsInfer;
+	const initialValue = stored?.backgroundColor;
 
 	let value = isValidMode(initialValue) ? initialValue : defaultValue;
 
@@ -65,7 +65,7 @@ function createUserPrefersMode() {
 
 	function set(v: Mode) {
 		_set((value = v));
-		storage.setItem(localStorageKey, value);
+		storage.setItem(localStorageKey, JSON.stringify({ ...stored, backgroundColor: v }));
 	}
 
 	return {

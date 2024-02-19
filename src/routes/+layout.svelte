@@ -6,12 +6,14 @@
 	import { Center } from '$lib/components/ui/center';
 	import * as Sidenav from '$lib/components/ui/sidenav';
 	import { ModeWatcher } from '$lib/components/mode-watcher';
+	import { ScreenWatcher } from '$lib/components/screen-watcher';
 	import { ViewTransition } from '$lib/components/view-transition';
 	import { executeParallel } from '$lib/utils';
 	import { Loader } from 'lucide-svelte';
 </script>
 
 <ModeWatcher />
+<ScreenWatcher />
 <ViewTransition />
 
 <Wrapper class="overflow-hidden">

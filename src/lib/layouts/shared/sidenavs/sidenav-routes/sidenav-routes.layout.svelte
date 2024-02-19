@@ -29,9 +29,13 @@
 	const settingsStore = getSettingsStore();
 
 	$: currentRoute = $page.route.id;
+	$: orientation = $settingsStore.layout;
 </script>
 
-<div class="flex h-full flex-1 flex-col bg-background">
+<div
+	class="flex h-full flex-1 flex-col bg-background aria-[orientation=vertical]:flex-row"
+	aria-orientation={orientation}
+>
 	{#each ROUTES as { title, path, icon }}
 		{@const isCurrentRoute = currentRoute === path}
 
