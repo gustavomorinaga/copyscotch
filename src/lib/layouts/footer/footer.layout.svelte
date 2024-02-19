@@ -87,7 +87,7 @@
 	<Separator orientation="horizontal" />
 
 	<footer
-		class="flex h-8 w-full items-center justify-between overflow-x-auto overflow-y-hidden bg-background"
+		class="flex h-8 w-full shrink-0 items-center justify-between overflow-x-auto overflow-y-hidden bg-background"
 	>
 		<div class="flex">
 			<Tooltip.Root>

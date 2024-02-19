@@ -66,7 +66,7 @@
 	<Separator orientation="vertical" />
 
 	<div class="relative flex h-full w-full flex-1 flex-col overflow-y-auto bg-black/5">
-		<div class="sticky top-0 z-10 inline-flex flex-1 flex-col">
+		<div class="sticky top-0 inline-flex shrink-0 flex-col">
 			<Breadcrumb.Root class="w-full select-none bg-background">
 				<Breadcrumb.Item>My Workspace</Breadcrumb.Item>
 				<Breadcrumb.Separator />
