@@ -47,12 +47,12 @@
 		if (updatedTab) $formValue = updatedTab.context;
 	}
 
-	function onChange() {
+	function handleOnChange() {
 		tabStore.update(tabID, $formValue);
 		tabStore.setDirty([tabID], true);
 	}
 
-	function onSelectedChange(selected: ComponentProps<Form.Select>['selected']) {
+	function handleOnSelectedChange(selected: ComponentProps<Form.Select>['selected']) {
 		const method = selected?.value as TRESTRequestInfer['method'];
 		tabStore.update(tabID, { method });
 		tabStore.setDirty([tabID], true);
@@ -139,7 +139,7 @@
 	controlled
 	action="?/{action}"
 	let:config
-	on:change={onChange}
+	on:change={handleOnChange}
 	class="sticky top-0 z-20"
 >
 	<Form.Join class="flex flex-col gap-2 sm:flex-row">
@@ -148,7 +148,7 @@
 				<Form.Item class="w-32">
 					<Form.Select
 						selected={{ value: $formValue.method, label: $formValue.method }}
-						onSelectedChange={(value) => onSelectedChange(value)}
+						onSelectedChange={handleOnSelectedChange}
 					>
 						<Form.SelectTrigger
 							class="relative rounded-l-md rounded-r-none bg-input font-semibold focus:z-10"
