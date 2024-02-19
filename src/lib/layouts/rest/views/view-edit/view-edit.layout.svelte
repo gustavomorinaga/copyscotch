@@ -81,7 +81,7 @@
 <Tabs.Root
 	value={$tabStore.current}
 	activateOnFocus={false}
-	class="relative flex h-full flex-1 flex-col"
+	class="relative flex h-full w-full flex-1 flex-col"
 >
 	<Tabs.List
 		id={tablistID}

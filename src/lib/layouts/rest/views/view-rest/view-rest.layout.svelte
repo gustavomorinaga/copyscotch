@@ -23,15 +23,15 @@
 
 <Sidenav.Root>
 	{#if openSidenav}
-		<Sidenav.Nav class="w-3/12 {isMobile ? 'invisible' : 'visible'}">
+		<Sidenav.Nav class="w-3/12 {isMobile && 'hidden'}">
 			<SidenavREST />
 		</Sidenav.Nav>
-		<Sidenav.Separator orientation="vertical" class={isMobile ? 'invisible' : 'visible'} />
+		<Sidenav.Separator orientation="vertical" class={isMobile ? 'hidden' : undefined} />
 	{/if}
-	<Sidenav.Content class={!openSidenav ? 'w-full' : 'w-9/12'}>
+	<Sidenav.Content class={isMobile || !openSidenav ? 'w-full' : 'w-9/12'}>
 		{#if $tabStore.tabs.length}
 			<div
-				class="flex h-full"
+				class="flex h-full w-full"
 				class:flex-col={orientation === 'vertical'}
 				class:flex-row={orientation === 'horizontal'}
 			>
