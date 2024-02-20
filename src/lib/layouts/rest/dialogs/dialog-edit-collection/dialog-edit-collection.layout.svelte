@@ -115,7 +115,7 @@
 	closeOnOutsideClick={false}
 	onOpenChange={handleOpenChange}
 >
-	<Dialog.Content>
+	<Dialog.Content class="z-[60]" overlayClass="z-[60]">
 		<Dialog.Header>
 			<Dialog.Title>{title}</Dialog.Title>
 		</Dialog.Header>

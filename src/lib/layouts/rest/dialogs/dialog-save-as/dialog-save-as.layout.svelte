@@ -2,7 +2,7 @@
 	import { dialogSaveAsStore as dialogStore } from '.';
 	import { getRESTStore, getRESTTabStore } from '$lib/stores';
 	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/validators';
-	import { TabCollections } from '$lib/layouts/rest';
+	import { ViewCollections } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
@@ -93,7 +93,7 @@
 						<Separator orientation="horizontal" />
 					</div>
 
-					<TabCollections />
+					<ViewCollections />
 				</div>
 			</Form.Fieldset>
 		</Form.Root>
