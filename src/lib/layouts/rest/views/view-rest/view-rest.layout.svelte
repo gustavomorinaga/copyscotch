@@ -18,12 +18,12 @@
 </script>
 
 <script lang="ts">
-	const [settingsStore, tabStore] = [getSettingsContext(), getRESTTabContext()];
+	const [settingsContext, tabContext] = [getSettingsContext(), getRESTTabContext()];
 
-	$: orientation = $settingsStore.layout;
-	$: openSidenav = $settingsStore.sidebar === 'open';
+	$: orientation = $settingsContext.layout;
+	$: openSidenav = $settingsContext.sidebar === 'open';
 	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
-	$: if (isMobile) $settingsStore.layout = 'vertical';
+	$: if (isMobile) $settingsContext.layout = 'vertical';
 </script>
 
 <Sidenav.Root>
@@ -34,7 +34,7 @@
 		<Sidenav.Separator orientation="vertical" class={isMobile ? 'hidden' : undefined} />
 	{/if}
 	<Sidenav.Content class={isMobile || !openSidenav ? 'w-full' : 'w-9/12'}>
-		{#if $tabStore.tabs.length}
+		{#if $tabContext.tabs.length}
 			<div
 				class="flex h-full w-full"
 				class:flex-col={orientation === 'vertical'}

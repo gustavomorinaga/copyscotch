@@ -5,12 +5,12 @@
 </script>
 
 <script lang="ts">
-	const restStore = getRESTContext();
+	const restContext = getRESTContext();
 
 	function handleRequestDeletion() {
 		if (!$dialogStore.requestID) return;
 
-		restStore.removeFile($dialogStore.requestID);
+		restContext.removeFile($dialogStore.requestID);
 		dialogStore.set({ open: false, requestID: undefined });
 	}
 </script>

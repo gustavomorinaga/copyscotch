@@ -7,14 +7,14 @@
 </script>
 
 <script lang="ts">
-	const tabStore = getRESTTabContext();
+	const tabContext = getRESTTabContext();
 
 	function getStatusType(status: number): TStatus {
 		if (status >= 200 && status < 300) return 'success';
 		return 'error';
 	}
 
-	$: result = $tabStore.results.find(({ id }) => id === $tabStore.current) as TRESTResult;
+	$: result = $tabContext.results.find(({ id }) => id === $tabContext.current) as TRESTResult;
 	$: status = getStatusType(result?.response?.status);
 </script>
 

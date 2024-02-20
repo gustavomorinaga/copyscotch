@@ -16,7 +16,7 @@
 </script>
 
 <script lang="ts">
-	const settingsStore = getSettingsContext();
+	const settingsContext = getSettingsContext();
 
 	const { options: backgroundOptions } = BackgroundColorEnum;
 	const { options: accentOptions } = AccentColorEnum;
@@ -29,27 +29,27 @@
 	});
 
 	$: ({ form: formValue } = settingsForm);
-	$: if ($settingsStore) {
-		$formValue.backgroundColor = $settingsStore.backgroundColor;
-		$formValue.accentColor = $settingsStore.accentColor;
-		$formValue.expandNavigation = $settingsStore.navigation === 'expand';
-		$formValue.sidebarOnLeft = $settingsStore.sidebar === 'open';
+	$: if ($settingsContext) {
+		$formValue.backgroundColor = $settingsContext.backgroundColor;
+		$formValue.accentColor = $settingsContext.accentColor;
+		$formValue.expandNavigation = $settingsContext.navigation === 'expand';
+		$formValue.sidebarOnLeft = $settingsContext.sidebar === 'open';
 	}
 
 	function handleBackgroundColor(value: string) {
-		settingsStore.save({ backgroundColor: value as TThemeInfer['backgroundColor'] });
+		settingsContext.save({ backgroundColor: value as TThemeInfer['backgroundColor'] });
 	}
 
 	function handleAccentColor(value: string) {
-		settingsStore.save({ accentColor: value as TThemeInfer['accentColor'] });
+		settingsContext.save({ accentColor: value as TThemeInfer['accentColor'] });
 	}
 
 	function handleNavigation(checked: boolean) {
-		$settingsStore.navigation = checked ? 'expand' : 'collapse';
+		$settingsContext.navigation = checked ? 'expand' : 'collapse';
 	}
 
 	function handleSidebar(checked: boolean) {
-		$settingsStore.sidebar = checked ? 'open' : 'closed';
+		$settingsContext.sidebar = checked ? 'open' : 'closed';
 	}
 </script>
 

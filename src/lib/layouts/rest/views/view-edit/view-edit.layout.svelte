@@ -17,7 +17,7 @@
 </script>
 
 <script lang="ts">
-	const [restStore, tabStore] = [getRESTContext(), getRESTTabContext()];
+	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
 	const tablistID = 'rest-tablist';
 	let tablistRef: HTMLElement;
@@ -26,7 +26,7 @@
 	function handleCurrentTab(event: MouseEvent, tabID: TRESTTabInfer['id']) {
 		event.stopPropagation();
 
-		tabStore.setCurrent(tabID);
+		tabContext.setCurrent(tabID);
 		scrollToActiveTab();
 	}
 
@@ -38,26 +38,26 @@
 		const isKeyboardEvent = event instanceof KeyboardEvent && event.key === 'Enter';
 
 		if (isMouseEvent || isKeyboardEvent) {
-			const isDirty = tabStore.get(tabID)?.dirty;
-			isDirty ? tabStore.setTainted([tabID]) : tabStore.close({ ids: [tabID], mode: 'normal' });
+			const isDirty = tabContext.get(tabID)?.dirty;
+			isDirty ? tabContext.setTainted([tabID]) : tabContext.close({ ids: [tabID], mode: 'normal' });
 		}
 	}
 
 	function handleKeyDown(event: KeyboardEvent) {
 		const isMainTarget = event.target instanceof HTMLBodyElement;
 		if (!isMainTarget) return;
-		if (!$tabStore.current) return;
+		if (!$tabContext.current) return;
 
 		if ((event.ctrlKey || event.metaKey) && event.key === 's') {
 			event.preventDefault();
-			const { context: request } = tabStore.get($tabStore.current) as TRESTTabInfer;
-			restStore.updateFile(request);
-			tabStore.setDirty([$tabStore.current], false);
+			const { context: request } = tabContext.get($tabContext.current) as TRESTTabInfer;
+			restContext.updateFile(request);
+			tabContext.setDirty([$tabContext.current], false);
 		}
 	}
 
 	function handleEditing(tabID: TRESTTabInfer['id']) {
-		const { context: request } = tabStore.get(tabID) as TRESTTabInfer;
+		const { context: request } = tabContext.get(tabID) as TRESTTabInfer;
 		dialogStore.set({ mode: 'edit', open: true, request });
 	}
 
@@ -80,7 +80,7 @@
 <svelte:window on:keydown={handleKeyDown} />
 
 <Tabs.Root
-	value={$tabStore.current}
+	value={$tabContext.current}
 	activateOnFocus={false}
 	class="relative flex h-full w-full flex-1 flex-col"
 >
@@ -88,7 +88,7 @@
 		id={tablistID}
 		class="relative flex min-h-12 touch-pan-x justify-start overflow-x-auto overflow-y-hidden scroll-smooth rounded-none p-0 pr-16 sm:overflow-x-hidden"
 	>
-		{#each $tabStore.tabs as tab}
+		{#each $tabContext.tabs as tab}
 			{@const tabID = tab.id}
 			{@const methodLowCase = tab.context.method.toLowerCase()}
 
@@ -177,7 +177,7 @@
 					class="mx-3 h-8 w-8 shrink-0"
 					role="button"
 					tabindex={0}
-					on:click={() => tabStore.add()}
+					on:click={() => tabContext.add()}
 				>
 					<Plus class="h-4 w-4" />
 					<span role="presentation" class="sr-only">New Tab</span>
@@ -189,7 +189,7 @@
 		</Tooltip.Root>
 	</Tabs.List>
 
-	{#each $tabStore.tabs as tab}
+	{#each $tabContext.tabs as tab}
 		{@const tabID = tab.id}
 
 		<Tabs.Content value={tabID} class="m-0 bg-background p-4">

@@ -15,9 +15,9 @@
 	export let file: $$Props['file'];
 	let openOptions: boolean = false;
 
-	const tabStore = getRESTTabContext();
+	const tabContext = getRESTTabContext();
 
-	$: current = $tabStore.current === file.id;
+	$: current = $tabContext.current === file.id;
 </script>
 
 <Button
@@ -26,7 +26,7 @@
 	class="group/file w-full flex-1 px-0"
 	on:click={(event) => {
 		event.stopPropagation();
-		tabStore.get(file.id) ? tabStore.setCurrent(file.id) : tabStore.add(file);
+		tabContext.get(file.id) ? tabContext.setCurrent(file.id) : tabContext.add(file);
 	}}
 >
 	<div

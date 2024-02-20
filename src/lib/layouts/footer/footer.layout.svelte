@@ -57,23 +57,24 @@
 </script>
 
 <script lang="ts">
-	const settingsStore = getSettingsContext();
+	const settingsContext = getSettingsContext();
 
-	$: layoutProps = LAYOUT[$settingsStore.layout];
-	$: navigationProps = NAVIGATION[$settingsStore.navigation];
-	$: sidebarProps = SIDEBAR[$settingsStore.sidebar];
+	$: layoutProps = LAYOUT[$settingsContext.layout];
+	$: navigationProps = NAVIGATION[$settingsContext.navigation];
+	$: sidebarProps = SIDEBAR[$settingsContext.sidebar];
 	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
 
 	function handleLayoutToggle() {
-		$settingsStore.layout = $settingsStore.layout === 'horizontal' ? 'vertical' : 'horizontal';
+		$settingsContext.layout = $settingsContext.layout === 'horizontal' ? 'vertical' : 'horizontal';
 	}
 
 	function handleNavigationToggle() {
-		$settingsStore.navigation = $settingsStore.navigation === 'collapse' ? 'expand' : 'collapse';
+		$settingsContext.navigation =
+			$settingsContext.navigation === 'collapse' ? 'expand' : 'collapse';
 	}
 
 	function handleSidebarToggle() {
-		$settingsStore.sidebar = $settingsStore.sidebar === 'open' ? 'closed' : 'open';
+		$settingsContext.sidebar = $settingsContext.sidebar === 'open' ? 'closed' : 'open';
 	}
 </script>
 

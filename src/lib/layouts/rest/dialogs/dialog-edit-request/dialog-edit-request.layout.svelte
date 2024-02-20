@@ -12,7 +12,7 @@
 </script>
 
 <script lang="ts">
-	const [restStore, tabStore] = [getRESTContext(), getRESTTabContext()];
+	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
 	const superFrm = superForm(defaults(zod(RESTRequestSchema)), {
 		SPA: true,
@@ -39,7 +39,7 @@
 		const ACTIONS = {
 			create: () => {
 				if (!$dialogStore.collectionID) return;
-				restStore.createFile($formValue as TRESTRequestInfer, $dialogStore.collectionID);
+				restContext.createFile($formValue as TRESTRequestInfer, $dialogStore.collectionID);
 			},
 			edit: () => {
 				if (!$dialogStore.request) return;
@@ -49,14 +49,14 @@
 
 				if ($dialogStore.forceSave) {
 					const request: TRESTRequestInfer = { ...$dialogStore.request, name: $formValue.name };
-					restStore.updateFile(request);
+					restContext.updateFile(request);
 				}
 
-				const tab = tabStore.get(requestID);
+				const tab = tabContext.get(requestID);
 				if (!tab) return;
 
-				tabStore.update(requestID, $formValue as TRESTRequestInfer);
-				if (!$dialogStore.forceSave) tabStore.setDirty([requestID], true);
+				tabContext.update(requestID, $formValue as TRESTRequestInfer);
+				if (!$dialogStore.forceSave) tabContext.setDirty([requestID], true);
 			}
 		};
 

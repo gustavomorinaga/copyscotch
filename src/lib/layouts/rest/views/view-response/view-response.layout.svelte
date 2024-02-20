@@ -29,9 +29,9 @@
 </script>
 
 <script lang="ts">
-	const [settingsStore, tabStore] = [getSettingsContext(), getRESTTabContext()];
+	const [settingsContext, tabContext] = [getSettingsContext(), getRESTTabContext()];
 
-	$: result = $tabStore.results.find(({ id }) => id === $tabStore.current) as TRESTResult;
+	$: result = $tabContext.results.find(({ id }) => id === $tabContext.current) as TRESTResult;
 	$: isSending = result?.sending;
 	$: hasResponse = Boolean(result?.response);
 	$: value = hasResponse
@@ -61,7 +61,7 @@
 				<CodeMirror
 					{...CODEMIRROR_CONFIG}
 					lang={RESPONSE_TYPES[result.response.blob.type]}
-					lineWrapping={$settingsStore.lineWrapping}
+					lineWrapping={$settingsContext.lineWrapping}
 					{value}
 				/>
 			</div>

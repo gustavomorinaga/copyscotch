@@ -22,10 +22,10 @@
 </script>
 
 <script lang="ts">
-	const restStore = getRESTContext();
+	const restContext = getRESTContext();
 
 	const searchTerm = writable('');
-	const tree = derived(restStore, ($collections) => structuredClone($collections));
+	const tree = derived(restContext, ($collections) => structuredClone($collections));
 	const filteredCollections = derived([tree, searchTerm], ([$tree, $term]) => {
 		if (!$term) return $tree;
 		return RESTRepository.filterTree($tree, $term);

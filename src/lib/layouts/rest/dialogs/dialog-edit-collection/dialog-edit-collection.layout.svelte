@@ -36,7 +36,7 @@
 </script>
 
 <script lang="ts">
-	const restStore = getRESTContext();
+	const restContext = getRESTContext();
 
 	const superFrm = superForm(defaults(zod(RESTBaseFolderSchema)), {
 		SPA: true,
@@ -71,7 +71,7 @@
 					folders: []
 				};
 				const collection: TRESTCollectionInfer = { ...$formValue, ...initialData };
-				restStore.createFolder(collection, $dialogStore.parentID);
+				restContext.createFolder(collection, $dialogStore.parentID);
 			},
 			edit: () => {
 				if (!$dialogStore.collection) return;
@@ -80,7 +80,7 @@
 					...$dialogStore.collection,
 					name: $formValue.name
 				};
-				restStore.updateFolder(collection);
+				restContext.updateFolder(collection);
 			}
 		};
 

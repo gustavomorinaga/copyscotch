@@ -18,7 +18,7 @@
 	let tab: TRESTTabInfer;
 	let open: boolean = false;
 
-	const tabStore = getRESTTabContext();
+	const tabContext = getRESTTabContext();
 
 	const superFrm = superForm(defaults(zod(SaveOptionsSchema)), {
 		id: `save-options-${tabID}`,
@@ -34,8 +34,8 @@
 	});
 
 	$: ({ form: formValue, formId } = superFrm);
-	$: if ($tabStore.tabs) {
-		tab = tabStore.get(tabID) as TRESTTabInfer;
+	$: if ($tabContext.tabs) {
+		tab = tabContext.get(tabID) as TRESTTabInfer;
 		if (tab) $formValue = tab.context;
 	}
 
@@ -46,8 +46,8 @@
 
 	function handleOnChange(event: ChangeEvent) {
 		if (!event.target) return;
-		tabStore.setDirty([tabID], true);
-		tabStore.update(tabID, { name: $formValue.name });
+		tabContext.setDirty([tabID], true);
+		tabContext.update(tabID, { name: $formValue.name });
 	}
 </script>
 

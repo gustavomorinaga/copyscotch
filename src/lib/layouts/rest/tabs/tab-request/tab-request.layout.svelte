@@ -26,7 +26,7 @@
 	export let tabID: $$Props['tabID'];
 	let tab: TRESTTabInfer;
 
-	const [restStore, tabStore] = [getRESTContext(), getRESTTabContext()];
+	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 	const { options: methodOptions } = MethodEnum;
 
 	let action: TFormAction = 'send';
@@ -42,25 +42,25 @@
 	});
 
 	$: ({ form: formValue, formId, submitting } = superFrm);
-	$: sending = $tabStore.results.find((result) => result.id === tabID)?.sending;
-	$: if ($tabStore.tabs) {
-		tab = tabStore.get(tabID) as TRESTTabInfer;
+	$: sending = $tabContext.results.find((result) => result.id === tabID)?.sending;
+	$: if ($tabContext.tabs) {
+		tab = tabContext.get(tabID) as TRESTTabInfer;
 		if (tab) $formValue = tab.context;
 	}
 
 	function handleOnChange() {
-		tabStore.update(tabID, $formValue);
-		tabStore.setDirty([tabID], true);
+		tabContext.update(tabID, $formValue);
+		tabContext.setDirty([tabID], true);
 	}
 
 	function handleOnSelectedChange(selected: ComponentProps<Form.Select>['selected']) {
 		const method = selected?.value as TRESTRequestInfer['method'];
-		tabStore.update(tabID, { method });
-		tabStore.setDirty([tabID], true);
+		tabContext.update(tabID, { method });
+		tabContext.setDirty([tabID], true);
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
-		if ($tabStore.current !== tabID) return;
+		if ($tabContext.current !== tabID) return;
 
 		if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
 			event.preventDefault();
@@ -74,7 +74,7 @@
 	function handleFormSubmit() {
 		const ACTIONS: Record<TFormAction, () => void> = {
 			send: () => {
-				tabStore.setResult(tabID, { response: undefined, sending: true });
+				tabContext.setResult(tabID, { response: undefined, sending: true });
 
 				const { url, method } = $formValue;
 				const start = performance.now();
@@ -94,7 +94,7 @@
 								if (blob.type === 'application/json') {
 									Promise.all([response.clone().json(), response.clone().text()]).then(
 										([json, raw]) =>
-											tabStore.setResult(tabID, {
+											tabContext.setResult(tabID, {
 												response: { ok, status, headers, blob, json, time, raw }
 											})
 									);
@@ -103,7 +103,7 @@
 										.clone()
 										.text()
 										.then((raw) =>
-											tabStore.setResult(tabID, {
+											tabContext.setResult(tabID, {
 												response: { ok, status, headers, blob, time, raw }
 											})
 										);
@@ -112,18 +112,18 @@
 					})
 					.catch((error) => {
 						const isDOMException = error instanceof DOMException;
-						tabStore.setResult(tabID, { response: isDOMException ? undefined : error });
+						tabContext.setResult(tabID, { response: isDOMException ? undefined : error });
 					})
-					.finally(() => tabStore.setResult(tabID, { sending: false }));
+					.finally(() => tabContext.setResult(tabID, { sending: false }));
 			},
 			cancel: async () => {
 				controller.abort();
 				controller = new AbortController();
 			},
 			save: () => {
-				restStore.updateFile($formValue as TRESTRequestInfer);
-				tabStore.update(tabID, $formValue);
-				tabStore.setDirty([tabID], false);
+				restContext.updateFile($formValue as TRESTRequestInfer);
+				tabContext.update(tabID, $formValue);
+				tabContext.setDirty([tabID], false);
 			}
 		};
 

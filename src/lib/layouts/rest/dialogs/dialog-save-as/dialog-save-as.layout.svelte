@@ -15,7 +15,7 @@
 </script>
 
 <script lang="ts">
-	const [restStore, tabStore] = [getRESTContext(), getRESTTabContext()];
+	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
 	const superFrm = superForm(defaults(zod(RESTRequestSchema)), {
 		SPA: true,

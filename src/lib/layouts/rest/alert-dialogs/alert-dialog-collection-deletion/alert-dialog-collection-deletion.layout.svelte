@@ -5,12 +5,12 @@
 </script>
 
 <script lang="ts">
-	const restStore = getRESTContext();
+	const restContext = getRESTContext();
 
 	function handleCollectionDeletion() {
 		if (!$dialogStore.collectionID) return;
 
-		restStore.removeFolder($dialogStore.collectionID);
+		restContext.removeFolder($dialogStore.collectionID);
 		dialogStore.set({ open: false, collectionID: undefined });
 	}
 </script>

@@ -4,25 +4,27 @@
 </script>
 
 <script lang="ts">
-	const [restStore, tabStore] = [getRESTContext(), getRESTTabContext()];
+	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
-	$: open = $tabStore.tainted?.length > 0;
+	$: open = $tabContext.tainted?.length > 0;
 	$: isCurrent =
-		$tabStore.current &&
-		$tabStore.tainted?.length === 1 &&
-		$tabStore.tainted?.includes($tabStore.current);
-	$: dirtyTabs = $tabStore.tabs.filter((tab) => tab.dirty && $tabStore.tainted?.includes(tab.id));
+		$tabContext.current &&
+		$tabContext.tainted?.length === 1 &&
+		$tabContext.tainted?.includes($tabContext.current);
+	$: dirtyTabs = $tabContext.tabs.filter(
+		(tab) => tab.dirty && $tabContext.tainted?.includes(tab.id)
+	);
 
 	function handleDiscard() {
-		tabStore.close({ ids: $tabStore.tainted, mode: 'normal' });
-		tabStore.setTainted(undefined);
+		tabContext.close({ ids: $tabContext.tainted, mode: 'normal' });
+		tabContext.setTainted(undefined);
 	}
 
 	function handleSave() {
 		const requests = dirtyTabs.map((tab) => tab.context);
-		// restStore.save(requests);
-		tabStore.close({ ids: $tabStore.tainted, mode: 'normal' });
-		tabStore.setTainted(undefined);
+		// restContext.save(requests);
+		tabContext.close({ ids: $tabContext.tainted, mode: 'normal' });
+		tabContext.setTainted(undefined);
 	}
 </script>
 

@@ -10,7 +10,7 @@
 </script>
 
 <script lang="ts">
-	const restStore = getRESTContext();
+	const restContext = getRESTContext();
 
 	function handleNewCollection() {
 		dialogStore.set({ mode: 'create', type: 'collection', open: true, collection: undefined });
@@ -37,7 +37,7 @@
 					size="icon"
 					variant="text"
 					class="mx-2 h-8 w-6"
-					disabled={!$restStore.length}
+					disabled={!$restContext.length}
 					on:click={handleCollapseAll}
 				>
 					<MinusSquare class="h-4 w-4" />

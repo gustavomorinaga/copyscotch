@@ -22,11 +22,11 @@
 </script>
 
 <script lang="ts">
-	const [settingsStore, tabStore] = [getSettingsContext(), getRESTTabContext()];
+	const [settingsContext, tabContext] = [getSettingsContext(), getRESTTabContext()];
 
 	let clipboardState: TClipboardState = 'default';
 
-	$: result = $tabStore.results.find(({ id }) => id === $tabStore.current) as TRESTResult;
+	$: result = $tabContext.results.find(({ id }) => id === $tabContext.current) as TRESTResult;
 
 	function handleClipboard() {
 		const { replacer, space } = CLIPBOARD_CONFIG;
@@ -59,7 +59,7 @@
 			variant="primary"
 			aria-label="Toggle Line Wrapping"
 			class="rounded-none"
-			bind:pressed={$settingsStore.lineWrapping}
+			bind:pressed={$settingsContext.lineWrapping}
 		>
 			<WrapText class="h-4 w-4" />
 			<span class="sr-only">Line Wrapping</span>
