@@ -2,7 +2,7 @@
 	import { dialogSaveAsStore as dialogStore } from '.';
 	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
 	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/validators';
-	import { ViewCollections } from '$lib/layouts/rest';
+	import { ViewSelectCollections } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
@@ -18,6 +18,7 @@
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
 	const superFrm = superForm(defaults(zod(RESTRequestSchema)), {
+		id: 'dialog-save-as',
 		SPA: true,
 		validators: zod(RESTRequestSchema),
 		validationMethod: 'oninput',
@@ -93,7 +94,7 @@
 						<Separator orientation="horizontal" />
 					</div>
 
-					<ViewCollections />
+					<ViewSelectCollections />
 				</div>
 			</Form.Fieldset>
 		</Form.Root>
