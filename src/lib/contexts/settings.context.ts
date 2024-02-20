@@ -12,7 +12,7 @@ type TSettingsActions = {
 
 const CTX = Symbol('SETTINGS_CTX');
 const STORAGE_KEY = 'settings';
-const INITIAL_DATA: TSettingsData = {
+export const INITIAL_DATA: TSettingsData = {
 	backgroundColor: 'system',
 	accentColor: 'green',
 	layout: 'vertical',

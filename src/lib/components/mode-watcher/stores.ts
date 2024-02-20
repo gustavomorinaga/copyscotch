@@ -1,5 +1,6 @@
 import { writable, derived } from 'svelte/store';
 import { withoutTransition } from './without-transition';
+import { INITIAL_DATA as SETTINGS_INITIAL_DATA } from '$lib/contexts';
 import type { Mode, ThemeColors } from './types';
 import type { TSettingsInfer } from '$lib/validators';
 
@@ -65,7 +66,10 @@ function createUserPrefersMode() {
 
 	function set(v: Mode) {
 		_set((value = v));
-		storage.setItem(localStorageKey, JSON.stringify({ ...stored, backgroundColor: v }));
+		storage.setItem(
+			localStorageKey,
+			JSON.stringify({ ...SETTINGS_INITIAL_DATA, ...stored, backgroundColor: v })
+		);
 	}
 
 	return {
