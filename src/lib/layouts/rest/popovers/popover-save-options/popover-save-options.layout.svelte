@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
 	import { getRESTTabStore } from '$lib/stores';
+	import { dialogSaveAsStore as dialogStore } from '$lib/layouts/rest';
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Form from '$lib/components/ui/form';
 	import { FolderPlus } from 'lucide-svelte';
@@ -14,6 +15,8 @@
 	type $$Props = { tabID: TRESTTabInfer['id'] };
 
 	export let tabID: $$Props['tabID'];
+	let tab: TRESTTabInfer;
+	let open: boolean = false;
 
 	const tabStore = getRESTTabStore();
 
@@ -32,22 +35,23 @@
 
 	$: ({ form: formValue, formId } = superFrm);
 	$: if ($tabStore.tabs) {
-		const updatedTab = tabStore.get(tabID);
-		if (updatedTab) $formValue = updatedTab.context;
+		tab = tabStore.get(tabID) as TRESTTabInfer;
+		if (tab) $formValue = tab.context;
 	}
 
 	function handleFormSubmit() {
-		// tabStore.update(tabID, superFrm.formValue);
-		// tabStore.setDirty([tabID], true);
+		dialogStore.set({ open: true, request: tab.context });
+		open = false;
 	}
 
-	function handleOnChange(_: ChangeEvent) {
+	function handleOnChange(event: ChangeEvent) {
+		if (!event.target) return;
 		tabStore.setDirty([tabID], true);
 		tabStore.update(tabID, { name: $formValue.name });
 	}
 </script>
 
-<Popover.Root disableFocusTrap>
+<Popover.Root bind:open disableFocusTrap>
 	<Popover.Trigger asChild let:builder>
 		<slot {builder} />
 	</Popover.Trigger>

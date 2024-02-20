@@ -24,6 +24,7 @@
 	type $$Props = { tabID: TRESTTabInfer['id'] };
 
 	export let tabID: $$Props['tabID'];
+	let tab: TRESTTabInfer;
 
 	const [restStore, tabStore] = [getRESTStore(), getRESTTabStore()];
 	const { options: methodOptions } = MethodEnum;
@@ -43,8 +44,8 @@
 	$: ({ form: formValue, formId, submitting } = superFrm);
 	$: sending = $tabStore.results.find((result) => result.id === tabID)?.sending;
 	$: if ($tabStore.tabs) {
-		const updatedTab = tabStore.get(tabID);
-		if (updatedTab) $formValue = updatedTab.context;
+		tab = tabStore.get(tabID) as TRESTTabInfer;
+		if (tab) $formValue = tab.context;
 	}
 
 	function handleOnChange() {

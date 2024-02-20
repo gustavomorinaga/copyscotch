@@ -73,7 +73,7 @@
 	}
 </script>
 
-<Collapsible.Root class="flex flex-col" bind:open {onOpenChange}>
+<Collapsible.Root class="flex shrink-0 flex-col" bind:open {onOpenChange}>
 	<Collapsible.Trigger
 		class={buttonVariants({ size: 'sm', variant: 'text', class: 'group/folder px-0' })}
 	>

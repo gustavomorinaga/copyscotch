@@ -5,7 +5,6 @@
 	import { FeedbackNotFound, InputSearch } from '$lib/layouts/shared';
 	import {
 		treeCollectionStore as treeStore,
-		DialogEditCollection,
 		FeedbackCollectionEmpty,
 		ToolbarCollections
 	} from '$lib/layouts/rest';
@@ -40,7 +39,7 @@
 	<Separator orientation="horizontal" />
 </div>
 
-<div class="sticky top-[4.125rem] inline-flex w-full shrink-0 flex-col">
+<div class="sticky top-[4.125rem] z-10 inline-flex w-full shrink-0 flex-col">
 	<ToolbarCollections />
 	<Separator orientation="horizontal" />
 </div>
@@ -56,5 +55,3 @@
 {:else}
 	<FeedbackCollectionEmpty />
 {/if}
-
-<DialogEditCollection />

@@ -8,6 +8,7 @@
 		TabRequest,
 		ContextMenuEditRequest,
 		AlertDialogUnsavedChanges,
+		DialogSaveAs,
 		dialogEditRequestStore as dialogStore
 	} from '$lib/layouts/rest';
 	import { horizontalScroll } from '$lib/directives';
@@ -198,3 +199,4 @@
 </Tabs.Root>
 
 <AlertDialogUnsavedChanges />
+<DialogSaveAs />

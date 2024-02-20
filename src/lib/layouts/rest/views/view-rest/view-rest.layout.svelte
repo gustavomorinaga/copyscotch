@@ -4,7 +4,12 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Sidenav from '$lib/components/ui/sidenav';
 	import { screenStore } from '$lib/components/screen-watcher';
-	import { DialogEditRequest, SidenavREST, ViewWelcome } from '$lib/layouts/rest';
+	import {
+		DialogEditCollection,
+		DialogEditRequest,
+		SidenavREST,
+		ViewWelcome
+	} from '$lib/layouts/rest';
 
 	const LAZY_COMPONENTS = [
 		import('$lib/layouts/rest/views/view-edit').then((m) => m.ViewEdit),
@@ -47,4 +52,5 @@
 	</Sidenav.Content>
 </Sidenav.Root>
 
+<DialogEditCollection />
 <DialogEditRequest />

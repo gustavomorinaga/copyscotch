@@ -19,7 +19,7 @@
 	{#each folders as folder}
 		{@const isEmpty = !folder.folders.length && !folder.requests.length}
 
-		<li class="flex flex-col">
+		<li class="flex shrink-0 flex-col">
 			<TreeFolder {folder} {type}>
 				<ul class="flex flex-1 flex-col">
 					{#if isEmpty}

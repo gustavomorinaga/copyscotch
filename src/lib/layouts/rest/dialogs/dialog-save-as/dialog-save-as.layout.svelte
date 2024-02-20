@@ -1,10 +1,13 @@
 <script lang="ts" context="module">
-	import { dialogEditRequestStore as dialogStore } from '.';
+	import { dialogSaveAsStore as dialogStore } from '.';
 	import { getRESTStore, getRESTTabStore } from '$lib/stores';
 	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/validators';
+	import { TabCollections } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
-	import * as Form from '$lib/components/ui/form';
+	import { Separator } from '$lib/components/ui/separator';
+	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
 	import * as Dialog from '$lib/components/ui/dialog';
+	import * as Form from '$lib/components/ui/form';
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 
@@ -32,36 +35,11 @@
 	$: superFrm.reset({ data: $dialogStore.request });
 
 	function handleCancel() {
-		dialogStore.set({ mode: 'create', open: false, collectionID: '', request: undefined });
+		dialogStore.set({ open: false, request: undefined });
 	}
 
 	function handleSave() {
-		const ACTIONS = {
-			create: () => {
-				if (!$dialogStore.collectionID) return;
-				restStore.createFile($formValue as TRESTRequestInfer, $dialogStore.collectionID);
-			},
-			edit: () => {
-				if (!$dialogStore.request) return;
-
-				const { id: requestID } = $dialogStore.request as TRESTRequestInfer;
-				if (!requestID) return;
-
-				if ($dialogStore.forceSave) {
-					const request: TRESTRequestInfer = { ...$dialogStore.request, name: $formValue.name };
-					restStore.updateFile(request);
-				}
-
-				const tab = tabStore.get(requestID);
-				if (!tab) return;
-
-				tabStore.update(requestID, $formValue as TRESTRequestInfer);
-				if (!$dialogStore.forceSave) tabStore.setDirty([requestID], true);
-			}
-		};
-
-		ACTIONS[$dialogStore.mode]();
-		dialogStore.set({ mode: 'create', open: false, collectionID: undefined, request: undefined });
+		dialogStore.set({ open: false, request: undefined });
 	}
 
 	function handleFormSubmit() {
@@ -72,18 +50,6 @@
 	function handleOpenChange(event: boolean) {
 		if (!event) handleCancel();
 	}
-
-	function handleKeydownSubmit(event: KeyboardEvent) {
-		const isInputTarget = event.target instanceof HTMLInputElement;
-		if (!isInputTarget) return;
-
-		event.stopPropagation();
-
-		if (event.key === 'Enter') {
-			event.preventDefault();
-			$formId && document.forms.namedItem($formId)?.requestSubmit();
-		}
-	}
 </script>
 
 <Dialog.Root
@@ -93,13 +59,7 @@
 >
 	<Dialog.Content>
 		<Dialog.Header>
-			<Dialog.Title>
-				{#if $dialogStore.mode === 'create'}
-					Create Request
-				{:else if $dialogStore.mode === 'edit'}
-					Edit Request
-				{/if}
-			</Dialog.Title>
+			<Dialog.Title>Save As</Dialog.Title>
 		</Dialog.Header>
 
 		<Form.Root
@@ -108,20 +68,34 @@
 			schema={RESTRequestSchema}
 			controlled
 			action="?/{action}"
+			class="flex max-h-[55vh] flex-col"
 			let:config
 		>
 			<Form.Field {config} name="name">
 				<Form.Item>
 					<Form.Label for="name">Name</Form.Label>
-					<Form.Input
-						type="text"
-						id="name"
-						name="name"
-						autocomplete="off"
-						on:keydown={handleKeydownSubmit}
-					/>
+					<Form.Input type="text" id="name" name="name" autocomplete="off" />
 				</Form.Item>
 			</Form.Field>
+
+			<Form.Fieldset class="mt-4 h-full">
+				<Form.Legend class="text-sm">Select Location</Form.Legend>
+
+				<div
+					class="relative flex h-full flex-1 flex-col overflow-y-auto rounded-md border border-border"
+				>
+					<div class="sticky top-0 z-10 inline-flex shrink-0 flex-col">
+						<Breadcrumb.Root class="w-full select-none bg-background">
+							<Breadcrumb.Item>My Workspace</Breadcrumb.Item>
+							<Breadcrumb.Separator />
+							<Breadcrumb.Item current class="capitalize">Collections</Breadcrumb.Item>
+						</Breadcrumb.Root>
+						<Separator orientation="horizontal" />
+					</div>
+
+					<TabCollections />
+				</div>
+			</Form.Fieldset>
 		</Form.Root>
 
 		<Dialog.Footer>

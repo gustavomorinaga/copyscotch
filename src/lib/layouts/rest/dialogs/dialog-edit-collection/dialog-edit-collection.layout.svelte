@@ -41,7 +41,7 @@
 	const superFrm = superForm(defaults(zod(RESTBaseFolderSchema)), {
 		SPA: true,
 		validators: zod(RESTBaseFolderSchema),
-		validationMethod: 'onblur',
+		validationMethod: 'oninput',
 		onSubmit: (input) => {
 			input.cancel();
 			return handleFormSubmit();
