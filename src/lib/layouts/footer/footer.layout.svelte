@@ -1,20 +1,22 @@
 <script lang="ts" context="module">
-	import { getSettingsContext } from '$lib/contexts';
+	import { screenStore } from '$lib/components/screen-watcher';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { screenStore } from '$lib/components/screen-watcher';
+	import { getSettingsContext } from '$lib/contexts';
 	import { BREAKPOINTS } from '$lib/maps';
+	import type { TSettingsInfer } from '$lib/validators';
 	import {
 		Columns,
-		Rows,
+		PanelLeft,
 		PanelLeftClose,
 		PanelLeftOpen,
 		PanelRight,
-		PanelLeft
+		PanelRightClose,
+		PanelRightOpen,
+		Rows
 	} from 'lucide-svelte';
 	import type { ComponentType } from 'svelte';
-	import type { TSettingsInfer } from '$lib/validators';
 
 	type TSettingOption = { icon: ComponentType; title: string; tooltip?: string };
 
@@ -42,16 +44,33 @@
 			tooltip: 'Collapse Navbar'
 		}
 	};
-	const SIDEBAR: Record<TSettingsInfer['sidebar'], TSettingOption> = {
+	const SIDEBAR: Record<
+		TSettingsInfer['sidebar'],
+		Record<TSettingsInfer['sidebarPosition'], TSettingOption>
+	> = {
 		open: {
-			icon: PanelLeftClose,
-			title: 'Hide sidebar',
-			tooltip: 'Hide Sidebar'
+			left: {
+				icon: PanelLeftClose,
+				title: 'Hide sidebar',
+				tooltip: 'Hide Sidebar'
+			},
+			right: {
+				icon: PanelRightClose,
+				title: 'Hide sidebar',
+				tooltip: 'Hide Sidebar'
+			}
 		},
 		closed: {
-			icon: PanelLeftOpen,
-			title: 'Show sidebar',
-			tooltip: 'Show Sidebar'
+			left: {
+				icon: PanelLeftOpen,
+				title: 'Show sidebar',
+				tooltip: 'Show Sidebar'
+			},
+			right: {
+				icon: PanelRightOpen,
+				title: 'Show sidebar',
+				tooltip: 'Show Sidebar'
+			}
 		}
 	} as const;
 </script>
@@ -59,9 +78,10 @@
 <script lang="ts">
 	const settingsContext = getSettingsContext();
 
-	$: layoutProps = LAYOUT[$settingsContext.layout];
-	$: navigationProps = NAVIGATION[$settingsContext.navigation];
-	$: sidebarProps = SIDEBAR[$settingsContext.sidebar];
+	$: ({ layout, navigation, sidebar, sidebarPosition } = $settingsContext);
+	$: layoutProps = LAYOUT[layout];
+	$: navigationProps = NAVIGATION[navigation];
+	$: sidebarProps = SIDEBAR[sidebar][sidebarPosition];
 	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
 
 	function handleLayoutToggle() {
