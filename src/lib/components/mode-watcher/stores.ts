@@ -35,7 +35,7 @@ export const systemPrefersMode = createSystemMode();
  */
 export const themeColors = writable<ThemeColors>(undefined);
 /**
- * Derived store that represents the current mode (`"dark"`, `"light"` or `undefined`)
+ * Derived store that represents the current mode (`"black"`, `"dark"`, `"light"` or `undefined`)
  */
 export const derivedMode = createDerivedMode();
 

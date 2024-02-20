@@ -54,7 +54,7 @@
 			<Tabs.Trigger
 				{value}
 				{disabled}
-				class="p-2 data-[state=active]:text-primary"
+				class="p-2 !shadow-none data-[state=active]:text-primary"
 				on:click={() => handleCurrentTab(value)}
 			>
 				<svelte:component this={icon} class="h-5 w-5" />
@@ -65,7 +65,9 @@
 
 	<Separator orientation="vertical" />
 
-	<div class="relative flex h-full w-full flex-1 flex-col overflow-y-auto bg-black/5">
+	<div
+		class="relative flex h-full w-full flex-1 flex-col overflow-y-auto bg-black bg-opacity-[0.025]"
+	>
 		<div class="sticky top-0 z-10 inline-flex shrink-0 flex-col">
 			<Breadcrumb.Root class="w-full select-none bg-background">
 				<Breadcrumb.Item>My Workspace</Breadcrumb.Item>
