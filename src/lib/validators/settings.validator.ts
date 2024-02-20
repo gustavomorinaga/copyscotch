@@ -15,6 +15,7 @@ export const AccentColorEnum = z.enum([
 export const LayoutEnum = z.enum(['horizontal', 'vertical']);
 export const NavigationEnum = z.enum(['collapse', 'expand']);
 export const SidebarEnum = z.enum(['open', 'closed']);
+export const SidebarPositionEnum = z.enum(['left', 'right']);
 
 export const SettingsSchema = z.object({
 	backgroundColor: BackgroundColorEnum.default('system'),
@@ -22,6 +23,7 @@ export const SettingsSchema = z.object({
 	layout: LayoutEnum.default('vertical'),
 	navigation: NavigationEnum.default('expand'),
 	sidebar: SidebarEnum.default('closed'),
+	sidebarPosition: SidebarPositionEnum.default('right'),
 	lineWrapping: z.boolean()
 });
 

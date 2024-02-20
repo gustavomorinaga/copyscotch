@@ -20,13 +20,14 @@
 <script lang="ts">
 	const [settingsContext, tabContext] = [getSettingsContext(), getRESTTabContext()];
 
-	$: orientation = $settingsContext.layout;
-	$: openSidenav = $settingsContext.sidebar === 'open';
+	$: ({ layout, sidebar, sidebarPosition } = $settingsContext);
+
+	$: openSidenav = sidebar === 'open';
 	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
-	$: if (isMobile) $settingsContext.layout = 'vertical';
+	$: if (isMobile) layout = 'vertical';
 </script>
 
-<Sidenav.Root>
+<Sidenav.Root class={sidebarPosition === 'left' ? 'flex-row' : 'flex-row-reverse'}>
 	{#if openSidenav}
 		<Sidenav.Nav class="w-3/12 {isMobile && 'hidden'}">
 			<SidenavREST />
@@ -37,12 +38,12 @@
 		{#if $tabContext.tabs.length}
 			<div
 				class="flex h-full w-full"
-				class:flex-col={orientation === 'vertical'}
-				class:flex-row={orientation === 'horizontal'}
+				class:flex-col={layout === 'vertical'}
+				class:flex-row={layout === 'horizontal'}
 			>
 				{#await Promise.all(LAZY_COMPONENTS) then [ViewEdit, ViewResponse]}
 					<ViewEdit />
-					<Separator orientation={orientation === 'horizontal' ? 'vertical' : 'horizontal'} />
+					<Separator orientation={layout === 'horizontal' ? 'vertical' : 'horizontal'} />
 					<ViewResponse />
 				{/await}
 			</div>

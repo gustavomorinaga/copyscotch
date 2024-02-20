@@ -33,7 +33,7 @@
 		$formValue.backgroundColor = $settingsContext.backgroundColor;
 		$formValue.accentColor = $settingsContext.accentColor;
 		$formValue.expandNavigation = $settingsContext.navigation === 'expand';
-		$formValue.sidebarOnLeft = $settingsContext.sidebar === 'open';
+		$formValue.sidebarOnLeft = $settingsContext.sidebarPosition === 'left';
 	}
 
 	function handleBackgroundColor(value: string) {
@@ -49,7 +49,7 @@
 	}
 
 	function handleSidebar(checked: boolean) {
-		$settingsContext.sidebar = checked ? 'open' : 'closed';
+		$settingsContext.sidebarPosition = checked ? 'left' : 'right';
 	}
 </script>
 

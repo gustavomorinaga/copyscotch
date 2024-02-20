@@ -18,6 +18,7 @@ export const INITIAL_DATA: TSettingsData = {
 	layout: 'vertical',
 	navigation: 'collapse',
 	sidebar: 'open',
+	sidebarPosition: 'right',
 	lineWrapping: false
 };
 
