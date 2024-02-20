@@ -10,8 +10,8 @@
 </script>
 
 <div
-	class={cn('flex h-full flex-1 aria-[orientation=vertical]:flex-col', className)}
-	aria-orientation={orientation}
+	class={cn('flex h-full flex-1 data-[orientation=vertical]:flex-col', className)}
+	data-orientation={orientation}
 	{...$$restProps}
 >
 	<slot />
