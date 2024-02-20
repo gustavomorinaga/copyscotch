@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '$lib/styles/app.pcss';
-	import { setSettingsStore } from '$lib/stores';
+	import { setSettingsContext } from '$lib/contexts';
 	import { BREAKPOINTS } from '$lib/maps';
 	import { Footer, Toolbar, Wrapper } from '$lib/layouts';
 	import { SidenavRoutes } from '$lib/layouts/shared';
@@ -23,7 +23,7 @@
 	<Toolbar />
 
 	<main class="flex flex-auto flex-col">
-		{#await executeParallel([setSettingsStore])}
+		{#await executeParallel([setSettingsContext])}
 			<Center>
 				<Loader class="h-4 w-4 animate-spin" />
 			</Center>

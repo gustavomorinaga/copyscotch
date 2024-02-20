@@ -4,7 +4,7 @@ import { writable, type StartStopNotifier, type Writable } from 'svelte/store';
 import { setBackground, setTheme } from '$lib/utils';
 import type { TSettingsInfer } from '$lib/validators';
 
-type TSettingsStore = Writable<TSettingsData> & TSettingsActions;
+type TSettingsContext = Writable<TSettingsData> & TSettingsActions;
 type TSettingsData = TSettingsInfer;
 type TSettingsActions = {
 	save: (settings: Partial<TSettingsData>) => void;
@@ -21,10 +21,10 @@ const INITIAL_DATA: TSettingsData = {
 	lineWrapping: false
 };
 
-export function setSettingsStore(
+export function setSettingsContext(
 	initialData: Partial<TSettingsData> = INITIAL_DATA,
 	start: StartStopNotifier<TSettingsData> = () => {}
-): TSettingsStore {
+): TSettingsContext {
 	let channel: BroadcastChannel | null;
 
 	const storedData = browser ? localStorage.getItem(STORAGE_KEY) : undefined;
@@ -75,8 +75,8 @@ export function setSettingsStore(
 
 	store.subscribe((state) => saveData(state));
 
-	const context = { ...store, ...actions } as TSettingsStore;
+	const context = { ...store, ...actions } as TSettingsContext;
 	return setContext(CTX, context);
 }
 
-export const getSettingsStore = () => getContext<TSettingsStore>(CTX);
+export const getSettingsContext = () => getContext<TSettingsContext>(CTX);

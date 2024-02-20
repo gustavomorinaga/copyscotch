@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { onDestroy } from 'svelte';
-	import { getRESTTabStore } from '$lib/stores';
+	import { getRESTTabContext } from '$lib/contexts';
 	import * as ContextMenu from '$lib/components/ui/context-menu';
 	import { ShortcutKey } from '$lib/components/ui/shortcut';
 	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest';
@@ -23,7 +23,7 @@
 	export let tabID: $$Props['tabID'];
 	let open = false;
 
-	const tabStore = getRESTTabStore();
+	const tabStore = getRESTTabContext();
 
 	$: hasOnlyOneTab = $tabStore.tabs.length === 1;
 	$: open ? handleAddWindowEvents() : handleRemoveWindowEvents();

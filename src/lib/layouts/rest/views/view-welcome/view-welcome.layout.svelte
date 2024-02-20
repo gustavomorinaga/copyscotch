@@ -1,12 +1,12 @@
 <script lang="ts" context="module">
-	import { getRESTTabStore } from '$lib/stores';
+	import { getRESTTabContext } from '$lib/contexts';
 	import { Button } from '$lib/components/ui/button';
 	import { Center } from '$lib/components/ui/center';
 	import { Plus } from 'lucide-svelte';
 </script>
 
 <script lang="ts">
-	const tabStore = getRESTTabStore();
+	const tabStore = getRESTTabContext();
 </script>
 
 <div

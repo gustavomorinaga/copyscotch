@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getSettingsStore } from '$lib/stores';
+	import { getSettingsContext } from '$lib/contexts';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';
@@ -57,7 +57,7 @@
 </script>
 
 <script lang="ts">
-	const settingsStore = getSettingsStore();
+	const settingsStore = getSettingsContext();
 
 	$: layoutProps = LAYOUT[$settingsStore.layout];
 	$: navigationProps = NAVIGATION[$settingsStore.navigation];

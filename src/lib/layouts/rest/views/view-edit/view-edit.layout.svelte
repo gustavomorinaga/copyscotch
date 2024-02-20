@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { onMount } from 'svelte';
-	import { getRESTStore, getRESTTabStore } from '$lib/stores';
+	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Tabs from '$lib/components/ui/tabs';
@@ -17,7 +17,7 @@
 </script>
 
 <script lang="ts">
-	const [restStore, tabStore] = [getRESTStore(), getRESTTabStore()];
+	const [restStore, tabStore] = [getRESTContext(), getRESTTabContext()];
 
 	const tablistID = 'rest-tablist';
 	let tablistRef: HTMLElement;

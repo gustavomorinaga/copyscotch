@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { dialogEditRequestStore as dialogStore } from '.';
-	import { getRESTStore, getRESTTabStore } from '$lib/stores';
+	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
 	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/validators';
 	import { Button } from '$lib/components/ui/button';
 	import * as Form from '$lib/components/ui/form';
@@ -12,7 +12,7 @@
 </script>
 
 <script lang="ts">
-	const [restStore, tabStore] = [getRESTStore(), getRESTTabStore()];
+	const [restStore, tabStore] = [getRESTContext(), getRESTTabContext()];
 
 	const superFrm = superForm(defaults(zod(RESTRequestSchema)), {
 		SPA: true,

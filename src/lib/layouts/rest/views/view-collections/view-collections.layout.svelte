@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { derived, writable } from 'svelte/store';
-	import { getRESTStore } from '$lib/stores';
+	import { getRESTContext } from '$lib/contexts';
 	import { Separator } from '$lib/components/ui/separator';
 	import { FeedbackNotFound, InputSearch } from '$lib/layouts/shared';
 	import {
@@ -22,7 +22,7 @@
 </script>
 
 <script lang="ts">
-	const restStore = getRESTStore();
+	const restStore = getRESTContext();
 
 	const searchTerm = writable('');
 	const tree = derived(restStore, ($collections) => structuredClone($collections));

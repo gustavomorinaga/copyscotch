@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { page } from '$app/stores';
-	import { getSettingsStore } from '$lib/stores';
+	import { getSettingsContext } from '$lib/contexts';
 	import { Button } from '$lib/components/ui/button';
 	import { screenStore } from '$lib/components/screen-watcher';
 	import { Link2, Settings } from 'lucide-svelte';
@@ -28,7 +28,7 @@
 </script>
 
 <script lang="ts">
-	const settingsStore = getSettingsStore();
+	const settingsStore = getSettingsContext();
 
 	$: currentRoute = $page.route.id;
 	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;

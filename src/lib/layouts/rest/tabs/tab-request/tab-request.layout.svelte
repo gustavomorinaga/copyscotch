@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getRESTStore, getRESTTabStore } from '$lib/stores';
+	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
 	import {
 		RESTRequestSchema,
 		MethodEnum,
@@ -26,7 +26,7 @@
 	export let tabID: $$Props['tabID'];
 	let tab: TRESTTabInfer;
 
-	const [restStore, tabStore] = [getRESTStore(), getRESTTabStore()];
+	const [restStore, tabStore] = [getRESTContext(), getRESTTabContext()];
 	const { options: methodOptions } = MethodEnum;
 
 	let action: TFormAction = 'send';

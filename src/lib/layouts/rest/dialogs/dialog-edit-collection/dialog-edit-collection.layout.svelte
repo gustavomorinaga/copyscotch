@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { dialogEditCollectionStore as dialogStore, type TCollectionDialogStore } from '.';
-	import { getRESTStore } from '$lib/stores';
+	import { getRESTContext } from '$lib/contexts';
 	import { generateUUID } from '$lib/utils';
 	import { RESTBaseFolderSchema, type TRESTCollectionInfer } from '$lib/validators';
 	import { Button } from '$lib/components/ui/button';
@@ -36,7 +36,7 @@
 </script>
 
 <script lang="ts">
-	const restStore = getRESTStore();
+	const restStore = getRESTContext();
 
 	const superFrm = superForm(defaults(zod(RESTBaseFolderSchema)), {
 		SPA: true,

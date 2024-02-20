@@ -1,10 +1,10 @@
 <script lang="ts" context="module">
-	import { getRESTStore, getRESTTabStore } from '$lib/stores';
+	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 </script>
 
 <script lang="ts">
-	const [restStore, tabStore] = [getRESTStore(), getRESTTabStore()];
+	const [restStore, tabStore] = [getRESTContext(), getRESTTabContext()];
 
 	$: open = $tabStore.tainted?.length > 0;
 	$: isCurrent =

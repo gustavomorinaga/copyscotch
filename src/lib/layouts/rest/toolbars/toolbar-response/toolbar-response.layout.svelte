@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getSettingsStore, getRESTTabStore, type TRESTResult } from '$lib/stores';
+	import { getSettingsContext, getRESTTabContext, type TRESTResult } from '$lib/contexts';
 	import { Button } from '$lib/components/ui/button';
 	import { Toggle } from '$lib/components/ui/toggle';
 	import * as Tooltip from '$lib/components/ui/tooltip';
@@ -22,7 +22,7 @@
 </script>
 
 <script lang="ts">
-	const [settingsStore, tabStore] = [getSettingsStore(), getRESTTabStore()];
+	const [settingsStore, tabStore] = [getSettingsContext(), getRESTTabContext()];
 
 	let clipboardState: TClipboardState = 'default';
 

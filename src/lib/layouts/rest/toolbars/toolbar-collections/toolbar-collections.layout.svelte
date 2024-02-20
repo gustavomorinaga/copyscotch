@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getRESTStore } from '$lib/stores';
+	import { getRESTContext } from '$lib/contexts';
 	import {
 		dialogEditCollectionStore as dialogStore,
 		treeCollectionStore as treeStore
@@ -10,7 +10,7 @@
 </script>
 
 <script lang="ts">
-	const restStore = getRESTStore();
+	const restStore = getRESTContext();
 
 	function handleNewCollection() {
 		dialogStore.set({ mode: 'create', type: 'collection', open: true, collection: undefined });

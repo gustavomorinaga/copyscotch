@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getSettingsStore } from '$lib/stores';
+	import { getSettingsContext } from '$lib/contexts';
 	import * as Form from '$lib/components/ui/form';
 	import {
 		ThemeSchema,
@@ -16,7 +16,7 @@
 </script>
 
 <script lang="ts">
-	const settingsStore = getSettingsStore();
+	const settingsStore = getSettingsContext();
 
 	const { options: backgroundOptions } = BackgroundColorEnum;
 	const { options: accentOptions } = AccentColorEnum;

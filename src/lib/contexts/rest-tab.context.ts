@@ -4,7 +4,7 @@ import { get, writable, type StartStopNotifier, type Writable } from 'svelte/sto
 import { generateUUID } from '$lib/utils';
 import type { TRESTTabInfer } from '$lib/validators';
 
-export type TRESTTabStore = Writable<TRESTTabData> & TRESTTabActions;
+export type TRESTTabContext = Writable<TRESTTabData> & TRESTTabActions;
 export type TRESTTabData = TRESTTabDataPersist & TRESTTabDataTemp;
 export type TRESTTabDataTemp = {
 	tainted: Array<TRESTTabInfer['context']['id']>;
@@ -56,10 +56,10 @@ const DEFAULT_REQUEST: Omit<TRESTTabInfer['context'], 'id'> = {
 	method: 'GET'
 };
 
-export function setRESTTabStore(
+export function setRESTTabContext(
 	initialData: Partial<TRESTTabData> = INITIAL_DATA,
 	start: StartStopNotifier<TRESTTabData> = () => {}
-): TRESTTabStore {
+): TRESTTabContext {
 	let channel: BroadcastChannel | null;
 
 	const storedData = browser ? localStorage.getItem(STORAGE_KEY) : undefined;
@@ -254,8 +254,8 @@ export function setRESTTabStore(
 		}
 	};
 
-	const context = { ...store, ...actions } as TRESTTabStore;
+	const context = { ...store, ...actions } as TRESTTabContext;
 	return setContext(CTX, context);
 }
 
-export const getRESTTabStore = () => getContext<TRESTTabStore>(CTX);
+export const getRESTTabContext = () => getContext<TRESTTabContext>(CTX);

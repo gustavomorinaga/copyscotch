@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { setRESTStore, setRESTTabStore } from '$lib/stores';
+	import { setRESTContext, setRESTTabContext } from '$lib/contexts';
 	import { Center } from '$lib/components/ui/center';
 	import { ViewREST } from '$lib/layouts/rest';
 	import { executeParallel } from '$lib/utils';
@@ -10,7 +10,7 @@
 	<title>Copyscotch &bull; API development ecosystem</title>
 </svelte:head>
 
-{#await executeParallel([setRESTStore, setRESTTabStore])}
+{#await executeParallel([setRESTContext, setRESTTabContext])}
 	<Center>
 		<Loader class="h-4 w-4 animate-spin" />
 	</Center>

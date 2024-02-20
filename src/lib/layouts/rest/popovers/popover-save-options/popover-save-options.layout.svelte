@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getRESTTabStore } from '$lib/stores';
+	import { getRESTTabContext } from '$lib/contexts';
 	import { dialogSaveAsStore as dialogStore } from '$lib/layouts/rest';
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Form from '$lib/components/ui/form';
@@ -18,7 +18,7 @@
 	let tab: TRESTTabInfer;
 	let open: boolean = false;
 
-	const tabStore = getRESTTabStore();
+	const tabStore = getRESTTabContext();
 
 	const superFrm = superForm(defaults(zod(SaveOptionsSchema)), {
 		id: `save-options-${tabID}`,

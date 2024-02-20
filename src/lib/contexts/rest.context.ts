@@ -5,7 +5,7 @@ import { RESTRepository } from '$lib/repositories';
 import { generateUUID } from '$lib/utils';
 import type { TFolderInfer, TFileInfer } from '$lib/validators';
 
-type TRESTStore = Writable<TRESTData> & TRESTActions;
+type TRESTContext = Writable<TRESTData> & TRESTActions;
 type TRESTData = Array<TFolderInfer>;
 type TRESTActions = {
 	getFolder: (id: TFolderInfer['id']) => TFolderInfer | undefined;
@@ -32,10 +32,10 @@ const DEFAULT_FILE: Omit<TFileInfer, 'id'> = {
 	method: 'GET'
 };
 
-export function setRESTStore(
+export function setRESTContext(
 	initialData: Partial<TRESTData> = INITIAL_DATA,
 	start: StartStopNotifier<TRESTData> = () => {}
-): TRESTStore {
+): TRESTContext {
 	let channel: BroadcastChannel | null;
 
 	const storedData = browser ? localStorage.getItem(STORAGE_KEY) : undefined;
@@ -139,8 +139,8 @@ export function setRESTStore(
 		}
 	};
 
-	const context = { ...store, ...actions } as TRESTStore;
+	const context = { ...store, ...actions } as TRESTContext;
 	return setContext(CTX, context);
 }
 
-export const getRESTStore = () => getContext<TRESTStore>(CTX);
+export const getRESTContext = () => getContext<TRESTContext>(CTX);

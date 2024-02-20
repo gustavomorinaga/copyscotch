@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getRESTTabStore } from '$lib/stores';
+	import { getRESTTabContext } from '$lib/contexts';
 	import { DropdownMenuRequestOptions } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
@@ -15,7 +15,7 @@
 	export let file: $$Props['file'];
 	let openOptions: boolean = false;
 
-	const tabStore = getRESTTabStore();
+	const tabStore = getRESTTabContext();
 
 	$: current = $tabStore.current === file.id;
 </script>

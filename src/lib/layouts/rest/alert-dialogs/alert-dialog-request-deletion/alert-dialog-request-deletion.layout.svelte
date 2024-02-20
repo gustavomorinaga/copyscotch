@@ -1,11 +1,11 @@
 <script lang="ts" context="module">
 	import { alertDialogRequestDeletionStore as dialogStore } from '.';
-	import { getRESTStore } from '$lib/stores';
+	import { getRESTContext } from '$lib/contexts';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 </script>
 
 <script lang="ts">
-	const restStore = getRESTStore();
+	const restStore = getRESTContext();
 
 	function handleRequestDeletion() {
 		if (!$dialogStore.requestID) return;

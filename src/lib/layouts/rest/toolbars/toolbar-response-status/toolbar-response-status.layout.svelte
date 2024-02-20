@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getRESTTabStore, type TRESTResult } from '$lib/stores';
+	import { getRESTTabContext, type TRESTResult } from '$lib/contexts';
 	import { formatBytes } from '$lib/utils';
 	import httpStatus from 'http-status';
 
@@ -7,7 +7,7 @@
 </script>
 
 <script lang="ts">
-	const tabStore = getRESTTabStore();
+	const tabStore = getRESTTabContext();
 
 	function getStatusType(status: number): TStatus {
 		if (status >= 200 && status < 300) return 'success';

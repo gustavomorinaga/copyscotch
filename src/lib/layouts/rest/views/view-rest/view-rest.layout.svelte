@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getSettingsStore, getRESTTabStore } from '$lib/stores';
+	import { getSettingsContext, getRESTTabContext } from '$lib/contexts';
 	import { BREAKPOINTS } from '$lib/maps';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Sidenav from '$lib/components/ui/sidenav';
@@ -18,7 +18,7 @@
 </script>
 
 <script lang="ts">
-	const [settingsStore, tabStore] = [getSettingsStore(), getRESTTabStore()];
+	const [settingsStore, tabStore] = [getSettingsContext(), getRESTTabContext()];
 
 	$: orientation = $settingsStore.layout;
 	$: openSidenav = $settingsStore.sidebar === 'open';
