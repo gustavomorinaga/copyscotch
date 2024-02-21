@@ -1,24 +1,27 @@
 <script lang="ts" context="module">
-	import { getSettingsContext, getRESTTabContext } from '$lib/contexts';
+	import { getRESTContext, getRESTTabContext, getSettingsContext } from '$lib/contexts';
+	import { DialogEditCollection, SidenavREST, ViewWelcome } from '$lib/layouts/rest';
 	import { BREAKPOINTS } from '$lib/maps';
+	import { screenStore } from '$lib/components/screen-watcher';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Sidenav from '$lib/components/ui/sidenav';
-	import { screenStore } from '$lib/components/screen-watcher';
-	import {
-		DialogEditCollection,
-		DialogEditRequest,
-		SidenavREST,
-		ViewWelcome
-	} from '$lib/layouts/rest';
 
-	const LAZY_COMPONENTS = [
+	const LAZY_VIEW_COMPONENTS = [
 		import('$lib/layouts/rest/views/view-edit').then((m) => m.ViewEdit),
 		import('$lib/layouts/rest/views/view-response').then((m) => m.ViewResponse)
+	] as const;
+
+	const LAZY_DIALOG_COMPONENTS = [
+		import('$lib/layouts/rest/dialogs/dialog-edit-request').then((m) => m.DialogEditRequest)
 	] as const;
 </script>
 
 <script lang="ts">
-	const [settingsContext, tabContext] = [getSettingsContext(), getRESTTabContext()];
+	const [settingsContext, restContext, tabContext] = [
+		getSettingsContext(),
+		getRESTContext(),
+		getRESTTabContext()
+	];
 
 	$: ({ layout, sidebar, sidebarPosition } = $settingsContext);
 
@@ -41,7 +44,7 @@
 				class:flex-col={layout === 'vertical'}
 				class:flex-row={layout === 'horizontal'}
 			>
-				{#await Promise.all(LAZY_COMPONENTS) then [ViewEdit, ViewResponse]}
+				{#await Promise.all(LAZY_VIEW_COMPONENTS) then [ViewEdit, ViewResponse]}
 					<ViewEdit />
 					<Separator orientation={layout === 'horizontal' ? 'vertical' : 'horizontal'} />
 					<ViewResponse />
@@ -54,4 +57,9 @@
 </Sidenav.Root>
 
 <DialogEditCollection />
-<DialogEditRequest />
+
+{#if $restContext.length}
+	{#await Promise.all(LAZY_DIALOG_COMPONENTS) then [DialogEditRequest]}
+		<DialogEditRequest />
+	{/await}
+{/if}

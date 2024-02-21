@@ -2,12 +2,12 @@
 	import { derived, writable } from 'svelte/store';
 	import { getRESTContext } from '$lib/contexts';
 	import { Separator } from '$lib/components/ui/separator';
-	import { FeedbackNotFound, InputSearch } from '$lib/layouts/shared';
 	import {
-		treeCollectionStore as treeStore,
 		FeedbackCollectionEmpty,
-		ToolbarCollections
+		ToolbarCollections,
+		treeCollectionStore as treeStore
 	} from '$lib/layouts/rest';
+	import { FeedbackNotFound, InputSearch } from '$lib/layouts/shared';
 	import { RESTRepository } from '$lib/repositories';
 
 	const LAZY_COMPONENTS = [

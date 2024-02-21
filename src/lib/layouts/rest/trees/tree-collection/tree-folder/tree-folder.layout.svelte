@@ -21,7 +21,10 @@
 		action: (folderID: TFolderInfer['id']) => void;
 	};
 
-	const ICONS = { open: FolderOpen, closed: Folder } as const;
+	const ICONS = { open: FolderOpen, closed: Folder } as const satisfies Record<
+		TFolderStatus,
+		ComponentType
+	>;
 	const OPTIONS: Array<TFolderOptions> = [
 		{
 			title: 'New request',

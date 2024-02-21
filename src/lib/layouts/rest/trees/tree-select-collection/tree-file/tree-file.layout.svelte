@@ -3,13 +3,11 @@
 	import { DropdownMenuRequestOptions } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { MoreVertical } from 'lucide-svelte';
+	import { Dot, MoreVertical } from 'lucide-svelte';
 	import type { TRESTRequestInfer } from '$lib/validators';
 </script>
 
 <script lang="ts">
-	import { Dot } from 'lucide-svelte';
-
 	type $$Props = { file: TRESTRequestInfer };
 
 	export let file: $$Props['file'];
@@ -17,18 +15,12 @@
 
 	const tabContext = getRESTTabContext();
 
+	// TODO - Handle selected state
+
 	$: current = $tabContext.current === file.id;
 </script>
 
-<Button
-	size="sm"
-	variant="text"
-	class="group/file w-full flex-1 px-0"
-	on:click={(event) => {
-		event.stopPropagation();
-		tabContext.get(file.id) ? tabContext.setCurrent(file.id) : tabContext.add(file);
-	}}
->
+<Button size="sm" variant="text" class="group/file w-full flex-1 px-0" on:click>
 	<div
 		role="button"
 		tabindex="0"
@@ -46,19 +38,6 @@
 		</span>
 		<span class="flex flex-1 items-center py-2 pr-2">
 			<span class="truncate text-sm">{file.name}</span>
-			{#if current}
-				<div class="relative mx-3 flex h-2 w-2 shrink-0 items-center justify-center">
-					<div
-						class="absolute inset-0 inline-flex shrink-0 animate-ping rounded-full bg-success opacity-75"
-					/>
-					<Dot
-						class="relative inline-flex h-2 w-2 text-success"
-						style="stroke-width: 16"
-						aria-hidden="true"
-						focusable="false"
-					/>
-				</div>
-			{/if}
 		</span>
 	</div>
 

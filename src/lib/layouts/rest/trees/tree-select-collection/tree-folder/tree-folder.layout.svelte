@@ -1,19 +1,26 @@
 <script lang="ts" context="module">
+	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import * as Collapsible from '$lib/components/ui/collapsible';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 	import {
 		DropdownMenuCollectionOptions,
-		treeSelectCollectionStore as treeStore,
 		dialogEditCollectionStore,
-		dialogEditRequestStore
+		dialogEditRequestStore,
+		treeSelectCollectionStore as treeStore
 	} from '$lib/layouts/rest';
+	import {
+		CheckCircle,
+		FilePlus,
+		Folder,
+		FolderOpen,
+		FolderPlus,
+		MoreVertical
+	} from 'lucide-svelte';
 	import { TreeExpand } from '../tree-expand';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
-	import * as Tooltip from '$lib/components/ui/tooltip';
-	import * as Collapsible from '$lib/components/ui/collapsible';
-	import { Folder, FilePlus, FolderOpen, FolderPlus, MoreVertical } from 'lucide-svelte';
 	import type { ComponentType } from 'svelte';
 	import type { TFolderInfer } from '$lib/validators';
 
-	type TFolderStatus = 'open' | 'closed';
+	type TFolderStatus = 'open' | 'closed' | 'selected';
 	type TFolderOptions = {
 		title: string;
 		tooltip?: string;
@@ -21,7 +28,11 @@
 		action: (folderID: TFolderInfer['id']) => void;
 	};
 
-	const ICONS = { open: FolderOpen, closed: Folder } as const;
+	const ICONS = {
+		open: FolderOpen,
+		closed: Folder,
+		selected: CheckCircle
+	} as const satisfies Record<TFolderStatus, ComponentType>;
 	const OPTIONS: Array<TFolderOptions> = [
 		{
 			title: 'New request',
@@ -56,12 +67,16 @@
 		folder: TFolderInfer;
 		type: 'collection' | 'folder';
 		open?: boolean;
+		selected?: boolean;
 	};
 
 	export let folder: $$Props['folder'];
 	export let type: $$Props['type'] = 'collection';
 	export let open: $$Props['open'] = false;
+	export let selected: $$Props['selected'] = false;
 	let openOptions: boolean = false;
+
+	// TODO - Handle selected state
 
 	$: status = (open ? 'open' : 'closed') as TFolderStatus;
 	$: if ($treeStore.collapse) open = false;
