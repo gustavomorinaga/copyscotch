@@ -1,4 +1,6 @@
 <script lang="ts" context="module">
+	import { onMount } from 'svelte';
+	import { treeSelectCollectionStore as treeStore } from '.';
 	import { TreeWrapper } from './tree-wrapper';
 	import type { TRESTCollectionInfer } from '$lib/validators';
 </script>
@@ -8,6 +10,17 @@
 
 	let folders: $$Props['collections'] = [];
 	export { folders as collections };
+
+	onMount(() => {
+		return () => {
+			treeStore.set({
+				expand: false,
+				collapse: true,
+				selectedID: undefined,
+				selectedType: undefined
+			});
+		};
+	});
 </script>
 
 <div class="-ml-2 flex h-full flex-col p-2">
