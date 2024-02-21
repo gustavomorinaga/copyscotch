@@ -28,8 +28,7 @@
 	}}
 >
 	<div
-		role="button"
-		tabindex="0"
+		role="presentation"
 		class="flex flex-1 items-center justify-center"
 		on:contextmenu={(event) => {
 			event.preventDefault();

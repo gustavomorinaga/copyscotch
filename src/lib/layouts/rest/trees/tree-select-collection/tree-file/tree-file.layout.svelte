@@ -1,9 +1,11 @@
 <script lang="ts" context="module">
-	import { getRESTTabContext } from '$lib/contexts';
-	import { DropdownMenuRequestOptions } from '$lib/layouts/rest';
+	import {
+		DropdownMenuRequestOptions,
+		treeSelectCollectionStore as treeStore
+	} from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { Dot, MoreVertical } from 'lucide-svelte';
+	import { CheckCircle, MoreVertical } from 'lucide-svelte';
 	import type { TRESTRequestInfer } from '$lib/validators';
 </script>
 
@@ -13,17 +15,29 @@
 	export let file: $$Props['file'];
 	let openOptions: boolean = false;
 
-	const tabContext = getRESTTabContext();
+	$: selected = $treeStore.selectedID === file.id;
 
-	// TODO - Handle selected state
+	function handleSelect() {
+		if ($treeStore.selectedID === file.id) {
+			$treeStore.selectedID = undefined;
+			$treeStore.selectedType = undefined;
+			return;
+		}
 
-	$: current = $tabContext.current === file.id;
+		$treeStore.selectedID = file.id;
+		$treeStore.selectedType = 'file';
+	}
 </script>
 
-<Button size="sm" variant="text" class="group/file w-full flex-1 px-0" on:click>
+<Button
+	size="sm"
+	variant="text"
+	data-selected={selected}
+	class="group/file w-full flex-1 px-0"
+	on:click={handleSelect}
+>
 	<div
-		role="button"
-		tabindex="0"
+		role="presentation"
 		class="flex flex-1 items-center justify-center"
 		on:contextmenu={(event) => {
 			event.preventDefault();
@@ -34,9 +48,13 @@
 			class="pointer-events-none flex w-16 items-center justify-center truncate px-2 text-tiny"
 			style="color: var(--method-{file.method.toLowerCase()}-color)"
 		>
-			{file.method}
+			{#if selected}
+				<CheckCircle class="h-5 w-5" />
+			{:else}
+				{file.method}
+			{/if}
 		</span>
-		<span class="flex flex-1 items-center py-2 pr-2">
+		<span class="flex flex-1 items-center py-2 pr-2 group-data-[selected=true]/file:text-success">
 			<span class="truncate text-sm">{file.name}</span>
 		</span>
 	</div>
