@@ -86,7 +86,7 @@
 >
 	<Tabs.List
 		id={tablistID}
-		class="relative flex min-h-12 touch-pan-x justify-start overflow-x-auto overflow-y-hidden scroll-smooth rounded-none p-0 pr-16 sm:overflow-x-hidden"
+		class="relative flex !h-auto min-h-12 touch-pan-x justify-start overflow-x-auto overflow-y-hidden scroll-smooth rounded-none p-0 pr-16 sm:overflow-x-hidden"
 	>
 		{#each $tabContext.tabs as tab}
 			{@const tabID = tab.id}

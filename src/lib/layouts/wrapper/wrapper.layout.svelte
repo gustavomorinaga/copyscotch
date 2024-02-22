@@ -10,6 +10,6 @@
 	export { className as class };
 </script>
 
-<div class={cn('flex h-screen w-screen flex-col', className)} {...$$restProps}>
+<div class={cn('flex h-[100svh] w-screen flex-col', className)} {...$$restProps}>
 	<slot />
 </div>

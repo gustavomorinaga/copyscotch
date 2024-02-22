@@ -1,16 +1,16 @@
 <script lang="ts" context="module">
 	import { getSettingsContext } from '$lib/contexts';
-	import * as Form from '$lib/components/ui/form';
 	import {
 		ThemeSchema,
 		BackgroundColorEnum,
 		AccentColorEnum,
 		type TThemeInfer
 	} from '$lib/validators';
+	import * as Form from '$lib/components/ui/form';
+	import { systemPrefersMode } from '$lib/components/mode-watcher';
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { Cloud, Monitor, Moon, Sun } from 'lucide-svelte';
-	import { systemPrefersMode } from '$lib/components/mode-watcher';
 
 	const THEME_ICONS = { system: Monitor, light: Sun, dark: Cloud, black: Moon } as const;
 </script>

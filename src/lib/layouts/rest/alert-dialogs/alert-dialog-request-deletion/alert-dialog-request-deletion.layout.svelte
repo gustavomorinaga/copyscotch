@@ -1,16 +1,18 @@
 <script lang="ts" context="module">
 	import { alertDialogRequestDeletionStore as dialogStore } from '.';
-	import { getRESTContext } from '$lib/contexts';
+	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 </script>
 
 <script lang="ts">
-	const restContext = getRESTContext();
+	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
 	function handleRequestDeletion() {
 		if (!$dialogStore.requestID) return;
 
 		restContext.removeFile($dialogStore.requestID);
+		tabContext.close({ ids: [$dialogStore.requestID], mode: 'normal' });
+		tabContext.setTainted(undefined);
 		dialogStore.set({ open: false, requestID: undefined });
 	}
 </script>

@@ -7,6 +7,6 @@ export type TSaveAsDialogStore = {
 };
 
 export const dialogSaveAsStore = writable<TSaveAsDialogStore>({
-	open: true,
+	open: false,
 	request: undefined
 });

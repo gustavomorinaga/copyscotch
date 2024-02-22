@@ -89,7 +89,10 @@
 	}
 
 	function handleFormSubmit() {
-		const ACTIONS = { cancel: handleCancel, save: handleSave } as const;
+		const ACTIONS = { cancel: handleCancel, save: handleSave } as const satisfies Record<
+			TFormAction,
+			() => void
+		>;
 		return ACTIONS[action]();
 	}
 

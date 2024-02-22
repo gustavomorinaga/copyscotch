@@ -143,8 +143,8 @@
 	on:change={handleOnChange}
 	class="sticky top-0 z-20"
 >
-	<Form.Join class="flex flex-col gap-2 sm:flex-row">
-		<Form.Join class="min-w-[12rem] whitespace-nowrap">
+	<Form.Join class="flex flex-wrap gap-2">
+		<Form.Join class="min-w-[12rem] flex-auto whitespace-nowrap lg:flex-1">
 			<Form.Field {config} name="method">
 				<Form.Item class="w-32">
 					<Form.Select
@@ -178,7 +178,7 @@
 			</Form.Field>
 		</Form.Join>
 
-		<Form.Join class="flex-none gap-2">
+		<Form.Join class="flex-auto gap-2 lg:flex-none">
 			<Tooltip.Root>
 				<Tooltip.Trigger asChild let:builder>
 					<Form.Button

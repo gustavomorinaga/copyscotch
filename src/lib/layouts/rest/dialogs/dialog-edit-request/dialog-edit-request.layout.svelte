@@ -58,7 +58,7 @@
 				tabContext.update(requestID, $formValue as TRESTRequestInfer);
 				if (!$dialogStore.forceSave) tabContext.setDirty([requestID], true);
 			}
-		};
+		} as const satisfies Record<typeof $dialogStore.mode, () => void>;
 
 		ACTIONS[$dialogStore.mode]();
 		dialogStore.set({ mode: 'create', open: false, collectionID: undefined, request: undefined });

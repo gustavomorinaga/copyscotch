@@ -88,7 +88,7 @@ export function setRESTContext(
 		},
 		createFile: (file, parentID) => {
 			const collections = get(store);
-			const newFile: TFileInfer = { ...DEFAULT_FILE, id: generateUUID(), name: file.name };
+			const newFile: TFileInfer = { ...DEFAULT_FILE, ...file, id: file.id || generateUUID() };
 			const newCollections = RESTRepository.createFile(collections, { id: parentID }, newFile);
 
 			return store.update((state) => {

@@ -30,7 +30,7 @@
 		{:then}
 			<Sidenav.Root
 				orientation={isMobile ? 'vertical' : 'horizontal'}
-				class="aria-[orientation=vertical]:flex-col-reverse"
+				class="data-[orientation=vertical]:flex-col-reverse"
 			>
 				<Sidenav.Nav class="overflow-hidden {isMobile ? 'h-fit w-full' : 'h-full'}">
 					<SidenavRoutes />

@@ -2,7 +2,7 @@
 	import { dialogSaveAsStore as dialogStore } from '.';
 	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
 	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/validators';
-	import { ViewSelectCollections } from '$lib/layouts/rest';
+	import { ViewSelectCollections, treeSelectCollectionStore as treeStore } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
@@ -32,7 +32,7 @@
 	let action: TFormAction = 'save';
 
 	$: ({ form: formValue, formId, allErrors } = superFrm);
-	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
+	$: isInvalid = Boolean($allErrors.length) || !$formValue.name || !$treeStore.selectedID;
 	$: superFrm.reset({ data: $dialogStore.request });
 
 	function handleCancel() {
@@ -40,11 +40,29 @@
 	}
 
 	function handleSave() {
+		if (!$dialogStore.request) return;
+
+		const { selectedID, selectedType } = $treeStore;
+		if (!selectedID || !selectedType) return;
+
+		const data = $formValue as TRESTRequestInfer;
+
+		const ACTIONS = {
+			folder: () => restContext.createFile(data, selectedID),
+			file: () => restContext.updateFile(data)
+		} as const satisfies Record<NonNullable<typeof selectedType>, () => void>;
+
+		ACTIONS[selectedType]();
+		tabContext.update(data.id, data);
+		tabContext.setDirty([data.id], false);
 		dialogStore.set({ open: false, request: undefined });
 	}
 
 	function handleFormSubmit() {
-		const ACTIONS = { cancel: handleCancel, save: handleSave } as const;
+		const ACTIONS = { cancel: handleCancel, save: handleSave } as const satisfies Record<
+			TFormAction,
+			() => void
+		>;
 		return ACTIONS[action]();
 	}
 

@@ -32,12 +32,12 @@
 
 <Sidenav.Root class={sidebarPosition === 'left' ? 'flex-row' : 'flex-row-reverse'}>
 	{#if openSidenav}
-		<Sidenav.Nav class="w-3/12 {isMobile && 'hidden'}">
+		<Sidenav.Nav class="w-5/12 lg:w-3/12 {isMobile && 'hidden'}">
 			<SidenavREST />
 		</Sidenav.Nav>
 		<Sidenav.Separator orientation="vertical" class={isMobile ? 'hidden' : undefined} />
 	{/if}
-	<Sidenav.Content class={isMobile || !openSidenav ? 'w-full' : 'w-9/12'}>
+	<Sidenav.Content class={isMobile || !openSidenav ? 'w-full' : 'w-7/12 lg:w-9/12'}>
 		{#if $tabContext.tabs.length}
 			<div
 				class="flex h-full w-full"
