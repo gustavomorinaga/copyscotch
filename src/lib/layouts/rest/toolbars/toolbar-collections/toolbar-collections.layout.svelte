@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getRESTStore } from '$lib/stores';
+	import { getRESTContext } from '$lib/contexts';
 	import {
 		dialogEditCollectionStore as dialogStore,
 		treeCollectionStore as treeStore
@@ -10,7 +10,7 @@
 </script>
 
 <script lang="ts">
-	const restStore = getRESTStore();
+	const restContext = getRESTContext();
 
 	function handleNewCollection() {
 		dialogStore.set({ mode: 'create', type: 'collection', open: true, collection: undefined });
@@ -21,9 +21,9 @@
 	}
 </script>
 
-<div class="inline-flex h-8 w-full flex-1 items-center justify-between">
+<div class="inline-flex h-8 w-full flex-1 items-center justify-between bg-background">
 	<div class="flex gap-2">
-		<Button size="sm" variant="text" class="h-6" on:click={handleNewCollection}>
+		<Button size="sm" variant="text" class="h-8" on:click={handleNewCollection}>
 			<Plus class="mr-2 h-4 w-4" />
 			New
 		</Button>
@@ -36,8 +36,8 @@
 					builders={[builder]}
 					size="icon"
 					variant="text"
-					class="mx-2 h-6 w-6"
-					disabled={!$restStore.length}
+					class="mx-2 h-8 w-6"
+					disabled={!$restContext.length}
 					on:click={handleCollapseAll}
 				>
 					<MinusSquare class="h-4 w-4" />

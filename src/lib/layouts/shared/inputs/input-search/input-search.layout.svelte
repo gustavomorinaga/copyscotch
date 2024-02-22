@@ -17,11 +17,12 @@
 <div class="relative inline-flex w-full flex-1 items-center">
 	<Input
 		class={cn(
-			'peer/search h-8 border-none bg-transparent py-2 pl-4 pr-8 text-sm focus-visible:z-10',
+			'peer/search h-8 border-none bg-transparent py-2 pl-4 pr-[2.375rem] text-sm ring-offset-transparent focus-visible:ring-transparent',
 			className
 		)}
-		type="text"
+		type="search"
 		placeholder="Search"
+		autocomplete="off"
 		bind:value
 		on:blur
 		on:change

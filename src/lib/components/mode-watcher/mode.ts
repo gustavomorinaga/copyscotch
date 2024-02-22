@@ -38,7 +38,7 @@ export function setInitialMode(defaultMode: Mode, themeColors?: ThemeColors) {
 		rootEl.classList.remove('black');
 		rootEl.classList.add('dark');
 	} else if (black) {
-		rootEl.style.colorScheme = 'black';
+		rootEl.style.colorScheme = 'dark';
 		rootEl.classList.remove('dark');
 		rootEl.classList.add('black');
 	}

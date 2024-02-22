@@ -1,39 +1,52 @@
 <script lang="ts" context="module">
-	import { getSettingsStore, getRESTTabStore } from '$lib/stores';
+	import { getRESTContext, getRESTTabContext, getSettingsContext } from '$lib/contexts';
+	import { DialogEditCollection, SidenavREST, ViewWelcome } from '$lib/layouts/rest';
+	import { BREAKPOINTS } from '$lib/maps';
+	import { screenStore } from '$lib/components/screen-watcher';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Sidenav from '$lib/components/ui/sidenav';
-	import { DialogEditRequest, SidenavREST, ViewWelcome } from '$lib/layouts/rest';
 
-	const LAZY_COMPONENTS = [
+	const LAZY_VIEW_COMPONENTS = [
 		import('$lib/layouts/rest/views/view-edit').then((m) => m.ViewEdit),
 		import('$lib/layouts/rest/views/view-response').then((m) => m.ViewResponse)
+	] as const;
+
+	const LAZY_DIALOG_COMPONENTS = [
+		import('$lib/layouts/rest/dialogs/dialog-edit-request').then((m) => m.DialogEditRequest)
 	] as const;
 </script>
 
 <script lang="ts">
-	const [settingsStore, tabStore] = [getSettingsStore(), getRESTTabStore()];
+	const [settingsContext, restContext, tabContext] = [
+		getSettingsContext(),
+		getRESTContext(),
+		getRESTTabContext()
+	];
 
-	$: orientation = $settingsStore.layout;
-	$: openSidenav = $settingsStore.sidebar === 'open';
+	$: ({ layout, sidebar, sidebarPosition } = $settingsContext);
+
+	$: openSidenav = sidebar === 'open';
+	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
+	$: if (isMobile) layout = 'vertical';
 </script>
 
-<Sidenav.Root>
+<Sidenav.Root class={sidebarPosition === 'left' ? 'flex-row' : 'flex-row-reverse'}>
 	{#if openSidenav}
-		<Sidenav.Nav class="w-3/12">
+		<Sidenav.Nav class="w-5/12 lg:w-3/12 {isMobile && 'hidden'}">
 			<SidenavREST />
 		</Sidenav.Nav>
-		<Sidenav.Separator orientation="vertical" />
+		<Sidenav.Separator orientation="vertical" class={isMobile ? 'hidden' : undefined} />
 	{/if}
-	<Sidenav.Content class={!openSidenav ? 'w-full' : 'w-9/12'}>
-		{#if $tabStore.tabs.length}
+	<Sidenav.Content class={isMobile || !openSidenav ? 'w-full' : 'w-7/12 lg:w-9/12'}>
+		{#if $tabContext.tabs.length}
 			<div
-				class="flex h-full"
-				class:flex-col={orientation === 'vertical'}
-				class:flex-row={orientation === 'horizontal'}
+				class="flex h-full w-full"
+				class:flex-col={layout === 'vertical'}
+				class:flex-row={layout === 'horizontal'}
 			>
-				{#await Promise.all(LAZY_COMPONENTS) then [ViewEdit, ViewResponse]}
+				{#await Promise.all(LAZY_VIEW_COMPONENTS) then [ViewEdit, ViewResponse]}
 					<ViewEdit />
-					<Separator {orientation} />
+					<Separator orientation={layout === 'horizontal' ? 'vertical' : 'horizontal'} />
 					<ViewResponse />
 				{/await}
 			</div>
@@ -43,4 +56,10 @@
 	</Sidenav.Content>
 </Sidenav.Root>
 
-<DialogEditRequest />
+<DialogEditCollection />
+
+{#if $restContext.length}
+	{#await Promise.all(LAZY_DIALOG_COMPONENTS) then [DialogEditRequest]}
+		<DialogEditRequest />
+	{/await}
+{/if}

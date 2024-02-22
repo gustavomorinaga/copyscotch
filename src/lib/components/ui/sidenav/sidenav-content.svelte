@@ -8,6 +8,6 @@
 	export { className as class };
 </script>
 
-<section class={cn('flex h-full w-full flex-col', className)}>
+<section class={cn('flex h-full w-full flex-col', className)} {...$$restProps}>
 	<slot />
 </section>

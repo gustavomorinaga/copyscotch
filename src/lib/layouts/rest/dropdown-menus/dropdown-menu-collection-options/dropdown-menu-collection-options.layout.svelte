@@ -1,10 +1,12 @@
 <script lang="ts" context="module">
 	import {
-		dialogEditCollectionStore as dialogStore,
+		alertDialogCollectionDeletionStore as collectionDeletionDialogStore,
+		dialogEditCollectionStore as collectionDialogStore,
+		dialogEditRequestStore as requestDialogStore,
 		type TCollectionDialogStore
 	} from '$lib/layouts/rest';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import { Edit, Trash2 } from 'lucide-svelte';
+	import { Edit, FilePlus, FolderPlus, Trash2 } from 'lucide-svelte';
 	import type { ComponentType } from 'svelte';
 	import type { TRESTCollectionInfer } from '$lib/validators';
 
@@ -29,16 +31,41 @@
 
 	const OPTIONS = [
 		{
+			label: 'New Request',
+			shortcut: 'R',
+			icon: FilePlus,
+			action: () =>
+				requestDialogStore.set({
+					mode: 'create',
+					open: true,
+					collectionID: collection.id,
+					request: undefined
+				})
+		},
+		{
+			label: 'New Folder',
+			shortcut: 'F',
+			icon: FolderPlus,
+			action: () =>
+				collectionDialogStore.set({
+					mode: 'create',
+					type: 'folder',
+					open: true,
+					parentID: collection.id,
+					collection: undefined
+				})
+		},
+		{
 			label: 'Edit',
 			shortcut: 'E',
 			icon: Edit,
-			action: () => dialogStore.set({ mode: 'edit', type, open: true, collection })
+			action: () => collectionDialogStore.set({ mode: 'edit', type, open: true, collection })
 		},
 		{
 			label: 'Delete',
 			shortcut: 'D',
 			icon: Trash2,
-			action: () => {}
+			action: () => collectionDeletionDialogStore.set({ open: true, collectionID: collection.id })
 		}
 	] satisfies Array<TFolderMenuOption>;
 </script>

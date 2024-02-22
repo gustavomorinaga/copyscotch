@@ -1,29 +1,49 @@
 <script lang="ts" context="module">
-	import { getRESTStore, getRESTTabStore } from '$lib/stores';
-	import { Button } from '$lib/components/ui/button';
+	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
+	import { dialogSaveAsStore as dialogStore } from '$lib/layouts/rest';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 </script>
 
 <script lang="ts">
-	const [restStore, tabStore] = [getRESTStore(), getRESTTabStore()];
+	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
-	$: open = $tabStore.tainted?.length > 0;
+	$: open = $tabContext.tainted?.length > 0;
 	$: isCurrent =
-		$tabStore.current &&
-		$tabStore.tainted?.length === 1 &&
-		$tabStore.tainted?.includes($tabStore.current);
-	$: dirtyTabs = $tabStore.tabs.filter((tab) => tab.dirty && $tabStore.tainted?.includes(tab.id));
+		$tabContext.current &&
+		$tabContext.tainted?.length === 1 &&
+		$tabContext.tainted?.includes($tabContext.current);
+	$: dirtyTabs = $tabContext.tabs.filter(
+		(tab) => tab.dirty && $tabContext.tainted?.includes(tab.id)
+	);
 
 	function handleDiscard() {
-		tabStore.close({ ids: $tabStore.tainted, mode: 'normal' });
-		tabStore.setTainted(undefined);
+		if (isCurrent) tabContext.close({ ids: $tabContext.tainted, mode: 'normal' });
+		tabContext.setTainted(undefined);
 	}
 
 	function handleSave() {
 		const requests = dirtyTabs.map((tab) => tab.context);
-		// restStore.save(requests);
-		tabStore.close({ ids: $tabStore.tainted, mode: 'normal' });
-		tabStore.setTainted(undefined);
+
+		if (requests.length === 1) {
+			const [request] = requests;
+			const found = restContext.getFile(request.id);
+
+			if (found) {
+				restContext.updateFile(request);
+				tabContext.close({ ids: [request.id], mode: 'normal' });
+			} else {
+				dialogStore.set({
+					open: true,
+					request,
+					onSave: () => tabContext.close({ ids: [request.id], mode: 'normal' })
+				});
+			}
+		} else if (requests.length > 1) {
+			for (const request of requests) restContext.updateFile(request);
+			tabContext.close({ ids: $tabContext.tainted, mode: 'normal' });
+		}
+
+		tabContext.setTainted(undefined);
 	}
 </script>
 
@@ -41,8 +61,8 @@
 		</AlertDialog.Header>
 
 		<AlertDialog.Footer>
-			<Button variant="secondary" on:click={handleDiscard}>No</Button>
-			<Button variant="default" on:click={handleSave}>Yes</Button>
+			<AlertDialog.Cancel on:click={handleDiscard}>No</AlertDialog.Cancel>
+			<AlertDialog.Action on:click={handleSave}>Yes</AlertDialog.Action>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>

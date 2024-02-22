@@ -6,7 +6,7 @@
 	import { ExternalLink } from 'lucide-svelte';
 </script>
 
-<Center class="select-none">
+<Center class="select-none bg-background">
 	<Shortcut.Root>
 		<span class="mr-4">Send request</span>
 		{#each SHORTCUTS.send.modifier as modifier}

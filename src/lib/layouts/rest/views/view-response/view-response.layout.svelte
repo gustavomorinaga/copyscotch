@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getSettingsStore, getRESTTabStore, type TRESTResult } from '$lib/stores';
+	import { getSettingsContext, getRESTTabContext, type TRESTResult } from '$lib/contexts';
 	import { ViewInstructions } from '$lib/layouts/rest';
 	import { Center } from '$lib/components/ui/center';
 	import { Loader } from 'lucide-svelte';
@@ -29,9 +29,9 @@
 </script>
 
 <script lang="ts">
-	const [settingsStore, tabStore] = [getSettingsStore(), getRESTTabStore()];
+	const [settingsContext, tabContext] = [getSettingsContext(), getRESTTabContext()];
 
-	$: result = $tabStore.results.find(({ id }) => id === $tabStore.current) as TRESTResult;
+	$: result = $tabContext.results.find(({ id }) => id === $tabContext.current) as TRESTResult;
 	$: isSending = result?.sending;
 	$: hasResponse = Boolean(result?.response);
 	$: value = hasResponse
@@ -61,7 +61,7 @@
 				<CodeMirror
 					{...CODEMIRROR_CONFIG}
 					lang={RESPONSE_TYPES[result.response.blob.type]}
-					lineWrapping={$settingsStore.lineWrapping}
+					lineWrapping={$settingsContext.lineWrapping}
 					{value}
 				/>
 			</div>

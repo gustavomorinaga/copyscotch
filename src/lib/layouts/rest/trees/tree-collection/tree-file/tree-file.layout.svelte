@@ -1,23 +1,21 @@
 <script lang="ts" context="module">
-	import { getRESTTabStore } from '$lib/stores';
+	import { getRESTTabContext } from '$lib/contexts';
 	import { DropdownMenuRequestOptions } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { MoreVertical } from 'lucide-svelte';
+	import { Dot, MoreVertical } from 'lucide-svelte';
 	import type { TRESTRequestInfer } from '$lib/validators';
 </script>
 
 <script lang="ts">
-	import { Dot } from 'lucide-svelte';
-
 	type $$Props = { file: TRESTRequestInfer };
 
 	export let file: $$Props['file'];
 	let openOptions: boolean = false;
 
-	const tabStore = getRESTTabStore();
+	const tabContext = getRESTTabContext();
 
-	$: current = $tabStore.current === file.id;
+	$: current = $tabContext.current === file.id;
 </script>
 
 <Button
@@ -26,12 +24,11 @@
 	class="group/file w-full flex-1 px-0"
 	on:click={(event) => {
 		event.stopPropagation();
-		tabStore.get(file.id) ? tabStore.setCurrent(file.id) : tabStore.add(file);
+		tabContext.get(file.id) ? tabContext.setCurrent(file.id) : tabContext.add(file);
 	}}
 >
 	<div
-		role="button"
-		tabindex="0"
+		role="presentation"
 		class="flex flex-1 items-center justify-center"
 		on:contextmenu={(event) => {
 			event.preventDefault();
@@ -47,7 +44,10 @@
 		<span class="flex flex-1 items-center py-2 pr-2">
 			<span class="truncate text-sm">{file.name}</span>
 			{#if current}
-				<div class="relative mx-3 flex h-2 w-2 shrink-0 items-center justify-center">
+				<div
+					role="presentation"
+					class="relative mx-3 flex h-2 w-2 shrink-0 items-center justify-center"
+				>
 					<div
 						class="absolute inset-0 inline-flex shrink-0 animate-ping rounded-full bg-success opacity-75"
 					/>
@@ -57,6 +57,7 @@
 						aria-hidden="true"
 						focusable="false"
 					/>
+					<span class="sr-only">Current Tab</span>
 				</div>
 			{/if}
 		</span>

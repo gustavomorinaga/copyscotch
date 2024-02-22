@@ -1,19 +1,22 @@
 <script lang="ts" context="module">
-	import { getSettingsStore } from '$lib/stores';
+	import { screenStore } from '$lib/components/screen-watcher';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';
+	import { getSettingsContext } from '$lib/contexts';
 	import { BREAKPOINTS } from '$lib/maps';
+	import type { TSettingsInfer } from '$lib/validators';
 	import {
 		Columns,
-		Rows,
+		PanelLeft,
 		PanelLeftClose,
 		PanelLeftOpen,
 		PanelRight,
-		PanelLeft
+		PanelRightClose,
+		PanelRightOpen,
+		Rows
 	} from 'lucide-svelte';
 	import type { ComponentType } from 'svelte';
-	import type { TSettingsInfer } from '$lib/validators';
 
 	type TSettingOption = { icon: ComponentType; title: string; tooltip?: string };
 
@@ -41,53 +44,65 @@
 			tooltip: 'Collapse Navbar'
 		}
 	};
-	const SIDEBAR: Record<TSettingsInfer['sidebar'], TSettingOption> = {
+	const SIDEBAR: Record<
+		TSettingsInfer['sidebar'],
+		Record<TSettingsInfer['sidebarPosition'], TSettingOption>
+	> = {
 		open: {
-			icon: PanelLeftClose,
-			title: 'Hide sidebar',
-			tooltip: 'Hide Sidebar'
+			left: {
+				icon: PanelLeftClose,
+				title: 'Hide sidebar',
+				tooltip: 'Hide Sidebar'
+			},
+			right: {
+				icon: PanelRightClose,
+				title: 'Hide sidebar',
+				tooltip: 'Hide Sidebar'
+			}
 		},
 		closed: {
-			icon: PanelLeftOpen,
-			title: 'Show sidebar',
-			tooltip: 'Show Sidebar'
+			left: {
+				icon: PanelLeftOpen,
+				title: 'Show sidebar',
+				tooltip: 'Show Sidebar'
+			},
+			right: {
+				icon: PanelRightOpen,
+				title: 'Show sidebar',
+				tooltip: 'Show Sidebar'
+			}
 		}
 	} as const;
 </script>
 
 <script lang="ts">
-	const settingsStore = getSettingsStore();
+	const settingsContext = getSettingsContext();
 
-	$: layoutProps = LAYOUT[$settingsStore.layout];
-	$: navigationProps = NAVIGATION[$settingsStore.navigation];
-	$: sidebarProps = SIDEBAR[$settingsStore.sidebar];
-	$: innerWidth = 0;
-	$: isMobile = innerWidth < BREAKPOINTS.sm;
-	$: if (isMobile) $settingsStore.layout = 'vertical';
-	$: {
-		$settingsStore.sidebar = isMobile ? 'closed' : 'open';
-	}
+	$: ({ layout, navigation, sidebar, sidebarPosition } = $settingsContext);
+	$: layoutProps = LAYOUT[layout];
+	$: navigationProps = NAVIGATION[navigation];
+	$: sidebarProps = SIDEBAR[sidebar][sidebarPosition];
+	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
 
 	function handleLayoutToggle() {
-		$settingsStore.layout = $settingsStore.layout === 'horizontal' ? 'vertical' : 'horizontal';
+		$settingsContext.layout = $settingsContext.layout === 'horizontal' ? 'vertical' : 'horizontal';
 	}
 
 	function handleNavigationToggle() {
-		$settingsStore.navigation = $settingsStore.navigation === 'collapse' ? 'expand' : 'collapse';
+		$settingsContext.navigation =
+			$settingsContext.navigation === 'collapse' ? 'expand' : 'collapse';
 	}
 
 	function handleSidebarToggle() {
-		$settingsStore.sidebar = $settingsStore.sidebar === 'open' ? 'closed' : 'open';
+		$settingsContext.sidebar = $settingsContext.sidebar === 'open' ? 'closed' : 'open';
 	}
 </script>
-
-<svelte:window bind:innerWidth />
 
 {#if !isMobile}
 	<Separator orientation="horizontal" />
 
 	<footer
-		class="flex h-8 w-full items-center justify-between overflow-x-auto overflow-y-hidden bg-background"
+		class="flex h-8 w-full shrink-0 items-center justify-between overflow-x-auto overflow-y-hidden bg-background"
 	>
 		<div class="flex">
 			<Tooltip.Root>

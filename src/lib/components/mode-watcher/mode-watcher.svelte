@@ -22,10 +22,8 @@
 		const unsubscriber = mode.subscribe(() => {});
 		systemPrefersMode.tracking(track);
 		systemPrefersMode.query();
-		const { backgroundColor: localStorageMode } = JSON.parse(
-			localStorage.getItem(localStorageKey) as string
-		) as TSettingsInfer;
-		setMode(isValidMode(localStorageMode) ? localStorageMode : defaultMode);
+		const stored = JSON.parse(localStorage.getItem(localStorageKey) as string) as TSettingsInfer;
+		setMode(isValidMode(stored.backgroundColor) ? stored.backgroundColor : defaultMode);
 
 		return () => {
 			unsubscriber();

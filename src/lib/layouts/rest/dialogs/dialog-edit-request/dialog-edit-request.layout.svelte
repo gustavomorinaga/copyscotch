@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import { dialogEditRequestStore as dialogStore } from '.';
-	import { getRESTTabStore } from '$lib/stores';
-	import { RESTRequestSchema } from '$lib/validators';
+	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
+	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/validators';
 	import { Button } from '$lib/components/ui/button';
 	import * as Form from '$lib/components/ui/form';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -12,47 +12,56 @@
 </script>
 
 <script lang="ts">
-	const tabStore = getRESTTabStore();
+	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
 	const superFrm = superForm(defaults(zod(RESTRequestSchema)), {
 		SPA: true,
 		validators: zod(RESTRequestSchema),
-		validationMethod: 'onblur',
-		onSubmit: handleFormSubmit
+		validationMethod: 'oninput',
+		resetForm: true,
+		onSubmit: (input) => {
+			input.cancel();
+			return handleFormSubmit();
+		}
 	});
 
 	let action: TFormAction = 'save';
 
 	$: ({ form: formValue, formId, allErrors } = superFrm);
 	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
-	$: superFrm.reset({
-		id: `edit-request-${$dialogStore.request?.id}`,
-		data: $dialogStore.request
-	});
+	$: superFrm.reset({ data: $dialogStore.request });
 
 	function handleCancel() {
-		dialogStore.set({ mode: 'create', open: false, request: undefined });
+		dialogStore.set({ mode: 'create', open: false, collectionID: '', request: undefined });
 	}
 
 	function handleSave() {
-		if (!$dialogStore.request) return;
-
-		const { id: requestID } = $dialogStore.request;
-
-		const MODES = {
-			create: () => {},
+		const ACTIONS = {
+			create: () => {
+				if (!$dialogStore.collectionID) return;
+				restContext.createFile($formValue as TRESTRequestInfer, $dialogStore.collectionID);
+			},
 			edit: () => {
-				const tab = tabStore.get(requestID);
+				if (!$dialogStore.request) return;
+
+				const { id: requestID } = $dialogStore.request as TRESTRequestInfer;
+				if (!requestID) return;
+
+				if ($dialogStore.forceSave) {
+					const request: TRESTRequestInfer = { ...$dialogStore.request, name: $formValue.name };
+					restContext.updateFile(request);
+				}
+
+				const tab = tabContext.get(requestID);
 				if (!tab) return;
 
-				tabStore.update(requestID, $formValue);
-				tabStore.setDirty([requestID], true);
+				tabContext.update(requestID, $formValue as TRESTRequestInfer);
+				if (!$dialogStore.forceSave) tabContext.setDirty([requestID], true);
 			}
-		};
+		} as const satisfies Record<typeof $dialogStore.mode, () => void>;
 
-		MODES[$dialogStore.mode]();
-
-		dialogStore.set({ mode: 'create', open: false, request: undefined });
+		ACTIONS[$dialogStore.mode]();
+		dialogStore.set({ mode: 'create', open: false, collectionID: undefined, request: undefined });
 	}
 
 	function handleFormSubmit() {
@@ -82,7 +91,7 @@
 	closeOnOutsideClick={false}
 	onOpenChange={handleOpenChange}
 >
-	<Dialog.Content>
+	<Dialog.Content class="z-[60]" overlayClass="z-[60]">
 		<Dialog.Header>
 			<Dialog.Title>
 				{#if $dialogStore.mode === 'create'}
@@ -104,7 +113,13 @@
 			<Form.Field {config} name="name">
 				<Form.Item>
 					<Form.Label for="name">Name</Form.Label>
-					<Form.Input type="text" id="name" name="name" on:keydown={handleKeydownSubmit} />
+					<Form.Input
+						type="text"
+						id="name"
+						name="name"
+						autocomplete="off"
+						on:keydown={handleKeydownSubmit}
+					/>
 				</Form.Item>
 			</Form.Field>
 		</Form.Root>

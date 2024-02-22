@@ -1,5 +1,4 @@
 <script lang="ts" context="module">
-	import { treeCollectionStore as treeStore } from '.';
 	import { TreeWrapper } from './tree-wrapper';
 	import type { TRESTCollectionInfer } from '$lib/validators';
 </script>
@@ -7,10 +6,10 @@
 <script lang="ts">
 	type $$Props = { collections: Array<TRESTCollectionInfer> };
 
-	export let collections: $$Props['collections'] = [];
-	let open = !$treeStore.collapse;
+	let folders: $$Props['collections'] = [];
+	export { folders as collections };
 </script>
 
-<div class="-ml-2 flex flex-col p-2">
-	<TreeWrapper type="collection" folders={collections.map((rest) => ({ ...rest, open }))} />
+<div class="-ml-2 flex h-full flex-col p-2">
+	<TreeWrapper type="collection" {folders} />
 </div>

@@ -2,6 +2,7 @@
 	import { dialogEditCollectionStore as dialogStore } from '$lib/layouts/rest';
 	import { Center } from '$lib/components/ui/center';
 	import { Button } from '$lib/components/ui/button';
+	import { mode } from '$lib/components/mode-watcher';
 	import { FolderDown, Plus } from 'lucide-svelte';
 </script>
 
@@ -12,13 +13,21 @@
 </script>
 
 <div class="flex flex-col p-2">
-	<Center>
-		<p class="mt-2 max-w-sm whitespace-normal text-center text-tiny text-muted-foreground">
-			Collections are empty
-		</p>
+	<Center class="p-2">
+		<div class="mt-2 flex max-w-sm select-none flex-col items-center">
+			<img
+				src="/images/states/{$mode}/pack.svg"
+				alt="Collections are empty"
+				loading="lazy"
+				class="inline-flex h-16 w-16 flex-col object-contain object-center"
+			/>
+			<span class="mt-2 max-w-sm whitespace-normal text-center text-tiny text-muted-foreground">
+				Collections are empty
+			</span>
+		</div>
 
 		<div class="mt-4 flex flex-col items-center space-y-4">
-			<p class="text-sm text-muted-foreground">Import or create a collection</p>
+			<p class="select-none text-sm text-muted-foreground">Import or create a collection</p>
 			<div class="flex flex-col items-stretch gap-4">
 				<Button class="w-40" disabled>
 					<FolderDown class="mr-2 h-4 w-4" />

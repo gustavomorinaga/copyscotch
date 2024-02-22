@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { dialogEditCollectionStore as dialogStore, type TCollectionDialogStore } from '.';
-	import { getRESTStore } from '$lib/stores';
+	import { getRESTContext } from '$lib/contexts';
 	import { generateUUID } from '$lib/utils';
 	import { RESTBaseFolderSchema, type TRESTCollectionInfer } from '$lib/validators';
 	import { Button } from '$lib/components/ui/button';
@@ -36,19 +36,19 @@
 </script>
 
 <script lang="ts">
-	const restStore = getRESTStore();
+	const restContext = getRESTContext();
 
 	const superFrm = superForm(defaults(zod(RESTBaseFolderSchema)), {
 		SPA: true,
 		validators: zod(RESTBaseFolderSchema),
-		validationMethod: 'onblur',
+		validationMethod: 'oninput',
 		onSubmit: (input) => {
 			input.cancel();
-			const action = getAction(input.action);
-			const ACTIONS = { cancel: handleCancel, save: handleSave } as const;
-			return ACTIONS[action]();
+			return handleFormSubmit();
 		}
 	});
+
+	let action: TFormAction = 'save';
 
 	$: ({ form: formValue, formId, allErrors } = superFrm);
 	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
@@ -58,17 +58,12 @@
 	});
 	$: ({ title } = DIALOG_PROPS[$dialogStore.type][$dialogStore.mode]);
 
-	function getAction(url: URL) {
-		const [action] = [...url.searchParams.keys()];
-		return action.replace('/', '') as TFormAction;
-	}
-
 	function handleCancel() {
 		dialogStore.set({ mode: 'create', type: 'collection', open: false, collection: undefined });
 	}
 
 	function handleSave() {
-		const saveAction = {
+		const ACTIONS = {
 			create: () => {
 				const initialData: Pick<TRESTCollectionInfer, 'id' | 'requests' | 'folders'> = {
 					id: generateUUID(),
@@ -76,13 +71,29 @@
 					folders: []
 				};
 				const collection: TRESTCollectionInfer = { ...$formValue, ...initialData };
-				restStore.saveCollection(collection);
+				restContext.createFolder(collection, $dialogStore.parentID);
 			},
-			edit: () => console.log($formValue)
+			edit: () => {
+				if (!$dialogStore.collection) return;
+
+				const collection: TRESTCollectionInfer = {
+					...$dialogStore.collection,
+					name: $formValue.name
+				};
+				restContext.updateFolder(collection);
+			}
 		};
 
-		saveAction[$dialogStore.mode]();
+		ACTIONS[$dialogStore.mode]();
 		dialogStore.set({ mode: 'create', type: 'collection', open: false, collection: undefined });
+	}
+
+	function handleFormSubmit() {
+		const ACTIONS = { cancel: handleCancel, save: handleSave } as const satisfies Record<
+			TFormAction,
+			() => void
+		>;
+		return ACTIONS[action]();
 	}
 
 	function handleOpenChange(event: boolean) {
@@ -107,7 +118,7 @@
 	closeOnOutsideClick={false}
 	onOpenChange={handleOpenChange}
 >
-	<Dialog.Content>
+	<Dialog.Content class="z-[60]" overlayClass="z-[60]">
 		<Dialog.Header>
 			<Dialog.Title>{title}</Dialog.Title>
 		</Dialog.Header>
@@ -123,14 +134,30 @@
 			<Form.Field {config} name="name">
 				<Form.Item>
 					<Form.Label for="name">Name</Form.Label>
-					<Form.Input type="text" id="name" name="name" on:keydown={handleKeydownSubmit} />
+					<Form.Input
+						type="text"
+						id="name"
+						name="name"
+						autocomplete="off"
+						on:keydown={handleKeydownSubmit}
+					/>
 				</Form.Item>
 			</Form.Field>
 		</Form.Root>
 
 		<Dialog.Footer>
-			<Button type="submit" variant="ghost" form={$formId} formaction="?/cancel">Cancel</Button>
-			<Button type="submit" variant="default" form={$formId} disabled={isInvalid}>Save</Button>
+			<Button type="submit" variant="ghost" form={$formId} on:click={() => (action = 'cancel')}>
+				Cancel
+			</Button>
+			<Button
+				type="submit"
+				variant="default"
+				form={$formId}
+				disabled={isInvalid}
+				on:click={() => (action = 'save')}
+			>
+				Save
+			</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

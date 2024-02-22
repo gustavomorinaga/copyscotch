@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getSettingsStore, getRESTTabStore, type TRESTResult } from '$lib/stores';
+	import { getSettingsContext, getRESTTabContext, type TRESTResult } from '$lib/contexts';
 	import { Button } from '$lib/components/ui/button';
 	import { Toggle } from '$lib/components/ui/toggle';
 	import * as Tooltip from '$lib/components/ui/tooltip';
@@ -22,11 +22,11 @@
 </script>
 
 <script lang="ts">
-	const [settingsStore, tabStore] = [getSettingsStore(), getRESTTabStore()];
+	const [settingsContext, tabContext] = [getSettingsContext(), getRESTTabContext()];
 
 	let clipboardState: TClipboardState = 'default';
 
-	$: result = $tabStore.results.find(({ id }) => id === $tabStore.current) as TRESTResult;
+	$: result = $tabContext.results.find(({ id }) => id === $tabContext.current) as TRESTResult;
 
 	function handleClipboard() {
 		const { replacer, space } = CLIPBOARD_CONFIG;
@@ -59,7 +59,7 @@
 			variant="primary"
 			aria-label="Toggle Line Wrapping"
 			class="rounded-none"
-			bind:pressed={$settingsStore.lineWrapping}
+			bind:pressed={$settingsContext.lineWrapping}
 		>
 			<WrapText class="h-4 w-4" />
 			<span class="sr-only">Line Wrapping</span>
