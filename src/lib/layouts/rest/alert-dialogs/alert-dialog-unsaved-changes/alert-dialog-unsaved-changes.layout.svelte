@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
 	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
+	import { dialogSaveAsStore as dialogStore } from '$lib/layouts/rest';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 </script>
 
@@ -22,8 +23,19 @@
 
 	function handleSave() {
 		const requests = dirtyTabs.map((tab) => tab.context);
-		// restContext.save(requests);
-		tabContext.close({ ids: $tabContext.tainted, mode: 'normal' });
+
+		if (requests.length === 1) {
+			const [request] = requests;
+			dialogStore.set({
+				open: true,
+				request,
+				onSave: () => tabContext.close({ ids: [request.id], mode: 'normal' })
+			});
+		} else {
+			for (const request of requests) restContext.updateFile(request);
+			tabContext.close({ ids: $tabContext.tainted, mode: 'normal' });
+		}
+
 		tabContext.setTainted(undefined);
 	}
 </script>

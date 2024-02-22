@@ -55,6 +55,7 @@
 		ACTIONS[selectedType]();
 		tabContext.update(data.id, data);
 		tabContext.setDirty([data.id], false);
+		$dialogStore.onSave?.();
 		dialogStore.set({ open: false, request: undefined });
 	}
 

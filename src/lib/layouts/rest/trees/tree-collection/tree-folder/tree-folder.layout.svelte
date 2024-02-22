@@ -6,7 +6,7 @@
 		dialogEditRequestStore
 	} from '$lib/layouts/rest';
 	import { TreeExpand } from '../tree-expand';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { Folder, FilePlus, FolderOpen, FolderPlus, MoreVertical } from 'lucide-svelte';

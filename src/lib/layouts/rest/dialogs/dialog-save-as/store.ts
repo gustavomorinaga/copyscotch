@@ -4,9 +4,11 @@ import type { TRESTRequestInfer } from '$lib/validators';
 export type TSaveAsDialogStore = {
 	open: boolean;
 	request?: TRESTRequestInfer;
+	onSave?: () => void;
 };
 
 export const dialogSaveAsStore = writable<TSaveAsDialogStore>({
 	open: false,
-	request: undefined
+	request: undefined,
+	onSave: undefined
 });
