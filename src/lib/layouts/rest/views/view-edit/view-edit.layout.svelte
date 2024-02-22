@@ -43,19 +43,6 @@
 		}
 	}
 
-	function handleKeyDown(event: KeyboardEvent) {
-		const isMainTarget = event.target instanceof HTMLBodyElement;
-		if (!isMainTarget) return;
-		if (!$tabContext.current) return;
-
-		if ((event.ctrlKey || event.metaKey) && event.key === 's') {
-			event.preventDefault();
-			const { context: request } = tabContext.get($tabContext.current) as TRESTTabInfer;
-			restContext.updateFile(request);
-			tabContext.setDirty([$tabContext.current], false);
-		}
-	}
-
 	function handleEditing(tabID: TRESTTabInfer['id']) {
 		const { context: request } = tabContext.get(tabID) as TRESTTabInfer;
 		dialogStore.set({ mode: 'edit', open: true, request });
@@ -76,8 +63,6 @@
 		setTablistScroll();
 	});
 </script>
-
-<svelte:window on:keydown={handleKeyDown} />
 
 <Tabs.Root
 	value={$tabContext.current}

@@ -17,7 +17,7 @@
 	);
 
 	function handleDiscard() {
-		tabContext.close({ ids: $tabContext.tainted, mode: 'normal' });
+		if (isCurrent) tabContext.close({ ids: $tabContext.tainted, mode: 'normal' });
 		tabContext.setTainted(undefined);
 	}
 
@@ -26,12 +26,19 @@
 
 		if (requests.length === 1) {
 			const [request] = requests;
-			dialogStore.set({
-				open: true,
-				request,
-				onSave: () => tabContext.close({ ids: [request.id], mode: 'normal' })
-			});
-		} else {
+			const found = restContext.getFile(request.id);
+
+			if (found) {
+				restContext.updateFile(request);
+				tabContext.close({ ids: [request.id], mode: 'normal' });
+			} else {
+				dialogStore.set({
+					open: true,
+					request,
+					onSave: () => tabContext.close({ ids: [request.id], mode: 'normal' })
+				});
+			}
+		} else if (requests.length > 1) {
 			for (const request of requests) restContext.updateFile(request);
 			tabContext.close({ ids: $tabContext.tainted, mode: 'normal' });
 		}

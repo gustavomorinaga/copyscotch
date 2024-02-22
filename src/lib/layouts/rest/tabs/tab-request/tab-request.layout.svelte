@@ -60,6 +60,9 @@
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
+		const isMainTarget = event.target instanceof HTMLBodyElement;
+		if (!isMainTarget) return;
+		if (!$tabContext.current) return;
 		if ($tabContext.current !== tabID) return;
 
 		if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
@@ -67,6 +70,13 @@
 			if ($submitting) return;
 
 			action = sending ? 'cancel' : 'send';
+			$formId && document.forms.namedItem($formId)?.requestSubmit();
+		}
+
+		if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+			event.preventDefault();
+
+			action = 'save';
 			$formId && document.forms.namedItem($formId)?.requestSubmit();
 		}
 	}
