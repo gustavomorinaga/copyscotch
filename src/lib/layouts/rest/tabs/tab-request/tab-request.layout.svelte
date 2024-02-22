@@ -11,6 +11,7 @@
 	import * as Shortcut from '$lib/components/ui/shortcut';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Form from '$lib/components/ui/form';
+	import * as Tabs from '$lib/components/ui/tabs';
 	import { RESPONSE_TYPES, SHORTCUTS, UNICODES } from '$lib/maps';
 	import { ChevronDown, Save } from 'lucide-svelte';
 	import { defaults, superForm } from 'sveltekit-superforms';
@@ -24,13 +25,14 @@
 	type $$Props = { tabID: TRESTTabInfer['id'] };
 
 	export let tabID: $$Props['tabID'];
-	let tab: TRESTTabInfer;
 
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 	const { options: methodOptions } = MethodEnum;
 
+	let tab: TRESTTabInfer;
 	let action: TFormAction = 'send';
 	let controller = new AbortController();
+	let currentTab;
 
 	const superFrm = superForm(defaults(zod(RESTRequestSchema)), {
 		id: `tab-request-${tabID}`,
@@ -166,9 +168,8 @@
 	action="?/{action}"
 	let:config
 	on:change={handleOnChange}
-	class="sticky top-0 z-20"
 >
-	<Form.Join class="flex flex-wrap gap-2">
+	<Form.Join class="sticky top-0 z-20 flex flex-wrap gap-2">
 		<Form.Join class="min-w-[12rem] flex-auto whitespace-nowrap lg:flex-1">
 			<Form.Field {config} name="method">
 				<Form.Item class="w-32">
@@ -275,5 +276,9 @@
 				</PopoverSaveOptions>
 			</Form.Join>
 		</Form.Join>
+	</Form.Join>
+
+	<Form.Join>
+		<Tabs.Root></Tabs.Root>
 	</Form.Join>
 </Form.Root>

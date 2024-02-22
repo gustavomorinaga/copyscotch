@@ -4,12 +4,11 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { Folder, Loader, Layers, Clock } from 'lucide-svelte';
-	import type { ComponentType } from 'svelte';
 
 	type TTab = {
 		value: string;
 		icon: typeof Folder;
-		content: Promise<ComponentType>;
+		content: Promise<any>;
 		disabled?: boolean;
 	};
 	type TAvailableTabs = (typeof LAZY_TABS)[number]['value'];
@@ -18,23 +17,19 @@
 		{
 			value: 'collections',
 			icon: Folder,
-			content: import('$lib/layouts/rest/tabs/tab-collections').then((m) => m.TabCollections),
+			content: import('$lib/layouts/rest/tabs/tab-collections'),
 			disabled: false
 		},
 		{
 			value: 'environments',
 			icon: Layers,
-			content: import('$lib/layouts/rest/feedbacks/feedback-collection-empty').then(
-				(m) => m.FeedbackCollectionEmpty
-			),
+			content: import('$lib/layouts/rest/feedbacks/feedback-collection-empty'),
 			disabled: true
 		},
 		{
 			value: 'history',
 			icon: Clock,
-			content: import('$lib/layouts/rest/feedbacks/feedback-collection-empty').then(
-				(m) => m.FeedbackCollectionEmpty
-			),
+			content: import('$lib/layouts/rest/feedbacks/feedback-collection-empty'),
 			disabled: true
 		}
 	] as const satisfies Array<TTab>;
@@ -84,7 +79,7 @@
 						<Loader class="h-4 w-4 animate-spin" />
 					</Center>
 				{:then module}
-					<svelte:component this={module} />
+					<svelte:component this={module.default} />
 				{/await}
 			</Tabs.Content>
 		{/each}

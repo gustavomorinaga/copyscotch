@@ -7,13 +7,11 @@
 	import * as Sidenav from '$lib/components/ui/sidenav';
 
 	const LAZY_VIEW_COMPONENTS = [
-		import('$lib/layouts/rest/views/view-edit').then((m) => m.ViewEdit),
-		import('$lib/layouts/rest/views/view-response').then((m) => m.ViewResponse)
+		import('$lib/layouts/rest/views/view-edit'),
+		import('$lib/layouts/rest/views/view-response')
 	] as const;
 
-	const LAZY_DIALOG_COMPONENTS = [
-		import('$lib/layouts/rest/dialogs/dialog-edit-request').then((m) => m.DialogEditRequest)
-	] as const;
+	const LAZY_DIALOG_COMPONENTS = [import('$lib/layouts/rest/dialogs/dialog-edit-request')] as const;
 </script>
 
 <script lang="ts">
@@ -24,7 +22,6 @@
 	];
 
 	$: ({ layout, sidebar, sidebarPosition } = $settingsContext);
-
 	$: openSidenav = sidebar === 'open';
 	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
 	$: if (isMobile) layout = 'vertical';
@@ -44,7 +41,7 @@
 				class:flex-col={layout === 'vertical'}
 				class:flex-row={layout === 'horizontal'}
 			>
-				{#await Promise.all(LAZY_VIEW_COMPONENTS) then [ViewEdit, ViewResponse]}
+				{#await Promise.all(LAZY_VIEW_COMPONENTS) then [{ ViewEdit }, { ViewResponse }]}
 					<ViewEdit />
 					<Separator orientation={layout === 'horizontal' ? 'vertical' : 'horizontal'} />
 					<ViewResponse />
@@ -59,7 +56,9 @@
 <DialogEditCollection />
 
 {#if $restContext.length}
-	{#await Promise.all(LAZY_DIALOG_COMPONENTS) then [DialogEditRequest]}
-		<DialogEditRequest />
+	{#await Promise.all(LAZY_DIALOG_COMPONENTS) then loadedComponents}
+		{#each loadedComponents as component}
+			<svelte:component this={component.default} />
+		{/each}
 	{/await}
 {/if}

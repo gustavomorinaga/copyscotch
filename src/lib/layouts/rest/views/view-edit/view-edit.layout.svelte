@@ -15,9 +15,7 @@
 	import type { TRESTTabInfer } from '$lib/validators';
 
 	const LAZY_ALERT_DIALOG_COMPONENTS = [
-		import('$lib/layouts/rest/alert-dialogs/alert-dialog-unsaved-changes').then(
-			(m) => m.AlertDialogUnsavedChanges
-		)
+		import('$lib/layouts/rest/alert-dialogs/alert-dialog-unsaved-changes')
 	] as const;
 </script>
 
@@ -192,7 +190,9 @@
 <DialogSaveAs />
 
 {#if dirtyTabs.length}
-	{#await Promise.all(LAZY_ALERT_DIALOG_COMPONENTS) then [AlertDialogUnsavedChanges]}
-		<AlertDialogUnsavedChanges />
+	{#await Promise.all(LAZY_ALERT_DIALOG_COMPONENTS) then loadedComponents}
+		{#each loadedComponents as component}
+			<svelte:component this={component.default} />
+		{/each}
 	{/await}
 {/if}

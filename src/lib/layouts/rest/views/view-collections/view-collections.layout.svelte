@@ -11,13 +11,9 @@
 	import { RESTRepository } from '$lib/repositories';
 
 	const LAZY_COMPONENTS = [
-		import('$lib/layouts/rest/trees/tree-collection').then((m) => m.TreeCollection),
-		import('$lib/layouts/rest/alert-dialogs/alert-dialog-collection-deletion').then(
-			(m) => m.AlertDialogCollectionDeletion
-		),
-		import('$lib/layouts/rest/alert-dialogs/alert-dialog-request-deletion').then(
-			(m) => m.AlertDialogRequestDeletion
-		)
+		import('$lib/layouts/rest/trees/tree-collection'),
+		import('$lib/layouts/rest/alert-dialogs/alert-dialog-collection-deletion'),
+		import('$lib/layouts/rest/alert-dialogs/alert-dialog-request-deletion')
 	] as const;
 </script>
 
@@ -45,10 +41,12 @@
 </div>
 
 {#if $filteredCollections.length}
-	{#await Promise.all(LAZY_COMPONENTS) then [TreeCollection, AlertDialogCollectionDeletion, AlertDialogRequestDeletion]}
+	{#await Promise.all(LAZY_COMPONENTS) then [{ TreeCollection }, ...loadedComponents]}
 		<TreeCollection collections={$filteredCollections} />
-		<AlertDialogCollectionDeletion />
-		<AlertDialogRequestDeletion />
+
+		{#each loadedComponents as component}
+			<svelte:component this={component.default} />
+		{/each}
 	{/await}
 {:else if $searchTerm}
 	<FeedbackNotFound term={$searchTerm} />

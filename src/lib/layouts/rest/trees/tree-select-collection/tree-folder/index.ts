@@ -1,1 +1,3 @@
-export { default as TreeFolder } from './tree-folder.layout.svelte';
+import { default as TreeFolder } from './tree-folder.layout.svelte';
+export { TreeFolder };
+export default TreeFolder;

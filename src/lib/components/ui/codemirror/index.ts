@@ -159,3 +159,4 @@ export {
 	//
 	Root as CodeMirror
 };
+export default Root;
