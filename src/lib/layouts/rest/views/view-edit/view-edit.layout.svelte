@@ -82,7 +82,6 @@
 	>
 		{#each $tabContext.tabs as tab}
 			{@const tabID = tab.id}
-			{@const methodLowCase = tab.context.method.toLowerCase()}
 
 			<ContextMenuEditRequest {tabID}>
 				<div
@@ -102,7 +101,7 @@
 						>
 							<span
 								class="block text-left text-tiny font-medium uppercase"
-								style="color: var(--method-{methodLowCase}-color)"
+								style="color: hsl(var(--method-{tab.context.method.toLowerCase()}-color) / var(--tw-text-opacity))"
 							>
 								{tab.context.method}
 							</span>

@@ -181,9 +181,10 @@
 						/>
 						<Form.SelectContent>
 							{#each methodOptions as method}
-								{@const methodLowCase = method.toLowerCase()}
-
-								<Form.SelectItem value={method} style="color: var(--method-{methodLowCase}-color)">
+								<Form.SelectItem
+									value={method}
+									style="color: hsl(var(--method-{method.toLowerCase()}-color) / var(--tw-text-opacity))"
+								>
 									{method}
 								</Form.SelectItem>
 							{/each}

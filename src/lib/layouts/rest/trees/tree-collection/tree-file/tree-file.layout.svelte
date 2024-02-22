@@ -37,7 +37,7 @@
 	>
 		<span
 			class="pointer-events-none flex w-16 items-center justify-center truncate px-2 text-tiny"
-			style="color: var(--method-{file.method.toLowerCase()}-color)"
+			style="color: hsl(var(--method-{file.method.toLowerCase()}-color) / var(--tw-text-opacity))"
 		>
 			{file.method}
 		</span>
