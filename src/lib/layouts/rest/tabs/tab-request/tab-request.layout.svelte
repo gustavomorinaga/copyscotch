@@ -6,7 +6,7 @@
 		type TRESTRequestInfer,
 		type TRESTTabInfer
 	} from '$lib/validators';
-	import { PopoverSaveOptions } from '$lib/layouts/rest';
+	import { PopoverSaveOptions, dialogSaveAsStore as dialogStore } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
 	import * as Shortcut from '$lib/components/ui/shortcut';
 	import * as Tooltip from '$lib/components/ui/tooltip';
@@ -131,9 +131,24 @@
 				controller = new AbortController();
 			},
 			save: () => {
-				restContext.updateFile($formValue as TRESTRequestInfer);
-				tabContext.update(tabID, $formValue);
-				tabContext.setDirty([tabID], false);
+				const data = $formValue as TRESTRequestInfer;
+				const found = restContext.getFile(tabID);
+
+				const updateTab = () => {
+					tabContext.update(tabID, $formValue);
+					tabContext.setDirty([tabID], false);
+				};
+
+				if (found) {
+					restContext.updateFile(data);
+					updateTab();
+				} else {
+					dialogStore.set({
+						open: true,
+						request: data,
+						onSave: () => updateTab()
+					});
+				}
 			}
 		};
 

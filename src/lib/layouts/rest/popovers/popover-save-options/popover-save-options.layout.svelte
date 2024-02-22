@@ -55,7 +55,7 @@
 	<Popover.Trigger asChild let:builder>
 		<slot {builder} />
 	</Popover.Trigger>
-	<Popover.Content align="start" sideOffset={8} class="w-60 bg-background">
+	<Popover.Content align="end" side="bottom" sideOffset={8} class="w-60 bg-background">
 		<Form.Root
 			id={$formId}
 			form={superFrm}

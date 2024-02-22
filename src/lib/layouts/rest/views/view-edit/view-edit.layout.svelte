@@ -1,27 +1,34 @@
 <script lang="ts" context="module">
 	import { onMount } from 'svelte';
-	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
+	import { getRESTTabContext } from '$lib/contexts';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import {
 		TabRequest,
 		ContextMenuEditRequest,
-		AlertDialogUnsavedChanges,
 		DialogSaveAs,
 		dialogEditRequestStore as dialogStore
 	} from '$lib/layouts/rest';
 	import { horizontalScroll } from '$lib/directives';
 	import { Dot, Plus, X } from 'lucide-svelte';
 	import type { TRESTTabInfer } from '$lib/validators';
+
+	const LAZY_ALERT_DIALOG_COMPONENTS = [
+		import('$lib/layouts/rest/alert-dialogs/alert-dialog-unsaved-changes').then(
+			(m) => m.AlertDialogUnsavedChanges
+		)
+	] as const;
 </script>
 
 <script lang="ts">
-	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
+	const tabContext = getRESTTabContext();
 
 	const tablistID = 'rest-tablist';
 	let tablistRef: HTMLElement;
 	let activeTabRef: HTMLElement;
+
+	$: dirtyTabs = $tabContext.tabs.filter((tab) => tab.dirty);
 
 	function handleCurrentTab(event: MouseEvent, tabID: TRESTTabInfer['id']) {
 		event.stopPropagation();
@@ -183,5 +190,10 @@
 	{/each}
 </Tabs.Root>
 
-<AlertDialogUnsavedChanges />
 <DialogSaveAs />
+
+{#if dirtyTabs.length}
+	{#await Promise.all(LAZY_ALERT_DIALOG_COMPONENTS) then [AlertDialogUnsavedChanges]}
+		<AlertDialogUnsavedChanges />
+	{/await}
+{/if}
