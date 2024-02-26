@@ -4,6 +4,7 @@
 	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/validators';
 	import { ViewSelectCollections, treeSelectCollectionStore as treeStore } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
+	import { Input } from '$lib/components/ui/input';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -17,9 +18,12 @@
 <script lang="ts">
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
+	let action: TFormAction = 'save';
+
 	const form = superForm(defaults(zod(RESTRequestSchema)), {
 		id: 'dialog-save-as',
 		SPA: true,
+		dataType: 'json',
 		validators: zod(RESTRequestSchema),
 		validationMethod: 'oninput',
 		resetForm: true,
@@ -29,10 +33,11 @@
 		}
 	});
 
-	let action: TFormAction = 'save';
+	const { formId, enhance } = form;
+	$: ({ form: formData, allErrors } = form);
 
-	$: ({ form: formValue, formId, allErrors } = form);
-	$: isInvalid = Boolean($allErrors.length) || !$formValue.name || !$treeStore.selectedID;
+	$: isInvalid =
+		Boolean($allErrors.length) || ![$formData.name, $treeStore.selectedID].some(Boolean);
 	$: form.reset({ data: $dialogStore.request });
 
 	function handleCancel() {
@@ -45,7 +50,7 @@
 		const { selectedID, selectedType } = $treeStore;
 		if (!selectedID || !selectedType) return;
 
-		const data = $formValue as TRESTRequestInfer;
+		const data = $formData as TRESTRequestInfer;
 
 		const ACTIONS = {
 			folder: () => restContext.createFile(data, selectedID),
@@ -82,23 +87,15 @@
 			<Dialog.Title>Save As</Dialog.Title>
 		</Dialog.Header>
 
-		<Form.Root
-			id={$formId}
-			{form}
-			schema={RESTRequestSchema}
-			controlled
-			action="?/{action}"
-			class="flex max-h-[55vh] flex-col"
-			let:config
-		>
-			<Form.Field {config} name="name">
-				<Form.Item>
-					<Form.Label for="name">Name</Form.Label>
-					<Form.Input type="text" id="name" name="name" autocomplete="off" />
-				</Form.Item>
+		<form id={$formId} method="POST" action="?/{action}" class="flex max-h-[55vh] flex-col">
+			<Form.Field {form} name="name">
+				<Form.Control let:attrs>
+					<Form.Label>Name</Form.Label>
+					<Input {...attrs} type="text" autocomplete="off" bind:value={$formData.name} />
+				</Form.Control>
 			</Form.Field>
 
-			<Form.Fieldset class="mt-4 h-full">
+			<Form.Fieldset {form} name="id" class="mt-4 h-full">
 				<Form.Legend class="text-sm">Select Location</Form.Legend>
 
 				<div
@@ -116,7 +113,7 @@
 					<ViewSelectCollections />
 				</div>
 			</Form.Fieldset>
-		</Form.Root>
+		</form>
 
 		<Dialog.Footer>
 			<Button type="submit" variant="ghost" form={$formId} on:click={() => (action = 'cancel')}>

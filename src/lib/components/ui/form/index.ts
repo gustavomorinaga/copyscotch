@@ -1,5 +1,4 @@
 import * as FormPrimitive from 'formsnap';
-import Root from './form.svelte';
 import Description from './form-description.svelte';
 import Label from './form-label.svelte';
 import FieldErrors from './form-field-errors.svelte';
@@ -13,7 +12,6 @@ import Join from './form-join.svelte';
 const Control = FormPrimitive.Control;
 
 export {
-	Root,
 	Field,
 	Control,
 	Label,
@@ -25,7 +23,6 @@ export {
 	ElementField,
 	Join,
 	//
-	Root as Form,
 	Field as FormField,
 	Control as FormControl,
 	Description as FormDescription,

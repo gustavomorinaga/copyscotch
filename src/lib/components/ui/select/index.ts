@@ -1,4 +1,4 @@
-import { Select as SelectPrimitive } from 'bits-ui';
+import { Select as SelectPrimitive, type Selected } from 'bits-ui';
 
 import Label from './select-label.svelte';
 import Item from './select-item.svelte';
@@ -30,5 +30,7 @@ export {
 	Value as SelectValue,
 	Content as SelectContent,
 	Trigger as SelectTrigger,
-	Separator as SelectSeparator
+	Separator as SelectSeparator,
+	//
+	type Selected
 };

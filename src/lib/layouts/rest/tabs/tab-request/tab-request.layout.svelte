@@ -10,15 +10,16 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import { Spinner } from '$lib/components/ui/spinner';
+	import { Input } from '$lib/components/ui/input';
 	import * as Shortcut from '$lib/components/ui/shortcut';
 	import * as Tooltip from '$lib/components/ui/tooltip';
+	import * as Select from '$lib/components/ui/select';
 	import * as Form from '$lib/components/ui/form';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { RESPONSE_TYPES, SHORTCUTS, UNICODES } from '$lib/maps';
 	import { ChevronDown, Save } from 'lucide-svelte';
-	import { defaults, superForm, type SuperForm } from 'sveltekit-superforms';
+	import { defaults, superForm, type ChangeEvent, type SuperForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import type { ComponentProps } from 'svelte';
 
 	type TFormAction = 'send' | 'cancel' | 'save';
 	type TTab = {
@@ -34,21 +35,7 @@
 			content: import('$lib/layouts/rest/tabs/tab-params'),
 			disabled: false
 		}
-		// {
-		// 	value: 'body',
-		// 	content: import('$lib/layouts/rest/tabs/tab-collections'),
-		// 	disabled: true
-		// },
-		// {
-		// 	value: 'headers',
-		// 	content: import('$lib/layouts/rest/tabs/tab-collections'),
-		// 	disabled: true
-		// },
-		// {
-		// 	value: 'authorization',
-		// 	content: import('$lib/layouts/rest/tabs/tab-collections'),
-		// 	disabled: true
-		// }
+		// TODO - Add 'body', 'headers', 'authorization' tabs
 	] as const satisfies Array<TTab>;
 </script>
 
@@ -70,30 +57,34 @@
 		SPA: true,
 		dataType: 'json',
 		validators: zod(RESTRequestSchema),
-		validationMethod: 'onblur',
+		validationMethod: 'oninput',
 		resetForm: false,
+		onChange: handleOnChange,
 		onSubmit: handleFormSubmit
 	}) as SuperForm<TRESTRequestInfer>;
 
-	$: ({ form: formValue, formId, submitting } = form);
+	const { formId, enhance } = form;
+	$: ({ form: formData, submitting } = form);
+
 	$: sending = $tabContext.results.find((result) => result.id === tabID)?.sending;
 	$: if ($tabContext.tabs) {
 		tab = tabContext.get(tabID) as TRESTTabInfer;
-		if (tab) $formValue = tab.context;
+		if (tab) form.reset({ data: tab.context });
 	}
 
 	function handleCurrentTab(value: TAvailableTabs) {
 		currentTab = value;
 	}
 
-	function handleOnChange() {
-		tabContext.update(tabID, $formValue);
-		tabContext.setDirty([tabID], true);
-	}
+	function handleOnChange(event: ChangeEvent<TRESTRequestInfer>) {
+		if (!event.paths.length) return;
 
-	function handleOnSelectedChange(selected: { value: any }) {
-		const method = selected?.value as TRESTRequestInfer['method'];
-		tabContext.update(tabID, { method });
+		for (const path of event.paths) {
+			tabContext.update(tabID, {
+				[path as keyof TRESTRequestInfer]: $formData[path as keyof TRESTRequestInfer]
+			});
+		}
+
 		tabContext.setDirty([tabID], true);
 	}
 
@@ -124,7 +115,7 @@
 			send: () => {
 				tabContext.setResult(tabID, { response: undefined, sending: true });
 
-				const { url, method } = $formValue;
+				const { url, method } = $formData;
 				const start = performance.now();
 
 				fetch(url, { method, signal: controller.signal })
@@ -169,11 +160,11 @@
 				controller = new AbortController();
 			},
 			save: () => {
-				const data = $formValue as TRESTRequestInfer;
+				const data = $formData as TRESTRequestInfer;
 				const found = restContext.getFile(tabID);
 
 				const updateTab = () => {
-					tabContext.update(tabID, $formValue);
+					tabContext.update(tabID, $formData);
 					tabContext.setDirty([tabID], false);
 				};
 
@@ -196,40 +187,52 @@
 
 <svelte:window on:keydown={handleKeydown} />
 
-<Form.Root id={$formId} action="?/{action}" on:change={handleOnChange}>
+<form
+	id={$formId}
+	method="POST"
+	action="?/{action}"
+	class="flex w-full flex-1 flex-col"
+	use:enhance
+>
 	<Form.Join class="sticky top-0 z-20 flex flex-wrap gap-2">
 		<Form.Join class="min-w-[12rem] flex-auto whitespace-nowrap lg:flex-1">
-			<Form.Field {form} name="method">
+			<Form.Field {form} name="method" class="w-32">
 				<Form.Control let:attrs>
-					<Form.Select
-						selected={{ value: $formValue.method, label: $formValue.method }}
-						onSelectedChange={handleOnSelectedChange}
+					<Select.Root
+						selected={{ value: $formData.method, label: $formData.method }}
+						onSelectedChange={(v) => v && ($formData.method = v.value)}
 					>
-						<Form.SelectTrigger
+						<Select.Trigger
+							{...attrs}
 							class="relative rounded-l-md rounded-r-none bg-input font-semibold focus:z-10"
-						/>
-						<Form.SelectContent>
+						>
+							<Select.Value />
+						</Select.Trigger>
+						<Select.Content>
 							{#each methodOptions as method}
-								<Form.SelectItem
+								<Select.Item
 									value={method}
 									style="color: hsl(var(--method-{method.toLowerCase()}-color) / var(--tw-text-opacity))"
 								>
 									{method}
-								</Form.SelectItem>
+								</Select.Item>
 							{/each}
-						</Form.SelectContent>
-					</Form.Select>
+						</Select.Content>
+					</Select.Root>
+					<input hidden name={attrs.name} bind:value={$formData.method} />
 				</Form.Control>
 			</Form.Field>
 
-			<Form.Field {config} name="url">
-				<Form.Item class="flex-1">
-					<Form.Input
+			<Form.Field {form} name="url" class="flex-1">
+				<Form.Control let:attrs>
+					<Input
+						{...attrs}
 						type="url"
 						placeholder="URL"
 						class="relative rounded-l-none rounded-r-md border-none bg-input focus:z-10"
+						bind:value={$formData.url}
 					/>
-				</Form.Item>
+				</Form.Control>
 			</Form.Field>
 		</Form.Join>
 
@@ -265,7 +268,6 @@
 					<Tooltip.Trigger asChild let:builder>
 						<Form.Button
 							builders={[builder]}
-							type="submit"
 							variant="secondary"
 							class="rounded-r-none"
 							on:click={() => (action = 'save')}
@@ -334,4 +336,4 @@
 			{/each}
 		</Tabs.Root>
 	</Form.Join>
-</Form.Root>
+</form>

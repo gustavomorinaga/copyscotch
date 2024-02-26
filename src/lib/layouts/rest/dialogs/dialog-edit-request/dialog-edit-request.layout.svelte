@@ -2,7 +2,7 @@
 	import { dialogEditRequestStore as dialogStore } from '.';
 	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
 	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/validators';
-	import { Button } from '$lib/components/ui/button';
+	import { Input } from '$lib/components/ui/input';
 	import * as Form from '$lib/components/ui/form';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { defaults, superForm } from 'sveltekit-superforms';
@@ -14,8 +14,12 @@
 <script lang="ts">
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
+	let action: TFormAction = 'save';
+
 	const form = superForm(defaults(zod(RESTRequestSchema)), {
+		id: 'dialog-edit-request',
 		SPA: true,
+		dataType: 'json',
 		validators: zod(RESTRequestSchema),
 		validationMethod: 'oninput',
 		resetForm: true,
@@ -25,10 +29,10 @@
 		}
 	});
 
-	let action: TFormAction = 'save';
+	const { formId, enhance } = form;
+	$: ({ form: formData, allErrors } = form);
 
-	$: ({ form: formValue, formId, allErrors } = form);
-	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
+	$: isInvalid = Boolean($allErrors.length) || !$formData.name;
 	$: form.reset({ data: $dialogStore.request });
 
 	function handleCancel() {
@@ -39,7 +43,7 @@
 		const ACTIONS = {
 			create: () => {
 				if (!$dialogStore.collectionID) return;
-				restContext.createFile($formValue as TRESTRequestInfer, $dialogStore.collectionID);
+				restContext.createFile($formData as TRESTRequestInfer, $dialogStore.collectionID);
 			},
 			edit: () => {
 				if (!$dialogStore.request) return;
@@ -48,14 +52,14 @@
 				if (!requestID) return;
 
 				if ($dialogStore.forceSave) {
-					const request: TRESTRequestInfer = { ...$dialogStore.request, name: $formValue.name };
+					const request: TRESTRequestInfer = { ...$dialogStore.request, name: $formData.name };
 					restContext.updateFile(request);
 				}
 
 				const tab = tabContext.get(requestID);
 				if (!tab) return;
 
-				tabContext.update(requestID, $formValue as TRESTRequestInfer);
+				tabContext.update(requestID, $formData as TRESTRequestInfer);
 				if (!$dialogStore.forceSave) tabContext.setDirty([requestID], true);
 			}
 		} as const satisfies Record<typeof $dialogStore.mode, () => void>;
@@ -102,41 +106,33 @@
 			</Dialog.Title>
 		</Dialog.Header>
 
-		<Form.Root
-			id={$formId}
-			{form}
-			schema={RESTRequestSchema}
-			controlled
-			action="?/{action}"
-			let:config
-		>
-			<Form.Field {config} name="name">
-				<Form.Item>
-					<Form.Label for="name">Name</Form.Label>
-					<Form.Input
+		<form id={$formId} method="POST" action="?/{action}" use:enhance>
+			<Form.Field {form} name="name">
+				<Form.Control let:attrs>
+					<Form.Label>Name</Form.Label>
+					<Input
+						{...attrs}
 						type="text"
-						id="name"
-						name="name"
 						autocomplete="off"
+						bind:value={$formData.name}
 						on:keydown={handleKeydownSubmit}
 					/>
-				</Form.Item>
+				</Form.Control>
 			</Form.Field>
-		</Form.Root>
+		</form>
 
 		<Dialog.Footer>
-			<Button type="submit" variant="ghost" form={$formId} on:click={() => (action = 'cancel')}>
+			<Form.Button variant="ghost" form={$formId} on:click={() => (action = 'cancel')}>
 				Cancel
-			</Button>
-			<Button
-				type="submit"
+			</Form.Button>
+			<Form.Button
 				variant="default"
 				form={$formId}
 				disabled={isInvalid}
 				on:click={() => (action = 'save')}
 			>
 				Save
-			</Button>
+			</Form.Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

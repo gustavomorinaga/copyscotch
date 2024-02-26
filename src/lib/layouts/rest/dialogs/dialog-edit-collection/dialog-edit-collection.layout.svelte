@@ -3,7 +3,7 @@
 	import { getRESTContext } from '$lib/contexts';
 	import { generateUUID } from '$lib/utils';
 	import { RESTBaseFolderSchema, type TRESTCollectionInfer } from '$lib/validators';
-	import { Button } from '$lib/components/ui/button';
+	import { Input } from '$lib/components/ui/input';
 	import * as Form from '$lib/components/ui/form';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { defaults, superForm } from 'sveltekit-superforms';
@@ -38,7 +38,10 @@
 <script lang="ts">
 	const restContext = getRESTContext();
 
+	let action: TFormAction = 'save';
+
 	const form = superForm(defaults(zod(RESTBaseFolderSchema)), {
+		id: 'dialog-edit-collection',
 		SPA: true,
 		validators: zod(RESTBaseFolderSchema),
 		validationMethod: 'oninput',
@@ -48,14 +51,11 @@
 		}
 	});
 
-	let action: TFormAction = 'save';
+	const { formId, enhance } = form;
+	$: ({ form: formData, allErrors } = form);
 
-	$: ({ form: formValue, formId, allErrors } = form);
-	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
-	$: form.reset({
-		id: `edit-collection-${$dialogStore.collection?.id}`,
-		data: $dialogStore.collection
-	});
+	$: isInvalid = Boolean($allErrors.length) || !$formData.name;
+	$: form.reset({ data: $dialogStore.collection });
 	$: ({ title } = DIALOG_PROPS[$dialogStore.type][$dialogStore.mode]);
 
 	function handleCancel() {
@@ -70,7 +70,7 @@
 					requests: [],
 					folders: []
 				};
-				const collection: TRESTCollectionInfer = { ...$formValue, ...initialData };
+				const collection: TRESTCollectionInfer = { ...$formData, ...initialData };
 				restContext.createFolder(collection, $dialogStore.parentID);
 			},
 			edit: () => {
@@ -78,7 +78,7 @@
 
 				const collection: TRESTCollectionInfer = {
 					...$dialogStore.collection,
-					name: $formValue.name
+					name: $formData.name
 				};
 				restContext.updateFolder(collection);
 			}
@@ -123,41 +123,33 @@
 			<Dialog.Title>{title}</Dialog.Title>
 		</Dialog.Header>
 
-		<Form.Root
-			id={$formId}
-			{form}
-			schema={RESTBaseFolderSchema}
-			controlled
-			action="?/save"
-			let:config
-		>
-			<Form.Field {config} name="name">
-				<Form.Item>
-					<Form.Label for="name">Name</Form.Label>
-					<Form.Input
+		<form id={$formId} method="POST" action="?/save" use:enhance>
+			<Form.Field {form} name="name">
+				<Form.Control let:attrs>
+					<Form.Label>Name</Form.Label>
+					<Input
+						{...attrs}
 						type="text"
-						id="name"
-						name="name"
 						autocomplete="off"
+						bind:value={$formData.name}
 						on:keydown={handleKeydownSubmit}
 					/>
-				</Form.Item>
+				</Form.Control>
 			</Form.Field>
-		</Form.Root>
+		</form>
 
 		<Dialog.Footer>
-			<Button type="submit" variant="ghost" form={$formId} on:click={() => (action = 'cancel')}>
+			<Form.Button variant="ghost" form={$formId} on:click={() => (action = 'cancel')}>
 				Cancel
-			</Button>
-			<Button
-				type="submit"
+			</Form.Button>
+			<Form.Button
 				variant="default"
 				form={$formId}
 				disabled={isInvalid}
 				on:click={() => (action = 'save')}
 			>
 				Save
-			</Button>
+			</Form.Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

@@ -16,11 +16,11 @@
 
 	export let form: $$Props['form'];
 
-	$: ({ form: formValue } = form);
-	$: hasParams = $formValue.params.length > 0;
+	$: ({ form: formData } = form);
+	$: hasParams = $formData.params.length > 0;
 
 	onMount(() => {
-		if (!hasParams) $formValue.params.push(DEFAULT_KEY_VALUE);
+		if (!hasParams) $formData.params.push(DEFAULT_KEY_VALUE);
 	});
 </script>
 
