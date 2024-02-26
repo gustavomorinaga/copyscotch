@@ -1,8 +1,7 @@
 <script lang="ts" context="module">
 	import { getSettingsContext, getRESTTabContext, type TRESTResult } from '$lib/contexts';
 	import { ViewInstructions } from '$lib/layouts/rest';
-	import { Center } from '$lib/components/ui/center';
-	import { Loader } from 'lucide-svelte';
+	import { Spinner } from '$lib/components/ui/spinner';
 	import type { Props as TCodeMirror } from '$lib/components/ui/codemirror';
 
 	const CODEMIRROR_CONFIG: TCodeMirror = {
@@ -46,9 +45,7 @@
 
 <section class="relative flex h-full flex-1 flex-col overflow-y-auto">
 	{#if isSending && !hasResponse}
-		<Center>
-			<Loader class="h-4 w-4 animate-spin" />
-		</Center>
+		<Spinner />
 	{:else if hasResponse}
 		{#await Promise.all(LAZY_COMPONENTS) then [{ CodeMirror }, { ToolbarResponse }, { ToolbarResponseStatus }]}
 			<ToolbarResponseStatus />

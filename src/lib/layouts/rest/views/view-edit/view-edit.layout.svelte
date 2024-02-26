@@ -89,7 +89,7 @@
 					on:dblclick={() => handleEditing(tabID)}
 				>
 					<Tabs.Trigger
-						class="group/tab-trigger relative h-12 min-w-52 shrink-0 items-center justify-between gap-2 px-5 before:absolute before:inset-x-0 before:top-0 before:h-[.125rem] before:bg-transparent data-[state=active]:before:bg-primary"
+						class="group/tab-trigger relative h-12 min-w-52 shrink-0 items-center justify-between gap-2 px-5 !shadow-none before:absolute before:inset-x-0 before:top-0 before:h-[.125rem] before:bg-transparent before:transition-colors data-[state=active]:before:bg-primary"
 						aria-label={tab.context.name}
 						value={tabID}
 						on:click={(event) => handleCurrentTab(event, tabID)}

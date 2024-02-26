@@ -38,7 +38,7 @@
 <script lang="ts">
 	const restContext = getRESTContext();
 
-	const superFrm = superForm(defaults(zod(RESTBaseFolderSchema)), {
+	const form = superForm(defaults(zod(RESTBaseFolderSchema)), {
 		SPA: true,
 		validators: zod(RESTBaseFolderSchema),
 		validationMethod: 'oninput',
@@ -50,9 +50,9 @@
 
 	let action: TFormAction = 'save';
 
-	$: ({ form: formValue, formId, allErrors } = superFrm);
+	$: ({ form: formValue, formId, allErrors } = form);
 	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
-	$: superFrm.reset({
+	$: form.reset({
 		id: `edit-collection-${$dialogStore.collection?.id}`,
 		data: $dialogStore.collection
 	});
@@ -125,7 +125,7 @@
 
 		<Form.Root
 			id={$formId}
-			form={superFrm}
+			{form}
 			schema={RESTBaseFolderSchema}
 			controlled
 			action="?/save"

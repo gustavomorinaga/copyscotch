@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { KeyValueSchema } from '$lib/validators';
 
 export const MethodEnum = z.enum([
 	'GET',
@@ -13,11 +14,28 @@ export const MethodEnum = z.enum([
 	'CUSTOM'
 ]);
 
+export const BodyContentTypeEnum = z.enum([
+	'application/json',
+	'application/xml',
+	'application/x-www-form-urlencoded',
+	'multipart/form-data',
+	'text/html',
+	'text/plain'
+]);
+
+export const BodySchema = z.object({
+	body: z.string().min(1).max(10000),
+	contentType: BodyContentTypeEnum
+});
+
 export const RESTRequestSchema = z.object({
 	id: z.string().uuid(),
 	name: z.string().min(1).max(100),
 	url: z.string().url(),
-	method: MethodEnum.default('GET')
+	method: MethodEnum.default('GET'),
+	params: KeyValueSchema.array(),
+	body: BodySchema.optional(),
+	headers: KeyValueSchema.array()
 });
 
 export const RESTTabSchema = z.object({

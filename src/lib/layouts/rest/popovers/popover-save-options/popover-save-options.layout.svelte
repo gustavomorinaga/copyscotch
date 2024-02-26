@@ -20,7 +20,7 @@
 
 	const tabContext = getRESTTabContext();
 
-	const superFrm = superForm(defaults(zod(SaveOptionsSchema)), {
+	const form = superForm(defaults(zod(SaveOptionsSchema)), {
 		id: `save-options-${tabID}`,
 		SPA: true,
 		validators: zod(SaveOptionsSchema),
@@ -33,7 +33,7 @@
 		}
 	});
 
-	$: ({ form: formValue, formId } = superFrm);
+	$: ({ form: formValue, formId } = form);
 	$: if ($tabContext.tabs) {
 		tab = tabContext.get(tabID) as TRESTTabInfer;
 		if (tab) $formValue = tab.context;
@@ -58,7 +58,7 @@
 	<Popover.Content align="end" side="bottom" sideOffset={8} class="w-60 bg-background">
 		<Form.Root
 			id={$formId}
-			form={superFrm}
+			{form}
 			schema={SaveOptionsSchema}
 			controlled
 			class="flex flex-col gap-2"

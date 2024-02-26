@@ -14,7 +14,7 @@
 <script lang="ts">
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
-	const superFrm = superForm(defaults(zod(RESTRequestSchema)), {
+	const form = superForm(defaults(zod(RESTRequestSchema)), {
 		SPA: true,
 		validators: zod(RESTRequestSchema),
 		validationMethod: 'oninput',
@@ -27,9 +27,9 @@
 
 	let action: TFormAction = 'save';
 
-	$: ({ form: formValue, formId, allErrors } = superFrm);
+	$: ({ form: formValue, formId, allErrors } = form);
 	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
-	$: superFrm.reset({ data: $dialogStore.request });
+	$: form.reset({ data: $dialogStore.request });
 
 	function handleCancel() {
 		dialogStore.set({ mode: 'create', open: false, collectionID: '', request: undefined });
@@ -104,7 +104,7 @@
 
 		<Form.Root
 			id={$formId}
-			form={superFrm}
+			{form}
 			schema={RESTRequestSchema}
 			controlled
 			action="?/{action}"

@@ -53,7 +53,10 @@ const INITIAL_DATA: TRESTTabData = {
 const DEFAULT_REQUEST: Omit<TRESTTabInfer['context'], 'id'> = {
 	name: 'Untitled',
 	url: 'https://jsonplaceholder.typicode.com/todos/1',
-	method: 'GET'
+	method: 'GET',
+	params: [],
+	body: undefined,
+	headers: []
 };
 
 export function setRESTTabContext(

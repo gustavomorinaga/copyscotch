@@ -8,17 +8,48 @@
 	} from '$lib/validators';
 	import { PopoverSaveOptions, dialogSaveAsStore as dialogStore } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
+	import { Separator } from '$lib/components/ui/separator';
+	import { Spinner } from '$lib/components/ui/spinner';
 	import * as Shortcut from '$lib/components/ui/shortcut';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Form from '$lib/components/ui/form';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { RESPONSE_TYPES, SHORTCUTS, UNICODES } from '$lib/maps';
 	import { ChevronDown, Save } from 'lucide-svelte';
-	import { defaults, superForm } from 'sveltekit-superforms';
+	import { defaults, superForm, type SuperForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import type { ComponentProps } from 'svelte';
 
 	type TFormAction = 'send' | 'cancel' | 'save';
+	type TTab = {
+		value: string;
+		content: Promise<any>;
+		disabled?: boolean;
+	};
+	type TAvailableTabs = (typeof LAZY_TABS)[number]['value'];
+
+	const LAZY_TABS = [
+		{
+			value: 'parameters',
+			content: import('$lib/layouts/rest/tabs/tab-params'),
+			disabled: false
+		}
+		// {
+		// 	value: 'body',
+		// 	content: import('$lib/layouts/rest/tabs/tab-collections'),
+		// 	disabled: true
+		// },
+		// {
+		// 	value: 'headers',
+		// 	content: import('$lib/layouts/rest/tabs/tab-collections'),
+		// 	disabled: true
+		// },
+		// {
+		// 	value: 'authorization',
+		// 	content: import('$lib/layouts/rest/tabs/tab-collections'),
+		// 	disabled: true
+		// }
+	] as const satisfies Array<TTab>;
 </script>
 
 <script lang="ts">
@@ -32,22 +63,27 @@
 	let tab: TRESTTabInfer;
 	let action: TFormAction = 'send';
 	let controller = new AbortController();
-	let currentTab;
+	let currentTab: TAvailableTabs = 'parameters';
 
-	const superFrm = superForm(defaults(zod(RESTRequestSchema)), {
+	const form = superForm(defaults(zod(RESTRequestSchema)), {
 		id: `tab-request-${tabID}`,
 		SPA: true,
+		dataType: 'json',
 		validators: zod(RESTRequestSchema),
 		validationMethod: 'onblur',
 		resetForm: false,
 		onSubmit: handleFormSubmit
-	});
+	}) as SuperForm<TRESTRequestInfer>;
 
-	$: ({ form: formValue, formId, submitting } = superFrm);
+	$: ({ form: formValue, formId, submitting } = form);
 	$: sending = $tabContext.results.find((result) => result.id === tabID)?.sending;
 	$: if ($tabContext.tabs) {
 		tab = tabContext.get(tabID) as TRESTTabInfer;
 		if (tab) $formValue = tab.context;
+	}
+
+	function handleCurrentTab(value: TAvailableTabs) {
+		currentTab = value;
 	}
 
 	function handleOnChange() {
@@ -162,10 +198,11 @@
 
 <Form.Root
 	id={$formId}
-	form={superFrm}
+	{form}
 	schema={RESTRequestSchema}
 	controlled
 	action="?/{action}"
+	class="flex flex-col"
 	let:config
 	on:change={handleOnChange}
 >
@@ -278,7 +315,32 @@
 		</Form.Join>
 	</Form.Join>
 
-	<Form.Join>
-		<Tabs.Root></Tabs.Root>
+	<Form.Join class="-mx-4 mt-4">
+		<Tabs.Root class="relative flex flex-1 flex-col">
+			<Tabs.List class="flex flex-1 gap-8 bg-background px-4 py-0">
+				{#each LAZY_TABS as { value, disabled }}
+					<Tabs.Trigger
+						{value}
+						{disabled}
+						class="relative px-0 py-2 text-muted-foreground !shadow-none before:absolute before:inset-x-0 before:bottom-0 before:h-[.125rem] before:bg-transparent before:transition-colors data-[state=active]:text-accent-foreground data-[state=active]:before:bg-primary hover:text-accent-foreground"
+						on:click={() => handleCurrentTab(value)}
+					>
+						<span class="capitalize">{value}</span>
+					</Tabs.Trigger>
+				{/each}
+			</Tabs.List>
+
+			<Separator orientation="horizontal" />
+
+			{#each LAZY_TABS as { value, content }}
+				<Tabs.Content {value} class="m-0 w-full">
+					{#await content}
+						<Spinner />
+					{:then module}
+						<svelte:component this={module.default} {form} />
+					{/await}
+				</Tabs.Content>
+			{/each}
+		</Tabs.Root>
 	</Form.Join>
 </Form.Root>

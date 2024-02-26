@@ -1,13 +1,14 @@
 <script lang="ts" context="module">
-	import { Center } from '$lib/components/ui/center';
 	import { Separator } from '$lib/components/ui/separator';
+	import { Spinner } from '$lib/components/ui/spinner';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
 	import * as Tabs from '$lib/components/ui/tabs';
-	import { Folder, Loader, Layers, Clock } from 'lucide-svelte';
+	import { Folder, Layers, Clock } from 'lucide-svelte';
+	import type { ComponentType } from 'svelte';
 
 	type TTab = {
 		value: string;
-		icon: typeof Folder;
+		icon: ComponentType;
 		content: Promise<any>;
 		disabled?: boolean;
 	};
@@ -75,9 +76,7 @@
 		{#each LAZY_TABS as { value, content }}
 			<Tabs.Content {value} class="m-0 w-full">
 				{#await content}
-					<Center>
-						<Loader class="h-4 w-4 animate-spin" />
-					</Center>
+					<Spinner />
 				{:then module}
 					<svelte:component this={module.default} />
 				{/await}
