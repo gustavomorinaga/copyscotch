@@ -91,7 +91,7 @@
 		tabContext.setDirty([tabID], true);
 	}
 
-	function handleOnSelectedChange(selected: ComponentProps<Form.Select>['selected']) {
+	function handleOnSelectedChange(selected: { value: any }) {
 		const method = selected?.value as TRESTRequestInfer['method'];
 		tabContext.update(tabID, { method });
 		tabContext.setDirty([tabID], true);
@@ -196,20 +196,11 @@
 
 <svelte:window on:keydown={handleKeydown} />
 
-<Form.Root
-	id={$formId}
-	{form}
-	schema={RESTRequestSchema}
-	controlled
-	action="?/{action}"
-	class="flex flex-col"
-	let:config
-	on:change={handleOnChange}
->
+<Form.Root id={$formId} action="?/{action}" on:change={handleOnChange}>
 	<Form.Join class="sticky top-0 z-20 flex flex-wrap gap-2">
 		<Form.Join class="min-w-[12rem] flex-auto whitespace-nowrap lg:flex-1">
-			<Form.Field {config} name="method">
-				<Form.Item class="w-32">
+			<Form.Field {form} name="method">
+				<Form.Control let:attrs>
 					<Form.Select
 						selected={{ value: $formValue.method, label: $formValue.method }}
 						onSelectedChange={handleOnSelectedChange}
@@ -228,7 +219,7 @@
 							{/each}
 						</Form.SelectContent>
 					</Form.Select>
-				</Form.Item>
+				</Form.Control>
 			</Form.Field>
 
 			<Form.Field {config} name="url">
