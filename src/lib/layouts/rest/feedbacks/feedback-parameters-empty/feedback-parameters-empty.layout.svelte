@@ -3,10 +3,20 @@
 	import { Button } from '$lib/components/ui/button';
 	import { mode } from '$lib/components/mode-watcher';
 	import { Plus } from 'lucide-svelte';
+	import { DEFAULT_KEY_VALUE, type TRESTRequestInfer } from '$lib/validators';
+	import type { SuperForm } from 'sveltekit-superforms';
 </script>
 
 <script lang="ts">
-	function handleNewParameter() {}
+	type $$Props = { form: SuperForm<TRESTRequestInfer> };
+
+	export let form: $$Props['form'];
+
+	$: ({ form: formData } = form);
+
+	function handleAddNew() {
+		$formData.params = [...$formData.params, DEFAULT_KEY_VALUE];
+	}
 </script>
 
 <div class="flex flex-col p-2">
@@ -30,7 +40,7 @@
 					variant="secondary"
 					aria-label="Add New Parameter"
 					class="w-40"
-					on:click={handleNewParameter}
+					on:click={handleAddNew}
 				>
 					<Plus class="mr-2 h-4 w-4" />
 					<span>Add New</span>

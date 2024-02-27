@@ -8,6 +8,7 @@
 
 	type TTab = {
 		value: string;
+		label: string;
 		icon: ComponentType;
 		content: Promise<any>;
 		disabled?: boolean;
@@ -17,18 +18,21 @@
 	const LAZY_TABS = [
 		{
 			value: 'collections',
+			label: 'Collections',
 			icon: Folder,
 			content: import('$lib/layouts/rest/tabs/tab-collections'),
 			disabled: false
 		},
 		{
 			value: 'environments',
+			label: 'Environments',
 			icon: Layers,
 			content: import('$lib/layouts/rest/feedbacks/feedback-collection-empty'),
 			disabled: true
 		},
 		{
 			value: 'history',
+			label: 'History',
 			icon: Clock,
 			content: import('$lib/layouts/rest/feedbacks/feedback-collection-empty'),
 			disabled: true
@@ -46,15 +50,16 @@
 
 <Tabs.Root value={currentTab} orientation="vertical" class="relative flex h-full flex-1 p-0">
 	<Tabs.List class="gap-2 bg-background p-2">
-		{#each LAZY_TABS as { value, icon, disabled }}
+		{#each LAZY_TABS as { value, label, icon, disabled }}
 			<Tabs.Trigger
 				{value}
 				{disabled}
+				aria-label="{label} Tab"
 				class="p-2 !shadow-none data-[state=active]:text-primary"
 				on:click={() => handleCurrentTab(value)}
 			>
 				<svelte:component this={icon} class="h-5 w-5" />
-				<span class="sr-only capitalize">{value}</span>
+				<span class="sr-only capitalize">{label}</span>
 			</Tabs.Trigger>
 		{/each}
 	</Tabs.List>

@@ -82,7 +82,6 @@
 	function handleOnChange(event: ChangeEvent<TRESTRequestInfer>) {
 		if (!event.paths.length) return;
 
-		console.log(event.paths);
 		for (const path of event.paths) {
 			let request: Partial<TRESTRequestInfer>;
 
@@ -200,7 +199,7 @@
 <svelte:window on:keydown={handleKeydown} />
 
 <form id={formID} method="POST" action="?/{action}" class="flex w-full flex-1 flex-col" use:enhance>
-	<Form.Join class="sticky top-0 z-20 flex flex-wrap gap-2">
+	<Form.Join class="sticky top-0 z-20 flex flex-wrap gap-2 bg-background p-4">
 		<Form.Join class="min-w-[12rem] flex-auto whitespace-nowrap lg:flex-1">
 			<Form.Field {form} name="method" class="w-32">
 				<Form.Control let:attrs>
@@ -313,29 +312,32 @@
 		</Form.Join>
 	</Form.Join>
 
-	<Form.Join class="-mx-4 mt-4">
-		<Tabs.Root class="relative flex flex-1 flex-col">
-			<Tabs.List class="flex flex-1 gap-8 bg-background px-4 py-0">
-				{#each LAZY_TABS as { value, label, disabled }}
-					<Tabs.Trigger
-						{value}
-						{disabled}
-						class="relative px-0 py-2 text-muted-foreground !shadow-none before:absolute before:inset-x-0 before:bottom-0 before:h-[.125rem] before:bg-transparent before:transition-colors data-[state=active]:text-accent-foreground data-[state=active]:before:bg-primary hover:text-accent-foreground"
-						on:click={() => handleCurrentTab(value)}
-					>
-						<span class="capitalize">{label}</span>
-					</Tabs.Trigger>
-				{/each}
-			</Tabs.List>
+	<Form.Join>
+		<Tabs.Root class="flex flex-1 flex-col">
+			<div class="sticky top-[7.5rem] flex w-full flex-1 flex-col lg:top-[4.5rem]">
+				<Tabs.List class="flex flex-1 gap-8 bg-background px-4 py-0">
+					{#each LAZY_TABS as { value, label, disabled }}
+						<Tabs.Trigger
+							{value}
+							{disabled}
+							aria-label="{label} Tab"
+							class="relative px-0 py-2 text-muted-foreground !shadow-none before:absolute before:inset-x-0 before:bottom-0 before:h-[.125rem] before:bg-transparent before:transition-colors data-[state=active]:text-accent-foreground data-[state=active]:before:bg-primary hover:text-accent-foreground"
+							on:click={() => handleCurrentTab(value)}
+						>
+							<span class="capitalize">{label}</span>
+						</Tabs.Trigger>
+					{/each}
+				</Tabs.List>
 
-			<Separator orientation="horizontal" />
+				<Separator orientation="horizontal" />
+			</div>
 
 			{#each LAZY_TABS as { value, content }}
 				<Tabs.Content {value} class="m-0 w-full">
 					{#await content}
 						<Spinner />
 					{:then module}
-						<svelte:component this={module.default} {form} />
+						<svelte:component this={module.default} {tabID} {form} />
 					{/await}
 				</Tabs.Content>
 			{/each}

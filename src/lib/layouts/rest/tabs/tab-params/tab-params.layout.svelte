@@ -1,25 +1,23 @@
 <script lang="ts" context="module">
 	import { onMount } from 'svelte';
+	import { getRESTTabContext } from '$lib/contexts';
 	import { FeedbackParametersEmpty, ToolbarParams } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Form from '$lib/components/ui/form';
+	import { DEFAULT_KEY_VALUE, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
 	import { Trash } from 'lucide-svelte';
-	import type { TKeyValueInfer, TRESTRequestInfer } from '$lib/validators';
 	import type { SuperForm } from 'sveltekit-superforms';
-
-	const DEFAULT_KEY_VALUE: TKeyValueInfer = {
-		key: '',
-		value: '',
-		active: true
-	};
 </script>
 
 <script lang="ts">
-	type $$Props = { form: SuperForm<TRESTRequestInfer> };
+	type $$Props = { tabID: TRESTTabInfer['id']; form: SuperForm<TRESTRequestInfer> };
 
+	export let tabID: $$Props['tabID'];
 	export let form: $$Props['form'];
+
+	const tabContext = getRESTTabContext();
 
 	$: ({ form: formData } = form);
 	$: hasParams = $formData.params.length > 0;
@@ -30,11 +28,11 @@
 	}
 
 	onMount(() => {
-		if (!hasParams) $formData.params = [DEFAULT_KEY_VALUE];
+		if (!hasParams) tabContext.update(tabID, { params: [DEFAULT_KEY_VALUE] });
 	});
 </script>
 
-<ToolbarParams {form} />
+<ToolbarParams {tabID} {form} />
 
 {#if hasParams}
 	<ul class="flex w-full flex-1 flex-col">
@@ -69,6 +67,7 @@
 						<Form.Control let:attrs>
 							<Checkbox
 								{...attrs}
+								aria-label={active ? 'Turn Off' : 'Turn On'}
 								class="flex h-full w-10 items-center justify-center !border-none !bg-transparent !text-success"
 								bind:checked={active}
 							/>
@@ -94,5 +93,5 @@
 		{/each}
 	</ul>
 {:else}
-	<FeedbackParametersEmpty />
+	<FeedbackParametersEmpty {form} />
 {/if}

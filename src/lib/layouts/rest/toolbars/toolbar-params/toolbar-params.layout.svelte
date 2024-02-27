@@ -1,21 +1,20 @@
 <script lang="ts" context="module">
+	import { getRESTTabContext } from '$lib/contexts';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
+	import * as Tooltip from '$lib/components/ui/tooltip';
+	import { DEFAULT_KEY_VALUE, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
 	import { Plus, Trash2 } from 'lucide-svelte';
-	import type { TKeyValueInfer, TRESTRequestInfer } from '$lib/validators';
 	import type { SuperForm } from 'sveltekit-superforms';
-
-	const DEFAULT_KEY_VALUE: TKeyValueInfer = {
-		key: '',
-		value: '',
-		active: true
-	};
 </script>
 
 <script lang="ts">
-	type $$Props = { form: SuperForm<TRESTRequestInfer> };
+	type $$Props = { tabID: TRESTTabInfer['id']; form: SuperForm<TRESTRequestInfer> };
 
+	export let tabID: $$Props['tabID'];
 	export let form: $$Props['form'];
+
+	const tabContext = getRESTTabContext();
 
 	$: ({ form: formData } = form);
 
@@ -24,30 +23,56 @@
 	}
 
 	function handleAddNew() {
-		$formData.params = [...$formData.params, DEFAULT_KEY_VALUE];
+		tabContext.update(tabID, { params: [...$formData.params, DEFAULT_KEY_VALUE] });
 	}
 </script>
 
-<div
-	class="sticky top-12 z-10 flex h-10 shrink-0 items-center justify-between overflow-x-auto bg-background pl-4"
->
-	<div class="flex">
-		<span class="select-none truncate text-sm font-semibold text-muted-foreground">
-			Query Parameters
-		</span>
+<div class="sticky top-[9.825rem] z-10 flex shrink-0 flex-col bg-background lg:top-[6.825rem]">
+	<div class="flex h-10 w-full flex-1 items-center justify-between overflow-x-auto pl-4">
+		<div class="flex">
+			<span class="select-none truncate text-sm font-semibold text-muted-foreground">
+				Query Parameters
+			</span>
+		</div>
+
+		<div class="flex">
+			<Tooltip.Root>
+				<Tooltip.Trigger asChild let:builder>
+					<Button
+						builders={[builder]}
+						size="icon"
+						variant="text"
+						aria-label="Clear All Parameters"
+						on:click={handleClearAll}
+					>
+						<Trash2 class="h-4 w-4" />
+						<span class="sr-only">Clear All</span>
+					</Button>
+				</Tooltip.Trigger>
+				<Tooltip.Content side="top" class="select-none">
+					<span>Clear All</span>
+				</Tooltip.Content>
+			</Tooltip.Root>
+
+			<Tooltip.Root>
+				<Tooltip.Trigger asChild let:builder>
+					<Button
+						builders={[builder]}
+						size="icon"
+						variant="text"
+						aria-label="Add New Parameter"
+						on:click={handleAddNew}
+					>
+						<Plus class="h-4 w-4" />
+						<span class="sr-only">Add New</span>
+					</Button>
+				</Tooltip.Trigger>
+				<Tooltip.Content side="top" class="select-none">
+					<span>Add New</span>
+				</Tooltip.Content>
+			</Tooltip.Root>
+		</div>
 	</div>
 
-	<div class="flex">
-		<Button size="icon" variant="text" aria-label="Clear All Parameters" on:click={handleClearAll}>
-			<Trash2 class="h-4 w-4" />
-			<span class="sr-only">Clear All</span>
-		</Button>
-
-		<Button size="icon" variant="text" aria-label="Add New Parameter" on:click={handleAddNew}>
-			<Plus class="h-4 w-4" />
-			<span class="sr-only">Add New</span>
-		</Button>
-	</div>
+	<Separator orientation="horizontal" />
 </div>
-
-<Separator orientation="horizontal" />

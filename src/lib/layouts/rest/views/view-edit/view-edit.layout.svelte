@@ -90,7 +90,7 @@
 				>
 					<Tabs.Trigger
 						class="group/tab-trigger relative h-12 min-w-52 shrink-0 items-center justify-between gap-2 px-5 !shadow-none before:absolute before:inset-x-0 before:top-0 before:h-[.125rem] before:bg-transparent before:transition-colors data-[state=active]:before:bg-primary"
-						aria-label={tab.context.name}
+						aria-label="{tab.context.name} Tab"
 						value={tabID}
 						on:click={(event) => handleCurrentTab(event, tabID)}
 					>
@@ -180,7 +180,7 @@
 	{#each $tabContext.tabs as tab}
 		{@const tabID = tab.id}
 
-		<Tabs.Content value={tabID} class="m-0 overflow-y-auto bg-background p-4">
+		<Tabs.Content value={tabID} class="m-0 overflow-y-auto bg-background">
 			<TabRequest {tabID} />
 		</Tabs.Content>
 	{/each}
