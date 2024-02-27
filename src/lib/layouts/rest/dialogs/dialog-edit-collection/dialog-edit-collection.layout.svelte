@@ -38,24 +38,26 @@
 <script lang="ts">
 	const restContext = getRESTContext();
 
+	const formID = 'dialog-edit-collection';
 	let action: TFormAction = 'save';
 
 	const form = superForm(defaults(zod(RESTBaseFolderSchema)), {
-		id: 'dialog-edit-collection',
+		id: formID,
 		SPA: true,
 		validators: zod(RESTBaseFolderSchema),
 		validationMethod: 'oninput',
+		resetForm: true,
 		onSubmit: (input) => {
 			input.cancel();
 			return handleFormSubmit();
 		}
 	});
 
-	const { formId, enhance } = form;
+	const { enhance } = form;
 	$: ({ form: formData, allErrors } = form);
 
 	$: isInvalid = Boolean($allErrors.length) || !$formData.name;
-	$: form.reset({ data: $dialogStore.collection });
+	$: form.reset({ id: formID, data: $dialogStore.collection });
 	$: ({ title } = DIALOG_PROPS[$dialogStore.type][$dialogStore.mode]);
 
 	function handleCancel() {
@@ -108,7 +110,7 @@
 
 		if (event.key === 'Enter') {
 			event.preventDefault();
-			$formId && document.forms.namedItem($formId)?.requestSubmit();
+			document.forms.namedItem(formID)?.requestSubmit();
 		}
 	}
 </script>
@@ -123,7 +125,7 @@
 			<Dialog.Title>{title}</Dialog.Title>
 		</Dialog.Header>
 
-		<form id={$formId} method="POST" action="?/save" use:enhance>
+		<form id={formID} method="POST" action="?/{action}" use:enhance>
 			<Form.Field {form} name="name">
 				<Form.Control let:attrs>
 					<Form.Label>Name</Form.Label>
@@ -139,12 +141,12 @@
 		</form>
 
 		<Dialog.Footer>
-			<Form.Button variant="ghost" form={$formId} on:click={() => (action = 'cancel')}>
+			<Form.Button variant="ghost" form={formID} on:click={() => (action = 'cancel')}>
 				Cancel
 			</Form.Button>
 			<Form.Button
 				variant="default"
-				form={$formId}
+				form={formID}
 				disabled={isInvalid}
 				on:click={() => (action = 'save')}
 			>

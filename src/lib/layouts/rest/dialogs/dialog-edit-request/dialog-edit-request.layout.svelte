@@ -14,10 +14,11 @@
 <script lang="ts">
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
+	const formID = 'dialog-edit-request';
 	let action: TFormAction = 'save';
 
 	const form = superForm(defaults(zod(RESTRequestSchema)), {
-		id: 'dialog-edit-request',
+		id: formID,
 		SPA: true,
 		dataType: 'json',
 		validators: zod(RESTRequestSchema),
@@ -29,11 +30,11 @@
 		}
 	});
 
-	const { formId, enhance } = form;
+	const { enhance } = form;
 	$: ({ form: formData, allErrors } = form);
 
 	$: isInvalid = Boolean($allErrors.length) || !$formData.name;
-	$: form.reset({ data: $dialogStore.request });
+	$: form.reset({ id: formID, data: $dialogStore.request });
 
 	function handleCancel() {
 		dialogStore.set({ mode: 'create', open: false, collectionID: '', request: undefined });
@@ -85,7 +86,7 @@
 
 		if (event.key === 'Enter') {
 			event.preventDefault();
-			$formId && document.forms.namedItem($formId)?.requestSubmit();
+			document.forms.namedItem(formID)?.requestSubmit();
 		}
 	}
 </script>
@@ -106,7 +107,7 @@
 			</Dialog.Title>
 		</Dialog.Header>
 
-		<form id={$formId} method="POST" action="?/{action}" use:enhance>
+		<form id={formID} method="POST" action="?/{action}" use:enhance>
 			<Form.Field {form} name="name">
 				<Form.Control let:attrs>
 					<Form.Label>Name</Form.Label>
@@ -122,12 +123,12 @@
 		</form>
 
 		<Dialog.Footer>
-			<Form.Button variant="ghost" form={$formId} on:click={() => (action = 'cancel')}>
+			<Form.Button variant="ghost" form={formID} on:click={() => (action = 'cancel')}>
 				Cancel
 			</Form.Button>
 			<Form.Button
 				variant="default"
-				form={$formId}
+				form={formID}
 				disabled={isInvalid}
 				on:click={() => (action = 'save')}
 			>

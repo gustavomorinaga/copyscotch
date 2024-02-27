@@ -20,11 +20,12 @@
 <script lang="ts">
 	const settingsContext = getSettingsContext();
 
+	const formID: string = 'view-settings';
 	const { options: backgroundOptions } = BackgroundColorEnum;
 	const { options: accentOptions } = AccentColorEnum;
 
 	const form = superForm(defaults(zod(ThemeSchema)), {
-		id: 'view-settings',
+		id: formID,
 		SPA: true,
 		validators: zod(ThemeSchema),
 		validationMethod: 'oninput',
@@ -32,7 +33,7 @@
 		onChange: handleOnChange
 	});
 
-	const { formId, enhance } = form;
+	const { enhance } = form;
 	$: ({ form: formData } = form);
 
 	$: if ($settingsContext) {
@@ -64,7 +65,7 @@
 
 <div class="container h-full overflow-y-auto bg-background">
 	<section class="flex flex-1 flex-col">
-		<form id={$formId} method="POST" class="md:grid md:grid-cols-3 md:gap-4" use:enhance>
+		<form id={formID} method="POST" class="md:grid md:grid-cols-3 md:gap-4" use:enhance>
 			<header class="select-none py-8 sm:p-8 md:col-span-1">
 				<h3 class="text-xl font-bold">Theme</h3>
 				<p class="my-1 text-sm text-muted-foreground">Customize your application theme.</p>

@@ -43,6 +43,7 @@
 	type $$Props = { tabID: TRESTTabInfer['id'] };
 
 	export let tabID: $$Props['tabID'];
+	const formID: string = `tab-request-${tabID}`;
 
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 	const { options: methodOptions } = MethodEnum;
@@ -53,7 +54,7 @@
 	let currentTab: TAvailableTabs = 'parameters';
 
 	const form = superForm(defaults(zod(RESTRequestSchema)), {
-		id: `tab-request-${tabID}`,
+		id: formID,
 		SPA: true,
 		dataType: 'json',
 		validators: zod(RESTRequestSchema),
@@ -63,13 +64,13 @@
 		onSubmit: handleFormSubmit
 	}) as SuperForm<TRESTRequestInfer>;
 
-	const { formId, enhance } = form;
+	const { enhance } = form;
 	$: ({ form: formData, submitting } = form);
 
 	$: sending = $tabContext.results.find((result) => result.id === tabID)?.sending;
 	$: if ($tabContext.tabs) {
 		tab = tabContext.get(tabID) as TRESTTabInfer;
-		if (tab) form.reset({ data: tab.context });
+		if (tab) form.reset({ id: formID, data: tab.context });
 	}
 
 	function handleCurrentTab(value: TAvailableTabs) {
@@ -99,14 +100,14 @@
 			if ($submitting) return;
 
 			action = sending ? 'cancel' : 'send';
-			$formId && document.forms.namedItem($formId)?.requestSubmit();
+			document.forms.namedItem(formID)?.requestSubmit();
 		}
 
 		if ((event.ctrlKey || event.metaKey) && event.key === 's') {
 			event.preventDefault();
 
 			action = 'save';
-			$formId && document.forms.namedItem($formId)?.requestSubmit();
+			document.forms.namedItem(formID)?.requestSubmit();
 		}
 	}
 
@@ -187,13 +188,7 @@
 
 <svelte:window on:keydown={handleKeydown} />
 
-<form
-	id={$formId}
-	method="POST"
-	action="?/{action}"
-	class="flex w-full flex-1 flex-col"
-	use:enhance
->
+<form id={formID} method="POST" action="?/{action}" class="flex w-full flex-1 flex-col" use:enhance>
 	<Form.Join class="sticky top-0 z-20 flex flex-wrap gap-2">
 		<Form.Join class="min-w-[12rem] flex-auto whitespace-nowrap lg:flex-1">
 			<Form.Field {form} name="method" class="w-32">
@@ -241,7 +236,6 @@
 				<Tooltip.Trigger asChild let:builder>
 					<Form.Button
 						builders={[builder]}
-						type="submit"
 						class="flex-1 sm:w-24"
 						on:click={() => (action = sending ? 'cancel' : 'send')}
 					>

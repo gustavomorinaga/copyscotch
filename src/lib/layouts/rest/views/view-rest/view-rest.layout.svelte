@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { getRESTContext, getRESTTabContext, getSettingsContext } from '$lib/contexts';
-	import { DialogEditCollection, SidenavREST, ViewWelcome } from '$lib/layouts/rest';
+	import { SidenavREST, ViewWelcome } from '$lib/layouts/rest';
 	import { BREAKPOINTS } from '$lib/maps';
 	import { screenStore } from '$lib/components/screen-watcher';
 	import { Separator } from '$lib/components/ui/separator';
@@ -11,7 +11,10 @@
 		import('$lib/layouts/rest/views/view-response')
 	] as const;
 
-	const LAZY_DIALOG_COMPONENTS = [import('$lib/layouts/rest/dialogs/dialog-edit-request')] as const;
+	const LAZY_DIALOG_COMPONENTS = [
+		import('$lib/layouts/rest/dialogs/dialog-edit-collection'),
+		import('$lib/layouts/rest/dialogs/dialog-edit-request')
+	] as const;
 </script>
 
 <script lang="ts">
@@ -53,12 +56,14 @@
 	</Sidenav.Content>
 </Sidenav.Root>
 
-<DialogEditCollection />
+{#if $settingsContext.sidebar === 'open' || $tabContext.tabs.length}
+	{#await LAZY_DIALOG_COMPONENTS[0] then { default: DialogEditCollection }}
+		<DialogEditCollection />
+	{/await}
+{/if}
 
-{#if $restContext.length}
-	{#await Promise.all(LAZY_DIALOG_COMPONENTS) then loadedComponents}
-		{#each loadedComponents as component}
-			<svelte:component this={component.default} />
-		{/each}
+{#if ($settingsContext.sidebar === 'open' && $restContext.length) || $tabContext.tabs.length}
+	{#await LAZY_DIALOG_COMPONENTS[1] then { default: DialogEditRequest }}
+		<DialogEditRequest />
 	{/await}
 {/if}

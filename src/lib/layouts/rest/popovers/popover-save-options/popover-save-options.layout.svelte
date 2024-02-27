@@ -18,13 +18,14 @@
 	type $$Props = { tabID: TRESTTabInfer['id'] };
 
 	export let tabID: $$Props['tabID'];
+	const formID: string = `save-options-${tabID}`;
 	let tab: TRESTTabInfer;
 	let open: boolean = false;
 
 	const tabContext = getRESTTabContext();
 
 	const form = superForm(defaults(zod(SaveOptionsSchema)), {
-		id: `save-options-${tabID}`,
+		id: formID,
 		SPA: true,
 		dataType: 'json',
 		validators: zod(SaveOptionsSchema),
@@ -37,7 +38,7 @@
 		}
 	});
 
-	const { formId, enhance } = form;
+	const { enhance } = form;
 	$: ({ form: formData } = form);
 
 	$: if ($tabContext.tabs) {
@@ -62,7 +63,7 @@
 		<slot {builder} />
 	</Popover.Trigger>
 	<Popover.Content align="end" side="bottom" sideOffset={8} class="w-60 bg-background">
-		<form id={$formId} method="POST" class="flex flex-col gap-2" use:enhance>
+		<form id={formID} method="POST" class="flex flex-col gap-2" use:enhance>
 			<Form.Field {form} name="name">
 				<Form.Control let:attrs>
 					<Input

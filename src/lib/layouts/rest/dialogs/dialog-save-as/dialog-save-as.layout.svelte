@@ -3,7 +3,6 @@
 	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
 	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/validators';
 	import { ViewSelectCollections, treeSelectCollectionStore as treeStore } from '$lib/layouts/rest';
-	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
@@ -18,10 +17,11 @@
 <script lang="ts">
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
+	const formID: string = 'dialog-save-as';
 	let action: TFormAction = 'save';
 
 	const form = superForm(defaults(zod(RESTRequestSchema)), {
-		id: 'dialog-save-as',
+		id: formID,
 		SPA: true,
 		dataType: 'json',
 		validators: zod(RESTRequestSchema),
@@ -33,12 +33,12 @@
 		}
 	});
 
-	const { formId, enhance } = form;
+	const { enhance } = form;
 	$: ({ form: formData, allErrors } = form);
 
 	$: isInvalid =
-		Boolean($allErrors.length) || ![$formData.name, $treeStore.selectedID].some(Boolean);
-	$: form.reset({ data: $dialogStore.request });
+		Boolean($allErrors.length) || ![$formData.name, $treeStore.selectedID].every(Boolean);
+	$: form.reset({ id: formID, data: $dialogStore.request });
 
 	function handleCancel() {
 		dialogStore.set({ open: false, request: undefined });
@@ -87,16 +87,22 @@
 			<Dialog.Title>Save As</Dialog.Title>
 		</Dialog.Header>
 
-		<form id={$formId} method="POST" action="?/{action}" class="flex max-h-[55vh] flex-col">
-			<Form.Field {form} name="name">
+		<form
+			id={formID}
+			method="POST"
+			action="?/{action}"
+			class="flex max-h-[55vh] flex-col"
+			use:enhance
+		>
+			<Form.Field {form} name="name" class="flex shrink-0 flex-col">
 				<Form.Control let:attrs>
 					<Form.Label>Name</Form.Label>
 					<Input {...attrs} type="text" autocomplete="off" bind:value={$formData.name} />
 				</Form.Control>
 			</Form.Field>
 
-			<Form.Fieldset {form} name="id" class="mt-4 h-full">
-				<Form.Legend class="text-sm">Select Location</Form.Legend>
+			<fieldset class="mt-4 flex h-full flex-1 flex-col">
+				<legend class="mb-4 select-none text-sm font-medium">Select Location</legend>
 
 				<div
 					class="relative flex h-full flex-1 flex-col overflow-y-auto rounded-md border border-border"
@@ -112,22 +118,21 @@
 
 					<ViewSelectCollections />
 				</div>
-			</Form.Fieldset>
+			</fieldset>
 		</form>
 
 		<Dialog.Footer>
-			<Button type="submit" variant="ghost" form={$formId} on:click={() => (action = 'cancel')}>
+			<Form.Button variant="ghost" form={formID} on:click={() => (action = 'cancel')}>
 				Cancel
-			</Button>
-			<Button
-				type="submit"
+			</Form.Button>
+			<Form.Button
 				variant="default"
-				form={$formId}
+				form={formID}
 				disabled={isInvalid}
 				on:click={() => (action = 'save')}
 			>
 				Save
-			</Button>
+			</Form.Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>
