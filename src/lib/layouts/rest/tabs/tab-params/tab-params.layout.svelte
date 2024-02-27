@@ -1,9 +1,11 @@
 <script lang="ts" context="module">
 	import { onMount } from 'svelte';
-	import { FeedbackParametersEmpty } from '$lib/layouts/rest';
+	import { FeedbackParametersEmpty, ToolbarParams } from '$lib/layouts/rest';
+	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Form from '$lib/components/ui/form';
+	import { Trash } from 'lucide-svelte';
 	import type { TKeyValueInfer, TRESTRequestInfer } from '$lib/validators';
 	import type { SuperForm } from 'sveltekit-superforms';
 
@@ -22,10 +24,17 @@
 	$: ({ form: formData } = form);
 	$: hasParams = $formData.params.length > 0;
 
+	function handleRemove(index: number) {
+		$formData.params.splice(index, 1);
+		$formData.params = $formData.params;
+	}
+
 	onMount(() => {
 		if (!hasParams) $formData.params = [DEFAULT_KEY_VALUE];
 	});
 </script>
+
+<ToolbarParams {form} />
 
 {#if hasParams}
 	<ul class="flex w-full flex-1 flex-col">
@@ -56,16 +65,29 @@
 						</Form.Control>
 					</Form.Field>
 
-					<Form.Field {form} name="params[{index}].active">
+					<Form.Field {form} name="params[{index}].active" class="flex items-center justify-center">
 						<Form.Control let:attrs>
 							<Checkbox
 								{...attrs}
-								class="flex h-10 w-10 items-center justify-center !border-transparent !bg-transparent !text-success"
+								class="flex h-full w-10 items-center justify-center !border-none !bg-transparent !text-success"
 								bind:checked={active}
 							/>
+							<span class="sr-only">{active ? 'Turn Off' : 'Turn On'}</span>
 							<input name={attrs.name} value={active} hidden />
 						</Form.Control>
 					</Form.Field>
+
+					<div class="flex items-center justify-center">
+						<Button
+							size="icon"
+							variant="text"
+							class="rounded-none !text-destructive"
+							on:click={() => handleRemove(index)}
+						>
+							<Trash class="h-5 w-5" />
+							<span class="sr-only">Remove</span>
+						</Button>
+					</div>
 				</Form.Join>
 			</li>
 		{/each}

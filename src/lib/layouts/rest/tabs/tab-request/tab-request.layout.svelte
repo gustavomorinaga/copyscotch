@@ -82,6 +82,7 @@
 	function handleOnChange(event: ChangeEvent<TRESTRequestInfer>) {
 		if (!event.paths.length) return;
 
+		console.log(event.paths);
 		for (const path of event.paths) {
 			let request: Partial<TRESTRequestInfer>;
 
