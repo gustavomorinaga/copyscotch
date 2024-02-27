@@ -4,7 +4,8 @@
 		RESTRequestSchema,
 		MethodEnum,
 		type TRESTRequestInfer,
-		type TRESTTabInfer
+		type TRESTTabInfer,
+		type TKeyValueInfer
 	} from '$lib/validators';
 	import { PopoverSaveOptions, dialogSaveAsStore as dialogStore } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
@@ -126,10 +127,22 @@
 			send: () => {
 				tabContext.setResult(tabID, { response: undefined, sending: true });
 
-				const { url, method } = $formData;
+				const url = new URL($formData.url);
+				const params = $formData.params
+					.filter((param) => param.active && param.key)
+					.reduce(
+						(acc, param) => {
+							acc[param.key] = param.value;
+							return acc;
+						},
+						{} as Record<TKeyValueInfer['key'], TKeyValueInfer['value']>
+					);
+				const searchParams = new URLSearchParams(params);
+				url.search = searchParams.toString();
+
 				const start = performance.now();
 
-				fetch(url, { method, signal: controller.signal })
+				fetch(url, { method: $formData.method, signal: controller.signal })
 					.then((response) => {
 						const end = performance.now();
 						const time = end - start;
