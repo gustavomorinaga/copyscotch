@@ -181,7 +181,7 @@
 	{#each $tabContext.tabs as tab}
 		{@const tabID = tab.id}
 
-		<Tabs.Content value={tabID} class="m-0 bg-background p-4">
+		<Tabs.Content value={tabID} class="m-0 overflow-y-auto bg-background p-4">
 			<TabRequest {tabID} />
 		</Tabs.Content>
 	{/each}

@@ -16,7 +16,7 @@
 	import * as Select from '$lib/components/ui/select';
 	import * as Form from '$lib/components/ui/form';
 	import * as Tabs from '$lib/components/ui/tabs';
-	import { RESPONSE_TYPES, SHORTCUTS, UNICODES } from '$lib/maps';
+	import { REGEXES, RESPONSE_TYPES, SHORTCUTS, UNICODES } from '$lib/maps';
 	import { ChevronDown, Save } from 'lucide-svelte';
 	import { defaults, superForm, type ChangeEvent, type SuperForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
@@ -24,6 +24,7 @@
 	type TFormAction = 'send' | 'cancel' | 'save';
 	type TTab = {
 		value: string;
+		label: string;
 		content: Promise<any>;
 		disabled?: boolean;
 	};
@@ -31,7 +32,8 @@
 
 	const LAZY_TABS = [
 		{
-			value: 'parameters',
+			value: 'params',
+			label: 'parameters',
 			content: import('$lib/layouts/rest/tabs/tab-params'),
 			disabled: false
 		}
@@ -51,7 +53,7 @@
 	let tab: TRESTTabInfer;
 	let action: TFormAction = 'send';
 	let controller = new AbortController();
-	let currentTab: TAvailableTabs = 'parameters';
+	let currentTab: TAvailableTabs = 'params';
 
 	const form = superForm(defaults(zod(RESTRequestSchema)), {
 		id: formID,
@@ -81,9 +83,17 @@
 		if (!event.paths.length) return;
 
 		for (const path of event.paths) {
-			tabContext.update(tabID, {
-				[path as keyof TRESTRequestInfer]: $formData[path as keyof TRESTRequestInfer]
-			});
+			let request: Partial<TRESTRequestInfer>;
+
+			const match = path.match(REGEXES.deep);
+			if (match) {
+				const [, field] = match;
+				request = { [field]: $formData[field as keyof TRESTRequestInfer] };
+			} else {
+				request = { [path as keyof TRESTRequestInfer]: $formData[path as keyof TRESTRequestInfer] };
+			}
+
+			tabContext.update(tabID, request);
 		}
 
 		tabContext.setDirty([tabID], true);
@@ -305,14 +315,14 @@
 	<Form.Join class="-mx-4 mt-4">
 		<Tabs.Root class="relative flex flex-1 flex-col">
 			<Tabs.List class="flex flex-1 gap-8 bg-background px-4 py-0">
-				{#each LAZY_TABS as { value, disabled }}
+				{#each LAZY_TABS as { value, label, disabled }}
 					<Tabs.Trigger
 						{value}
 						{disabled}
 						class="relative px-0 py-2 text-muted-foreground !shadow-none before:absolute before:inset-x-0 before:bottom-0 before:h-[.125rem] before:bg-transparent before:transition-colors data-[state=active]:text-accent-foreground data-[state=active]:before:bg-primary hover:text-accent-foreground"
 						on:click={() => handleCurrentTab(value)}
 					>
-						<span class="capitalize">{value}</span>
+						<span class="capitalize">{label}</span>
 					</Tabs.Trigger>
 				{/each}
 			</Tabs.List>

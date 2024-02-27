@@ -8,16 +8,12 @@
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
 	$: open = $tabContext.tainted?.length > 0;
-	$: isCurrent =
-		$tabContext.current &&
-		$tabContext.tainted?.length === 1 &&
-		$tabContext.tainted?.includes($tabContext.current);
 	$: dirtyTabs = $tabContext.tabs.filter(
 		(tab) => tab.dirty && $tabContext.tainted?.includes(tab.id)
 	);
 
 	function handleDiscard() {
-		if (isCurrent) tabContext.close({ ids: $tabContext.tainted, mode: 'normal' });
+		tabContext.close({ ids: $tabContext.tainted, mode: 'normal' });
 		tabContext.setTainted(undefined);
 	}
 
@@ -52,9 +48,9 @@
 		<AlertDialog.Header>
 			<AlertDialog.Title>You have unsaved changes</AlertDialog.Title>
 			<AlertDialog.Description>
-				{#if isCurrent}
+				{#if dirtyTabs.length === 1}
 					Do you want to save changes made in this tab?
-				{:else}
+				{:else if dirtyTabs.length > 1}
 					Are you sure you want to close all tabs? {dirtyTabs.length} unsaved tabs will be lost.
 				{/if}
 			</AlertDialog.Description>
