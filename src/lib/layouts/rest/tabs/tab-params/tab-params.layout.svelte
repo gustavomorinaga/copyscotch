@@ -81,6 +81,7 @@
 						<Button
 							size="icon"
 							variant="text"
+							aria-label="Remove Parameter"
 							class="rounded-none !text-destructive"
 							on:click={() => handleRemove(index)}
 						>

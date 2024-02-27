@@ -38,14 +38,14 @@
 	</div>
 
 	<div class="flex">
-		<Button size="icon" variant="text" on:click={handleClearAll}>
+		<Button size="icon" variant="text" aria-label="Clear All Parameters" on:click={handleClearAll}>
 			<Trash2 class="h-4 w-4" />
-			<span class="sr-only">Clear all</span>
+			<span class="sr-only">Clear All</span>
 		</Button>
 
-		<Button size="icon" variant="text" on:click={handleAddNew}>
+		<Button size="icon" variant="text" aria-label="Add New Parameter" on:click={handleAddNew}>
 			<Plus class="h-4 w-4" />
-			<span class="sr-only">Add new</span>
+			<span class="sr-only">Add New</span>
 		</Button>
 	</div>
 </div>

@@ -35,7 +35,7 @@
 	} as const satisfies Record<TFolderStatus, ComponentType>;
 	const OPTIONS: Array<TFolderOptions> = [
 		{
-			title: 'New request',
+			title: 'New Request',
 			tooltip: 'New Request',
 			icon: FilePlus,
 			action: (folderID) =>
@@ -47,7 +47,7 @@
 				})
 		},
 		{
-			title: 'New folder',
+			title: 'New Folder',
 			tooltip: 'New Folder',
 			icon: FolderPlus,
 			action: (folderID) =>
@@ -104,6 +104,7 @@
 				size="sm"
 				variant="text"
 				data-selected={selected}
+				aria-label={selected ? 'Toggle Folder (Selected)' : 'Toggle Folder'}
 				class="flex flex-1 items-center justify-center px-0 data-[selected=true]:text-success data-[selected=true]:hover:text-success"
 				on:click={handleSelect}
 			>
@@ -130,6 +131,7 @@
 								builders={[builder]}
 								size="icon"
 								variant="text"
+								aria-label={option.title}
 								class="invisible h-6 w-6 group-hover/folder:visible"
 								on:click={(event) => {
 									event.stopPropagation();
@@ -158,11 +160,12 @@
 								builders={[dropdownBuilder, tooltipBuilder]}
 								size="icon"
 								variant="text"
+								aria-label="More Options"
 								class="h-6 w-6"
 								on:click={(event) => event.stopPropagation()}
 							>
 								<MoreVertical class="h-4 w-4" />
-								<span class="sr-only">More options</span>
+								<span class="sr-only">More Options</span>
 							</Button>
 						</Tooltip.Trigger>
 						<Tooltip.Content side="top" class="select-none">

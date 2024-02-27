@@ -35,12 +35,12 @@
 	const NAVIGATION: Record<TSettingsInfer['navigation'], TSettingOption> = {
 		collapse: {
 			icon: PanelRight,
-			title: 'Expand navbar',
+			title: 'Expand Navbar',
 			tooltip: 'Expand Navbar'
 		},
 		expand: {
 			icon: PanelLeft,
-			title: 'Collapse navbar',
+			title: 'Collapse Navbar',
 			tooltip: 'Collapse Navbar'
 		}
 	};
@@ -51,24 +51,24 @@
 		open: {
 			left: {
 				icon: PanelLeftClose,
-				title: 'Hide sidebar',
+				title: 'Hide Sidebar',
 				tooltip: 'Hide Sidebar'
 			},
 			right: {
 				icon: PanelRightClose,
-				title: 'Hide sidebar',
+				title: 'Hide Sidebar',
 				tooltip: 'Hide Sidebar'
 			}
 		},
 		closed: {
 			left: {
 				icon: PanelLeftOpen,
-				title: 'Show sidebar',
+				title: 'Show Sidebar',
 				tooltip: 'Show Sidebar'
 			},
 			right: {
 				icon: PanelRightOpen,
-				title: 'Show sidebar',
+				title: 'Show Sidebar',
 				tooltip: 'Show Sidebar'
 			}
 		}
@@ -111,6 +111,7 @@
 						builders={[builder]}
 						size="icon"
 						variant="text"
+						aria-label={navigationProps.title}
 						class="h-8 w-8"
 						on:click={handleNavigationToggle}
 					>
@@ -131,6 +132,7 @@
 						builders={[builder]}
 						size="icon"
 						variant="text"
+						aria-label={layoutProps.title}
 						class="h-8 w-8"
 						on:click={handleLayoutToggle}
 					>
@@ -149,6 +151,7 @@
 						builders={[builder]}
 						size="icon"
 						variant="text"
+						aria-label={sidebarProps.title}
 						class="h-8 w-8"
 						on:click={handleSidebarToggle}
 					>

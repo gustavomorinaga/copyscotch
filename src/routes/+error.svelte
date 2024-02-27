@@ -21,13 +21,13 @@
 	<p class="mb-4 text-sm text-muted-foreground">This page could not be found</p>
 
 	<div class="mt-4 inline-flex gap-2">
-		<Button size="sm" variant="secondary" href="/">
+		<Button size="sm" variant="secondary" href="/" aria-label="Go to Home Page">
 			<Home class="mr-2 h-4 w-4" />
-			Home
+			<span>Home</span>
 		</Button>
-		<Button size="sm" variant="secondary" on:click={handleReload}>
+		<Button size="sm" variant="secondary" aria-label="Reload Page" on:click={handleReload}>
 			<RefreshCw class="mr-2 h-4 w-4" />
-			Reload
+			<span>Reload</span>
 		</Button>
 	</div>
 </div>

@@ -25,9 +25,15 @@
 
 		<div class="mt-4 flex flex-col items-center space-y-4">
 			<div class="flex flex-col items-stretch gap-4">
-				<Button size="sm" variant="secondary" class="w-40" on:click={handleNewParameter}>
+				<Button
+					size="sm"
+					variant="secondary"
+					aria-label="Add New Parameter"
+					class="w-40"
+					on:click={handleNewParameter}
+				>
 					<Plus class="mr-2 h-4 w-4" />
-					Add new
+					<span>Add New</span>
 				</Button>
 			</div>
 		</div>

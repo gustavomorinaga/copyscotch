@@ -247,14 +247,11 @@
 				<Tooltip.Trigger asChild let:builder>
 					<Form.Button
 						builders={[builder]}
+						aria-label={sending ? 'Cancel Request' : 'Send Request'}
 						class="flex-1 sm:w-24"
 						on:click={() => (action = sending ? 'cancel' : 'send')}
 					>
-						{#if sending}
-							Cancel
-						{:else}
-							Send
-						{/if}
+						<span>{sending ? 'Cancel' : 'Send'}</span>
 					</Form.Button>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">
@@ -274,11 +271,12 @@
 						<Form.Button
 							builders={[builder]}
 							variant="secondary"
+							aria-label="Save Request"
 							class="rounded-r-none"
 							on:click={() => (action = 'save')}
 						>
 							<Save class="mr-2 h-4 w-4" />
-							Save
+							<span>Save</span>
 						</Form.Button>
 					</Tooltip.Trigger>
 					<Tooltip.Content side="top" class="select-none">
@@ -299,9 +297,11 @@
 								builders={[popoverBuilder, tooltipBuilder]}
 								size="icon"
 								variant="secondary"
+								aria-label="Options"
 								class="rounded-l-none"
 							>
 								<ChevronDown class="h-4 w-4" />
+								<span class="sr-only">Options</span>
 							</Button>
 						</Tooltip.Trigger>
 						<Tooltip.Content side="top" class="select-none">

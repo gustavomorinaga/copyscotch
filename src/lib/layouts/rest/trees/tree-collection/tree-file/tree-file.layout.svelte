@@ -21,6 +21,7 @@
 <Button
 	size="sm"
 	variant="text"
+	aria-label="Open File"
 	class="group/file w-full flex-1 px-0"
 	on:click={(event) => {
 		event.stopPropagation();
@@ -75,11 +76,12 @@
 						builders={[dropdownBuilder, tooltipBuilder]}
 						size="icon"
 						variant="text"
+						aria-label="More Options"
 						class="h-6 w-6"
 						on:click={(event) => event.stopPropagation()}
 					>
 						<MoreVertical class="h-4 w-4" />
-						<span class="sr-only">More options</span>
+						<span class="sr-only">More Options</span>
 					</Button>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">

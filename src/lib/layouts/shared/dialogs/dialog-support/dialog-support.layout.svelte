@@ -35,6 +35,7 @@
 					href={option.href}
 					target={option.target ?? '_self'}
 					rel={option.rel}
+					aria-label={option.title}
 					class="h-fit shrink-0"
 				>
 					<div class="mr-4 inline-flex items-center self-start">

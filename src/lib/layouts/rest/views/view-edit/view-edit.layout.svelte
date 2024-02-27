@@ -123,9 +123,10 @@
 										builders={[builder]}
 										size="icon"
 										variant="text"
-										class="relative h-6 w-6"
 										role="button"
 										tabindex={-1}
+										aria-label={tab.dirty ? 'Close Tab - Unsaved Changes' : 'Close Tab'}
+										class="relative h-6 w-6"
 										on:click={(event) => handleCloseTab(event, tabID)}
 										on:keydown={(event) => handleCloseTab(event, tabID)}
 									>
@@ -139,11 +140,8 @@
 										{/if}
 
 										<X class="h-4 w-4 {tab.dirty && 'invisible group-hover/tab-trigger:visible'}" />
-										<span role="presentation" class="sr-only">
-											Close Tab
-											{#if tab.dirty}
-												- Unsaved Changes
-											{/if}
+										<span class="sr-only">
+											{tab.dirty ? 'Close Tab - Unsaved Changes' : 'Close Tab'}
 										</span>
 									</Button>
 								</Tooltip.Trigger>
@@ -163,13 +161,14 @@
 					builders={[builder]}
 					size="icon"
 					variant="ghost"
-					class="mx-3 h-8 w-8 shrink-0"
 					role="button"
 					tabindex={0}
+					aria-label="New Tab"
+					class="mx-3 h-8 w-8 shrink-0"
 					on:click={() => tabContext.add()}
 				>
 					<Plus class="h-4 w-4" />
-					<span role="presentation" class="sr-only">New Tab</span>
+					<span class="sr-only">New Tab</span>
 				</Button>
 			</Tooltip.Trigger>
 			<Tooltip.Content side="top" class="select-none">

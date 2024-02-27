@@ -77,9 +77,9 @@
 				</Form.Control>
 			</Form.Field>
 
-			<Form.Button size="sm" variant="ghost">
+			<Form.Button size="sm" variant="ghost" aria-label="Save As">
 				<FolderPlus class="mr-2 h-4 w-4" />
-				Save As
+				<span>Save As</span>
 			</Form.Button>
 		</form>
 	</Popover.Content>

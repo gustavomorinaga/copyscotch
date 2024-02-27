@@ -42,6 +42,7 @@
 	<Button
 		size="icon"
 		variant="text"
+		aria-label="Clean Search"
 		class="absolute inset-y-auto right-2 h-6 w-6 peer-focus-visible/search:z-20 disabled:invisible"
 		disabled={!value}
 		on:click={() => (value = '')}

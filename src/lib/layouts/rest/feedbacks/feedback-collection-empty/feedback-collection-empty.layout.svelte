@@ -29,14 +29,20 @@
 		<div class="mt-4 flex flex-col items-center space-y-4">
 			<p class="select-none text-sm text-muted-foreground">Import or create a collection</p>
 			<div class="flex flex-col items-stretch gap-4">
-				<Button class="w-40" disabled>
+				<Button aria-label="Import Collection" class="w-40" disabled>
 					<FolderDown class="mr-2 h-4 w-4" />
-					Import
+					<span>Import</span>
 				</Button>
 
-				<Button size="sm" variant="secondary" class="w-40" on:click={handleNewCollection}>
+				<Button
+					size="sm"
+					variant="secondary"
+					aria-label="Add New Collection"
+					class="w-40"
+					on:click={handleNewCollection}
+				>
 					<Plus class="mr-2 h-4 w-4" />
-					Add new
+					<span>Add New</span>
 				</Button>
 			</div>
 		</div>

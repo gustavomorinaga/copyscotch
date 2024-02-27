@@ -71,6 +71,7 @@
 					builders={[builder]}
 					size="sm"
 					variant="text"
+					aria-label="Copy Response"
 					class="rounded-none"
 					disabled={clipboardState === 'copied'}
 					on:click={handleClipboard}

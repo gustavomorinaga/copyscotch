@@ -122,16 +122,22 @@
 		</form>
 
 		<Dialog.Footer>
-			<Form.Button variant="ghost" form={formID} on:click={() => (action = 'cancel')}>
-				Cancel
+			<Form.Button
+				variant="ghost"
+				form={formID}
+				aria-label="Cancel"
+				on:click={() => (action = 'cancel')}
+			>
+				<span>Cancel</span>
 			</Form.Button>
 			<Form.Button
 				variant="default"
 				form={formID}
+				aria-label="Save"
 				disabled={isInvalid}
 				on:click={() => (action = 'save')}
 			>
-				Save
+				<span>Save</span>
 			</Form.Button>
 		</Dialog.Footer>
 	</Dialog.Content>
