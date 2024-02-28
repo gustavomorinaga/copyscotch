@@ -54,7 +54,7 @@
 					data-expanded={$settingsContext.navigation === 'expand'}
 					aria-label="{title} Page"
 					aria-current={isCurrentRoute ? 'page' : undefined}
-					class="relative h-14 w-14 flex-col text-muted-foreground after:pointer-events-none after:absolute after:inset-0 after:w-[2px] after:shrink-0 after:bg-transparent aria-[current=page]:bg-muted aria-[current=page]:text-accent-foreground aria-[current=page]:after:bg-primary aria-[current=page]:after:[view-transition-name:active-page] group-aria-[orientation=horizontal]/sidenav-routes:w-full group-aria-[orientation=horizontal]/sidenav-routes:after:top-auto group-aria-[orientation=horizontal]/sidenav-routes:after:h-[6px] group-aria-[orientation=horizontal]/sidenav-routes:after:w-full data-[expanded=true]:h-20 data-[expanded=true]:w-24 hover:bg-muted"
+					class="relative h-14 w-14 flex-col text-muted-foreground after:pointer-events-none after:absolute after:inset-0 after:w-[2px] after:shrink-0 after:bg-transparent aria-[current=page]:bg-muted aria-[current=page]:text-accent-foreground aria-[current=page]:after:bg-primary aria-[current=page]:after:[view-transition-name:active-page] group-aria-[orientation=horizontal]/sidenav-routes:w-full group-aria-[orientation=horizontal]/sidenav-routes:after:top-auto group-aria-[orientation=horizontal]/sidenav-routes:after:h-[2px] group-aria-[orientation=horizontal]/sidenav-routes:after:w-full data-[expanded=true]:h-20 data-[expanded=true]:w-24 hover:bg-muted"
 				>
 					<svelte:component this={icon} class="h-5 w-5" />
 					<span class="mt-2 text-xs" class:sr-only={$settingsContext.navigation === 'collapse'}>
