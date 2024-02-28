@@ -103,9 +103,12 @@
 				builders={[builder]}
 				size="sm"
 				variant="text"
-				data-selected={selected}
-				aria-label={selected ? 'Toggle Folder (Selected)' : 'Toggle Folder'}
-				class="flex flex-1 items-center justify-center px-0 data-[selected=true]:text-success data-[selected=true]:hover:text-success"
+				role="treeitem"
+				aria-label={folder.name}
+				aria-selected={selected}
+				aria-expanded={open}
+				tabindex={selected ? 0 : -1}
+				class="flex flex-1 items-center justify-center px-0 aria-[selected=true]:text-success aria-[selected=true]:hover:text-success"
 				on:click={handleSelect}
 			>
 				<div

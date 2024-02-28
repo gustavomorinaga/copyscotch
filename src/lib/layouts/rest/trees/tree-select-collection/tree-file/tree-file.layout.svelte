@@ -32,8 +32,10 @@
 <Button
 	size="sm"
 	variant="text"
-	data-selected={selected}
-	aria-label="Select File"
+	role="treeitem"
+	aria-label={file.name}
+	aria-selected={selected}
+	tabindex={selected ? 0 : -1}
 	class="group/file w-full flex-1 px-0"
 	on:click={handleSelect}
 >
@@ -46,7 +48,7 @@
 		}}
 	>
 		<span
-			class="pointer-events-none flex w-16 items-center justify-center truncate px-2 text-tiny group-data-[selected=true]/file:!text-success"
+			class="pointer-events-none flex w-16 items-center justify-center truncate px-2 text-tiny group-aria-[selected=true]/file:!text-success"
 			style="color: hsl(var(--method-{file.method.toLowerCase()}-color) / var(--tw-text-opacity))"
 		>
 			{#if selected}
@@ -55,7 +57,7 @@
 				{file.method}
 			{/if}
 		</span>
-		<span class="flex flex-1 items-center py-2 pr-2 group-data-[selected=true]/file:!text-success">
+		<span class="flex flex-1 items-center py-2 pr-2 group-aria-[selected=true]/file:!text-success">
 			<span class="truncate text-sm">{file.name}</span>
 		</span>
 	</div>

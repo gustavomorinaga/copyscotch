@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { getRESTTabContext } from '$lib/contexts';
-	import { DropdownMenuRequestOptions } from '$lib/layouts/rest';
+	import { DropdownMenuRequestOptions, treeCollectionStore as treeStore } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { Dot, MoreVertical } from 'lucide-svelte';
@@ -16,17 +16,25 @@
 	const tabContext = getRESTTabContext();
 
 	$: current = $tabContext.current === file.id;
+	$: selected = $treeStore.selected === file.id;
+
+	function handleOpenFile(event: MouseEvent) {
+		event.stopPropagation();
+		$treeStore.selected = file.id;
+		tabContext.get(file.id) ? tabContext.setCurrent(file.id) : tabContext.add(file);
+	}
 </script>
 
 <Button
 	size="sm"
 	variant="text"
-	aria-label="Open File"
+	role="treeitem"
+	aria-label={file.name}
+	aria-current={current}
+	aria-selected={selected}
+	tabindex={selected ? 0 : -1}
 	class="group/file w-full flex-1 px-0"
-	on:click={(event) => {
-		event.stopPropagation();
-		tabContext.get(file.id) ? tabContext.setCurrent(file.id) : tabContext.add(file);
-	}}
+	on:click={handleOpenFile}
 >
 	<div
 		role="presentation"
@@ -44,6 +52,7 @@
 		</span>
 		<span class="flex flex-1 items-center py-2 pr-2">
 			<span class="truncate text-sm">{file.name}</span>
+
 			{#if current}
 				<div
 					role="presentation"

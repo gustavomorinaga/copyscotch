@@ -23,6 +23,6 @@
 	});
 </script>
 
-<div class="-ml-2 flex h-full flex-1 flex-col p-2">
+<div role="tree" class="-ml-2 flex h-full flex-1 flex-col p-2">
 	<TreeWrapper type="collection" {folders} />
 </div>

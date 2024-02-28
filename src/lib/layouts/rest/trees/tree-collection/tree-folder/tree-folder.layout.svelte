@@ -66,11 +66,13 @@
 	export let open: $$Props['open'] = false;
 	let openOptions: boolean = false;
 
+	$: selected = $treeStore.selected === folder.id;
 	$: status = (open ? 'open' : 'closed') as TFolderStatus;
 	$: if ($treeStore.collapse) open = false;
 	$: if ($treeStore.expand) open = true;
 
-	function onOpenChange() {
+	function onOpenChange(open: boolean) {
+		$treeStore.selected = open ? folder.id : undefined;
 		if ($treeStore.expand) $treeStore.expand = false;
 		if ($treeStore.collapse) $treeStore.collapse = false;
 	}
@@ -83,8 +85,12 @@
 				builders={[builder]}
 				size="sm"
 				variant="text"
-				aria-label="Toggle Folder"
-				class="flex flex-1 items-center justify-center px-0 data-[selected=true]:text-success data-[selected=true]:hover:text-success"
+				role="treeitem"
+				aria-label={folder.name}
+				aria-selected={selected}
+				aria-expanded={open}
+				tabindex={selected ? 0 : -1}
+				class="flex flex-1 items-center justify-center px-0"
 			>
 				<div
 					role="presentation"
