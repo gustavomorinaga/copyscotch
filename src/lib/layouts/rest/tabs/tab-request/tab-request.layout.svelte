@@ -7,6 +7,7 @@
 		type TRESTTabInfer,
 		type TKeyValueMapped
 	} from '$lib/validators';
+	import { fetcher } from '$lib/functions';
 	import { PopoverSaveOptions, dialogSaveAsStore as dialogStore } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
@@ -17,11 +18,10 @@
 	import * as Select from '$lib/components/ui/select';
 	import * as Form from '$lib/components/ui/form';
 	import * as Tabs from '$lib/components/ui/tabs';
-	import { REGEXES, RESPONSE_TYPES, SHORTCUTS, UNICODES } from '$lib/maps';
+	import { REGEXES, SHORTCUTS, UNICODES } from '$lib/maps';
 	import { ChevronDown, Save } from 'lucide-svelte';
 	import { defaults, superForm, type ChangeEvent, type SuperForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import { fetcher } from '$lib/functions';
 
 	type TFormAction = 'send' | 'cancel' | 'save';
 	type TTab = {
@@ -38,8 +38,14 @@
 			label: 'parameters',
 			content: import('$lib/layouts/rest/tabs/tab-params'),
 			disabled: false
+		},
+		{
+			value: 'headers',
+			label: 'headers',
+			content: import('$lib/layouts/rest/tabs/tab-headers'),
+			disabled: false
 		}
-		// TODO - Add 'body', 'headers', 'authorization' tabs
+		// TODO - Add 'body' and 'authorization' tabs
 	] as const satisfies Array<TTab>;
 </script>
 
@@ -125,50 +131,74 @@
 
 	function handleFormSubmit() {
 		const ACTIONS: Record<TFormAction, () => void> = {
-			send: () => {
-				tabContext.setResult(tabID, { response: undefined, sending: true });
-
-				const url = new URL($formData.url);
-				const params = $formData.params
-					.filter((param) => param.active && param.key)
-					.reduce((acc, param) => ({ ...acc, [param.key]: param.value }), {} as TKeyValueMapped);
-				url.search = new URLSearchParams(params).toString();
-
-				fetcher(url, { method: $formData.method, signal: controller.signal })
-					.then((response) => tabContext.setResult(tabID, { response }))
-					.catch((error) => {
-						const isDOMException = error instanceof DOMException;
-						tabContext.setResult(tabID, { response: isDOMException ? undefined : error });
-					})
-					.finally(() => tabContext.setResult(tabID, { sending: false }));
-			},
-			cancel: async () => {
-				controller.abort();
-				controller = new AbortController();
-			},
-			save: () => {
-				const data = $formData as TRESTRequestInfer;
-				const found = restContext.getFile(tabID);
-
-				const updateTab = () => {
-					tabContext.update(tabID, $formData);
-					tabContext.setDirty([tabID], false);
-				};
-
-				if (found) {
-					restContext.updateFile(data);
-					updateTab();
-				} else {
-					dialogStore.set({
-						open: true,
-						request: data,
-						onSave: () => updateTab()
-					});
-				}
-			}
+			send: handleSend,
+			cancel: handleCancel,
+			save: handleSave
 		};
 
 		return ACTIONS[action]();
+	}
+
+	function handleSend() {
+		tabContext.setResult(tabID, { response: undefined, sending: true });
+
+		const url = new URL($formData.url);
+		let params: TKeyValueMapped = {};
+		let headers: TKeyValueMapped = {};
+
+		const activeParams = $formData.params.filter((param) => param.active && param.key);
+		const activeHeaders = $formData.headers.filter((header) => header.active && header.key);
+		const hasActiveParams = activeParams.length > 0;
+		const hasActiveHeaders = activeHeaders.length > 0;
+
+		if (hasActiveParams) {
+			params = activeParams.reduce(
+				(acc, param) => ({ ...acc, [param.key]: param.value }),
+				{} as TKeyValueMapped
+			);
+			url.search = new URLSearchParams(params).toString();
+		}
+
+		if (hasActiveHeaders) {
+			headers = activeHeaders.reduce(
+				(acc, header) => ({ ...acc, [header.key]: header.value }),
+				{} as TKeyValueMapped
+			);
+		}
+
+		fetcher(url, { method: $formData.method, headers, signal: controller.signal })
+			.then((response) => tabContext.setResult(tabID, { response }))
+			.catch((error) => {
+				const isDOMException = error instanceof DOMException;
+				tabContext.setResult(tabID, { response: isDOMException ? undefined : error });
+			})
+			.finally(() => tabContext.setResult(tabID, { sending: false }));
+	}
+
+	function handleCancel() {
+		controller.abort();
+		controller = new AbortController();
+	}
+
+	function handleSave() {
+		const data = $formData as TRESTRequestInfer;
+		const found = restContext.getFile(tabID);
+
+		const updateTab = () => {
+			tabContext.update(tabID, $formData);
+			tabContext.setDirty([tabID], false);
+		};
+
+		if (found) {
+			restContext.updateFile(data);
+			updateTab();
+		} else {
+			dialogStore.set({
+				open: true,
+				request: data,
+				onSave: () => updateTab()
+			});
+		}
 	}
 </script>
 
@@ -289,7 +319,7 @@
 	</Form.Join>
 
 	<Form.Join>
-		<Tabs.Root class="flex flex-1 flex-col">
+		<Tabs.Root value={currentTab} class="flex flex-1 flex-col">
 			<div class="sticky top-[7.5rem] flex w-full flex-1 flex-col lg:top-[4.5rem]">
 				<Tabs.List class="flex flex-1 gap-8 bg-background px-4 py-0">
 					{#each LAZY_TABS as { value, label, disabled }}

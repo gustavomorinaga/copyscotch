@@ -3,6 +3,7 @@ import { getContext, setContext } from 'svelte';
 import { get, writable, type StartStopNotifier, type Writable } from 'svelte/store';
 import { generateUUID } from '$lib/utils';
 import type { TRESTTabInfer } from '$lib/validators';
+import type { TResponse } from '$lib/ts';
 
 export type TRESTTabContext = Writable<TRESTTabData> & TRESTTabActions;
 export type TRESTTabData = TRESTTabDataPersist & TRESTTabDataTemp;
@@ -31,14 +32,9 @@ export type TRESTTabActions = {
 		mode: 'normal' | 'close-others' | 'close-all';
 	}) => void;
 };
-export type TRESTResult = Pick<TRESTTabInfer['context'], 'id'> & {
-	response: Pick<Response, 'ok' | 'status' | 'headers'> & {
-		blob: Blob;
-		raw: string;
-		time: number;
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		json?: any;
-	};
+export type TRESTResult = {
+	id: TRESTTabInfer['context']['id'];
+	response: TResponse;
 	sending: boolean;
 };
 

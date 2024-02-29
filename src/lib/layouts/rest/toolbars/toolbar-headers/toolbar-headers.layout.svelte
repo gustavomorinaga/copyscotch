@@ -1,0 +1,78 @@
+<script lang="ts" context="module">
+	import { getRESTTabContext } from '$lib/contexts';
+	import { Button } from '$lib/components/ui/button';
+	import { Separator } from '$lib/components/ui/separator';
+	import * as Tooltip from '$lib/components/ui/tooltip';
+	import { DEFAULT_KEY_VALUE, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
+	import { Plus, Trash2 } from 'lucide-svelte';
+	import type { SuperForm } from 'sveltekit-superforms';
+</script>
+
+<script lang="ts">
+	type $$Props = { tabID: TRESTTabInfer['id']; form: SuperForm<TRESTRequestInfer> };
+
+	export let tabID: $$Props['tabID'];
+	export let form: $$Props['form'];
+
+	const tabContext = getRESTTabContext();
+
+	$: ({ form: formData } = form);
+
+	function handleClearAll() {
+		$formData.headers = [];
+	}
+
+	function handleAddNew() {
+		tabContext.update(tabID, { headers: [...$formData.headers, DEFAULT_KEY_VALUE] });
+	}
+</script>
+
+<div class="sticky top-[9.825rem] z-10 flex shrink-0 flex-col bg-background lg:top-[6.825rem]">
+	<div class="flex h-10 w-full flex-1 items-center justify-between overflow-x-auto pl-4">
+		<div class="flex">
+			<span class="select-none truncate text-sm font-semibold text-muted-foreground">
+				Header List
+			</span>
+		</div>
+
+		<div class="flex">
+			<Tooltip.Root>
+				<Tooltip.Trigger asChild let:builder>
+					<Button
+						builders={[builder]}
+						size="icon"
+						variant="text"
+						aria-label="Clear All Headers"
+						on:click={handleClearAll}
+					>
+						<Trash2 class="h-4 w-4" />
+						<span class="sr-only">Clear All</span>
+					</Button>
+				</Tooltip.Trigger>
+				<Tooltip.Content side="top" class="select-none">
+					<span>Clear All</span>
+				</Tooltip.Content>
+			</Tooltip.Root>
+
+			<Tooltip.Root>
+				<Tooltip.Trigger asChild let:builder>
+					<Button
+						builders={[builder]}
+						size="icon"
+						variant="text"
+						aria-label="Add New Header"
+						on:click={handleAddNew}
+					>
+						<Plus class="h-4 w-4" />
+						<span class="sr-only">Add New</span>
+					</Button>
+				</Tooltip.Trigger>
+				<Tooltip.Content side="top" class="select-none">
+					<span>Add New</span>
+				</Tooltip.Content>
+			</Tooltip.Root>
+		</div>
+	</div>
+
+	<Separator orientation="horizontal" />
+</div>

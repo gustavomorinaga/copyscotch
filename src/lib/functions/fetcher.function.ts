@@ -1,13 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { RESPONSE_TYPES } from '$lib/maps';
+import type { TResponse } from '$lib/ts';
 
-type TResponse = Pick<Response, 'ok' | 'status' | 'headers'> & {
-	blob: Blob;
-	raw: string;
-	time: number;
-	json?: any;
-};
 type TResponseType = (typeof RESPONSE_TYPES)[number];
 
 export async function fetcher(url: RequestInfo | URL, init?: RequestInit) {

@@ -15,7 +15,7 @@
 	$: ({ form: formData } = form);
 
 	function handleAddNew() {
-		$formData.params = [...$formData.params, DEFAULT_KEY_VALUE];
+		$formData.headers = [...$formData.headers, DEFAULT_KEY_VALUE];
 	}
 </script>
 
@@ -23,13 +23,13 @@
 	<Center>
 		<div class="mt-2 flex max-w-sm select-none flex-col items-center">
 			<img
-				src="/images/states/{$mode}/add_files.svg"
-				alt="Parameters are empty"
+				src="/images/states/{$mode}/add_category.svg"
+				alt="Headers are empty"
 				loading="lazy"
 				class="inline-flex h-16 w-16 flex-col object-contain object-center"
 			/>
 			<span class="mt-2 max-w-sm whitespace-normal text-center text-tiny text-muted-foreground">
-				This request does not have any parameters
+				This request does not have any headers
 			</span>
 		</div>
 
@@ -38,7 +38,7 @@
 				<Button
 					size="sm"
 					variant="secondary"
-					aria-label="Add New Parameter"
+					aria-label="Add New Header"
 					class="w-40"
 					on:click={handleAddNew}
 				>
