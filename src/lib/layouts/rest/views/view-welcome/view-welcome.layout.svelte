@@ -18,7 +18,7 @@
 	<Center>
 		<Button size="sm" variant="outline" aria-label="New Request" on:click={() => tabContext.add()}>
 			<Plus class="mr-2 h-4 w-4" />
-			<span>New Request</span>
+			<span class="select-none">New Request</span>
 		</Button>
 	</Center>
 </div>

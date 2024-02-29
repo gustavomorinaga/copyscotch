@@ -114,7 +114,7 @@
 						on:click={handleNavigationToggle}
 					>
 						<svelte:component this={navigationProps.icon} class="h-5 w-5" />
-						<span class="sr-only">{navigationProps.title}</span>
+						<span class="sr-only select-none">{navigationProps.title}</span>
 					</Button>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">
@@ -135,7 +135,7 @@
 						on:click={handleLayoutToggle}
 					>
 						<svelte:component this={layoutProps.icon} class="h-5 w-5" />
-						<span class="sr-only">{layoutProps.title}</span>
+						<span class="sr-only select-none">{layoutProps.title}</span>
 					</Button>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">
@@ -154,7 +154,7 @@
 						on:click={handleSidebarToggle}
 					>
 						<svelte:component this={sidebarProps.icon} class="h-5 w-5" />
-						<span class="sr-only">{sidebarProps.title}</span>
+						<span class="sr-only select-none">{sidebarProps.title}</span>
 					</Button>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">

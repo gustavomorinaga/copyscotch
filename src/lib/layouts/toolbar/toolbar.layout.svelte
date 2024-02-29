@@ -24,7 +24,7 @@
 			aria-current={isRootPage ? 'page' : undefined}
 			class="font-bold uppercase"
 		>
-			<span>Copyscotch</span>
+			<span class="select-none">Copyscotch</span>
 		</Button>
 	</div>
 
@@ -40,7 +40,7 @@
 							aria-label="Support Options"
 						>
 							<LifeBuoy class="h-5 w-5" />
-							<span class="sr-only">Support</span>
+							<span class="sr-only select-none">Support</span>
 						</Button>
 					</Tooltip.Trigger>
 					<Tooltip.Content side="bottom" class="select-none">
@@ -54,7 +54,7 @@
 	<!-- <div class="col-span-2 flex items-center justify-between gap-x-2">
 		<Button size="sm" variant="success" aria-label="Save My Workspace" class="ml-auto" disabled>
 			<UploadCloud class="w-4 h-4 mr-2" />
-			Save My Workspace
+			<span class="select-none">Save My Workspace</span>
 		</Button>
 	</div> -->
 </header>

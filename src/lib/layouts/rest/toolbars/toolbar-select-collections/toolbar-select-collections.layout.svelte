@@ -30,7 +30,7 @@
 			on:click={handleNewCollection}
 		>
 			<Plus class="mr-2 h-4 w-4" />
-			New
+			<span class="select-none">New</span>
 		</Button>
 	</div>
 
@@ -47,7 +47,7 @@
 					on:click={handleCollapseAll}
 				>
 					<MinusSquare class="h-4 w-4" />
-					<span class="sr-only">Collapse All</span>
+					<span class="sr-only select-none">Collapse All</span>
 				</Button>
 			</Tooltip.Trigger>
 			<Tooltip.Content side="top" class="select-none">

@@ -48,6 +48,6 @@
 		on:click={() => (value = '')}
 	>
 		<X class="h-4 w-4" />
-		<span class="sr-only">Clean</span>
+		<span class="sr-only select-none">Clean</span>
 	</Button>
 </div>

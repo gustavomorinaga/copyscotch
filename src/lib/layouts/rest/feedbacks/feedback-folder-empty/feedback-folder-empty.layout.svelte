@@ -47,7 +47,7 @@
 					on:click={handleNewFolder}
 				>
 					<Plus class="mr-2 h-4 w-4" />
-					<span>Add New</span>
+					<span class="select-none">Add New</span>
 				</Button>
 			</div>
 		</div>

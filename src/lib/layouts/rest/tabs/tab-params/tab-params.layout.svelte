@@ -89,7 +89,7 @@
 							on:click={() => handleRemove(index)}
 						>
 							<Trash class="h-5 w-5" />
-							<span class="sr-only">Remove</span>
+							<span class="sr-only select-none">Remove</span>
 						</Button>
 					</div>
 				</Form.Join>

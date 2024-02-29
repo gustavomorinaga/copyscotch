@@ -140,7 +140,7 @@
 										{/if}
 
 										<X class="h-4 w-4 {tab.dirty && 'invisible group-hover/tab-trigger:visible'}" />
-										<span class="sr-only">
+										<span class="sr-only select-none">
 											{tab.dirty ? 'Close Tab - Unsaved Changes' : 'Close Tab'}
 										</span>
 									</Button>
@@ -168,7 +168,7 @@
 					on:click={() => tabContext.add()}
 				>
 					<Plus class="h-4 w-4" />
-					<span class="sr-only">New Tab</span>
+					<span class="sr-only select-none">New Tab</span>
 				</Button>
 			</Tooltip.Trigger>
 			<Tooltip.Content side="top" class="select-none">

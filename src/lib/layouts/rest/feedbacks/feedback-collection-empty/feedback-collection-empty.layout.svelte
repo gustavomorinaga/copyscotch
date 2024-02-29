@@ -32,7 +32,7 @@
 			<div class="flex flex-col items-stretch gap-4">
 				<Button aria-label="Import Collection" class="w-40" disabled>
 					<FolderDown class="mr-2 h-4 w-4" />
-					<span>Import</span>
+					<span class="select-none">Import</span>
 				</Button>
 
 				<Button
@@ -43,7 +43,7 @@
 					on:click={handleNewCollection}
 				>
 					<Plus class="mr-2 h-4 w-4" />
-					<span>Add New</span>
+					<span class="select-none">Add New</span>
 				</Button>
 			</div>
 		</div>

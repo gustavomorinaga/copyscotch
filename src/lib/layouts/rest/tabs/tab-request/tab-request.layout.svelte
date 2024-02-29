@@ -276,7 +276,7 @@
 						class="flex-1 sm:w-24"
 						on:click={() => (action = sending ? 'cancel' : 'send')}
 					>
-						<span>{sending ? 'Cancel' : 'Send'}</span>
+						<span class="select-none capitalize">{sending ? 'Cancel' : 'Send'}</span>
 					</Form.Button>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">
@@ -301,7 +301,7 @@
 							on:click={() => (action = 'save')}
 						>
 							<Save class="mr-2 h-4 w-4" />
-							<span>Save</span>
+							<span class="select-none">Save</span>
 						</Form.Button>
 					</Tooltip.Trigger>
 					<Tooltip.Content side="top" class="select-none">
@@ -326,7 +326,7 @@
 								class="rounded-l-none"
 							>
 								<ChevronDown class="h-4 w-4" />
-								<span class="sr-only">Options</span>
+								<span class="sr-only select-none">Options</span>
 							</Button>
 						</Tooltip.Trigger>
 						<Tooltip.Content side="top" class="select-none">

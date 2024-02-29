@@ -117,7 +117,7 @@
 				>
 					<svelte:component this={ICONS[status]} class="mx-4 h-5 w-5 shrink-0" />
 					<span class="flex flex-1 py-2 pr-2">
-						<span class="truncate text-sm">{folder.name}</span>
+						<span class="select-none truncate text-sm">{folder.name}</span>
 					</span>
 				</div>
 			</Button>
@@ -138,7 +138,7 @@
 								}}
 							>
 								<svelte:component this={option.icon} class="h-4 w-4" />
-								<span class="sr-only">{option.title}</span>
+								<span class="sr-only select-none">{option.title}</span>
 							</Button>
 						</Tooltip.Trigger>
 						<Tooltip.Content side="top" class="select-none">
@@ -164,7 +164,7 @@
 								on:click={(event) => event.stopPropagation()}
 							>
 								<MoreVertical class="h-4 w-4" />
-								<span class="sr-only">More Options</span>
+								<span class="sr-only select-none">More Options</span>
 							</Button>
 						</Tooltip.Trigger>
 						<Tooltip.Content side="top" class="select-none">

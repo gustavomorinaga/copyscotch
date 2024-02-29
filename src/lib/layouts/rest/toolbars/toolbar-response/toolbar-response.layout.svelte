@@ -64,7 +64,7 @@
 			bind:pressed={$settingsContext.lineWrapping}
 		>
 			<WrapText class="h-4 w-4" />
-			<span class="sr-only">Line Wrapping</span>
+			<span class="sr-only select-none">Line Wrapping</span>
 		</Toggle>
 
 		<Tooltip.Root closeOnPointerDown={false}>
@@ -79,7 +79,7 @@
 					on:click={handleClipboard}
 				>
 					<svelte:component this={CLIPBOARD_STATES[clipboardState].icon} class="h-4 w-4" />
-					<span class="sr-only">{CLIPBOARD_STATES[clipboardState].label}</span>
+					<span class="sr-only select-none">{CLIPBOARD_STATES[clipboardState].label}</span>
 				</Button>
 			</Tooltip.Trigger>
 			<Tooltip.Content side="top" class="select-none">

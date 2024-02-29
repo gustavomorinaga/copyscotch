@@ -129,7 +129,7 @@
 				aria-label="Cancel"
 				on:click={() => (action = 'cancel')}
 			>
-				<span>Cancel</span>
+				<span class="select-none">Cancel</span>
 			</Form.Button>
 			<Form.Button
 				variant="default"
@@ -138,7 +138,7 @@
 				disabled={isInvalid}
 				on:click={() => (action = 'save')}
 			>
-				<span>Save</span>
+				<span class="select-none">Save</span>
 			</Form.Button>
 		</Dialog.Footer>
 	</Dialog.Content>

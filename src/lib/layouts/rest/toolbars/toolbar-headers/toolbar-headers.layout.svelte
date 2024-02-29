@@ -49,7 +49,7 @@
 						on:click={handleClearAll}
 					>
 						<Trash2 class="h-4 w-4" />
-						<span class="sr-only">Clear All</span>
+						<span class="sr-only select-none">Clear All</span>
 					</Button>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">
@@ -67,7 +67,7 @@
 						on:click={handleAddNew}
 					>
 						<Plus class="h-4 w-4" />
-						<span class="sr-only">Add New</span>
+						<span class="sr-only select-none">Add New</span>
 					</Button>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">

@@ -24,11 +24,11 @@
 	<div class="mt-4 inline-flex gap-2">
 		<Button size="sm" variant="secondary" href="/" aria-label="Go to Home Page">
 			<Home class="mr-2 h-4 w-4" />
-			<span>Home</span>
+			<span class="select-none">Home</span>
 		</Button>
 		<Button size="sm" variant="secondary" aria-label="Reload Page" on:click={handleReload}>
 			<RefreshCw class="mr-2 h-4 w-4" />
-			<span>Reload</span>
+			<span class="select-none">Reload</span>
 		</Button>
 	</div>
 </div>

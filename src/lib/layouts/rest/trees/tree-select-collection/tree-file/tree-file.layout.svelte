@@ -57,7 +57,7 @@
 			{/if}
 		</span>
 		<span class="flex flex-1 items-center py-2 pr-2 group-aria-[selected=true]/file:!text-success">
-			<span class="truncate text-sm">{file.name}</span>
+			<span class="select-none truncate text-sm">{file.name}</span>
 		</span>
 	</div>
 
@@ -78,7 +78,7 @@
 						on:click={(event) => event.stopPropagation()}
 					>
 						<MoreVertical class="h-4 w-4" />
-						<span class="sr-only">More Options</span>
+						<span class="sr-only select-none">More Options</span>
 					</Button>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">

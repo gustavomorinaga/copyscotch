@@ -42,7 +42,7 @@
 					<div class="mr-4 inline-flex items-center self-start">
 						<svelte:component this={option.icon} class="mt-0.5 h-5 w-5 text-primary" />
 					</div>
-					<div class="inline-flex flex-1 flex-col items-start truncate">
+					<div class="inline-flex flex-1 select-none flex-col items-start truncate">
 						<span class="max-w-[16rem] truncate font-semibold">{option.title}</span>
 						<p class="text-left text-muted-foreground">{option.description}</p>
 					</div>

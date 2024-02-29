@@ -53,7 +53,7 @@
 			{file.method}
 		</span>
 		<span class="flex flex-1 items-center py-2 pr-2">
-			<span class="truncate text-sm">{file.name}</span>
+			<span class="select-none truncate text-sm">{file.name}</span>
 
 			{#if current}
 				<div
@@ -69,7 +69,7 @@
 						aria-hidden="true"
 						focusable="false"
 					/>
-					<span class="sr-only">Current Tab</span>
+					<span class="sr-only select-none">Current Tab</span>
 				</div>
 			{/if}
 		</span>
