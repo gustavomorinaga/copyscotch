@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import { onMount } from 'svelte';
 	import { getRESTTabContext } from '$lib/contexts';
-	import { FeedbackHeadersEmpty, ToolbarHeaders } from '$lib/layouts/rest';
+	import { ToolbarHeaders } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
@@ -9,6 +9,8 @@
 	import { DEFAULT_KEY_VALUE, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
 	import { Trash } from 'lucide-svelte';
 	import type { SuperForm } from 'sveltekit-superforms';
+
+	const LAZY_COMPONENTS = [import('$lib/layouts/rest/feedbacks/feedback-headers-empty')] as const;
 </script>
 
 <script lang="ts">
@@ -97,5 +99,7 @@
 		{/each}
 	</ul>
 {:else}
-	<FeedbackHeadersEmpty {form} />
+	{#await Promise.all(LAZY_COMPONENTS) then [{ FeedbackHeadersEmpty }]}
+		<FeedbackHeadersEmpty {form} />
+	{/await}
 {/if}

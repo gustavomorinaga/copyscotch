@@ -204,8 +204,14 @@
 
 <svelte:window on:keydown={handleKeydown} />
 
-<form id={formID} method="POST" action="?/{action}" class="flex w-full flex-1 flex-col" use:enhance>
-	<Form.Join class="sticky top-0 z-20 flex flex-wrap gap-2 bg-background p-4">
+<form
+	id={formID}
+	method="POST"
+	action="?/{action}"
+	class="relative flex h-full w-full flex-1 flex-col"
+	use:enhance
+>
+	<Form.Join class="sticky top-0 z-20 flex-initial shrink-0 flex-wrap gap-2 bg-background p-4">
 		<Form.Join class="min-w-[12rem] flex-auto whitespace-nowrap lg:flex-1">
 			<Form.Field {form} name="method" class="w-32">
 				<Form.Control let:attrs>
@@ -318,10 +324,10 @@
 		</Form.Join>
 	</Form.Join>
 
-	<Form.Join>
+	<Form.Join class="h-full">
 		<Tabs.Root value={currentTab} class="flex flex-1 flex-col">
-			<div class="sticky top-[7.5rem] flex w-full flex-1 flex-col lg:top-[4.5rem]">
-				<Tabs.List class="flex flex-1 gap-8 bg-background px-4 py-0">
+			<div class="sticky top-[7.5rem] flex shrink-0 flex-col lg:top-[4.5rem]">
+				<Tabs.List class="flex !h-auto shrink-0 gap-8 bg-background px-4 py-0">
 					{#each LAZY_TABS as { value, label, disabled }}
 						<Tabs.Trigger
 							{value}
@@ -339,7 +345,7 @@
 			</div>
 
 			{#each LAZY_TABS as { value, content }}
-				<Tabs.Content {value} class="m-0 w-full">
+				<Tabs.Content {value} class="m-0 h-full w-full">
 					{#await content}
 						<Spinner />
 					{:then module}

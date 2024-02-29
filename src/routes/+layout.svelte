@@ -21,10 +21,10 @@
 <Wrapper class="overflow-hidden">
 	<Toolbar />
 
-	<main class="flex flex-auto flex-col">
-		{#await executeParallel([setSettingsContext])}
-			<Spinner />
-		{:then}
+	{#await executeParallel([setSettingsContext])}
+		<Spinner />
+	{:then}
+		<main class="flex flex-auto flex-col">
 			<Sidenav.Root
 				orientation={isMobile ? 'vertical' : 'horizontal'}
 				class="data-[orientation=vertical]:flex-col-reverse"
@@ -37,8 +37,8 @@
 					<slot />
 				</Sidenav.Content>
 			</Sidenav.Root>
-		{/await}
-	</main>
+		</main>
 
-	<Footer />
+		<Footer />
+	{/await}
 </Wrapper>

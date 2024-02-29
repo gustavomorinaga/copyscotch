@@ -79,7 +79,7 @@
 		</div>
 
 		{#each LAZY_TABS as { value, content }}
-			<Tabs.Content {value} class="m-0 w-full">
+			<Tabs.Content {value} class="m-0 h-full w-full">
 				{#await content}
 					<Spinner />
 				{:then module}

@@ -7,6 +7,6 @@
 	export { className as class };
 </script>
 
-<div class={cn('inline-flex flex-1 items-stretch', className)} {...$$restProps}>
+<div class={cn('inline-flex flex-1', className)} {...$$restProps}>
 	<slot />
 </div>

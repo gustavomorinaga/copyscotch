@@ -2,12 +2,8 @@
 	import { derived, writable } from 'svelte/store';
 	import { getRESTContext } from '$lib/contexts';
 	import { Separator } from '$lib/components/ui/separator';
-	import {
-		FeedbackCollectionEmpty,
-		ToolbarCollections,
-		treeCollectionStore as treeStore
-	} from '$lib/layouts/rest';
-	import { FeedbackNotFound, InputSearch } from '$lib/layouts/shared';
+	import { ToolbarCollections, treeCollectionStore as treeStore } from '$lib/layouts/rest';
+	import { InputSearch } from '$lib/layouts/shared';
 	import { RESTRepository } from '$lib/repositories';
 
 	const LAZY_COMPONENTS = [
@@ -15,6 +11,11 @@
 		import('$lib/layouts/rest/alert-dialogs/alert-dialog-collection-deletion'),
 		import('$lib/layouts/rest/alert-dialogs/alert-dialog-request-deletion')
 	] as const;
+
+	const LAZY_FEEDBACK_NOT_FOUND = import('$lib/layouts/shared/feedbacks/feedback-not-found');
+	const LAZY_FEEDBACK_COLLECTION_EMPTY = import(
+		'$lib/layouts/rest/feedbacks/feedback-collection-empty'
+	);
 </script>
 
 <script lang="ts">
@@ -49,7 +50,11 @@
 		{/each}
 	{/await}
 {:else if $searchTerm}
-	<FeedbackNotFound term={$searchTerm} />
+	{#await LAZY_FEEDBACK_NOT_FOUND then { FeedbackNotFound }}
+		<FeedbackNotFound term={$searchTerm} />
+	{/await}
 {:else}
-	<FeedbackCollectionEmpty />
+	{#await LAZY_FEEDBACK_COLLECTION_EMPTY then { FeedbackCollectionEmpty }}
+		<FeedbackCollectionEmpty />
+	{/await}
 {/if}

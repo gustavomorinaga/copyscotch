@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import { onMount } from 'svelte';
 	import { getRESTTabContext } from '$lib/contexts';
-	import { FeedbackParametersEmpty, ToolbarParams } from '$lib/layouts/rest';
+	import { ToolbarParams } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
@@ -9,6 +9,10 @@
 	import { DEFAULT_KEY_VALUE, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
 	import { Trash } from 'lucide-svelte';
 	import type { SuperForm } from 'sveltekit-superforms';
+
+	const LAZY_COMPONENTS = [
+		import('$lib/layouts/rest/feedbacks/feedback-parameters-empty')
+	] as const;
 </script>
 
 <script lang="ts">
@@ -93,5 +97,7 @@
 		{/each}
 	</ul>
 {:else}
-	<FeedbackParametersEmpty {form} />
+	{#await Promise.all(LAZY_COMPONENTS) then [{ FeedbackParametersEmpty }]}
+		<FeedbackParametersEmpty {form} />
+	{/await}
 {/if}
