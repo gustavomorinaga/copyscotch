@@ -16,9 +16,9 @@ export const MethodEnum = z.enum([
 
 export const BodyContentTypeEnum = z.enum([
 	'application/json',
-	'application/xml',
-	'application/x-www-form-urlencoded',
-	'multipart/form-data',
+	// 'application/xml',
+	// 'application/x-www-form-urlencoded',
+	// 'multipart/form-data',
 	'text/html',
 	'text/plain'
 ]);
@@ -26,8 +26,8 @@ export const BodyContentTypeEnum = z.enum([
 export const RequestTabsEnum = z.enum(['params', 'body', 'headers', 'auth']);
 
 export const BodySchema = z.object({
-	body: z.string().min(1).max(10000),
-	contentType: BodyContentTypeEnum
+	body: z.string().min(1).max(10000).nullable(),
+	contentType: BodyContentTypeEnum.nullable()
 });
 
 export const RESTRequestSchema = z.object({
@@ -36,7 +36,7 @@ export const RESTRequestSchema = z.object({
 	url: z.string().url(),
 	method: MethodEnum.default('GET'),
 	params: KeyValueSchema.array(),
-	body: BodySchema.optional(),
+	body: BodySchema,
 	headers: KeyValueSchema.array()
 });
 

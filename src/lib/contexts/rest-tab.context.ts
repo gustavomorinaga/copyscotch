@@ -52,7 +52,7 @@ const DEFAULT_REQUEST: Omit<TRESTTabInfer['context'], 'id'> = {
 	url: 'https://jsonplaceholder.typicode.com/todos/1',
 	method: 'GET',
 	params: [],
-	body: undefined,
+	body: { body: null, contentType: null },
 	headers: []
 };
 
