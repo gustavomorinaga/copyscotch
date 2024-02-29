@@ -3,6 +3,7 @@
 	import {
 		RESTRequestSchema,
 		MethodEnum,
+		RequestTabsEnum,
 		type TRESTRequestInfer,
 		type TRESTTabInfer,
 		type TKeyValueMapped
@@ -32,7 +33,7 @@
 		content: Promise<any>;
 		disabled?: boolean;
 	};
-	type TAvailableTabs = (typeof LAZY_TABS)[number]['value'];
+	type TAvailableTabs = (typeof RequestTabsEnum.options)[number];
 
 	const LAZY_TABS = [
 		{
@@ -60,10 +61,10 @@
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 	const { options: methodOptions } = MethodEnum;
 
-	let tab: TRESTTabInfer;
+	let tab!: TRESTTabInfer;
+	let currentTab!: TAvailableTabs;
 	let action: TFormAction = 'send';
 	let controller = new AbortController();
-	let currentTab: TAvailableTabs = 'params';
 
 	const form = superForm(defaults(zod(RESTRequestSchema)), {
 		id: formID,
@@ -82,11 +83,15 @@
 	$: sending = $tabContext.results.find((result) => result.id === tabID)?.sending;
 	$: if ($tabContext.tabs) {
 		tab = tabContext.get(tabID) as TRESTTabInfer;
-		if (tab) form.reset({ id: formID, data: tab.context });
+		if (tab) {
+			currentTab = tab.currentTab;
+			form.reset({ id: formID, data: tab.context });
+		}
 	}
 
 	function handleCurrentTab(value: TAvailableTabs) {
 		currentTab = value;
+		tabContext.setCurrentTab(tabID, value);
 	}
 
 	function handleOnChange(event: ChangeEvent<TRESTRequestInfer>) {

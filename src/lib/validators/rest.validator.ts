@@ -23,6 +23,8 @@ export const BodyContentTypeEnum = z.enum([
 	'text/plain'
 ]);
 
+export const RequestTabsEnum = z.enum(['params', 'body', 'headers', 'auth']);
+
 export const BodySchema = z.object({
 	body: z.string().min(1).max(10000),
 	contentType: BodyContentTypeEnum
@@ -41,6 +43,7 @@ export const RESTRequestSchema = z.object({
 export const RESTTabSchema = z.object({
 	id: z.string().uuid(),
 	context: RESTRequestSchema,
+	currentTab: RequestTabsEnum.default('params'),
 	dirty: z.boolean()
 });
 
