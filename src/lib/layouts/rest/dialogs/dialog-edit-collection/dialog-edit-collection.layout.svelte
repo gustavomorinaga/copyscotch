@@ -65,6 +65,8 @@
 	}
 
 	function handleSave() {
+		if (isInvalid) return;
+
 		const ACTIONS = {
 			create: () => {
 				const initialData: Pick<TRESTCollectionInfer, 'id' | 'requests' | 'folders'> = {
@@ -133,6 +135,7 @@
 						{...attrs}
 						type="text"
 						autocomplete="off"
+						placeholder="Collection name..."
 						bind:value={$formData.name}
 						on:keydown={handleKeydownSubmit}
 					/>

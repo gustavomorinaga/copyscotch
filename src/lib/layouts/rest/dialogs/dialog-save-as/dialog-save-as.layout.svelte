@@ -40,12 +40,20 @@
 		Boolean($allErrors.length) || ![$formData.name, $treeStore.selectedID].every(Boolean);
 	$: form.reset({ id: formID, data: $dialogStore.request });
 
+	function handleFormSubmit() {
+		const ACTIONS = { cancel: handleCancel, save: handleSave } as const satisfies Record<
+			TFormAction,
+			() => void
+		>;
+		return ACTIONS[action]();
+	}
+
 	function handleCancel() {
 		dialogStore.set({ open: false, request: undefined });
 	}
 
 	function handleSave() {
-		if (!$dialogStore.request) return;
+		if (isInvalid || !$dialogStore.request) return;
 
 		const { selectedID, selectedType } = $treeStore;
 		if (!selectedID || !selectedType) return;
@@ -62,14 +70,6 @@
 		tabContext.setDirty([data.id], false);
 		$dialogStore.onSave?.();
 		dialogStore.set({ open: false, request: undefined });
-	}
-
-	function handleFormSubmit() {
-		const ACTIONS = { cancel: handleCancel, save: handleSave } as const satisfies Record<
-			TFormAction,
-			() => void
-		>;
-		return ACTIONS[action]();
 	}
 
 	function handleOpenChange(event: boolean) {

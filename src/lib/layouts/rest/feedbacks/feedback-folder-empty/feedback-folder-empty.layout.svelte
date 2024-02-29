@@ -28,7 +28,7 @@
 		<div class="mt-2 flex max-w-sm select-none flex-col items-center">
 			<img
 				src="/images/states/{$mode}/pack.svg"
-				alt="Collections are empty"
+				alt="Folder are empty"
 				loading="lazy"
 				class="inline-flex h-16 w-16 flex-col object-contain object-center"
 			/>

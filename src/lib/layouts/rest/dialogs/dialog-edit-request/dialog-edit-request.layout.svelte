@@ -41,6 +41,8 @@
 	}
 
 	function handleSave() {
+		if (isInvalid) return;
+
 		const ACTIONS = {
 			create: () => {
 				if (!$dialogStore.collectionID) return;
@@ -115,6 +117,7 @@
 						{...attrs}
 						type="text"
 						autocomplete="off"
+						placeholder="Request name..."
 						bind:value={$formData.name}
 						on:keydown={handleKeydownSubmit}
 					/>
