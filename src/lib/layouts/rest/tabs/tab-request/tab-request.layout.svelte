@@ -5,7 +5,7 @@
 		MethodEnum,
 		type TRESTRequestInfer,
 		type TRESTTabInfer,
-		type TKeyValueInfer
+		type TKeyValueMapped
 	} from '$lib/validators';
 	import { PopoverSaveOptions, dialogSaveAsStore as dialogStore } from '$lib/layouts/rest';
 	import { Button } from '$lib/components/ui/button';
@@ -21,6 +21,7 @@
 	import { ChevronDown, Save } from 'lucide-svelte';
 	import { defaults, superForm, type ChangeEvent, type SuperForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
+	import { fetcher } from '$lib/functions';
 
 	type TFormAction = 'send' | 'cancel' | 'save';
 	type TTab = {
@@ -130,49 +131,11 @@
 				const url = new URL($formData.url);
 				const params = $formData.params
 					.filter((param) => param.active && param.key)
-					.reduce(
-						(acc, param) => {
-							acc[param.key] = param.value;
-							return acc;
-						},
-						{} as Record<TKeyValueInfer['key'], TKeyValueInfer['value']>
-					);
-				const searchParams = new URLSearchParams(params);
-				url.search = searchParams.toString();
+					.reduce((acc, param) => ({ ...acc, [param.key]: param.value }), {} as TKeyValueMapped);
+				url.search = new URLSearchParams(params).toString();
 
-				const start = performance.now();
-
-				fetch(url, { method: $formData.method, signal: controller.signal })
-					.then((response) => {
-						const end = performance.now();
-						const time = end - start;
-						const { ok, status, headers } = response;
-
-						response
-							.clone()
-							.blob()
-							.then((blob) => {
-								if (!RESPONSE_TYPES.includes(blob.type as (typeof RESPONSE_TYPES)[number])) return;
-
-								if (blob.type === 'application/json') {
-									Promise.all([response.clone().json(), response.clone().text()]).then(
-										([json, raw]) =>
-											tabContext.setResult(tabID, {
-												response: { ok, status, headers, blob, json, time, raw }
-											})
-									);
-								} else {
-									response
-										.clone()
-										.text()
-										.then((raw) =>
-											tabContext.setResult(tabID, {
-												response: { ok, status, headers, blob, time, raw }
-											})
-										);
-								}
-							});
-					})
+				fetcher(url, { method: $formData.method, signal: controller.signal })
+					.then((response) => tabContext.setResult(tabID, { response }))
 					.catch((error) => {
 						const isDOMException = error instanceof DOMException;
 						tabContext.setResult(tabID, { response: isDOMException ? undefined : error });

@@ -8,6 +8,7 @@ export const KeyValueSchema = z.object({
 
 export type TKeyValueSchema = typeof KeyValueSchema;
 export type TKeyValueInfer = z.infer<TKeyValueSchema>;
+export type TKeyValueMapped = Record<TKeyValueInfer['key'], TKeyValueInfer['value']>;
 
 export const DEFAULT_KEY_VALUE: TKeyValueInfer = {
 	key: '',
