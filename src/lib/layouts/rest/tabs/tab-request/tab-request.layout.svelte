@@ -25,15 +25,13 @@
 	import Save from 'lucide-svelte/icons/save';
 	import { defaults, superForm, type ChangeEvent, type SuperForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
+	import type { TTab } from '$lib/ts';
 
 	type TFormAction = 'send' | 'cancel' | 'save';
-	type TTab = {
-		value: string;
-		label: string;
-		content: Promise<any>;
-		disabled?: boolean;
-	};
 	type TAvailableTabs = (typeof RequestTabsEnum.options)[number];
+	type TAvailableCounterTabs =
+		| (typeof RequestTabsEnum.options)['0']
+		| (typeof RequestTabsEnum.options)['2'];
 
 	const LAZY_TABS = [
 		{
@@ -88,6 +86,12 @@
 			form.reset({ id: formID, data: tab.context });
 		}
 	}
+	$: countActiveParams = $formData.params.filter((param) => param.active && param.key).length;
+	$: countActiveHeaders = $formData.headers.filter((header) => header.active && header.key).length;
+	$: dynamicCounters = { params: countActiveParams, headers: countActiveHeaders } satisfies Record<
+		TAvailableCounterTabs,
+		number
+	>;
 
 	function handleCurrentTab(value: TAvailableTabs) {
 		currentTab = value;
@@ -340,10 +344,17 @@
 							{value}
 							{disabled}
 							aria-label="{label} Tab"
-							class="relative px-0 py-2 text-muted-foreground !shadow-none before:absolute before:inset-x-0 before:bottom-0 before:h-[.125rem] before:bg-transparent before:transition-colors data-[state=active]:text-accent-foreground data-[state=active]:before:bg-primary hover:text-accent-foreground"
+							class="relative gap-2 px-0 py-2 text-muted-foreground !shadow-none before:absolute before:inset-x-0 before:bottom-0 before:h-[.125rem] before:bg-transparent before:transition-colors data-[state=active]:text-accent-foreground data-[state=active]:before:bg-primary hover:text-accent-foreground"
 							on:click={() => handleCurrentTab(value)}
 						>
 							<span class="capitalize">{label}</span>
+							{#if dynamicCounters[value]}
+								<span
+									class="bg-accent-background inline-flex h-4 min-w-4 items-center justify-center rounded-md border border-border px-1 text-[8px] leading-normal text-muted-foreground"
+								>
+									{dynamicCounters[value]}
+								</span>
+							{/if}
 						</Tabs.Trigger>
 					{/each}
 				</Tabs.List>

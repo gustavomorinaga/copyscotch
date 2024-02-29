@@ -6,15 +6,8 @@
 	import Folder from 'lucide-svelte/icons/folder';
 	import Layers from 'lucide-svelte/icons/layers';
 	import Clock from 'lucide-svelte/icons/clock';
-	import type { ComponentType } from 'svelte';
+	import type { TTab } from '$lib/ts';
 
-	type TTab = {
-		value: string;
-		label: string;
-		icon: ComponentType;
-		content: Promise<any>;
-		disabled?: boolean;
-	};
 	type TAvailableTabs = (typeof LAZY_TABS)[number]['value'];
 
 	const LAZY_TABS = [
