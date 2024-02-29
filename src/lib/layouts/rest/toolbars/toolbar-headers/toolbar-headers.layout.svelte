@@ -28,8 +28,10 @@
 	}
 </script>
 
-<div class="sticky top-[9.825rem] z-10 flex shrink-0 flex-col bg-background lg:top-[6.825rem]">
-	<div class="flex h-10 w-full flex-1 items-center justify-between overflow-x-auto pl-4">
+<div class="sticky top-[9.825rem] z-10 flex h-10 shrink-0 flex-col bg-background lg:top-[6.825rem]">
+	<div
+		class="flex w-full flex-1 items-center justify-between overflow-x-auto overflow-y-hidden pl-4"
+	>
 		<div class="flex">
 			<span class="select-none truncate text-sm font-semibold text-muted-foreground">
 				Header List

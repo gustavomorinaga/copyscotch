@@ -29,15 +29,18 @@
 
 	type TFormAction = 'send' | 'cancel' | 'save';
 	type TAvailableTabs = (typeof RequestTabsEnum.options)[number];
-	type TAvailableCounterTabs =
-		| (typeof RequestTabsEnum.options)['0']
-		| (typeof RequestTabsEnum.options)['2'];
 
 	const LAZY_TABS = [
 		{
 			value: 'params',
 			label: 'parameters',
 			content: import('$lib/layouts/rest/tabs/tab-params'),
+			disabled: false
+		},
+		{
+			value: 'body',
+			label: 'body',
+			content: import('$lib/layouts/rest/tabs/tab-body'),
 			disabled: false
 		},
 		{
@@ -88,8 +91,8 @@
 	}
 	$: countActiveParams = $formData.params.filter((param) => param.active && param.key).length;
 	$: countActiveHeaders = $formData.headers.filter((header) => header.active && header.key).length;
-	$: dynamicCounters = { params: countActiveParams, headers: countActiveHeaders } satisfies Record<
-		TAvailableCounterTabs,
+	$: dynamicCounters = { params: countActiveParams, headers: countActiveHeaders } as Record<
+		TAvailableTabs,
 		number
 	>;
 
