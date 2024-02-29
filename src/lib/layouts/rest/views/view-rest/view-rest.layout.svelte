@@ -1,6 +1,7 @@
 <script lang="ts" context="module">
 	import { getRESTContext, getRESTTabContext, getSettingsContext } from '$lib/contexts';
-	import { SidenavREST, ViewWelcome } from '$lib/layouts/rest';
+	import { SidenavREST } from '$lib/layouts/rest/sidenavs/sidenav-rest';
+	import { ViewWelcome } from '$lib/layouts/rest/views/view-welcome';
 	import { BREAKPOINTS } from '$lib/maps';
 	import { screenStore } from '$lib/components/screen-watcher';
 	import { Separator } from '$lib/components/ui/separator';

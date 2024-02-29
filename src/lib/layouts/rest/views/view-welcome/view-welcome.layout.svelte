@@ -2,7 +2,7 @@
 	import { getRESTTabContext } from '$lib/contexts';
 	import { Button } from '$lib/components/ui/button';
 	import { Center } from '$lib/components/ui/center';
-	import { Plus } from 'lucide-svelte';
+	import Plus from 'lucide-svelte/icons/plus';
 </script>
 
 <script lang="ts">

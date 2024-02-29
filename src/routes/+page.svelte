@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { setRESTContext, setRESTTabContext } from '$lib/contexts';
 	import { Spinner } from '$lib/components/ui/spinner';
-	import { ViewREST } from '$lib/layouts/rest';
+	import { ViewREST } from '$lib/layouts/rest/views/view-rest';
 	import { executeParallel } from '$lib/utils';
 </script>
 

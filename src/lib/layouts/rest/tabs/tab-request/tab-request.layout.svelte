@@ -8,7 +8,8 @@
 		type TKeyValueMapped
 	} from '$lib/validators';
 	import { fetcher } from '$lib/functions';
-	import { PopoverSaveOptions, dialogSaveAsStore as dialogStore } from '$lib/layouts/rest';
+	import { dialogSaveAsStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-save-as';
+	import { PopoverSaveOptions } from '$lib/layouts/rest/popovers/popover-save-options';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import { Spinner } from '$lib/components/ui/spinner';
@@ -19,7 +20,8 @@
 	import * as Form from '$lib/components/ui/form';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { REGEXES, SHORTCUTS, UNICODES } from '$lib/maps';
-	import { ChevronDown, Save } from 'lucide-svelte';
+	import ChevronDown from 'lucide-svelte/icons/chevron-down';
+	import Save from 'lucide-svelte/icons/save';
 	import { defaults, superForm, type ChangeEvent, type SuperForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 

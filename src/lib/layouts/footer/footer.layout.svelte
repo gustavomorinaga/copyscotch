@@ -1,22 +1,20 @@
 <script lang="ts" context="module">
+	import { getSettingsContext } from '$lib/contexts';
+	import { BREAKPOINTS } from '$lib/maps';
 	import { screenStore } from '$lib/components/screen-watcher';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { getSettingsContext } from '$lib/contexts';
-	import { BREAKPOINTS } from '$lib/maps';
-	import type { TSettingsInfer } from '$lib/validators';
-	import {
-		Columns,
-		PanelLeft,
-		PanelLeftClose,
-		PanelLeftOpen,
-		PanelRight,
-		PanelRightClose,
-		PanelRightOpen,
-		Rows
-	} from 'lucide-svelte';
+	import Columns from 'lucide-svelte/icons/columns-2';
+	import Rows from 'lucide-svelte/icons/rows-2';
+	import PanelLeft from 'lucide-svelte/icons/panel-left';
+	import PanelLeftClose from 'lucide-svelte/icons/panel-left-close';
+	import PanelLeftOpen from 'lucide-svelte/icons/panel-left-open';
+	import PanelRight from 'lucide-svelte/icons/panel-right';
+	import PanelRightClose from 'lucide-svelte/icons/panel-right-close';
+	import PanelRightOpen from 'lucide-svelte/icons/panel-right-open';
 	import type { ComponentType } from 'svelte';
+	import type { TSettingsInfer } from '$lib/validators';
 
 	type TSettingOption = { icon: ComponentType; title: string; tooltip?: string };
 

@@ -1,22 +1,18 @@
 <script lang="ts" context="module">
+	import { treeSelectCollectionStore as treeStore } from '../store';
+	import { TreeExpand } from '../tree-expand';
 	import { Button } from '$lib/components/ui/button';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import {
-		DropdownMenuCollectionOptions,
-		dialogEditCollectionStore,
-		dialogEditRequestStore,
-		treeSelectCollectionStore as treeStore
-	} from '$lib/layouts/rest';
-	import {
-		CheckCircle,
-		FilePlus,
-		Folder,
-		FolderOpen,
-		FolderPlus,
-		MoreVertical
-	} from 'lucide-svelte';
-	import { TreeExpand } from '../tree-expand';
+	import { DropdownMenuCollectionOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-collection-options';
+	import { dialogEditCollectionStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
+	import { dialogEditRequestStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
+	import CheckCircle from 'lucide-svelte/icons/check-circle';
+	import Folder from 'lucide-svelte/icons/folder';
+	import FolderOpen from 'lucide-svelte/icons/folder-open';
+	import FolderPlus from 'lucide-svelte/icons/folder-plus';
+	import FilePlus from 'lucide-svelte/icons/file-plus';
+	import MoreVertical from 'lucide-svelte/icons/more-vertical';
 	import type { ComponentType } from 'svelte';
 	import type { TFolderInfer } from '$lib/validators';
 

@@ -1,9 +1,10 @@
 <script lang="ts" context="module">
-	import { dialogEditCollectionStore as dialogStore } from '$lib/layouts/rest';
+	import { dialogEditCollectionStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
 	import { Center } from '$lib/components/ui/center';
 	import { Button } from '$lib/components/ui/button';
 	import { mode } from '$lib/components/mode-watcher';
-	import { FolderDown, Plus } from 'lucide-svelte';
+	import FolderDown from 'lucide-svelte/icons/folder-down';
+	import Plus from 'lucide-svelte/icons/plus';
 </script>
 
 <script lang="ts">

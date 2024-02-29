@@ -2,12 +2,11 @@
 	import { derived, writable } from 'svelte/store';
 	import { getRESTContext } from '$lib/contexts';
 	import { Separator } from '$lib/components/ui/separator';
-	import { FeedbackNotFound, InputSearch } from '$lib/layouts/shared';
-	import {
-		treeSelectCollectionStore as treeStore,
-		FeedbackCollectionEmpty,
-		ToolbarSelectCollections
-	} from '$lib/layouts/rest';
+	import { FeedbackNotFound } from '$lib/layouts/shared/feedbacks/feedback-not-found';
+	import { InputSearch } from '$lib/layouts/shared/inputs/input-search';
+	import { treeSelectCollectionStore as treeStore } from '$lib/layouts/rest/trees/tree-select-collection';
+	import { FeedbackCollectionEmpty } from '$lib/layouts/rest/feedbacks/feedback-collection-empty';
+	import { ToolbarSelectCollections } from '$lib/layouts/rest/toolbars/toolbar-select-collections';
 	import { RESTRepository } from '$lib/repositories';
 
 	const LAZY_COMPONENTS = [

@@ -3,8 +3,12 @@
 	import { getRESTTabContext } from '$lib/contexts';
 	import * as ContextMenu from '$lib/components/ui/context-menu';
 	import { ShortcutKey } from '$lib/components/ui/shortcut';
-	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest';
-	import { Copy, FileEdit, XCircle, XOctagon, XSquare } from 'lucide-svelte';
+	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
+	import Copy from 'lucide-svelte/icons/copy';
+	import FileEdit from 'lucide-svelte/icons/file-pen';
+	import XCircle from 'lucide-svelte/icons/x-circle';
+	import XOctagon from 'lucide-svelte/icons/x-octagon';
+	import XSquare from 'lucide-svelte/icons/x-square';
 	import type { TRESTRequestInfer, TRESTTabInfer } from '$lib/validators';
 	import type { ComponentType } from 'svelte';
 

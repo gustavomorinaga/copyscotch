@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { Checkbox as CheckboxPrimitive } from 'bits-ui';
-	import { CheckCircle, Circle, Minus } from 'lucide-svelte';
 	import { cn } from '$lib/utils';
+	import CheckCircle from 'lucide-svelte/icons/check-circle';
+	import Circle from 'lucide-svelte/icons/circle';
+	import Minus from 'lucide-svelte/icons/minus';
 
 	type $$Props = CheckboxPrimitive.Props;
 	type $$Events = CheckboxPrimitive.Events;

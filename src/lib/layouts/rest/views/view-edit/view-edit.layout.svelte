@@ -4,14 +4,14 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Tabs from '$lib/components/ui/tabs';
-	import {
-		TabRequest,
-		ContextMenuEditRequest,
-		DialogSaveAs,
-		dialogEditRequestStore as dialogStore
-	} from '$lib/layouts/rest';
+	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
+	import { TabRequest } from '$lib/layouts/rest/tabs/tab-request';
+	import { ContextMenuEditRequest } from '$lib/layouts/rest/context-menus/context-menu-edit-request';
+	import { DialogSaveAs } from '$lib/layouts/rest/dialogs/dialog-save-as';
 	import { horizontalScroll } from '$lib/directives';
-	import { Dot, Plus, X } from 'lucide-svelte';
+	import Dot from 'lucide-svelte/icons/dot';
+	import Plus from 'lucide-svelte/icons/plus';
+	import X from 'lucide-svelte/icons/x';
 	import type { TRESTTabInfer } from '$lib/validators';
 
 	const LAZY_ALERT_DIALOG_COMPONENTS = [

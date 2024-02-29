@@ -1,11 +1,10 @@
 <script lang="ts" context="module">
-	import {
-		DropdownMenuRequestOptions,
-		treeSelectCollectionStore as treeStore
-	} from '$lib/layouts/rest';
+	import { treeSelectCollectionStore as treeStore } from '../store';
+	import { DropdownMenuRequestOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-request-options';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { CheckCircle, MoreVertical } from 'lucide-svelte';
+	import CheckCircle from 'lucide-svelte/icons/check-circle';
+	import MoreVertical from 'lucide-svelte/icons/more-vertical';
 	import type { TRESTRequestInfer } from '$lib/validators';
 </script>
 

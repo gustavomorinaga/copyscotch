@@ -10,9 +10,12 @@
 	import * as RadioGroup from '$lib/components/ui/radio-group';
 	import { Switch } from '$lib/components/ui/switch';
 	import { systemPrefersMode } from '$lib/components/mode-watcher';
+	import Cloud from 'lucide-svelte/icons/cloud';
+	import Monitor from 'lucide-svelte/icons/monitor';
+	import Moon from 'lucide-svelte/icons/moon';
+	import Sun from 'lucide-svelte/icons/sun';
 	import { defaults, superForm, type ChangeEvent } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import { Cloud, Monitor, Moon, Sun } from 'lucide-svelte';
 
 	const THEME_ICONS = { system: Monitor, light: Sun, dark: Cloud, black: Moon } as const;
 </script>

@@ -1,12 +1,11 @@
 <script lang="ts" context="module">
 	import { getRESTContext } from '$lib/contexts';
-	import {
-		dialogEditCollectionStore as dialogStore,
-		treeSelectCollectionStore as treeStore
-	} from '$lib/layouts/rest';
+	import { dialogEditCollectionStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
+	import { treeSelectCollectionStore as treeStore } from '$lib/layouts/rest/trees/tree-select-collection';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { Plus, MinusSquare } from 'lucide-svelte';
+	import Plus from 'lucide-svelte/icons/plus';
+	import MinusSquare from 'lucide-svelte/icons/minus-square';
 </script>
 
 <script lang="ts">

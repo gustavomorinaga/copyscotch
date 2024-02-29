@@ -1,9 +1,11 @@
 <script lang="ts" context="module">
 	import { getRESTTabContext } from '$lib/contexts';
-	import { DropdownMenuRequestOptions, treeCollectionStore as treeStore } from '$lib/layouts/rest';
+	import { treeCollectionStore as treeStore } from '$lib/layouts/rest/trees/tree-collection';
+	import { DropdownMenuRequestOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-request-options';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { Dot, MoreVertical } from 'lucide-svelte';
+	import Dot from 'lucide-svelte/icons/dot';
+	import MoreVertical from 'lucide-svelte/icons/more-vertical';
 	import type { TRESTRequestInfer } from '$lib/validators';
 </script>
 

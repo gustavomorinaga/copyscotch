@@ -1,13 +1,13 @@
 <script lang="ts" context="module">
 	import { onMount } from 'svelte';
 	import { getRESTTabContext } from '$lib/contexts';
-	import { ToolbarHeaders } from '$lib/layouts/rest';
+	import { ToolbarHeaders } from '$lib/layouts/rest/toolbars/toolbar-headers';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Form from '$lib/components/ui/form';
 	import { DEFAULT_KEY_VALUE, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
-	import { Trash } from 'lucide-svelte';
+	import Trash from 'lucide-svelte/icons/trash';
 	import type { SuperForm } from 'sveltekit-superforms';
 
 	const LAZY_COMPONENTS = [import('$lib/layouts/rest/feedbacks/feedback-headers-empty')] as const;

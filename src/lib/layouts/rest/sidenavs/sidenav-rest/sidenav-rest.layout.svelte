@@ -3,7 +3,9 @@
 	import { Spinner } from '$lib/components/ui/spinner';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
 	import * as Tabs from '$lib/components/ui/tabs';
-	import { Folder, Layers, Clock } from 'lucide-svelte';
+	import Folder from 'lucide-svelte/icons/folder';
+	import Layers from 'lucide-svelte/icons/layers';
+	import Clock from 'lucide-svelte/icons/clock';
 	import type { ComponentType } from 'svelte';
 
 	type TTab = {

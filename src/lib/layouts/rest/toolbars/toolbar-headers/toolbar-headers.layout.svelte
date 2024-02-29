@@ -4,7 +4,8 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { DEFAULT_KEY_VALUE, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
-	import { Plus, Trash2 } from 'lucide-svelte';
+	import Plus from 'lucide-svelte/icons/plus';
+	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import type { SuperForm } from 'sveltekit-superforms';
 </script>
 

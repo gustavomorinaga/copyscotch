@@ -2,8 +2,10 @@
 	import '$lib/styles/app.pcss';
 	import { setSettingsContext } from '$lib/contexts';
 	import { BREAKPOINTS } from '$lib/maps';
-	import { Footer, Toolbar, Wrapper } from '$lib/layouts';
-	import { SidenavRoutes } from '$lib/layouts/shared';
+	import { Toolbar } from '$lib/layouts/toolbar';
+	import { Footer } from '$lib/layouts/footer';
+	import { Wrapper } from '$lib/layouts/wrapper';
+	import { SidenavRoutes } from '$lib/layouts/shared/sidenavs/sidenav-routes';
 	import { Spinner } from '$lib/components/ui/spinner';
 	import * as Sidenav from '$lib/components/ui/sidenav';
 	import { ModeWatcher } from '$lib/components/mode-watcher';

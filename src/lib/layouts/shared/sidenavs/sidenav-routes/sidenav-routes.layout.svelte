@@ -1,11 +1,12 @@
 <script lang="ts" context="module">
 	import { page } from '$app/stores';
 	import { getSettingsContext } from '$lib/contexts';
+	import { BREAKPOINTS } from '$lib/maps';
 	import { Button } from '$lib/components/ui/button';
 	import { screenStore } from '$lib/components/screen-watcher';
-	import { Link2, Settings } from 'lucide-svelte';
+	import Link2 from 'lucide-svelte/icons/link-2';
+	import Settings from 'lucide-svelte/icons/settings';
 	import type { ComponentType } from 'svelte';
-	import { BREAKPOINTS } from '$lib/maps';
 
 	type TRoute = {
 		title: string;

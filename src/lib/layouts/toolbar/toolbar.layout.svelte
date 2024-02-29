@@ -1,11 +1,11 @@
 <script lang="ts" context="module">
 	import { page } from '$app/stores';
-	import { DialogSupport } from '$lib/layouts/shared';
+	import { DialogSupport } from '$lib/layouts/shared/dialogs/dialog-support';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { LifeBuoy } from 'lucide-svelte';
-	// import { UploadCloud } from 'lucide-svelte';
+	import LifeBuoy from 'lucide-svelte/icons/life-buoy';
+	// import UploadCloud from 'lucide-svelte/icons/upload-cloud';
 </script>
 
 <script lang="ts">

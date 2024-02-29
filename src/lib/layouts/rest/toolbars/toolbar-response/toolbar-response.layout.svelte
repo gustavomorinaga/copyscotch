@@ -3,7 +3,9 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Toggle } from '$lib/components/ui/toggle';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { Check, Copy, WrapText } from 'lucide-svelte';
+	import Check from 'lucide-svelte/icons/check';
+	import Copy from 'lucide-svelte/icons/copy';
+	import WrapText from 'lucide-svelte/icons/wrap-text';
 	import type { ComponentType } from 'svelte';
 
 	type TClipboardState = 'default' | 'copied';

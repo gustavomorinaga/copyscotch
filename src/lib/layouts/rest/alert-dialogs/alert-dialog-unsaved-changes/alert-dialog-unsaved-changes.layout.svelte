@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
-	import { dialogSaveAsStore as dialogStore } from '$lib/layouts/rest';
+	import { dialogSaveAsStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-save-as';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 </script>
 

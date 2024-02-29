@@ -2,7 +2,8 @@
 	import { page } from '$app/stores';
 	import { mode } from '$lib/components/mode-watcher';
 	import { Button } from '$lib/components/ui/button';
-	import { Home, RefreshCw } from 'lucide-svelte';
+	import Home from 'lucide-svelte/icons/home';
+	import RefreshCw from 'lucide-svelte/icons/refresh-cw';
 
 	function handleReload() {
 		return location.reload();
