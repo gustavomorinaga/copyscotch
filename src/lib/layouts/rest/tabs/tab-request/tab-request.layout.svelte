@@ -15,6 +15,7 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { Spinner } from '$lib/components/ui/spinner';
 	import { Input } from '$lib/components/ui/input';
+	import { Badge } from '$lib/components/ui/badge';
 	import * as Shortcut from '$lib/components/ui/shortcut';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Select from '$lib/components/ui/select';
@@ -352,11 +353,9 @@
 						>
 							<span class="capitalize">{label}</span>
 							{#if dynamicCounters[value]}
-								<span
-									class="bg-accent-background inline-flex h-4 min-w-4 items-center justify-center rounded-md border border-border px-1 text-[8px] leading-normal text-muted-foreground"
-								>
+								<Badge size="sm" variant="outline" class="!text-foreground">
 									{dynamicCounters[value]}
-								</span>
+								</Badge>
 							{/if}
 						</Tabs.Trigger>
 					{/each}
