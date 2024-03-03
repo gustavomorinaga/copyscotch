@@ -13,7 +13,7 @@
 	);
 
 	function handleDiscard() {
-		tabContext.close({ ids: $tabContext.tainted, mode: 'normal' });
+		if (dirtyTabs.length === 1) tabContext.close({ ids: $tabContext.tainted, mode: 'normal' });
 		tabContext.setTainted(undefined);
 	}
 
