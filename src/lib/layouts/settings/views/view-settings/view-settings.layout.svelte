@@ -18,14 +18,15 @@
 	import { zod } from 'sveltekit-superforms/adapters';
 
 	const THEME_ICONS = { system: Monitor, light: Sun, dark: Cloud, black: Moon } as const;
+
+	const { options: backgroundOptions } = BackgroundColorEnum;
+	const { options: accentOptions } = AccentColorEnum;
 </script>
 
 <script lang="ts">
 	const settingsContext = getSettingsContext();
 
 	const formID: string = 'view-settings';
-	const { options: backgroundOptions } = BackgroundColorEnum;
-	const { options: accentOptions } = AccentColorEnum;
 
 	const form = superForm(defaults(zod(ThemeSchema)), {
 		id: formID,

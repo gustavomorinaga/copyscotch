@@ -1,9 +1,9 @@
 <script lang="ts" context="module">
+	import { DEFAULT_KEY_VALUE, type TRESTRequestInfer } from '$lib/validators';
 	import { Center } from '$lib/components/ui/center';
 	import { Button } from '$lib/components/ui/button';
 	import { mode } from '$lib/components/mode-watcher';
 	import Plus from 'lucide-svelte/icons/plus';
-	import { DEFAULT_KEY_VALUE, type TRESTRequestInfer } from '$lib/validators';
 	import type { SuperForm } from 'sveltekit-superforms';
 </script>
 

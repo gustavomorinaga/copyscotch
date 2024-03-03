@@ -3,7 +3,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { DEFAULT_KEY_VALUE, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
+	import { DEFAULT_HEADER, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
 	import Plus from 'lucide-svelte/icons/plus';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import type { SuperForm } from 'sveltekit-superforms';
@@ -24,7 +24,7 @@
 	}
 
 	function handleAddNew() {
-		tabContext.update(tabID, { headers: [...$formData.headers, DEFAULT_KEY_VALUE] });
+		tabContext.update(tabID, { headers: [...$formData.headers, DEFAULT_HEADER] });
 	}
 </script>
 

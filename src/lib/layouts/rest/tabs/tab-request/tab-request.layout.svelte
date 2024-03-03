@@ -31,6 +31,8 @@
 	type TFormAction = 'send' | 'cancel' | 'save';
 	type TAvailableTabs = (typeof RequestTabsEnum.options)[number];
 
+	const { options: methodOptions } = MethodEnum;
+
 	const LAZY_TABS = [
 		{
 			value: 'params',
@@ -61,7 +63,6 @@
 	const formID: string = `tab-request-${tabID}`;
 
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
-	const { options: methodOptions } = MethodEnum;
 
 	let tab!: TRESTTabInfer;
 	let currentTab!: TAvailableTabs;
@@ -160,6 +161,7 @@
 		const url = new URL($formData.url);
 		let params: TKeyValueMapped = {};
 		let headers: TKeyValueMapped = {};
+		let body: BodyInit | null = null;
 
 		const activeParams = $formData.params.filter((param) => param.active && param.key);
 		const activeHeaders = $formData.headers.filter((header) => header.active && header.key);
@@ -181,7 +183,13 @@
 			);
 		}
 
-		fetcher(url, { method: $formData.method, headers, signal: controller.signal })
+		if ($formData.body.body) {
+			if ($formData.body.contentType) body = $formData.body.body;
+			const hasOverride = activeHeaders.some(({ key }) => key.toLowerCase() === 'content-type');
+			if (!hasOverride) headers['content-type'] = $formData.body.contentType || 'text/plain';
+		}
+
+		fetcher(url, { method: $formData.method, headers, body, signal: controller.signal })
 			.then((response) => tabContext.setResult(tabID, { response }))
 			.catch((error) => {
 				const isDOMException = error instanceof DOMException;

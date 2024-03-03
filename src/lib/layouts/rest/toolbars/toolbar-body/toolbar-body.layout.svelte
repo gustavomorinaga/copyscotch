@@ -2,7 +2,7 @@
 	import { getRESTTabContext } from '$lib/contexts';
 	import {
 		BodyContentTypeEnum,
-		type TKeyValueInfer,
+		type TRESTHeaderInfer,
 		type TRESTRequestInfer,
 		type TRESTTabInfer
 	} from '$lib/validators';
@@ -13,6 +13,8 @@
 	import * as Select from '$lib/components/ui/select';
 	import RefreshCw from 'lucide-svelte/icons/refresh-cw';
 	import type { SuperForm } from 'sveltekit-superforms';
+
+	const { options: contentTypes } = BodyContentTypeEnum;
 </script>
 
 <script lang="ts">
@@ -23,17 +25,37 @@
 
 	const tabContext = getRESTTabContext();
 
-	const { options: contentTypes } = BodyContentTypeEnum;
-
 	$: ({ form: formData } = form);
+	$: contentTypeHeaderIndex = $formData.headers.findIndex(
+		({ key }) => key.toLowerCase() === 'content-type'
+	);
+
+	function handleContentTypeChange(event?: Select.Selected<(typeof contentTypes)[number] | null>) {
+		if (!event) return;
+
+		if (contentTypeHeaderIndex !== -1 && $formData.headers[contentTypeHeaderIndex].override) {
+			$formData.headers[contentTypeHeaderIndex].value = event.value || '';
+			tabContext.update(tabID, {
+				headers: $formData.headers,
+				body: { ...$formData.body, contentType: event.value }
+			});
+		} else {
+			tabContext.update(tabID, { body: { ...$formData.body, contentType: event.value } });
+		}
+	}
 
 	function handleOverrideContentType() {
-		const updatedHeader: TKeyValueInfer = {
+		const updatedHeader: TRESTHeaderInfer = {
 			key: 'Content-Type',
 			value: $formData.body.contentType || '',
-			active: true
+			active: true,
+			override: true
 		};
-		const headerIndex = $formData.headers.findIndex((h) => h.key === 'Content-Type');
+
+		const headerIndex = $formData.headers.findIndex(
+			({ key }) => key.toLowerCase() === 'content-type'
+		);
+
 		if (headerIndex === -1) {
 			tabContext.update(tabID, { headers: [...$formData.headers, updatedHeader] });
 		} else {
@@ -43,6 +65,8 @@
 				)
 			});
 		}
+
+		tabContext.setCurrentTab(tabID, 'headers');
 	}
 </script>
 
@@ -62,7 +86,7 @@
 							value: $formData.body?.contentType,
 							label: $formData.body?.contentType || 'None'
 						}}
-						onSelectedChange={(v) => v && ($formData.body.contentType = v.value)}
+						onSelectedChange={handleContentTypeChange}
 					>
 						<Select.Trigger
 							{...attrs}
@@ -71,11 +95,9 @@
 							<Select.Value />
 						</Select.Trigger>
 						<Select.Content class="!min-w-64">
-							<Select.Item value={null}>None</Select.Item>
-
-							{#each contentTypes as contentType}
+							{#each [null, ...contentTypes] as contentType}
 								<Select.Item value={contentType}>
-									{contentType}
+									{contentType || 'None'}
 								</Select.Item>
 							{/each}
 						</Select.Content>

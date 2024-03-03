@@ -23,6 +23,8 @@ export const BodyContentTypeEnum = z.enum([
 	'text/plain'
 ]);
 
+export const HeaderSchema = KeyValueSchema.extend({ override: z.boolean().default(false) });
+
 export const RequestTabsEnum = z.enum(['params', 'body', 'headers', 'auth']);
 
 export const BodySchema = z.object({
@@ -37,7 +39,7 @@ export const RESTRequestSchema = z.object({
 	method: MethodEnum.default('GET'),
 	params: KeyValueSchema.array(),
 	body: BodySchema,
-	headers: KeyValueSchema.array()
+	headers: HeaderSchema.array()
 });
 
 export const RESTTabSchema = z.object({
@@ -51,3 +53,11 @@ export type TRESTTabSchema = typeof RESTTabSchema;
 export type TRESTTabInfer = z.infer<TRESTTabSchema>;
 export type TRESTRequestSchema = typeof RESTRequestSchema;
 export type TRESTRequestInfer = z.infer<TRESTRequestSchema>;
+export type TRESTHeaderInfer = z.infer<typeof HeaderSchema>;
+
+export const DEFAULT_HEADER: TRESTHeaderInfer = {
+	key: '',
+	value: '',
+	active: true,
+	override: false
+};

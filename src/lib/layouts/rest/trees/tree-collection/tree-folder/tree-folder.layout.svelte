@@ -58,20 +58,18 @@
 
 <script lang="ts">
 	type $$Props = {
-		folder: TFolderInfer;
+		folder: TFolderInfer & { open?: boolean };
 		type: 'collection' | 'folder';
-		open?: boolean;
 	};
 
 	export let folder: $$Props['folder'];
 	export let type: $$Props['type'] = 'collection';
-	export let open: $$Props['open'] = false;
 	let openOptions: boolean = false;
 
 	$: selected = $treeStore.selected === folder.id;
-	$: status = (open ? 'open' : 'closed') as TFolderStatus;
-	$: if ($treeStore.collapse) open = false;
-	$: if ($treeStore.expand) open = true;
+	$: status = (folder.open ? 'open' : 'closed') as TFolderStatus;
+	$: if ($treeStore.collapse) folder.open = false;
+	$: if ($treeStore.expand) folder.open = true;
 
 	function onOpenChange(open: boolean) {
 		$treeStore.selected = open ? folder.id : undefined;
@@ -80,7 +78,7 @@
 	}
 </script>
 
-<Collapsible.Root class="flex shrink-0 flex-col" bind:open {onOpenChange}>
+<Collapsible.Root class="flex shrink-0 flex-col" bind:open={folder.open} {onOpenChange}>
 	<Collapsible.Trigger asChild let:builder>
 		<div class="group/folder flex flex-1 items-center gap-2">
 			<Button
@@ -90,7 +88,7 @@
 				role="treeitem"
 				aria-label={folder.name}
 				aria-selected={selected}
-				aria-expanded={open}
+				aria-expanded={folder.open}
 				tabindex={selected ? 0 : -1}
 				class="flex flex-1 items-center justify-center px-0"
 			>
@@ -163,7 +161,7 @@
 		</div>
 	</Collapsible.Trigger>
 	<Collapsible.Content class="flex">
-		<TreeExpand bind:open />
+		<TreeExpand bind:open={folder.open} />
 		<slot />
 	</Collapsible.Content>
 </Collapsible.Root>
