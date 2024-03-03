@@ -29,7 +29,10 @@ const DEFAULT_FOLDER: Omit<TFolderInfer, 'id'> = {
 const DEFAULT_FILE: Omit<TFileInfer, 'id'> = {
 	name: 'Untitled',
 	url: 'https://jsonplaceholder.typicode.com/todos/1',
-	method: 'GET'
+	method: 'GET',
+	params: [],
+	body: { body: null, contentType: null },
+	headers: []
 };
 
 export function setRESTContext(

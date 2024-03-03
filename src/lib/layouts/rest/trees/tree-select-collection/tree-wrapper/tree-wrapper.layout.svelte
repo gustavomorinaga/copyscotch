@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
-	import { FeedbackFolderEmpty } from '$lib/layouts/rest';
 	import { TreeFolder } from '../tree-folder';
 	import { TreeFile } from '../tree-file';
+	import { FeedbackFolderEmpty } from '$lib/layouts/rest/feedbacks/feedback-folder-empty';
 	import type { TRESTCollectionInfer } from '$lib/validators';
 </script>
 
@@ -15,7 +15,7 @@
 	export let type: $$Props['type'] = 'collection';
 </script>
 
-<ul class="flex flex-col">
+<ul role="group" class="flex flex-col">
 	{#each folders as folder}
 		{@const isEmpty = !folder.folders.length && !folder.requests.length}
 

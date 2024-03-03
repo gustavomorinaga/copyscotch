@@ -1,8 +1,9 @@
 <script lang="ts" context="module">
+	import { LINKS } from '$lib/maps';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import { LINKS } from '$lib/maps';
-	import { ChevronRight, Github } from 'lucide-svelte';
+	import ChevronRight from 'lucide-svelte/icons/chevron-right';
+	import Github from 'lucide-svelte/icons/github';
 	import type { ComponentType } from 'svelte';
 
 	type TOption = (typeof LINKS)[keyof typeof LINKS] & {
@@ -35,12 +36,13 @@
 					href={option.href}
 					target={option.target ?? '_self'}
 					rel={option.rel}
+					aria-label={option.title}
 					class="h-fit shrink-0"
 				>
 					<div class="mr-4 inline-flex items-center self-start">
 						<svelte:component this={option.icon} class="mt-0.5 h-5 w-5 text-primary" />
 					</div>
-					<div class="inline-flex flex-1 flex-col items-start truncate">
+					<div class="inline-flex flex-1 select-none flex-col items-start truncate">
 						<span class="max-w-[16rem] truncate font-semibold">{option.title}</span>
 						<p class="text-left text-muted-foreground">{option.description}</p>
 					</div>

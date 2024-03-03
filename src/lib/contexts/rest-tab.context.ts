@@ -3,6 +3,7 @@ import { getContext, setContext } from 'svelte';
 import { get, writable, type StartStopNotifier, type Writable } from 'svelte/store';
 import { generateUUID } from '$lib/utils';
 import type { TRESTTabInfer } from '$lib/validators';
+import type { TResponse } from '$lib/ts';
 
 export type TRESTTabContext = Writable<TRESTTabData> & TRESTTabActions;
 export type TRESTTabData = TRESTTabDataPersist & TRESTTabDataTemp;
@@ -20,6 +21,7 @@ export type TRESTTabActions = {
 	update: (id: TRESTTabInfer['context']['id'], request: Partial<TRESTTabInfer['context']>) => void;
 	duplicate: (id: TRESTTabInfer['context']['id']) => void;
 	setCurrent: (id?: TRESTTabInfer['context']['id']) => void;
+	setCurrentTab: (id: TRESTTabInfer['context']['id'], tab: TRESTTabInfer['currentTab']) => void;
 	setTainted: (ids?: Array<TRESTTabInfer['context']['id']>) => void;
 	setDirty: (ids: Array<TRESTTabInfer['context']['id']>, dirty: TRESTTabInfer['dirty']) => void;
 	setResult: (
@@ -31,14 +33,9 @@ export type TRESTTabActions = {
 		mode: 'normal' | 'close-others' | 'close-all';
 	}) => void;
 };
-export type TRESTResult = Pick<TRESTTabInfer['context'], 'id'> & {
-	response: Pick<Response, 'ok' | 'status' | 'headers'> & {
-		blob: Blob;
-		raw: string;
-		time: number;
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		json?: any;
-	};
+export type TRESTResult = {
+	id: TRESTTabInfer['context']['id'];
+	response: TResponse;
 	sending: boolean;
 };
 
@@ -53,7 +50,10 @@ const INITIAL_DATA: TRESTTabData = {
 const DEFAULT_REQUEST: Omit<TRESTTabInfer['context'], 'id'> = {
 	name: 'Untitled',
 	url: 'https://jsonplaceholder.typicode.com/todos/1',
-	method: 'GET'
+	method: 'GET',
+	params: [],
+	body: { body: null, contentType: null },
+	headers: []
 };
 
 export function setRESTTabContext(
@@ -104,10 +104,20 @@ export function setRESTTabContext(
 
 			if (request) {
 				const clonedRequest = structuredClone(request);
-				newTab = { id: clonedRequest.id, context: clonedRequest, dirty: false };
+				newTab = {
+					id: clonedRequest.id,
+					context: clonedRequest,
+					currentTab: 'params',
+					dirty: false
+				};
 			} else {
 				const newTabID = generateUUID();
-				newTab = { id: newTabID, context: { ...DEFAULT_REQUEST, id: newTabID }, dirty: false };
+				newTab = {
+					id: newTabID,
+					context: { ...DEFAULT_REQUEST, id: newTabID },
+					currentTab: 'params',
+					dirty: false
+				};
 			}
 
 			return store.update((state) => {
@@ -141,10 +151,11 @@ export function setRESTTabContext(
 				const newTabID = generateUUID();
 				const newRequestID = generateUUID();
 				const clonedTab = structuredClone(state.tabs[index]);
-				const newTab = {
+				const newTab: TRESTTabInfer = {
 					...clonedTab,
 					id: newTabID,
 					context: { ...clonedTab.context, id: newRequestID },
+					currentTab: 'params',
 					dirty: false
 				};
 				state.tabs.splice(index + 1, 0, newTab);
@@ -170,6 +181,17 @@ export function setRESTTabContext(
 
 			return store.update((state) => {
 				state.tabs = tabs;
+				saveData(state);
+				return state;
+			});
+		},
+		setCurrentTab(id, tab) {
+			const { tabs } = get(store);
+			const index = tabs.findIndex((tab) => tab.id === id);
+			if (index === -1) return;
+
+			return store.update((state) => {
+				state.tabs[index].currentTab = tab;
 				saveData(state);
 				return state;
 			});

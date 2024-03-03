@@ -3,59 +3,123 @@
 	import {
 		RESTRequestSchema,
 		MethodEnum,
+		RequestTabsEnum,
 		type TRESTRequestInfer,
-		type TRESTTabInfer
+		type TRESTTabInfer,
+		type TKeyValueMapped
 	} from '$lib/validators';
-	import { PopoverSaveOptions } from '$lib/layouts/rest';
+	import { fetcher } from '$lib/functions';
+	import { dialogSaveAsStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-save-as';
+	import { PopoverSaveOptions } from '$lib/layouts/rest/popovers/popover-save-options';
 	import { Button } from '$lib/components/ui/button';
+	import { Separator } from '$lib/components/ui/separator';
+	import { Spinner } from '$lib/components/ui/spinner';
+	import { Input } from '$lib/components/ui/input';
+	import { Badge } from '$lib/components/ui/badge';
 	import * as Shortcut from '$lib/components/ui/shortcut';
 	import * as Tooltip from '$lib/components/ui/tooltip';
+	import * as Select from '$lib/components/ui/select';
 	import * as Form from '$lib/components/ui/form';
-	import { RESPONSE_TYPES, SHORTCUTS, UNICODES } from '$lib/maps';
-	import { ChevronDown, Save } from 'lucide-svelte';
-	import { defaults, superForm } from 'sveltekit-superforms';
+	import * as Tabs from '$lib/components/ui/tabs';
+	import { REGEXES, SHORTCUTS, UNICODES } from '$lib/maps';
+	import ChevronDown from 'lucide-svelte/icons/chevron-down';
+	import Save from 'lucide-svelte/icons/save';
+	import { defaults, superForm, type ChangeEvent, type SuperForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import type { ComponentProps } from 'svelte';
+	import type { TTab } from '$lib/ts';
 
 	type TFormAction = 'send' | 'cancel' | 'save';
+	type TAvailableTabs = (typeof RequestTabsEnum.options)[number];
+
+	const { options: methodOptions } = MethodEnum;
+
+	const LAZY_TABS = [
+		{
+			value: 'params',
+			label: 'parameters',
+			content: import('$lib/layouts/rest/tabs/tab-params'),
+			disabled: false
+		},
+		{
+			value: 'body',
+			label: 'body',
+			content: import('$lib/layouts/rest/tabs/tab-body'),
+			disabled: false
+		},
+		{
+			value: 'headers',
+			label: 'headers',
+			content: import('$lib/layouts/rest/tabs/tab-headers'),
+			disabled: false
+		}
+		// TODO - Add 'body' and 'authorization' tabs
+	] as const satisfies Array<TTab>;
 </script>
 
 <script lang="ts">
 	type $$Props = { tabID: TRESTTabInfer['id'] };
 
 	export let tabID: $$Props['tabID'];
-	let tab: TRESTTabInfer;
+	const formID: string = `tab-request-${tabID}`;
 
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
-	const { options: methodOptions } = MethodEnum;
 
+	let tab!: TRESTTabInfer;
+	let currentTab!: TAvailableTabs;
 	let action: TFormAction = 'send';
 	let controller = new AbortController();
 
-	const superFrm = superForm(defaults(zod(RESTRequestSchema)), {
-		id: `tab-request-${tabID}`,
+	const form = superForm(defaults(zod(RESTRequestSchema)), {
+		id: formID,
 		SPA: true,
+		dataType: 'json',
 		validators: zod(RESTRequestSchema),
-		validationMethod: 'onblur',
+		validationMethod: 'oninput',
 		resetForm: false,
+		onChange: handleOnChange,
 		onSubmit: handleFormSubmit
-	});
+	}) as SuperForm<TRESTRequestInfer>;
 
-	$: ({ form: formValue, formId, submitting } = superFrm);
+	const { enhance } = form;
+	$: ({ form: formData, submitting } = form);
+
 	$: sending = $tabContext.results.find((result) => result.id === tabID)?.sending;
 	$: if ($tabContext.tabs) {
 		tab = tabContext.get(tabID) as TRESTTabInfer;
-		if (tab) $formValue = tab.context;
+		if (tab) {
+			currentTab = tab.currentTab;
+			form.reset({ id: formID, data: tab.context });
+		}
+	}
+	$: countActiveParams = $formData.params.filter((param) => param.active && param.key).length;
+	$: countActiveHeaders = $formData.headers.filter((header) => header.active && header.key).length;
+	$: dynamicCounters = { params: countActiveParams, headers: countActiveHeaders } as Record<
+		TAvailableTabs,
+		number
+	>;
+
+	function handleCurrentTab(value: TAvailableTabs) {
+		currentTab = value;
+		tabContext.setCurrentTab(tabID, value);
 	}
 
-	function handleOnChange() {
-		tabContext.update(tabID, $formValue);
-		tabContext.setDirty([tabID], true);
-	}
+	function handleOnChange(event: ChangeEvent<TRESTRequestInfer>) {
+		if (!event.paths.length) return;
 
-	function handleOnSelectedChange(selected: ComponentProps<Form.Select>['selected']) {
-		const method = selected?.value as TRESTRequestInfer['method'];
-		tabContext.update(tabID, { method });
+		for (const path of event.paths) {
+			let request: Partial<TRESTRequestInfer>;
+
+			const match = path.match(REGEXES.deep);
+			if (match) {
+				const [, field] = match;
+				request = { [field]: $formData[field as keyof TRESTRequestInfer] };
+			} else {
+				request = { [path as keyof TRESTRequestInfer]: $formData[path as keyof TRESTRequestInfer] };
+			}
+
+			tabContext.update(tabID, request);
+		}
+
 		tabContext.setDirty([tabID], true);
 	}
 
@@ -70,121 +134,145 @@
 			if ($submitting) return;
 
 			action = sending ? 'cancel' : 'send';
-			$formId && document.forms.namedItem($formId)?.requestSubmit();
+			document.forms.namedItem(formID)?.requestSubmit();
 		}
 
 		if ((event.ctrlKey || event.metaKey) && event.key === 's') {
 			event.preventDefault();
 
 			action = 'save';
-			$formId && document.forms.namedItem($formId)?.requestSubmit();
+			document.forms.namedItem(formID)?.requestSubmit();
 		}
 	}
 
 	function handleFormSubmit() {
 		const ACTIONS: Record<TFormAction, () => void> = {
-			send: () => {
-				tabContext.setResult(tabID, { response: undefined, sending: true });
-
-				const { url, method } = $formValue;
-				const start = performance.now();
-
-				fetch(url, { method, signal: controller.signal })
-					.then((response) => {
-						const end = performance.now();
-						const time = end - start;
-						const { ok, status, headers } = response;
-
-						response
-							.clone()
-							.blob()
-							.then((blob) => {
-								if (!RESPONSE_TYPES.includes(blob.type as (typeof RESPONSE_TYPES)[number])) return;
-
-								if (blob.type === 'application/json') {
-									Promise.all([response.clone().json(), response.clone().text()]).then(
-										([json, raw]) =>
-											tabContext.setResult(tabID, {
-												response: { ok, status, headers, blob, json, time, raw }
-											})
-									);
-								} else {
-									response
-										.clone()
-										.text()
-										.then((raw) =>
-											tabContext.setResult(tabID, {
-												response: { ok, status, headers, blob, time, raw }
-											})
-										);
-								}
-							});
-					})
-					.catch((error) => {
-						const isDOMException = error instanceof DOMException;
-						tabContext.setResult(tabID, { response: isDOMException ? undefined : error });
-					})
-					.finally(() => tabContext.setResult(tabID, { sending: false }));
-			},
-			cancel: async () => {
-				controller.abort();
-				controller = new AbortController();
-			},
-			save: () => {
-				restContext.updateFile($formValue as TRESTRequestInfer);
-				tabContext.update(tabID, $formValue);
-				tabContext.setDirty([tabID], false);
-			}
+			send: handleSend,
+			cancel: handleCancel,
+			save: handleSave
 		};
 
 		return ACTIONS[action]();
+	}
+
+	function handleSend() {
+		tabContext.setResult(tabID, { response: undefined, sending: true });
+
+		const url = new URL($formData.url);
+		let params: TKeyValueMapped = {};
+		let headers: TKeyValueMapped = {};
+		let body: BodyInit | null = null;
+
+		const activeParams = $formData.params.filter((param) => param.active && param.key);
+		const activeHeaders = $formData.headers.filter((header) => header.active && header.key);
+		const hasActiveParams = activeParams.length > 0;
+		const hasActiveHeaders = activeHeaders.length > 0;
+
+		if (hasActiveParams) {
+			params = activeParams.reduce(
+				(acc, param) => ({ ...acc, [param.key]: param.value }),
+				{} as TKeyValueMapped
+			);
+			url.search = new URLSearchParams(params).toString();
+		}
+
+		if (hasActiveHeaders) {
+			headers = activeHeaders.reduce(
+				(acc, header) => ({ ...acc, [header.key]: header.value }),
+				{} as TKeyValueMapped
+			);
+		}
+
+		if ($formData.body.body) {
+			if ($formData.body.contentType) body = $formData.body.body;
+			const hasOverride = activeHeaders.some(({ key }) => key.toLowerCase() === 'content-type');
+			if (!hasOverride) headers['content-type'] = $formData.body.contentType || 'text/plain';
+		}
+
+		fetcher(url, { method: $formData.method, headers, body, signal: controller.signal })
+			.then((response) => tabContext.setResult(tabID, { response }))
+			.catch((error) => {
+				const isDOMException = error instanceof DOMException;
+				tabContext.setResult(tabID, { response: isDOMException ? undefined : error });
+			})
+			.finally(() => tabContext.setResult(tabID, { sending: false }));
+	}
+
+	function handleCancel() {
+		controller.abort();
+		controller = new AbortController();
+	}
+
+	function handleSave() {
+		const data = $formData as TRESTRequestInfer;
+		const found = restContext.getFile(tabID);
+
+		const updateTab = () => {
+			tabContext.update(tabID, $formData);
+			tabContext.setDirty([tabID], false);
+		};
+
+		if (found) {
+			restContext.updateFile(data);
+			updateTab();
+		} else {
+			dialogStore.set({
+				open: true,
+				request: data,
+				onSave: () => updateTab()
+			});
+		}
 	}
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
 
-<Form.Root
-	id={$formId}
-	form={superFrm}
-	schema={RESTRequestSchema}
-	controlled
+<form
+	id={formID}
+	method="POST"
 	action="?/{action}"
-	let:config
-	on:change={handleOnChange}
-	class="sticky top-0 z-20"
+	class="relative flex h-full w-full flex-1 flex-col"
+	use:enhance
 >
-	<Form.Join class="flex flex-wrap gap-2">
+	<Form.Join class="sticky top-0 z-20 flex-initial shrink-0 flex-wrap gap-2 bg-background p-4">
 		<Form.Join class="min-w-[12rem] flex-auto whitespace-nowrap lg:flex-1">
-			<Form.Field {config} name="method">
-				<Form.Item class="w-32">
-					<Form.Select
-						selected={{ value: $formValue.method, label: $formValue.method }}
-						onSelectedChange={handleOnSelectedChange}
+			<Form.Field {form} name="method" class="w-32">
+				<Form.Control let:attrs>
+					<Select.Root
+						selected={{ value: $formData.method, label: $formData.method }}
+						onSelectedChange={(v) => v && ($formData.method = v.value)}
 					>
-						<Form.SelectTrigger
+						<Select.Trigger
+							{...attrs}
 							class="relative rounded-l-md rounded-r-none bg-input font-semibold focus:z-10"
-						/>
-						<Form.SelectContent>
+						>
+							<Select.Value />
+						</Select.Trigger>
+						<Select.Content>
 							{#each methodOptions as method}
-								{@const methodLowCase = method.toLowerCase()}
-
-								<Form.SelectItem value={method} style="color: var(--method-{methodLowCase}-color)">
+								<Select.Item
+									value={method}
+									style="color: hsl(var(--method-{method.toLowerCase()}-color) / var(--tw-text-opacity))"
+								>
 									{method}
-								</Form.SelectItem>
+								</Select.Item>
 							{/each}
-						</Form.SelectContent>
-					</Form.Select>
-				</Form.Item>
+						</Select.Content>
+					</Select.Root>
+					<input hidden name={attrs.name} bind:value={$formData.method} />
+				</Form.Control>
 			</Form.Field>
 
-			<Form.Field {config} name="url">
-				<Form.Item class="flex-1">
-					<Form.Input
+			<Form.Field {form} name="url" class="flex-1">
+				<Form.Control let:attrs>
+					<Input
+						{...attrs}
 						type="url"
 						placeholder="URL"
 						class="relative rounded-l-none rounded-r-md border-none bg-input focus:z-10"
+						bind:value={$formData.url}
 					/>
-				</Form.Item>
+				</Form.Control>
 			</Form.Field>
 		</Form.Join>
 
@@ -193,15 +281,11 @@
 				<Tooltip.Trigger asChild let:builder>
 					<Form.Button
 						builders={[builder]}
-						type="submit"
+						aria-label={sending ? 'Cancel Request' : 'Send Request'}
 						class="flex-1 sm:w-24"
 						on:click={() => (action = sending ? 'cancel' : 'send')}
 					>
-						{#if sending}
-							Cancel
-						{:else}
-							Send
-						{/if}
+						<span class="select-none capitalize">{sending ? 'Cancel' : 'Send'}</span>
 					</Form.Button>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">
@@ -220,13 +304,13 @@
 					<Tooltip.Trigger asChild let:builder>
 						<Form.Button
 							builders={[builder]}
-							type="submit"
 							variant="secondary"
+							aria-label="Save Request"
 							class="rounded-r-none"
 							on:click={() => (action = 'save')}
 						>
 							<Save class="mr-2 h-4 w-4" />
-							Save
+							<span class="select-none">Save</span>
 						</Form.Button>
 					</Tooltip.Trigger>
 					<Tooltip.Content side="top" class="select-none">
@@ -247,9 +331,11 @@
 								builders={[popoverBuilder, tooltipBuilder]}
 								size="icon"
 								variant="secondary"
+								aria-label="Options"
 								class="rounded-l-none"
 							>
 								<ChevronDown class="h-4 w-4" />
+								<span class="sr-only select-none">Options</span>
 							</Button>
 						</Tooltip.Trigger>
 						<Tooltip.Content side="top" class="select-none">
@@ -260,4 +346,41 @@
 			</Form.Join>
 		</Form.Join>
 	</Form.Join>
-</Form.Root>
+
+	<Form.Join class="h-full">
+		<Tabs.Root value={currentTab} class="flex flex-1 flex-col">
+			<div class="sticky top-[7.5rem] flex shrink-0 flex-col lg:top-[4.5rem]">
+				<Tabs.List class="flex !h-auto shrink-0 gap-8 bg-background px-4 py-0">
+					{#each LAZY_TABS as { value, label, disabled }}
+						<Tabs.Trigger
+							{value}
+							{disabled}
+							aria-label="{label} Tab"
+							class="relative gap-2 px-0 py-2 text-muted-foreground !shadow-none before:absolute before:inset-x-0 before:bottom-0 before:h-[.125rem] before:bg-transparent before:transition-colors data-[state=active]:text-accent-foreground data-[state=active]:before:bg-primary hover:text-accent-foreground"
+							on:click={() => handleCurrentTab(value)}
+						>
+							<span class="capitalize">{label}</span>
+							{#if dynamicCounters[value]}
+								<Badge size="sm" variant="outline" class="!text-foreground">
+									{dynamicCounters[value]}
+								</Badge>
+							{/if}
+						</Tabs.Trigger>
+					{/each}
+				</Tabs.List>
+
+				<Separator orientation="horizontal" />
+			</div>
+
+			{#each LAZY_TABS as { value, content }}
+				<Tabs.Content {value} class="m-0 h-full w-full">
+					{#await content}
+						<Spinner />
+					{:then module}
+						<svelte:component this={module.default} {tabID} {form} />
+					{/await}
+				</Tabs.Content>
+			{/each}
+		</Tabs.Root>
+	</Form.Join>
+</form>

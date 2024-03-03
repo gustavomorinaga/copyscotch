@@ -1,15 +1,17 @@
 <script lang="ts" context="module">
-	import {
-		DropdownMenuCollectionOptions,
-		treeCollectionStore as treeStore,
-		dialogEditCollectionStore,
-		dialogEditRequestStore
-	} from '$lib/layouts/rest';
+	import { treeCollectionStore as treeStore } from '../store';
 	import { TreeExpand } from '../tree-expand';
+	import { DropdownMenuCollectionOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-collection-options';
+	import { dialogEditCollectionStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
+	import { dialogEditRequestStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Collapsible from '$lib/components/ui/collapsible';
-	import { Folder, FilePlus, FolderOpen, FolderPlus, MoreVertical } from 'lucide-svelte';
+	import Folder from 'lucide-svelte/icons/folder';
+	import FolderOpen from 'lucide-svelte/icons/folder-open';
+	import FolderPlus from 'lucide-svelte/icons/folder-plus';
+	import FilePlus from 'lucide-svelte/icons/file-plus';
+	import MoreVertical from 'lucide-svelte/icons/more-vertical';
 	import type { ComponentType } from 'svelte';
 	import type { TFolderInfer } from '$lib/validators';
 
@@ -27,7 +29,7 @@
 	>;
 	const OPTIONS: Array<TFolderOptions> = [
 		{
-			title: 'New request',
+			title: 'New Request',
 			tooltip: 'New Request',
 			icon: FilePlus,
 			action: (folderID) =>
@@ -39,7 +41,7 @@
 				})
 		},
 		{
-			title: 'New folder',
+			title: 'New Folder',
 			tooltip: 'New Folder',
 			icon: FolderPlus,
 			action: (folderID) =>
@@ -56,34 +58,39 @@
 
 <script lang="ts">
 	type $$Props = {
-		folder: TFolderInfer;
+		folder: TFolderInfer & { open?: boolean };
 		type: 'collection' | 'folder';
-		open?: boolean;
 	};
 
 	export let folder: $$Props['folder'];
 	export let type: $$Props['type'] = 'collection';
-	export let open: $$Props['open'] = false;
 	let openOptions: boolean = false;
 
-	$: status = (open ? 'open' : 'closed') as TFolderStatus;
-	$: if ($treeStore.collapse) open = false;
-	$: if ($treeStore.expand) open = true;
+	$: selected = $treeStore.selected === folder.id;
+	$: status = (folder.open ? 'open' : 'closed') as TFolderStatus;
+	$: if ($treeStore.collapse) folder.open = false;
+	$: if ($treeStore.expand) folder.open = true;
 
-	function onOpenChange() {
+	function onOpenChange(open: boolean) {
+		$treeStore.selected = open ? folder.id : undefined;
 		if ($treeStore.expand) $treeStore.expand = false;
 		if ($treeStore.collapse) $treeStore.collapse = false;
 	}
 </script>
 
-<Collapsible.Root class="flex shrink-0 flex-col" bind:open {onOpenChange}>
+<Collapsible.Root class="flex shrink-0 flex-col" bind:open={folder.open} {onOpenChange}>
 	<Collapsible.Trigger asChild let:builder>
 		<div class="group/folder flex flex-1 items-center gap-2">
 			<Button
 				builders={[builder]}
 				size="sm"
 				variant="text"
-				class="flex flex-1 items-center justify-center px-0 data-[selected=true]:text-success data-[selected=true]:hover:text-success"
+				role="treeitem"
+				aria-label={folder.name}
+				aria-selected={selected}
+				aria-expanded={folder.open}
+				tabindex={selected ? 0 : -1}
+				class="flex flex-1 items-center justify-center px-0"
 			>
 				<div
 					role="presentation"
@@ -95,7 +102,7 @@
 				>
 					<svelte:component this={ICONS[status]} class="mx-4 h-5 w-5 shrink-0" />
 					<span class="flex flex-1 py-2 pr-2">
-						<span class="truncate text-sm">{folder.name}</span>
+						<span class="select-none truncate text-sm">{folder.name}</span>
 					</span>
 				</div>
 			</Button>
@@ -108,6 +115,7 @@
 								builders={[builder]}
 								size="icon"
 								variant="text"
+								aria-label={option.title}
 								class="invisible h-6 w-6 group-hover/folder:visible"
 								on:click={(event) => {
 									event.stopPropagation();
@@ -115,7 +123,7 @@
 								}}
 							>
 								<svelte:component this={option.icon} class="h-4 w-4" />
-								<span class="sr-only">{option.title}</span>
+								<span class="sr-only select-none">{option.title}</span>
 							</Button>
 						</Tooltip.Trigger>
 						<Tooltip.Content side="top" class="select-none">
@@ -136,11 +144,12 @@
 								builders={[dropdownBuilder, tooltipBuilder]}
 								size="icon"
 								variant="text"
+								aria-label="More Options"
 								class="h-6 w-6"
 								on:click={(event) => event.stopPropagation()}
 							>
 								<MoreVertical class="h-4 w-4" />
-								<span class="sr-only">More options</span>
+								<span class="sr-only select-none">More Options</span>
 							</Button>
 						</Tooltip.Trigger>
 						<Tooltip.Content side="top" class="select-none">
@@ -152,7 +161,7 @@
 		</div>
 	</Collapsible.Trigger>
 	<Collapsible.Content class="flex">
-		<TreeExpand bind:open />
+		<TreeExpand bind:open={folder.open} />
 		<slot />
 	</Collapsible.Content>
 </Collapsible.Root>

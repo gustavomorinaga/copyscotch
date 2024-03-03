@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import { getRESTTabContext, type TRESTResult } from '$lib/contexts';
 	import { formatBytes } from '$lib/utils';
-	import httpStatus from 'http-status';
+	import httpStatus, { type HttpStatus } from 'http-status';
 
 	type TStatus = 'success' | 'error';
 </script>
@@ -16,6 +16,7 @@
 
 	$: result = $tabContext.results.find(({ id }) => id === $tabContext.current) as TRESTResult;
 	$: status = getStatusType(result?.response?.status);
+	$: statusCode = httpStatus[result?.response?.status as keyof HttpStatus];
 </script>
 
 <div
@@ -27,7 +28,7 @@
 			<span class={status === 'success' ? 'text-success' : 'text-destructive'}>
 				{result.response.status}
 				&NonBreakingSpace;&bull;&NonBreakingSpace;
-				{httpStatus[result.response.status]}
+				{statusCode}
 			</span>
 		</span>
 

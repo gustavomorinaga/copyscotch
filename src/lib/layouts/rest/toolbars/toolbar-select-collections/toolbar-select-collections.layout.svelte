@@ -1,12 +1,11 @@
 <script lang="ts" context="module">
 	import { getRESTContext } from '$lib/contexts';
-	import {
-		dialogEditCollectionStore as dialogStore,
-		treeSelectCollectionStore as treeStore
-	} from '$lib/layouts/rest';
+	import { dialogEditCollectionStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
+	import { treeSelectCollectionStore as treeStore } from '$lib/layouts/rest/trees/tree-select-collection';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { Plus, MinusSquare } from 'lucide-svelte';
+	import Plus from 'lucide-svelte/icons/plus';
+	import MinusSquare from 'lucide-svelte/icons/minus-square';
 </script>
 
 <script lang="ts">
@@ -23,9 +22,15 @@
 
 <div class="inline-flex h-8 w-full flex-1 items-center justify-between bg-background">
 	<div class="flex gap-2">
-		<Button size="sm" variant="text" class="h-8" on:click={handleNewCollection}>
+		<Button
+			size="sm"
+			variant="text"
+			aria-label="New Collection"
+			class="h-8"
+			on:click={handleNewCollection}
+		>
 			<Plus class="mr-2 h-4 w-4" />
-			New
+			<span class="select-none">New</span>
 		</Button>
 	</div>
 
@@ -36,12 +41,13 @@
 					builders={[builder]}
 					size="icon"
 					variant="text"
+					aria-label="Collapse All"
 					class="mx-2 h-8 w-6"
 					disabled={!$restContext.length}
 					on:click={handleCollapseAll}
 				>
 					<MinusSquare class="h-4 w-4" />
-					<span class="sr-only">Collapse All</span>
+					<span class="sr-only select-none">Collapse All</span>
 				</Button>
 			</Tooltip.Trigger>
 			<Tooltip.Content side="top" class="select-none">

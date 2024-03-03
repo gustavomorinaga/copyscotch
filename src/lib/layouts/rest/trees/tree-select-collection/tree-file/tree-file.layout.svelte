@@ -1,11 +1,10 @@
 <script lang="ts" context="module">
-	import {
-		DropdownMenuRequestOptions,
-		treeSelectCollectionStore as treeStore
-	} from '$lib/layouts/rest';
+	import { treeSelectCollectionStore as treeStore } from '../store';
+	import { DropdownMenuRequestOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-request-options';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { CheckCircle, MoreVertical } from 'lucide-svelte';
+	import CheckCircle from 'lucide-svelte/icons/check-circle';
+	import MoreVertical from 'lucide-svelte/icons/more-vertical';
 	import type { TRESTRequestInfer } from '$lib/validators';
 </script>
 
@@ -32,7 +31,10 @@
 <Button
 	size="sm"
 	variant="text"
-	data-selected={selected}
+	role="treeitem"
+	aria-label={file.name}
+	aria-selected={selected}
+	tabindex={selected ? 0 : -1}
 	class="group/file w-full flex-1 px-0"
 	on:click={handleSelect}
 >
@@ -45,8 +47,8 @@
 		}}
 	>
 		<span
-			class="pointer-events-none flex w-16 items-center justify-center truncate px-2 text-tiny"
-			style="color: var(--method-{file.method.toLowerCase()}-color)"
+			class="pointer-events-none flex w-16 items-center justify-center truncate px-2 text-tiny group-aria-[selected=true]/file:!text-success"
+			style="color: hsl(var(--method-{file.method.toLowerCase()}-color) / var(--tw-text-opacity))"
 		>
 			{#if selected}
 				<CheckCircle class="h-5 w-5" />
@@ -54,8 +56,8 @@
 				{file.method}
 			{/if}
 		</span>
-		<span class="flex flex-1 items-center py-2 pr-2 group-data-[selected=true]/file:text-success">
-			<span class="truncate text-sm">{file.name}</span>
+		<span class="flex flex-1 items-center py-2 pr-2 group-aria-[selected=true]/file:!text-success">
+			<span class="select-none truncate text-sm">{file.name}</span>
 		</span>
 	</div>
 
@@ -71,11 +73,12 @@
 						builders={[dropdownBuilder, tooltipBuilder]}
 						size="icon"
 						variant="text"
+						aria-label="More Options"
 						class="h-6 w-6"
 						on:click={(event) => event.stopPropagation()}
 					>
 						<MoreVertical class="h-4 w-4" />
-						<span class="sr-only">More options</span>
+						<span class="sr-only select-none">More Options</span>
 					</Button>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">

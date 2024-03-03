@@ -1,12 +1,31 @@
-<script lang="ts">
-	import { cn } from '$lib/utils';
-	import type { HTMLAttributes } from 'svelte/elements';
+<script lang="ts" context="module">
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	import type { FormPath, SuperForm } from 'sveltekit-superforms';
+	type T = Record<string, unknown>;
+	type U = unknown;
+</script>
 
-	type $$Props = HTMLAttributes<HTMLFieldSetElement>;
-	let className: string | undefined | null = undefined;
+<script lang="ts" generics="T extends Record<string, unknown>, U extends FormPath<T>">
+	import * as FormPrimitive from 'formsnap';
+	import { cn } from '$lib/utils';
+
+	type $$Props = FormPrimitive.FieldsetProps<T, U>;
+
+	export let form: SuperForm<T>;
+	export let name: U;
+
+	let className: $$Props['class'] = undefined;
 	export { className as class };
 </script>
 
-<div class={cn('flex w-full flex-1 flex-col items-stretch', className)} {...$$restProps}>
-	<slot />
-</div>
+<FormPrimitive.Fieldset
+	{form}
+	{name}
+	let:constraints
+	let:errors
+	let:tainted
+	let:value
+	class={cn('space-y-2', className)}
+>
+	<slot {constraints} {errors} {tainted} {value} />
+</FormPrimitive.Fieldset>

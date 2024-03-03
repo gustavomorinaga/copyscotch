@@ -3,7 +3,7 @@
 	import { getRESTContext } from '$lib/contexts';
 	import { generateUUID } from '$lib/utils';
 	import { RESTBaseFolderSchema, type TRESTCollectionInfer } from '$lib/validators';
-	import { Button } from '$lib/components/ui/button';
+	import { Input } from '$lib/components/ui/input';
 	import * as Form from '$lib/components/ui/form';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { defaults, superForm } from 'sveltekit-superforms';
@@ -38,24 +38,26 @@
 <script lang="ts">
 	const restContext = getRESTContext();
 
-	const superFrm = superForm(defaults(zod(RESTBaseFolderSchema)), {
+	const formID = 'dialog-edit-collection';
+	let action: TFormAction = 'save';
+
+	const form = superForm(defaults(zod(RESTBaseFolderSchema)), {
+		id: formID,
 		SPA: true,
 		validators: zod(RESTBaseFolderSchema),
 		validationMethod: 'oninput',
+		resetForm: true,
 		onSubmit: (input) => {
 			input.cancel();
 			return handleFormSubmit();
 		}
 	});
 
-	let action: TFormAction = 'save';
+	const { enhance } = form;
+	$: ({ form: formData, allErrors } = form);
 
-	$: ({ form: formValue, formId, allErrors } = superFrm);
-	$: isInvalid = Boolean($allErrors.length) || !$formValue.name;
-	$: superFrm.reset({
-		id: `edit-collection-${$dialogStore.collection?.id}`,
-		data: $dialogStore.collection
-	});
+	$: isInvalid = Boolean($allErrors.length) || !$formData.name;
+	$: form.reset({ id: formID, data: $dialogStore.collection });
 	$: ({ title } = DIALOG_PROPS[$dialogStore.type][$dialogStore.mode]);
 
 	function handleCancel() {
@@ -63,6 +65,8 @@
 	}
 
 	function handleSave() {
+		if (isInvalid) return;
+
 		const ACTIONS = {
 			create: () => {
 				const initialData: Pick<TRESTCollectionInfer, 'id' | 'requests' | 'folders'> = {
@@ -70,7 +74,7 @@
 					requests: [],
 					folders: []
 				};
-				const collection: TRESTCollectionInfer = { ...$formValue, ...initialData };
+				const collection: TRESTCollectionInfer = { ...$formData, ...initialData };
 				restContext.createFolder(collection, $dialogStore.parentID);
 			},
 			edit: () => {
@@ -78,7 +82,7 @@
 
 				const collection: TRESTCollectionInfer = {
 					...$dialogStore.collection,
-					name: $formValue.name
+					name: $formData.name
 				};
 				restContext.updateFolder(collection);
 			}
@@ -108,7 +112,7 @@
 
 		if (event.key === 'Enter') {
 			event.preventDefault();
-			$formId && document.forms.namedItem($formId)?.requestSubmit();
+			document.forms.namedItem(formID)?.requestSubmit();
 		}
 	}
 </script>
@@ -123,41 +127,40 @@
 			<Dialog.Title>{title}</Dialog.Title>
 		</Dialog.Header>
 
-		<Form.Root
-			id={$formId}
-			form={superFrm}
-			schema={RESTBaseFolderSchema}
-			controlled
-			action="?/save"
-			let:config
-		>
-			<Form.Field {config} name="name">
-				<Form.Item>
-					<Form.Label for="name">Name</Form.Label>
-					<Form.Input
+		<form id={formID} method="POST" action="?/{action}" use:enhance>
+			<Form.Field {form} name="name">
+				<Form.Control let:attrs>
+					<Form.Label>Name</Form.Label>
+					<Input
+						{...attrs}
 						type="text"
-						id="name"
-						name="name"
 						autocomplete="off"
+						placeholder="Collection name..."
+						bind:value={$formData.name}
 						on:keydown={handleKeydownSubmit}
 					/>
-				</Form.Item>
+				</Form.Control>
 			</Form.Field>
-		</Form.Root>
+		</form>
 
 		<Dialog.Footer>
-			<Button type="submit" variant="ghost" form={$formId} on:click={() => (action = 'cancel')}>
-				Cancel
-			</Button>
-			<Button
-				type="submit"
+			<Form.Button
+				variant="ghost"
+				form={formID}
+				aria-label="Cancel"
+				on:click={() => (action = 'cancel')}
+			>
+				<span class="select-none">Cancel</span>
+			</Form.Button>
+			<Form.Button
 				variant="default"
-				form={$formId}
+				form={formID}
+				aria-label="Save"
 				disabled={isInvalid}
 				on:click={() => (action = 'save')}
 			>
-				Save
-			</Button>
+				<span class="select-none">Save</span>
+			</Form.Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

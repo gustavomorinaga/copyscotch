@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
-	import { ChevronRight } from 'lucide-svelte';
+	import ChevronRight from 'lucide-svelte/icons/chevron-right';
 	import type { ComponentType } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 

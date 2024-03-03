@@ -1,11 +1,11 @@
 <script lang="ts" context="module">
 	import { page } from '$app/stores';
-	import { DialogSupport } from '$lib/layouts/shared';
+	import { DialogSupport } from '$lib/layouts/shared/dialogs/dialog-support';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { LifeBuoy } from 'lucide-svelte';
-	// import { UploadCloud } from 'lucide-svelte';
+	import LifeBuoy from 'lucide-svelte/icons/life-buoy';
+	// import UploadCloud from 'lucide-svelte/icons/upload-cloud';
 </script>
 
 <script lang="ts">
@@ -20,10 +20,11 @@
 			size="sm"
 			variant="ghost"
 			href="/"
+			aria-label="Go to Home Page"
+			aria-current={isRootPage ? 'page' : undefined}
 			class="font-bold uppercase"
-			aria-current={isRootPage ? 'page' : 'false'}
 		>
-			Copyscotch
+			<span class="select-none">Copyscotch</span>
 		</Button>
 	</div>
 
@@ -32,9 +33,14 @@
 			<DialogSupport let:builder={triggerBuilder}>
 				<Tooltip.Root>
 					<Tooltip.Trigger asChild let:builder={tooltipBuilder}>
-						<Button builders={[triggerBuilder, tooltipBuilder]} size="icon" variant="ghost">
+						<Button
+							builders={[triggerBuilder, tooltipBuilder]}
+							size="icon"
+							variant="ghost"
+							aria-label="Support Options"
+						>
 							<LifeBuoy class="h-5 w-5" />
-							<span role="presentation" class="sr-only">Support</span>
+							<span class="sr-only select-none">Support</span>
 						</Button>
 					</Tooltip.Trigger>
 					<Tooltip.Content side="bottom" class="select-none">
@@ -46,9 +52,9 @@
 	</div>
 
 	<!-- <div class="col-span-2 flex items-center justify-between gap-x-2">
-		<Button size="sm" variant="success" class="ml-auto" disabled>
+		<Button size="sm" variant="success" aria-label="Save My Workspace" class="ml-auto" disabled>
 			<UploadCloud class="w-4 h-4 mr-2" />
-			Save my workspace
+			<span class="select-none">Save My Workspace</span>
 		</Button>
 	</div> -->
 </header>

@@ -1,8 +1,7 @@
 <script lang="ts" context="module">
 	import { getSettingsContext, getRESTTabContext, type TRESTResult } from '$lib/contexts';
-	import { ViewInstructions } from '$lib/layouts/rest';
-	import { Center } from '$lib/components/ui/center';
-	import { Loader } from 'lucide-svelte';
+	import { ViewInstructions } from '$lib/layouts/rest/views/view-instructions';
+	import { Spinner } from '$lib/components/ui/spinner';
 	import type { Props as TCodeMirror } from '$lib/components/ui/codemirror';
 
 	const CODEMIRROR_CONFIG: TCodeMirror = {
@@ -20,11 +19,9 @@
 	} as const;
 
 	const LAZY_COMPONENTS = [
-		import('$lib/components/ui/codemirror').then((m) => m.CodeMirror),
-		import('$lib/layouts/rest/toolbars/toolbar-response').then((m) => m.ToolbarResponse),
-		import('$lib/layouts/rest/toolbars/toolbar-response-status').then(
-			(m) => m.ToolbarResponseStatus
-		)
+		import('$lib/components/ui/codemirror'),
+		import('$lib/layouts/rest/toolbars/toolbar-response'),
+		import('$lib/layouts/rest/toolbars/toolbar-response-status')
 	] as const;
 </script>
 
@@ -48,11 +45,9 @@
 
 <section class="relative flex h-full flex-1 flex-col overflow-y-auto">
 	{#if isSending && !hasResponse}
-		<Center>
-			<Loader class="h-4 w-4 animate-spin" />
-		</Center>
+		<Spinner />
 	{:else if hasResponse}
-		{#await Promise.all(LAZY_COMPONENTS) then [CodeMirror, ToolbarResponse, ToolbarResponseStatus]}
+		{#await Promise.all(LAZY_COMPONENTS) then [{ CodeMirror }, { ToolbarResponse }, { ToolbarResponseStatus }]}
 			<ToolbarResponseStatus />
 
 			<div class="flex flex-1 flex-col">

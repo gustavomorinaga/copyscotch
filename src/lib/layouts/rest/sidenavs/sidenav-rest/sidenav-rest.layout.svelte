@@ -1,40 +1,35 @@
 <script lang="ts" context="module">
-	import { Center } from '$lib/components/ui/center';
 	import { Separator } from '$lib/components/ui/separator';
+	import { Spinner } from '$lib/components/ui/spinner';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
 	import * as Tabs from '$lib/components/ui/tabs';
-	import { Folder, Loader, Layers, Clock } from 'lucide-svelte';
-	import type { ComponentType } from 'svelte';
+	import Folder from 'lucide-svelte/icons/folder';
+	import Layers from 'lucide-svelte/icons/layers';
+	import Clock from 'lucide-svelte/icons/clock';
+	import type { TTab } from '$lib/ts';
 
-	type TTab = {
-		value: string;
-		icon: typeof Folder;
-		content: Promise<ComponentType>;
-		disabled?: boolean;
-	};
 	type TAvailableTabs = (typeof LAZY_TABS)[number]['value'];
 
 	const LAZY_TABS = [
 		{
 			value: 'collections',
+			label: 'Collections',
 			icon: Folder,
-			content: import('$lib/layouts/rest/tabs/tab-collections').then((m) => m.TabCollections),
+			content: import('$lib/layouts/rest/tabs/tab-collections'),
 			disabled: false
 		},
 		{
 			value: 'environments',
+			label: 'Environments',
 			icon: Layers,
-			content: import('$lib/layouts/rest/feedbacks/feedback-collection-empty').then(
-				(m) => m.FeedbackCollectionEmpty
-			),
+			content: import('$lib/layouts/rest/feedbacks/feedback-collection-empty'),
 			disabled: true
 		},
 		{
 			value: 'history',
+			label: 'History',
 			icon: Clock,
-			content: import('$lib/layouts/rest/feedbacks/feedback-collection-empty').then(
-				(m) => m.FeedbackCollectionEmpty
-			),
+			content: import('$lib/layouts/rest/feedbacks/feedback-collection-empty'),
 			disabled: true
 		}
 	] as const satisfies Array<TTab>;
@@ -50,15 +45,16 @@
 
 <Tabs.Root value={currentTab} orientation="vertical" class="relative flex h-full flex-1 p-0">
 	<Tabs.List class="gap-2 bg-background p-2">
-		{#each LAZY_TABS as { value, icon, disabled }}
+		{#each LAZY_TABS as { value, label, icon, disabled }}
 			<Tabs.Trigger
 				{value}
 				{disabled}
+				aria-label="{label} Tab"
 				class="p-2 !shadow-none data-[state=active]:text-primary"
 				on:click={() => handleCurrentTab(value)}
 			>
 				<svelte:component this={icon} class="h-5 w-5" />
-				<span class="sr-only capitalize">{value}</span>
+				<span class="sr-only capitalize">{label}</span>
 			</Tabs.Trigger>
 		{/each}
 	</Tabs.List>
@@ -78,13 +74,11 @@
 		</div>
 
 		{#each LAZY_TABS as { value, content }}
-			<Tabs.Content {value} class="m-0 w-full">
+			<Tabs.Content {value} class="m-0 h-full w-full">
 				{#await content}
-					<Center>
-						<Loader class="h-4 w-4 animate-spin" />
-					</Center>
+					<Spinner />
 				{:then module}
-					<svelte:component this={module} />
+					<svelte:component this={module.default} />
 				{/await}
 			</Tabs.Content>
 		{/each}

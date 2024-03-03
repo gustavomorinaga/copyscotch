@@ -1,27 +1,32 @@
 <script lang="ts" context="module">
 	import { onMount } from 'svelte';
-	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
+	import { getRESTTabContext } from '$lib/contexts';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Tabs from '$lib/components/ui/tabs';
-	import {
-		TabRequest,
-		ContextMenuEditRequest,
-		AlertDialogUnsavedChanges,
-		DialogSaveAs,
-		dialogEditRequestStore as dialogStore
-	} from '$lib/layouts/rest';
+	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
+	import { TabRequest } from '$lib/layouts/rest/tabs/tab-request';
+	import { ContextMenuEditRequest } from '$lib/layouts/rest/context-menus/context-menu-edit-request';
+	import { DialogSaveAs } from '$lib/layouts/rest/dialogs/dialog-save-as';
 	import { horizontalScroll } from '$lib/directives';
-	import { Dot, Plus, X } from 'lucide-svelte';
+	import Dot from 'lucide-svelte/icons/dot';
+	import Plus from 'lucide-svelte/icons/plus';
+	import X from 'lucide-svelte/icons/x';
 	import type { TRESTTabInfer } from '$lib/validators';
+
+	const LAZY_ALERT_DIALOG_COMPONENTS = [
+		import('$lib/layouts/rest/alert-dialogs/alert-dialog-unsaved-changes')
+	] as const;
 </script>
 
 <script lang="ts">
-	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
+	const tabContext = getRESTTabContext();
 
 	const tablistID = 'rest-tablist';
 	let tablistRef: HTMLElement;
 	let activeTabRef: HTMLElement;
+
+	$: dirtyTabs = $tabContext.tabs.filter((tab) => tab.dirty);
 
 	function handleCurrentTab(event: MouseEvent, tabID: TRESTTabInfer['id']) {
 		event.stopPropagation();
@@ -75,7 +80,6 @@
 	>
 		{#each $tabContext.tabs as tab}
 			{@const tabID = tab.id}
-			{@const methodLowCase = tab.context.method.toLowerCase()}
 
 			<ContextMenuEditRequest {tabID}>
 				<div
@@ -85,8 +89,8 @@
 					on:dblclick={() => handleEditing(tabID)}
 				>
 					<Tabs.Trigger
-						class="group/tab-trigger relative h-12 min-w-52 shrink-0 items-center justify-between gap-2 px-5 before:absolute before:inset-x-0 before:top-0 before:h-[.125rem] before:bg-transparent data-[state=active]:before:bg-primary"
-						aria-label={tab.context.name}
+						class="group/tab-trigger relative h-12 min-w-52 shrink-0 items-center justify-between gap-2 px-5 !shadow-none before:absolute before:inset-x-0 before:top-0 before:h-[.125rem] before:bg-transparent before:transition-colors data-[state=active]:before:bg-primary"
+						aria-label="{tab.context.name} Tab"
 						value={tabID}
 						on:click={(event) => handleCurrentTab(event, tabID)}
 					>
@@ -95,7 +99,7 @@
 						>
 							<span
 								class="block text-left text-tiny font-medium uppercase"
-								style="color: var(--method-{methodLowCase}-color)"
+								style="color: hsl(var(--method-{tab.context.method.toLowerCase()}-color) / var(--tw-text-opacity))"
 							>
 								{tab.context.method}
 							</span>
@@ -119,9 +123,10 @@
 										builders={[builder]}
 										size="icon"
 										variant="text"
-										class="relative h-6 w-6"
 										role="button"
 										tabindex={-1}
+										aria-label={tab.dirty ? 'Close Tab - Unsaved Changes' : 'Close Tab'}
+										class="relative h-6 w-6"
 										on:click={(event) => handleCloseTab(event, tabID)}
 										on:keydown={(event) => handleCloseTab(event, tabID)}
 									>
@@ -135,11 +140,8 @@
 										{/if}
 
 										<X class="h-4 w-4 {tab.dirty && 'invisible group-hover/tab-trigger:visible'}" />
-										<span role="presentation" class="sr-only">
-											Close Tab
-											{#if tab.dirty}
-												- Unsaved Changes
-											{/if}
+										<span class="sr-only select-none">
+											{tab.dirty ? 'Close Tab - Unsaved Changes' : 'Close Tab'}
 										</span>
 									</Button>
 								</Tooltip.Trigger>
@@ -159,13 +161,14 @@
 					builders={[builder]}
 					size="icon"
 					variant="ghost"
-					class="mx-3 h-8 w-8 shrink-0"
 					role="button"
 					tabindex={0}
+					aria-label="New Tab"
+					class="mx-3 h-8 w-8 shrink-0"
 					on:click={() => tabContext.add()}
 				>
 					<Plus class="h-4 w-4" />
-					<span role="presentation" class="sr-only">New Tab</span>
+					<span class="sr-only select-none">New Tab</span>
 				</Button>
 			</Tooltip.Trigger>
 			<Tooltip.Content side="top" class="select-none">
@@ -177,11 +180,18 @@
 	{#each $tabContext.tabs as tab}
 		{@const tabID = tab.id}
 
-		<Tabs.Content value={tabID} class="m-0 bg-background p-4">
+		<Tabs.Content value={tabID} class="m-0 h-full overflow-y-auto bg-background">
 			<TabRequest {tabID} />
 		</Tabs.Content>
 	{/each}
 </Tabs.Root>
 
-<AlertDialogUnsavedChanges />
 <DialogSaveAs />
+
+{#if dirtyTabs.length}
+	{#await Promise.all(LAZY_ALERT_DIALOG_COMPONENTS) then loadedComponents}
+		{#each loadedComponents as component}
+			<svelte:component this={component.default} />
+		{/each}
+	{/await}
+{/if}

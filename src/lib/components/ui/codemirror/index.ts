@@ -8,6 +8,8 @@ type Props = ComponentProps<Root>;
 
 export const langs = { html, json } as const;
 
+type Langs = keyof typeof langs | undefined;
+
 export const theme: ThemeSpec = {
 	'&': {
 		fontSize: 'calc(var(--base-font-size) - 2px)',
@@ -156,6 +158,8 @@ export const theme: ThemeSpec = {
 export {
 	Root,
 	type Props,
+	type Langs,
 	//
 	Root as CodeMirror
 };
+export default Root;

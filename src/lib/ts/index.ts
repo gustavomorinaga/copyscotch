@@ -1,1 +1,2 @@
-export * from './types';
+export * from './tab.type';
+export * from './response.type';

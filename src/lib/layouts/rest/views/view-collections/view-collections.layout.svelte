@@ -2,23 +2,21 @@
 	import { derived, writable } from 'svelte/store';
 	import { getRESTContext } from '$lib/contexts';
 	import { Separator } from '$lib/components/ui/separator';
-	import {
-		FeedbackCollectionEmpty,
-		ToolbarCollections,
-		treeCollectionStore as treeStore
-	} from '$lib/layouts/rest';
-	import { FeedbackNotFound, InputSearch } from '$lib/layouts/shared';
+	import { treeCollectionStore as treeStore } from '$lib/layouts/rest/trees/tree-collection';
+	import { ToolbarCollections } from '$lib/layouts/rest/toolbars/toolbar-collections';
+	import { InputSearch } from '$lib/layouts/shared';
 	import { RESTRepository } from '$lib/repositories';
 
 	const LAZY_COMPONENTS = [
-		import('$lib/layouts/rest/trees/tree-collection').then((m) => m.TreeCollection),
-		import('$lib/layouts/rest/alert-dialogs/alert-dialog-collection-deletion').then(
-			(m) => m.AlertDialogCollectionDeletion
-		),
-		import('$lib/layouts/rest/alert-dialogs/alert-dialog-request-deletion').then(
-			(m) => m.AlertDialogRequestDeletion
-		)
+		import('$lib/layouts/rest/trees/tree-collection'),
+		import('$lib/layouts/rest/alert-dialogs/alert-dialog-collection-deletion'),
+		import('$lib/layouts/rest/alert-dialogs/alert-dialog-request-deletion')
 	] as const;
+
+	const LAZY_FEEDBACK_NOT_FOUND = import('$lib/layouts/shared/feedbacks/feedback-not-found');
+	const LAZY_FEEDBACK_COLLECTION_EMPTY = import(
+		'$lib/layouts/rest/feedbacks/feedback-collection-empty'
+	);
 </script>
 
 <script lang="ts">
@@ -45,13 +43,19 @@
 </div>
 
 {#if $filteredCollections.length}
-	{#await Promise.all(LAZY_COMPONENTS) then [TreeCollection, AlertDialogCollectionDeletion, AlertDialogRequestDeletion]}
+	{#await Promise.all(LAZY_COMPONENTS) then [{ TreeCollection }, ...loadedComponents]}
 		<TreeCollection collections={$filteredCollections} />
-		<AlertDialogCollectionDeletion />
-		<AlertDialogRequestDeletion />
+
+		{#each loadedComponents as component}
+			<svelte:component this={component.default} />
+		{/each}
 	{/await}
 {:else if $searchTerm}
-	<FeedbackNotFound term={$searchTerm} />
+	{#await LAZY_FEEDBACK_NOT_FOUND then { FeedbackNotFound }}
+		<FeedbackNotFound term={$searchTerm} />
+	{/await}
 {:else}
-	<FeedbackCollectionEmpty />
+	{#await LAZY_FEEDBACK_COLLECTION_EMPTY then { FeedbackCollectionEmpty }}
+		<FeedbackCollectionEmpty />
+	{/await}
 {/if}

@@ -2,8 +2,9 @@
 	import { dialogSaveAsStore as dialogStore } from '.';
 	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
 	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/validators';
-	import { ViewSelectCollections, treeSelectCollectionStore as treeStore } from '$lib/layouts/rest';
-	import { Button } from '$lib/components/ui/button';
+	import { ViewSelectCollections } from '$lib/layouts/rest/views/view-select-collections';
+	import { treeSelectCollectionStore as treeStore } from '$lib/layouts/rest/trees/tree-select-collection';
+	import { Input } from '$lib/components/ui/input';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -17,9 +18,13 @@
 <script lang="ts">
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
-	const superFrm = superForm(defaults(zod(RESTRequestSchema)), {
-		id: 'dialog-save-as',
+	const formID: string = 'dialog-save-as';
+	let action: TFormAction = 'save';
+
+	const form = superForm(defaults(zod(RESTRequestSchema)), {
+		id: formID,
 		SPA: true,
+		dataType: 'json',
 		validators: zod(RESTRequestSchema),
 		validationMethod: 'oninput',
 		resetForm: true,
@@ -29,23 +34,32 @@
 		}
 	});
 
-	let action: TFormAction = 'save';
+	const { enhance } = form;
+	$: ({ form: formData, allErrors } = form);
 
-	$: ({ form: formValue, formId, allErrors } = superFrm);
-	$: isInvalid = Boolean($allErrors.length) || !$formValue.name || !$treeStore.selectedID;
-	$: superFrm.reset({ data: $dialogStore.request });
+	$: isInvalid =
+		Boolean($allErrors.length) || ![$formData.name, $treeStore.selectedID].every(Boolean);
+	$: form.reset({ id: formID, data: $dialogStore.request });
+
+	function handleFormSubmit() {
+		const ACTIONS = { cancel: handleCancel, save: handleSave } as const satisfies Record<
+			TFormAction,
+			() => void
+		>;
+		return ACTIONS[action]();
+	}
 
 	function handleCancel() {
 		dialogStore.set({ open: false, request: undefined });
 	}
 
 	function handleSave() {
-		if (!$dialogStore.request) return;
+		if (isInvalid || !$dialogStore.request) return;
 
 		const { selectedID, selectedType } = $treeStore;
 		if (!selectedID || !selectedType) return;
 
-		const data = $formValue as TRESTRequestInfer;
+		const data = $formData as TRESTRequestInfer;
 
 		const ACTIONS = {
 			folder: () => restContext.createFile(data, selectedID),
@@ -57,14 +71,6 @@
 		tabContext.setDirty([data.id], false);
 		$dialogStore.onSave?.();
 		dialogStore.set({ open: false, request: undefined });
-	}
-
-	function handleFormSubmit() {
-		const ACTIONS = { cancel: handleCancel, save: handleSave } as const satisfies Record<
-			TFormAction,
-			() => void
-		>;
-		return ACTIONS[action]();
 	}
 
 	function handleOpenChange(event: boolean) {
@@ -82,24 +88,22 @@
 			<Dialog.Title>Save As</Dialog.Title>
 		</Dialog.Header>
 
-		<Form.Root
-			id={$formId}
-			form={superFrm}
-			schema={RESTRequestSchema}
-			controlled
+		<form
+			id={formID}
+			method="POST"
 			action="?/{action}"
 			class="flex max-h-[55vh] flex-col"
-			let:config
+			use:enhance
 		>
-			<Form.Field {config} name="name">
-				<Form.Item>
-					<Form.Label for="name">Name</Form.Label>
-					<Form.Input type="text" id="name" name="name" autocomplete="off" />
-				</Form.Item>
+			<Form.Field {form} name="name" class="flex shrink-0 flex-col">
+				<Form.Control let:attrs>
+					<Form.Label>Name</Form.Label>
+					<Input {...attrs} type="text" autocomplete="off" bind:value={$formData.name} />
+				</Form.Control>
 			</Form.Field>
 
-			<Form.Fieldset class="mt-4 h-full">
-				<Form.Legend class="text-sm">Select Location</Form.Legend>
+			<fieldset class="mt-4 flex h-full flex-1 flex-col">
+				<legend class="mb-4 select-none text-sm font-medium">Select Location</legend>
 
 				<div
 					class="relative flex h-full flex-1 flex-col overflow-y-auto rounded-md border border-border"
@@ -115,22 +119,27 @@
 
 					<ViewSelectCollections />
 				</div>
-			</Form.Fieldset>
-		</Form.Root>
+			</fieldset>
+		</form>
 
 		<Dialog.Footer>
-			<Button type="submit" variant="ghost" form={$formId} on:click={() => (action = 'cancel')}>
-				Cancel
-			</Button>
-			<Button
-				type="submit"
+			<Form.Button
+				variant="ghost"
+				form={formID}
+				aria-label="Cancel"
+				on:click={() => (action = 'cancel')}
+			>
+				<span class="select-none">Cancel</span>
+			</Form.Button>
+			<Form.Button
 				variant="default"
-				form={$formId}
+				form={formID}
+				aria-label="Save"
 				disabled={isInvalid}
 				on:click={() => (action = 'save')}
 			>
-				Save
-			</Button>
+				<span class="select-none">Save</span>
+			</Form.Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

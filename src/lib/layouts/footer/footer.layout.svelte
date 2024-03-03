@@ -1,22 +1,20 @@
 <script lang="ts" context="module">
+	import { getSettingsContext } from '$lib/contexts';
+	import { BREAKPOINTS } from '$lib/maps';
 	import { screenStore } from '$lib/components/screen-watcher';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { getSettingsContext } from '$lib/contexts';
-	import { BREAKPOINTS } from '$lib/maps';
-	import type { TSettingsInfer } from '$lib/validators';
-	import {
-		Columns,
-		PanelLeft,
-		PanelLeftClose,
-		PanelLeftOpen,
-		PanelRight,
-		PanelRightClose,
-		PanelRightOpen,
-		Rows
-	} from 'lucide-svelte';
+	import Columns from 'lucide-svelte/icons/columns-2';
+	import Rows from 'lucide-svelte/icons/rows-2';
+	import PanelLeft from 'lucide-svelte/icons/panel-left';
+	import PanelLeftClose from 'lucide-svelte/icons/panel-left-close';
+	import PanelLeftOpen from 'lucide-svelte/icons/panel-left-open';
+	import PanelRight from 'lucide-svelte/icons/panel-right';
+	import PanelRightClose from 'lucide-svelte/icons/panel-right-close';
+	import PanelRightOpen from 'lucide-svelte/icons/panel-right-open';
 	import type { ComponentType } from 'svelte';
+	import type { TSettingsInfer } from '$lib/validators';
 
 	type TSettingOption = { icon: ComponentType; title: string; tooltip?: string };
 
@@ -35,12 +33,12 @@
 	const NAVIGATION: Record<TSettingsInfer['navigation'], TSettingOption> = {
 		collapse: {
 			icon: PanelRight,
-			title: 'Expand navbar',
+			title: 'Expand Navbar',
 			tooltip: 'Expand Navbar'
 		},
 		expand: {
 			icon: PanelLeft,
-			title: 'Collapse navbar',
+			title: 'Collapse Navbar',
 			tooltip: 'Collapse Navbar'
 		}
 	};
@@ -51,24 +49,24 @@
 		open: {
 			left: {
 				icon: PanelLeftClose,
-				title: 'Hide sidebar',
+				title: 'Hide Sidebar',
 				tooltip: 'Hide Sidebar'
 			},
 			right: {
 				icon: PanelRightClose,
-				title: 'Hide sidebar',
+				title: 'Hide Sidebar',
 				tooltip: 'Hide Sidebar'
 			}
 		},
 		closed: {
 			left: {
 				icon: PanelLeftOpen,
-				title: 'Show sidebar',
+				title: 'Show Sidebar',
 				tooltip: 'Show Sidebar'
 			},
 			right: {
 				icon: PanelRightOpen,
-				title: 'Show sidebar',
+				title: 'Show Sidebar',
 				tooltip: 'Show Sidebar'
 			}
 		}
@@ -111,11 +109,12 @@
 						builders={[builder]}
 						size="icon"
 						variant="text"
+						aria-label={navigationProps.title}
 						class="h-8 w-8"
 						on:click={handleNavigationToggle}
 					>
 						<svelte:component this={navigationProps.icon} class="h-5 w-5" />
-						<span class="sr-only">{navigationProps.title}</span>
+						<span class="sr-only select-none">{navigationProps.title}</span>
 					</Button>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">
@@ -131,11 +130,12 @@
 						builders={[builder]}
 						size="icon"
 						variant="text"
+						aria-label={layoutProps.title}
 						class="h-8 w-8"
 						on:click={handleLayoutToggle}
 					>
 						<svelte:component this={layoutProps.icon} class="h-5 w-5" />
-						<span class="sr-only">{layoutProps.title}</span>
+						<span class="sr-only select-none">{layoutProps.title}</span>
 					</Button>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">
@@ -149,11 +149,12 @@
 						builders={[builder]}
 						size="icon"
 						variant="text"
+						aria-label={sidebarProps.title}
 						class="h-8 w-8"
 						on:click={handleSidebarToggle}
 					>
 						<svelte:component this={sidebarProps.icon} class="h-5 w-5" />
-						<span class="sr-only">{sidebarProps.title}</span>
+						<span class="sr-only select-none">{sidebarProps.title}</span>
 					</Button>
 				</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">

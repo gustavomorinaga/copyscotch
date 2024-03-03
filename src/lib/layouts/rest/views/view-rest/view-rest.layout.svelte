@@ -1,18 +1,20 @@
 <script lang="ts" context="module">
 	import { getRESTContext, getRESTTabContext, getSettingsContext } from '$lib/contexts';
-	import { DialogEditCollection, SidenavREST, ViewWelcome } from '$lib/layouts/rest';
+	import { SidenavREST } from '$lib/layouts/rest/sidenavs/sidenav-rest';
+	import { ViewWelcome } from '$lib/layouts/rest/views/view-welcome';
 	import { BREAKPOINTS } from '$lib/maps';
 	import { screenStore } from '$lib/components/screen-watcher';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Sidenav from '$lib/components/ui/sidenav';
 
 	const LAZY_VIEW_COMPONENTS = [
-		import('$lib/layouts/rest/views/view-edit').then((m) => m.ViewEdit),
-		import('$lib/layouts/rest/views/view-response').then((m) => m.ViewResponse)
+		import('$lib/layouts/rest/views/view-edit'),
+		import('$lib/layouts/rest/views/view-response')
 	] as const;
 
 	const LAZY_DIALOG_COMPONENTS = [
-		import('$lib/layouts/rest/dialogs/dialog-edit-request').then((m) => m.DialogEditRequest)
+		import('$lib/layouts/rest/dialogs/dialog-edit-collection'),
+		import('$lib/layouts/rest/dialogs/dialog-edit-request')
 	] as const;
 </script>
 
@@ -24,7 +26,6 @@
 	];
 
 	$: ({ layout, sidebar, sidebarPosition } = $settingsContext);
-
 	$: openSidenav = sidebar === 'open';
 	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
 	$: if (isMobile) layout = 'vertical';
@@ -44,7 +45,7 @@
 				class:flex-col={layout === 'vertical'}
 				class:flex-row={layout === 'horizontal'}
 			>
-				{#await Promise.all(LAZY_VIEW_COMPONENTS) then [ViewEdit, ViewResponse]}
+				{#await Promise.all(LAZY_VIEW_COMPONENTS) then [{ ViewEdit }, { ViewResponse }]}
 					<ViewEdit />
 					<Separator orientation={layout === 'horizontal' ? 'vertical' : 'horizontal'} />
 					<ViewResponse />
@@ -56,10 +57,14 @@
 	</Sidenav.Content>
 </Sidenav.Root>
 
-<DialogEditCollection />
+{#if $settingsContext.sidebar === 'open' || $tabContext.tabs.length}
+	{#await LAZY_DIALOG_COMPONENTS[0] then { default: DialogEditCollection }}
+		<DialogEditCollection />
+	{/await}
+{/if}
 
-{#if $restContext.length}
-	{#await Promise.all(LAZY_DIALOG_COMPONENTS) then [DialogEditRequest]}
+{#if ($settingsContext.sidebar === 'open' && $restContext.length) || $tabContext.tabs.length}
+	{#await LAZY_DIALOG_COMPONENTS[1] then { default: DialogEditRequest }}
 		<DialogEditRequest />
 	{/await}
 {/if}

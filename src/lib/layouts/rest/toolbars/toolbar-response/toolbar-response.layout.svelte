@@ -3,7 +3,9 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Toggle } from '$lib/components/ui/toggle';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { Check, Copy, WrapText } from 'lucide-svelte';
+	import Check from 'lucide-svelte/icons/check';
+	import Copy from 'lucide-svelte/icons/copy';
+	import WrapText from 'lucide-svelte/icons/wrap-text';
 	import type { ComponentType } from 'svelte';
 
 	type TClipboardState = 'default' | 'copied';
@@ -62,7 +64,7 @@
 			bind:pressed={$settingsContext.lineWrapping}
 		>
 			<WrapText class="h-4 w-4" />
-			<span class="sr-only">Line Wrapping</span>
+			<span class="sr-only select-none">Line Wrapping</span>
 		</Toggle>
 
 		<Tooltip.Root closeOnPointerDown={false}>
@@ -71,12 +73,13 @@
 					builders={[builder]}
 					size="sm"
 					variant="text"
+					aria-label="Copy Response"
 					class="rounded-none"
 					disabled={clipboardState === 'copied'}
 					on:click={handleClipboard}
 				>
 					<svelte:component this={CLIPBOARD_STATES[clipboardState].icon} class="h-4 w-4" />
-					<span class="sr-only">{CLIPBOARD_STATES[clipboardState].label}</span>
+					<span class="sr-only select-none">{CLIPBOARD_STATES[clipboardState].label}</span>
 				</Button>
 			</Tooltip.Trigger>
 			<Tooltip.Content side="top" class="select-none">

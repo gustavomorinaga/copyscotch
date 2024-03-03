@@ -1,12 +1,17 @@
 <script lang="ts">
+	import * as FormPrimitive from 'formsnap';
 	import { cn } from '$lib/utils';
-	import type { HTMLAttributes } from 'svelte/elements';
 
-	type $$Props = HTMLAttributes<HTMLLegendElement>;
-	let className: string | undefined | null = undefined;
+	type $$Props = FormPrimitive.LegendProps;
+
+	let className: $$Props['class'] = undefined;
 	export { className as class };
 </script>
 
-<div class={cn('mb-2 text-lg font-semibold', className)} {...$$restProps}>
-	<slot />
-</div>
+<FormPrimitive.Legend
+	{...$$restProps}
+	class={cn('text-sm font-medium leading-none data-[fs-error]:text-destructive', className)}
+	let:legendAttrs
+>
+	<slot {legendAttrs} />
+</FormPrimitive.Legend>

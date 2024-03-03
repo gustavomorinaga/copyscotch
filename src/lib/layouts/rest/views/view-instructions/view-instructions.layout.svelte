@@ -3,7 +3,7 @@
 	import { Center } from '$lib/components/ui/center';
 	import * as Shortcut from '$lib/components/ui/shortcut';
 	import { LINKS, SHORTCUTS, UNICODES } from '$lib/maps';
-	import { ExternalLink } from 'lucide-svelte';
+	import ExternalLink from 'lucide-svelte/icons/external-link';
 </script>
 
 <Center class="select-none bg-background">
@@ -16,8 +16,8 @@
 	</Shortcut.Root>
 
 	<span class="mt-4 inline-flex">
-		<Button variant="outline" {...LINKS.github} title={undefined}>
-			Documentation
+		<Button variant="outline" {...LINKS.github} title={undefined} aria-label="Documentation">
+			<span class="select-none">Documentation</span>
 			<ExternalLink class="ml-2 h-4 w-4" />
 		</Button>
 	</span>

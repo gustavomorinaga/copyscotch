@@ -1,9 +1,10 @@
 <script lang="ts" context="module">
-	import { dialogEditCollectionStore as dialogStore } from '$lib/layouts/rest';
+	import { dialogEditCollectionStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
 	import { Center } from '$lib/components/ui/center';
 	import { Button } from '$lib/components/ui/button';
 	import { mode } from '$lib/components/mode-watcher';
-	import { FolderDown, Plus } from 'lucide-svelte';
+	import FolderDown from 'lucide-svelte/icons/folder-down';
+	import Plus from 'lucide-svelte/icons/plus';
 </script>
 
 <script lang="ts">
@@ -29,14 +30,20 @@
 		<div class="mt-4 flex flex-col items-center space-y-4">
 			<p class="select-none text-sm text-muted-foreground">Import or create a collection</p>
 			<div class="flex flex-col items-stretch gap-4">
-				<Button class="w-40" disabled>
+				<Button aria-label="Import Collection" class="w-40" disabled>
 					<FolderDown class="mr-2 h-4 w-4" />
-					Import
+					<span class="select-none">Import</span>
 				</Button>
 
-				<Button size="sm" variant="secondary" class="w-40" on:click={handleNewCollection}>
+				<Button
+					size="sm"
+					variant="secondary"
+					aria-label="Add New Collection"
+					class="w-40"
+					on:click={handleNewCollection}
+				>
 					<Plus class="mr-2 h-4 w-4" />
-					Add new
+					<span class="select-none">Add New</span>
 				</Button>
 			</div>
 		</div>

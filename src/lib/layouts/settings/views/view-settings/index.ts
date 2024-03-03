@@ -1,1 +1,3 @@
-export { default as ViewSettings } from './view-settings.layout.svelte';
+import { default as ViewSettings } from './view-settings.layout.svelte';
+export { ViewSettings };
+export default ViewSettings;

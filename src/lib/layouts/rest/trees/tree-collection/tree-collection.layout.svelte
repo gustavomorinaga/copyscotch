@@ -10,6 +10,6 @@
 	export { folders as collections };
 </script>
 
-<div class="-ml-2 flex h-full flex-col p-2">
+<div role="tree" class="-ml-2 flex flex-col p-2">
 	<TreeWrapper type="collection" {folders} />
 </div>

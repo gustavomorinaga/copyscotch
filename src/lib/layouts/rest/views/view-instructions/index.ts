@@ -1,1 +1,3 @@
-export { default as ViewInstructions } from './view-instructions.layout.svelte';
+import { default as ViewInstructions } from './view-instructions.layout.svelte';
+export { ViewInstructions };
+export default ViewInstructions;
