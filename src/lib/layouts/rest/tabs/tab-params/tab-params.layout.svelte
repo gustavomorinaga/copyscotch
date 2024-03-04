@@ -45,6 +45,8 @@
 
 			<li class="flex w-full flex-1">
 				<Form.Join class="w-full flex-1 divide-x border-b">
+					<div class="flex h-10 w-10 items-center justify-center" />
+
 					<Form.Field {form} name="params[{index}].key" class="flex w-full flex-1">
 						<Form.Control let:attrs>
 							<Input
