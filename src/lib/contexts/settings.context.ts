@@ -2,7 +2,7 @@ import { browser } from '$app/environment';
 import { getContext, setContext } from 'svelte';
 import { writable, type StartStopNotifier, type Writable } from 'svelte/store';
 import { setBackground, setTheme } from '$lib/utils';
-import type { TSettingsInfer } from '$lib/validators';
+import { DEFAULT_SETTINGS, type TSettingsInfer } from '$lib/validators';
 
 type TSettingsContext = Writable<TSettingsData> & TSettingsActions;
 type TSettingsData = TSettingsInfer;
@@ -12,15 +12,7 @@ type TSettingsActions = {
 
 const CTX = Symbol('SETTINGS_CTX');
 const STORAGE_KEY = 'settings';
-export const INITIAL_DATA: TSettingsData = {
-	backgroundColor: 'system',
-	accentColor: 'green',
-	layout: 'vertical',
-	navigation: 'collapse',
-	sidebar: 'open',
-	sidebarPosition: 'right',
-	lineWrapping: false
-};
+export const INITIAL_DATA: TSettingsData = DEFAULT_SETTINGS;
 
 export function setSettingsContext(
 	initialData: Partial<TSettingsData> = INITIAL_DATA,

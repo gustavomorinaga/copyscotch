@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getRESTTabContext } from '$lib/contexts';
+	import { getRESTTabContext, getSettingsContext } from '$lib/contexts';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';
@@ -15,12 +15,12 @@
 	export let tabID: $$Props['tabID'];
 	export let form: $$Props['form'];
 
-	const tabContext = getRESTTabContext();
+	const [settingsContext, tabContext] = [getSettingsContext(), getRESTTabContext()];
 
 	$: ({ form: formData } = form);
 
 	function handleClearAll() {
-		$formData.headers = [];
+		$formData.headers.length = 0;
 	}
 
 	function handleAddNew() {
@@ -28,7 +28,12 @@
 	}
 </script>
 
-<div class="sticky top-[9.825rem] z-10 flex h-10 shrink-0 flex-col bg-background lg:top-[6.825rem]">
+<div
+	class="sticky z-10 flex h-10 shrink-0 flex-col bg-background lg:top-[6.825rem] {$settingsContext.sidebar ===
+	'open'
+		? 'top-[9.825rem]'
+		: 'top-[6.825rem]'}"
+>
 	<div
 		class="flex w-full flex-1 items-center justify-between overflow-x-auto overflow-y-hidden pl-4"
 	>

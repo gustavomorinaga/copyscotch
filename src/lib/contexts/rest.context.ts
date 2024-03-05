@@ -3,7 +3,7 @@ import { getContext, setContext } from 'svelte';
 import { get, writable, type StartStopNotifier, type Writable } from 'svelte/store';
 import { RESTRepository } from '$lib/repositories';
 import { generateUUID } from '$lib/utils';
-import type { TFolderInfer, TFileInfer } from '$lib/validators';
+import { DEFAULT_FOLDER, DEFAULT_FILE, type TFolderInfer, type TFileInfer } from '$lib/validators';
 
 type TRESTContext = Writable<TRESTData> & TRESTActions;
 type TRESTData = Array<TFolderInfer>;
@@ -16,24 +16,12 @@ type TRESTActions = {
 	updateFile: (file: TFileInfer) => void;
 	removeFolder: (id: TFolderInfer['id']) => void;
 	removeFile: (id: TFileInfer['id']) => void;
+	import: (data: TRESTData) => void;
 };
 
 const CTX = Symbol('REST_COLLECTION_CTX');
 const STORAGE_KEY = 'collectionsREST';
 const INITIAL_DATA: TRESTData = [];
-const DEFAULT_FOLDER: Omit<TFolderInfer, 'id'> = {
-	name: 'Untitled',
-	folders: [],
-	requests: []
-};
-const DEFAULT_FILE: Omit<TFileInfer, 'id'> = {
-	name: 'Untitled',
-	url: 'https://jsonplaceholder.typicode.com/todos/1',
-	method: 'GET',
-	params: [],
-	body: { body: null, contentType: null },
-	headers: []
-};
 
 export function setRESTContext(
 	initialData: Partial<TRESTData> = INITIAL_DATA,
@@ -139,7 +127,16 @@ export function setRESTContext(
 				saveData(state);
 				return state;
 			});
-		}
+		},
+		import(data) {
+			const newCollections = RESTRepository.setNewIDs(data);
+
+			return store.update((state) => {
+				state.push(...newCollections);
+				saveData(state);
+				return state;
+			});
+		},
 	};
 
 	const context = { ...store, ...actions } as TRESTContext;

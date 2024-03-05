@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
+	import { getRESTContext, getRESTTabContext, getSettingsContext } from '$lib/contexts';
 	import {
 		RESTRequestSchema,
 		MethodEnum,
@@ -62,7 +62,11 @@
 	export let tabID: $$Props['tabID'];
 	const formID: string = `tab-request-${tabID}`;
 
-	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
+	const [settingsContext, restContext, tabContext] = [
+		getSettingsContext(),
+		getRESTContext(),
+		getRESTTabContext()
+	];
 
 	let tab!: TRESTTabInfer;
 	let currentTab!: TAvailableTabs;
@@ -349,7 +353,11 @@
 
 	<Form.Join class="h-full">
 		<Tabs.Root value={currentTab} class="flex flex-1 flex-col">
-			<div class="sticky top-[7.5rem] flex shrink-0 flex-col lg:top-[4.5rem]">
+			<div
+				class="sticky flex shrink-0 flex-col lg:top-[4.5rem] {$settingsContext.sidebar === 'open'
+					? 'top-[7.5rem]'
+					: 'top-[4.5rem]'}"
+			>
 				<Tabs.List class="flex !h-auto shrink-0 gap-8 bg-background px-4 py-0">
 					{#each LAZY_TABS as { value, label, disabled }}
 						<Tabs.Trigger

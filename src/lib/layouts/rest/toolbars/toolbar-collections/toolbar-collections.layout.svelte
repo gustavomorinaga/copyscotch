@@ -1,6 +1,7 @@
 <script lang="ts" context="module">
 	import { getRESTContext } from '$lib/contexts';
-	import { dialogEditCollectionStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
+	import { dialogImportStore } from '$lib/layouts/rest/dialogs/dialog-import';
+	import { dialogEditCollectionStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
 	import { treeCollectionStore as treeStore } from '$lib/layouts/rest/trees/tree-collection';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
@@ -13,10 +14,17 @@
 	const restContext = getRESTContext();
 
 	function handleNewCollection() {
-		dialogStore.set({ mode: 'create', type: 'collection', open: true, collection: undefined });
+		dialogEditCollectionStore.set({
+			mode: 'create',
+			type: 'collection',
+			open: true,
+			collection: undefined
+		});
 	}
 
-	function handleImportExport() {}
+	function handleImportExport() {
+		dialogImportStore.set({ open: true });
+	}
 
 	function handleCollapseAll() {
 		$treeStore.collapse = true;
@@ -46,7 +54,6 @@
 					variant="text"
 					aria-label="Import / Export"
 					class="mx-2 h-[2.250rem] w-6"
-					disabled
 					on:click={handleImportExport}
 				>
 					<FolderDown class="h-4 w-4" />

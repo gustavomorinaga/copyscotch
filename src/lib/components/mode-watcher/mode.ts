@@ -6,7 +6,7 @@ import {
 	themeColors
 } from './stores';
 import type { Mode, ThemeColors } from './types';
-import type { TSettingsInfer } from '$lib/validators';
+import { DEFAULT_SETTINGS, type TSettingsInfer } from '$lib/validators/settings.validator';
 
 /** Set the mode to light or dark */
 export function setMode(mode: Mode): void {
@@ -21,7 +21,7 @@ export function resetMode(): void {
 export function setInitialMode(defaultMode: Mode, themeColors?: ThemeColors) {
 	const rootEl = document.documentElement;
 	const stored = JSON.parse(localStorage.getItem('settings') as string) as TSettingsInfer;
-	const mode = stored.backgroundColor || defaultMode;
+	const mode = stored?.backgroundColor || defaultMode;
 	const light =
 		mode === 'light' ||
 		(mode === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches);
@@ -57,7 +57,17 @@ export function setInitialMode(defaultMode: Mode, themeColors?: ThemeColors) {
 		}
 	}
 
-	const settings: TSettingsInfer = { ...stored, backgroundColor: mode };
+	const defaultSettings: TSettingsInfer = {
+		backgroundColor: 'system',
+		accentColor: 'green',
+		layout: 'vertical',
+		navigation: 'collapse',
+		sidebar: 'open',
+		sidebarPosition: 'right',
+		lineWrapping: false
+	};
+
+	const settings: TSettingsInfer = { ...defaultSettings, ...stored, backgroundColor: mode };
 	localStorage.setItem('settings', JSON.stringify(settings));
 }
 

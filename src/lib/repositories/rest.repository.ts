@@ -1,3 +1,4 @@
+import { generateUUID } from '$lib/utils';
 import type { TFolderInfer, TFileInfer } from '$lib/validators';
 
 /**
@@ -296,5 +297,19 @@ export function removeFile(
 		}
 
 		return folder;
+	});
+}
+
+/**
+ * Sets new IDs for the collections, folders, and requests in the given array.
+ * @param collections - An array of collections.
+ * @returns An array of collections with new IDs.
+ */
+export function setNewIDs(collections: Array<TFolderInfer>): Array<TFolderInfer> {
+	return collections.map((collection) => {
+		const newCollection = { ...collection, id: generateUUID() };
+		newCollection.folders = setNewIDs(collection.folders);
+		newCollection.requests = collection.requests.map((request) => ({ ...request, id: generateUUID() }));
+		return newCollection;
 	});
 }

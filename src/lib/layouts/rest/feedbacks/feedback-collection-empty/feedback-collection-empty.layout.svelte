@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
-	import { dialogEditCollectionStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
+	import { dialogImportStore } from '$lib/layouts/rest/dialogs/dialog-import';
+	import { dialogEditCollectionStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
 	import { Center } from '$lib/components/ui/center';
 	import { Button } from '$lib/components/ui/button';
 	import { mode } from '$lib/components/mode-watcher';
@@ -8,8 +9,17 @@
 </script>
 
 <script lang="ts">
+	function handleImport() {
+		dialogImportStore.set({ open: true });
+	}
+
 	function handleNewCollection() {
-		dialogStore.set({ mode: 'create', type: 'collection', open: true, collection: undefined });
+		dialogEditCollectionStore.set({
+			mode: 'create',
+			type: 'collection',
+			open: true,
+			collection: undefined
+		});
 	}
 </script>
 
@@ -30,7 +40,7 @@
 		<div class="mt-4 flex flex-col items-center space-y-4">
 			<p class="select-none text-sm text-muted-foreground">Import or create a collection</p>
 			<div class="flex flex-col items-stretch gap-4">
-				<Button aria-label="Import Collection" class="w-40" disabled>
+				<Button aria-label="Import Collection" class="w-40" on:click={handleImport}>
 					<FolderDown class="mr-2 h-4 w-4" />
 					<span class="select-none">Import</span>
 				</Button>
