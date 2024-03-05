@@ -11,7 +11,7 @@
 
 <span
 	class={cn(
-		'inline-flex items-center justify-start truncate data-[current=true]:text-clip',
+		'inline-flex shrink items-center justify-start truncate data-[current=true]:shrink-0 data-[current=true]:text-clip',
 		className
 	)}
 	data-current={current}

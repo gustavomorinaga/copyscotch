@@ -40,7 +40,7 @@
 			class="h-[2.250rem]"
 			on:click={handleNewCollection}
 		>
-			<Plus class="mr-2 h-4 w-4" />
+			<Plus class="mr-2 h-4 w-4 shrink-0" />
 			<span class="select-none">New</span>
 		</Button>
 	</div>
@@ -56,7 +56,7 @@
 					class="mx-2 h-[2.250rem] w-6"
 					on:click={handleImportExport}
 				>
-					<FolderDown class="h-4 w-4" />
+					<FolderDown class="h-4 w-4 shrink-0" />
 					<span class="sr-only select-none">Import / Export</span>
 				</Button>
 			</Tooltip.Trigger>
@@ -76,7 +76,7 @@
 					disabled={!$restContext.length}
 					on:click={handleCollapseAll}
 				>
-					<MinusSquare class="h-4 w-4" />
+					<MinusSquare class="h-4 w-4 shrink-0" />
 					<span class="sr-only select-none">Collapse All</span>
 				</Button>
 			</Tooltip.Trigger>

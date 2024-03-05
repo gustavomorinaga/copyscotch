@@ -21,6 +21,6 @@
 	on:click
 >
 	<RadioGroupPrimitive.ItemIndicator class="absolute inset-0 flex items-center justify-center">
-		<Circle class="h-1 w-1 fill-current text-current" />
+		<Circle class="h-1 w-1 shrink-0 fill-current text-current" />
 	</RadioGroupPrimitive.ItemIndicator>
 </RadioGroupPrimitive.Item>

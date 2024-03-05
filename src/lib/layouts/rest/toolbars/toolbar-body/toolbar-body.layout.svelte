@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
-	import { getRESTTabContext, getSettingsContext } from '$lib/contexts';
+	import { onMount } from 'svelte';
+	import { getRESTTabContext } from '$lib/contexts';
 	import {
 		BodyContentTypeEnum,
 		type TRESTHeaderInfer,
@@ -23,7 +24,9 @@
 	export let tabID: $$Props['tabID'];
 	export let form: $$Props['form'];
 
-	const [settingsContext, tabContext] = [getSettingsContext(), getRESTTabContext()];
+	const tabContext = getRESTTabContext();
+
+	let toolbarRef!: HTMLElement;
 
 	$: ({ form: formData } = form);
 	$: contentTypeHeaderIndex = $formData.headers.findIndex(
@@ -68,11 +71,15 @@
 
 		tabContext.setCurrentTab(tabID, 'headers');
 	}
+
+	onMount(() => {
+		toolbarRef = document.getElementById('main-request-toolbar') as HTMLElement;
+	});
 </script>
 
 <div
-	class="sticky z-10 flex h-10 shrink-0 flex-col bg-background lg:top-[6.825rem] {$settingsContext.sidebar ===
-	'open'
+	class="sticky z-10 flex h-10 shrink-0 flex-col bg-background lg:top-[6.825rem] {toolbarRef?.offsetHeight >
+	100
 		? 'top-[9.825rem]'
 		: 'top-[6.825rem]'}"
 >
@@ -121,7 +128,7 @@
 						class="h-6"
 						on:click={handleOverrideContentType}
 					>
-						<RefreshCw class="mr-2 h-4 w-4" />
+						<RefreshCw class="mr-2 h-4 w-4 shrink-0" />
 						<span class="select-none capitalize">Override</span>
 					</Button>
 				</Tooltip.Trigger>

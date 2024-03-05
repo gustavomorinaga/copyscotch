@@ -1,11 +1,10 @@
 <script lang="ts" context="module">
 	import { getRESTContext, getRESTTabContext, getSettingsContext } from '$lib/contexts';
+	import { BREAKPOINTS } from '$lib/maps';
 	import { SidenavREST } from '$lib/layouts/rest/sidenavs/sidenav-rest';
 	import { ViewWelcome } from '$lib/layouts/rest/views/view-welcome';
-	import { BREAKPOINTS } from '$lib/maps';
 	import { screenStore } from '$lib/components/screen-watcher';
-	import { Separator } from '$lib/components/ui/separator';
-	import * as Sidenav from '$lib/components/ui/sidenav';
+	import * as Resizable from '$lib/components/ui/resizable';
 
 	const LAZY_VIEW_COMPONENTS = [
 		import('$lib/layouts/rest/views/view-edit'),
@@ -32,31 +31,44 @@
 	$: if (isMobile) layout = 'vertical';
 </script>
 
-<Sidenav.Root class={sidebarPosition === 'left' ? 'flex-row' : 'flex-row-reverse'}>
+<Resizable.PaneGroup
+	autoSaveId="sidenav"
+	direction="horizontal"
+	class={sidebarPosition === 'left' ? '!flex-row' : '!flex-row-reverse'}
+>
 	{#if openSidenav}
-		<Sidenav.Nav class="w-5/12 lg:w-3/12 {isMobile && 'hidden'}">
+		<Resizable.Pane
+			defaultSize={25}
+			minSize={25}
+			maxSize={35}
+			order={sidebarPosition === 'left' ? 1 : 2}
+		>
 			<SidenavREST />
-		</Sidenav.Nav>
-		<Sidenav.Separator orientation="vertical" class={isMobile ? 'hidden' : undefined} />
+		</Resizable.Pane>
+
+		<Resizable.Handle class="z-30" />
 	{/if}
-	<Sidenav.Content class={isMobile || !openSidenav ? 'w-full' : 'w-7/12 lg:w-9/12'}>
+
+	<Resizable.Pane defaultSize={75} order={sidebarPosition === 'right' ? 1 : 2}>
 		{#if $tabContext.tabs.length}
-			<div
-				class="flex h-full w-full"
-				class:flex-col={layout === 'vertical'}
-				class:flex-row={layout === 'horizontal'}
-			>
+			<Resizable.PaneGroup autoSaveId="editor" direction="vertical" class="flex h-full w-full">
 				{#await Promise.all(LAZY_VIEW_COMPONENTS) then [{ ViewEdit }, { ViewResponse }]}
-					<ViewEdit />
-					<Separator orientation={layout === 'horizontal' ? 'vertical' : 'horizontal'} />
-					<ViewResponse />
+					<Resizable.Pane defaultSize={1 / 2} minSize={35}>
+						<ViewEdit />
+					</Resizable.Pane>
+
+					<Resizable.Handle class="z-30" />
+
+					<Resizable.Pane defaultSize={1 / 2} minSize={25}>
+						<ViewResponse />
+					</Resizable.Pane>
 				{/await}
-			</div>
+			</Resizable.PaneGroup>
 		{:else}
 			<ViewWelcome />
 		{/if}
-	</Sidenav.Content>
-</Sidenav.Root>
+	</Resizable.Pane>
+</Resizable.PaneGroup>
 
 {#if $settingsContext.sidebar === 'open' || $tabContext.tabs.length}
 	{#await LAZY_DIALOG_COMPONENTS[0] then { DialogImport }}

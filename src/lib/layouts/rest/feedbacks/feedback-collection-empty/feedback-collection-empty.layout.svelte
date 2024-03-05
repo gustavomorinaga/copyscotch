@@ -41,7 +41,7 @@
 			<p class="select-none text-sm text-muted-foreground">Import or create a collection</p>
 			<div class="flex flex-col items-stretch gap-4">
 				<Button aria-label="Import Collection" class="w-40" on:click={handleImport}>
-					<FolderDown class="mr-2 h-4 w-4" />
+					<FolderDown class="mr-2 h-4 w-4 shrink-0" />
 					<span class="select-none">Import</span>
 				</Button>
 
@@ -52,7 +52,7 @@
 					class="w-40"
 					on:click={handleNewCollection}
 				>
-					<Plus class="mr-2 h-4 w-4" />
+					<Plus class="mr-2 h-4 w-4 shrink-0" />
 					<span class="select-none">Add New</span>
 				</Button>
 			</div>

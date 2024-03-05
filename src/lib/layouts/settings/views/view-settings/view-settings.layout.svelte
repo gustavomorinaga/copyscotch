@@ -97,7 +97,7 @@
 									class="inline-flex shrink-0 cursor-pointer rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-accent-foreground [&:has([data-state=checked])]:bg-accent [&:has([data-state=checked])]:text-primary"
 								>
 									<RadioGroup.Item {...attrs} value={option} class="!sr-only" />
-									<svelte:component this={THEME_ICONS[option]} class="h-5 w-5" />
+									<svelte:component this={THEME_ICONS[option]} class="h-5 w-5 shrink-0" />
 									<span class="sr-only capitalize">{option}</span>
 								</Form.Label>
 							</Form.Control>

@@ -78,7 +78,7 @@
 	<DropdownMenu.Content class="w-64">
 		{#each OPTIONS as option}
 			<DropdownMenu.Item inset on:click={option.action}>
-				<svelte:component this={option.icon} class="mr-2 h-4 w-4" />
+				<svelte:component this={option.icon} class="mr-2 h-4 w-4 shrink-0" />
 				{option.label}
 			</DropdownMenu.Item>
 		{/each}

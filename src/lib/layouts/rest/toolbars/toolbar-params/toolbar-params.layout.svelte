@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
-	import { getRESTTabContext, getSettingsContext } from '$lib/contexts';
+	import { onMount } from 'svelte';
+	import { getRESTTabContext } from '$lib/contexts';
 	import { DEFAULT_KEY_VALUE, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
@@ -15,7 +16,9 @@
 	export let tabID: $$Props['tabID'];
 	export let form: $$Props['form'];
 
-	const [settingsContext, tabContext] = [getSettingsContext(), getRESTTabContext()];
+	const tabContext = getRESTTabContext();
+
+	let toolbarRef!: HTMLElement;
 
 	$: ({ form: formData } = form);
 
@@ -26,11 +29,15 @@
 	function handleAddNew() {
 		tabContext.update(tabID, { params: [...$formData.params, DEFAULT_KEY_VALUE] });
 	}
+
+	onMount(() => {
+		toolbarRef = document.getElementById('main-request-toolbar') as HTMLElement;
+	});
 </script>
 
 <div
-	class="sticky z-10 flex h-10 shrink-0 flex-col bg-background lg:top-[6.825rem] {$settingsContext.sidebar ===
-	'open'
+	class="sticky z-10 flex h-10 shrink-0 flex-col bg-background lg:top-[6.825rem] {toolbarRef?.offsetHeight >
+	100
 		? 'top-[9.825rem]'
 		: 'top-[6.825rem]'}"
 >
@@ -53,7 +60,7 @@
 						aria-label="Clear All Parameters"
 						on:click={handleClearAll}
 					>
-						<Trash2 class="h-4 w-4" />
+						<Trash2 class="h-4 w-4 shrink-0" />
 						<span class="sr-only select-none">Clear All</span>
 					</Button>
 				</Tooltip.Trigger>
@@ -71,7 +78,7 @@
 						aria-label="Add New Parameter"
 						on:click={handleAddNew}
 					>
-						<Plus class="h-4 w-4" />
+						<Plus class="h-4 w-4 shrink-0" />
 						<span class="sr-only select-none">Add New</span>
 					</Button>
 				</Tooltip.Trigger>

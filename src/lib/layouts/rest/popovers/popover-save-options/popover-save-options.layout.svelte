@@ -78,7 +78,7 @@
 			</Form.Field>
 
 			<Form.Button size="sm" variant="ghost" aria-label="Save As">
-				<FolderPlus class="mr-2 h-4 w-4" />
+				<FolderPlus class="mr-2 h-4 w-4 shrink-0" />
 				<span class="select-none">Save As</span>
 			</Form.Button>
 		</form>

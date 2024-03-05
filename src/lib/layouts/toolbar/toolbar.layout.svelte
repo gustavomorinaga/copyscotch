@@ -39,7 +39,7 @@
 							variant="ghost"
 							aria-label="Support Options"
 						>
-							<LifeBuoy class="h-5 w-5" />
+							<LifeBuoy class="h-5 w-5 shrink-0" />
 							<span class="sr-only select-none">Support</span>
 						</Button>
 					</Tooltip.Trigger>
@@ -53,7 +53,7 @@
 
 	<!-- <div class="col-span-2 flex items-center justify-between gap-x-2">
 		<Button size="sm" variant="success" aria-label="Save My Workspace" class="ml-auto" disabled>
-			<UploadCloud class="w-4 h-4 mr-2" />
+			<UploadCloud class="w-4 h-4 mr-2 shrink-0" />
 			<span class="select-none">Save My Workspace</span>
 		</Button>
 	</div> -->

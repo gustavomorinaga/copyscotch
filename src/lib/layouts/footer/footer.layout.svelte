@@ -113,7 +113,7 @@
 						class="h-8 w-8"
 						on:click={handleNavigationToggle}
 					>
-						<svelte:component this={navigationProps.icon} class="h-5 w-5" />
+						<svelte:component this={navigationProps.icon} class="h-5 w-5 shrink-0" />
 						<span class="sr-only select-none">{navigationProps.title}</span>
 					</Button>
 				</Tooltip.Trigger>
@@ -134,7 +134,7 @@
 						class="h-8 w-8"
 						on:click={handleLayoutToggle}
 					>
-						<svelte:component this={layoutProps.icon} class="h-5 w-5" />
+						<svelte:component this={layoutProps.icon} class="h-5 w-5 shrink-0" />
 						<span class="sr-only select-none">{layoutProps.title}</span>
 					</Button>
 				</Tooltip.Trigger>
@@ -153,7 +153,7 @@
 						class="h-8 w-8"
 						on:click={handleSidebarToggle}
 					>
-						<svelte:component this={sidebarProps.icon} class="h-5 w-5" />
+						<svelte:component this={sidebarProps.icon} class="h-5 w-5 shrink-0" />
 						<span class="sr-only select-none">{sidebarProps.title}</span>
 					</Button>
 				</Tooltip.Trigger>

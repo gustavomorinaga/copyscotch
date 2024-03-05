@@ -17,7 +17,7 @@
 >
 	<Center>
 		<Button size="sm" variant="outline" aria-label="New Request" on:click={() => tabContext.add()}>
-			<Plus class="mr-2 h-4 w-4" />
+			<Plus class="mr-2 h-4 w-4 shrink-0" />
 			<span class="select-none">New Request</span>
 		</Button>
 	</Center>
