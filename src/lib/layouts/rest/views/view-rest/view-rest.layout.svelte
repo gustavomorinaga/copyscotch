@@ -26,8 +26,8 @@
 	];
 
 	$: ({ layout, sidebar, sidebarPosition } = $settingsContext);
-	$: openSidenav = sidebar === 'open';
 	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
+	$: openSidenav = isMobile ? false : sidebar === 'open';
 	$: if (isMobile) layout = 'vertical';
 </script>
 
