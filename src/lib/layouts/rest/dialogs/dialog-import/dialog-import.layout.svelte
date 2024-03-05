@@ -1,0 +1,146 @@
+<script lang="ts" context="module">
+	import { dialogImportStore as dialogStore } from '.';
+	import { getRESTContext } from '$lib/contexts';
+	import {
+		FileUploadSchema,
+		RESTCollectionSchema,
+		type TRESTCollectionInfer,
+		type TFileUploadInfer
+	} from '$lib/validators';
+	import { Input } from '$lib/components/ui/input';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import * as Form from '$lib/components/ui/form';
+	import CheckCircle from 'lucide-svelte/icons/check-circle';
+	import { defaults, superForm } from 'sveltekit-superforms';
+	import { zod } from 'sveltekit-superforms/adapters';
+
+	type TFormAction = 'import' | 'cancel';
+</script>
+
+<script lang="ts">
+	const restContext = getRESTContext();
+
+	const formID: string = 'dialog-import';
+	let action: TFormAction = 'import';
+	let parsedJSON: Array<TRESTCollectionInfer> = [];
+
+	const form = superForm(defaults(zod(FileUploadSchema)), {
+		id: formID,
+		SPA: true,
+		dataType: 'json',
+		validators: zod(FileUploadSchema),
+		validationMethod: 'oninput',
+		resetForm: true,
+		onSubmit: (input) => {
+			input.cancel();
+			return handleFormSubmit();
+		}
+	});
+
+	const { enhance } = form;
+	$: ({ form: formData, errors, allErrors } = form);
+	$: isInvalid = Boolean($allErrors.length) || !$formData.file;
+
+	function handleOnInput(event: Event) {
+		const target = event.target as HTMLInputElement;
+		$formData.file = target.files?.item(0) as File;
+		handleValidateFile($formData.file);
+	}
+
+	function handleFormSubmit() {
+		const ACTIONS = { cancel: handleCancel, import: handleImport } as const satisfies Record<
+			TFormAction,
+			() => void
+		>;
+
+		ACTIONS[action]();
+		form.reset();
+		parsedJSON.length = 0;
+	}
+
+	function handleCancel() {
+		dialogStore.set({ open: false });
+	}
+
+	function handleImport() {
+		if (isInvalid) return;
+
+		restContext.import(parsedJSON);
+		parsedJSON.length = 0;
+		dialogStore.set({ open: false });
+	}
+
+	function handleValidateFile(file: File) {
+		const reader = new FileReader();
+		reader.readAsText(file, 'UTF-8');
+		reader.onload = () => {
+			const content = reader.result as string;
+			const json = JSON.parse(content);
+
+			try {
+				parsedJSON = RESTCollectionSchema.array().parse(json);
+			} catch (error) {
+				$errors.file = ['Invalid JSON file, please try again'];
+			}
+		};
+	}
+
+	function handleOpenChange(event: boolean) {
+		if (!event) handleCancel();
+	}
+</script>
+
+<Dialog.Root
+	bind:open={$dialogStore.open}
+	closeOnOutsideClick={false}
+	onOpenChange={handleOpenChange}
+>
+	<Dialog.Content>
+		<Dialog.Header>
+			<Dialog.Title>Collections</Dialog.Title>
+		</Dialog.Header>
+
+		<form
+			id={formID}
+			method="POST"
+			action="?/{action}"
+			enctype="multipart/form-data"
+			class="flex max-h-[55vh] flex-col"
+			use:enhance
+		>
+			<div class="mb-2 flex items-center">
+				<CheckCircle class="mr-4 h-6 w-6 {!isInvalid ? 'text-success' : 'text-muted-foreground'}" />
+				<span class="select-none text-sm">Import from File</span>
+			</div>
+
+			<Form.Field {form} name="file" class="ml-10 flex shrink-0 flex-col">
+				<Form.Control let:attrs>
+					<div class="rounded border border-dashed border-border">
+						<Input
+							{...attrs}
+							type="file"
+							accept="application/json"
+							class="h-auto cursor-pointer p-4 text-muted-foreground transition file:mr-2 file:cursor-pointer file:rounded file:border-0 file:bg-secondary file:px-4 file:py-2 file:text-muted-foreground file:transition hover:text-accent-foreground file:hover:bg-secondary/80 file:hover:text-accent-foreground"
+							on:input={handleOnInput}
+						/>
+					</div>
+
+					<Form.FieldErrors />
+				</Form.Control>
+			</Form.Field>
+		</form>
+
+		<Dialog.Footer>
+			<Form.Button
+				variant="default"
+				form={formID}
+				aria-label="Save"
+				disabled={isInvalid}
+				class="w-full"
+				on:click={() => (action = 'import')}
+			>
+				<span class="select-none">Import</span>
+			</Form.Button>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>

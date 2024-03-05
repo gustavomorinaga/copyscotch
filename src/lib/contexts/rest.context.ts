@@ -16,6 +16,7 @@ type TRESTActions = {
 	updateFile: (file: TFileInfer) => void;
 	removeFolder: (id: TFolderInfer['id']) => void;
 	removeFile: (id: TFileInfer['id']) => void;
+	import: (data: TRESTData) => void;
 };
 
 const CTX = Symbol('REST_COLLECTION_CTX');
@@ -126,7 +127,16 @@ export function setRESTContext(
 				saveData(state);
 				return state;
 			});
-		}
+		},
+		import(data) {
+			const newCollections = RESTRepository.setNewIDs(data);
+
+			return store.update((state) => {
+				state.push(...newCollections);
+				saveData(state);
+				return state;
+			});
+		},
 	};
 
 	const context = { ...store, ...actions } as TRESTContext;

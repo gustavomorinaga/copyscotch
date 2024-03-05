@@ -20,7 +20,7 @@
 	$: ({ form: formData } = form);
 
 	function handleClearAll() {
-		$formData.params = [];
+		$formData.params.length = 0;
 	}
 
 	function handleAddNew() {

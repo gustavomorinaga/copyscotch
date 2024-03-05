@@ -13,6 +13,7 @@
 	] as const;
 
 	const LAZY_DIALOG_COMPONENTS = [
+		import('$lib/layouts/rest/dialogs/dialog-import'),
 		import('$lib/layouts/rest/dialogs/dialog-edit-collection'),
 		import('$lib/layouts/rest/dialogs/dialog-edit-request')
 	] as const;
@@ -58,13 +59,19 @@
 </Sidenav.Root>
 
 {#if $settingsContext.sidebar === 'open' || $tabContext.tabs.length}
-	{#await LAZY_DIALOG_COMPONENTS[0] then { default: DialogEditCollection }}
+	{#await LAZY_DIALOG_COMPONENTS[0] then { DialogImport }}
+		<DialogImport />
+	{/await}
+{/if}
+
+{#if $settingsContext.sidebar === 'open' || $tabContext.tabs.length}
+	{#await LAZY_DIALOG_COMPONENTS[1] then { DialogEditCollection }}
 		<DialogEditCollection />
 	{/await}
 {/if}
 
 {#if ($settingsContext.sidebar === 'open' && $restContext.length) || $tabContext.tabs.length}
-	{#await LAZY_DIALOG_COMPONENTS[1] then { default: DialogEditRequest }}
+	{#await LAZY_DIALOG_COMPONENTS[2] then { DialogEditRequest }}
 		<DialogEditRequest />
 	{/await}
 {/if}

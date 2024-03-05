@@ -20,7 +20,7 @@
 	$: ({ form: formData } = form);
 
 	function handleClearAll() {
-		$formData.headers = [];
+		$formData.headers.length = 0;
 	}
 
 	function handleAddNew() {

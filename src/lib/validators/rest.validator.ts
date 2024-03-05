@@ -28,7 +28,7 @@ export const HeaderSchema = KeyValueSchema.extend({ override: z.boolean().defaul
 export const RequestTabsEnum = z.enum(['params', 'body', 'headers', 'auth']);
 
 export const BodySchema = z.object({
-	body: z.string().min(1).max(10000).nullable(),
+	body: z.string().max(10000).nullable(),
 	contentType: BodyContentTypeEnum.nullable()
 });
 
