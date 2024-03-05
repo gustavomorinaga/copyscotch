@@ -1,92 +1,30 @@
 <script lang="ts" context="module">
 	import { dialogImportStore as dialogStore } from '.';
-	import { getRESTContext } from '$lib/contexts';
-	import {
-		FileUploadSchema,
-		RESTCollectionSchema,
-		type TRESTCollectionInfer,
-		type TFileUploadInfer
-	} from '$lib/validators';
-	import { Input } from '$lib/components/ui/input';
+	import { Button } from '$lib/components/ui/button';
+	import { Separator } from '$lib/components/ui/separator';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import * as Form from '$lib/components/ui/form';
-	import CheckCircle from 'lucide-svelte/icons/check-circle';
-	import { defaults, superForm } from 'sveltekit-superforms';
-	import { zod } from 'sveltekit-superforms/adapters';
+	import FolderPlus from 'lucide-svelte/icons/folder-plus';
+	import User from 'lucide-svelte/icons/user';
+	import type { ComponentType } from 'svelte';
 
-	type TFormAction = 'import' | 'cancel';
+	type TView = { value: string; name: string; icon: ComponentType; view: Promise<any> };
+
+	const VIEWS = {
+		'import-from-file': {
+			value: 'import-from-file',
+			name: 'Import from Copyscotch',
+			icon: FolderPlus,
+			view: import('$lib/layouts/rest/views/view-import-from-file')
+		}
+	} as const satisfies Record<string, TView>;
 </script>
 
 <script lang="ts">
-	const restContext = getRESTContext();
-
-	const formID: string = 'dialog-import';
-	let action: TFormAction = 'import';
-	let parsedJSON: Array<TRESTCollectionInfer> = [];
-
-	const form = superForm(defaults(zod(FileUploadSchema)), {
-		id: formID,
-		SPA: true,
-		dataType: 'json',
-		validators: zod(FileUploadSchema),
-		validationMethod: 'oninput',
-		resetForm: true,
-		onSubmit: (input) => {
-			input.cancel();
-			return handleFormSubmit();
-		}
-	});
-
-	const { enhance } = form;
-	$: ({ form: formData, errors, allErrors } = form);
-	$: isInvalid = Boolean($allErrors.length) || !$formData.file;
-
-	function handleOnInput(event: Event) {
-		const target = event.target as HTMLInputElement;
-		$formData.file = target.files?.item(0) as File;
-		handleValidateFile($formData.file);
-	}
-
-	function handleFormSubmit() {
-		const ACTIONS = { cancel: handleCancel, import: handleImport } as const satisfies Record<
-			TFormAction,
-			() => void
-		>;
-
-		ACTIONS[action]();
-		form.reset();
-		parsedJSON.length = 0;
-	}
-
-	function handleCancel() {
-		dialogStore.set({ open: false });
-	}
-
-	function handleImport() {
-		if (isInvalid) return;
-
-		restContext.import(parsedJSON);
-		parsedJSON.length = 0;
-		dialogStore.set({ open: false });
-	}
-
-	function handleValidateFile(file: File) {
-		const reader = new FileReader();
-		reader.readAsText(file, 'UTF-8');
-		reader.onload = () => {
-			const content = reader.result as string;
-			const json = JSON.parse(content);
-
-			try {
-				parsedJSON = RESTCollectionSchema.array().parse(json);
-			} catch (error) {
-				$errors.file = ['Invalid JSON file, please try again'];
-			}
-		};
-	}
+	let currentView: keyof typeof VIEWS | null = null;
 
 	function handleOpenChange(event: boolean) {
-		if (!event) handleCancel();
+		if (!event) currentView = null;
 	}
 </script>
 
@@ -100,47 +38,47 @@
 			<Dialog.Title>Collections</Dialog.Title>
 		</Dialog.Header>
 
-		<form
-			id={formID}
-			method="POST"
-			action="?/{action}"
-			enctype="multipart/form-data"
-			class="flex max-h-[55vh] flex-col"
-			use:enhance
-		>
-			<div class="mb-2 flex items-center">
-				<CheckCircle class="mr-4 h-6 w-6 {!isInvalid ? 'text-success' : 'text-muted-foreground'}" />
-				<span class="select-none text-sm">Import from File</span>
-			</div>
+		{#if !currentView}
+			<ul role="menu" class="flex flex-col gap-2">
+				{#each Object.values(VIEWS) as { name, value, icon }}
+					<li class="contents">
+						<Button
+							variant="ghost"
+							role="menuitem"
+							class="w-full flex-1 justify-start"
+							on:click={() => (currentView = value)}
+						>
+							<svelte:component this={icon} class="mr-4 h-5 w-5" />
+							<span class="select-none">{name}</span>
+						</Button>
+					</li>
+				{/each}
 
-			<Form.Field {form} name="file" class="ml-10 flex shrink-0 flex-col">
-				<Form.Control let:attrs>
-					<div class="rounded border border-dashed border-border">
-						<Input
-							{...attrs}
-							type="file"
-							accept="application/json"
-							class="h-auto cursor-pointer p-4 text-muted-foreground transition file:mr-2 file:cursor-pointer file:rounded file:border-0 file:bg-secondary file:px-4 file:py-2 file:text-muted-foreground file:transition hover:text-accent-foreground file:hover:bg-secondary/80 file:hover:text-accent-foreground"
-							on:input={handleOnInput}
-						/>
-					</div>
+				<Separator orientation="horizontal" />
 
-					<Form.FieldErrors />
-				</Form.Control>
-			</Form.Field>
-		</form>
-
-		<Dialog.Footer>
-			<Form.Button
-				variant="default"
-				form={formID}
-				aria-label="Save"
-				disabled={isInvalid}
-				class="w-full"
-				on:click={() => (action = 'import')}
-			>
-				<span class="select-none">Import</span>
-			</Form.Button>
-		</Dialog.Footer>
+				<li class="contents">
+					<Tooltip.Root>
+						<Tooltip.Trigger asChild let:builder>
+							<Button
+								builders={[builder]}
+								variant="ghost"
+								role="menuitem"
+								class="w-full flex-1 justify-start"
+							>
+								<User class="mr-4 h-5 w-5" />
+								<span class="select-none">Export as JSON</span>
+							</Button>
+						</Tooltip.Trigger>
+						<Tooltip.Content side="top" class="select-none">
+							<span>Download File</span>
+						</Tooltip.Content>
+					</Tooltip.Root>
+				</li>
+			</ul>
+		{:else}
+			{#await VIEWS[currentView].view then view}
+				<svelte:component this={view.default} onCancel={() => (currentView = null)} />
+			{/await}
+		{/if}
 	</Dialog.Content>
 </Dialog.Root>
