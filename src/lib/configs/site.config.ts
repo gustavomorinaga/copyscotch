@@ -1,7 +1,7 @@
 export const siteConfig = {
 	name: 'Copyscotch',
 	url: 'https://copyscotch.vercel.app',
-	ogImage: 'https://copyscotch.vercel.app/banner.png',
+	ogImage: 'https://copyscotch.vercel.app/images/banner.png',
 	description: 'Helps you create requests faster, saving precious time on development.',
 	author: 'gustavomorinaga',
 	links: {
