@@ -2,7 +2,7 @@ import { browser } from '$app/environment';
 import { getContext, setContext } from 'svelte';
 import { get, writable, type StartStopNotifier, type Writable } from 'svelte/store';
 import { generateUUID } from '$lib/utils';
-import type { TRESTTabInfer } from '$lib/validators';
+import { DEFAULT_REQUEST, type TRESTTabInfer } from '$lib/validators';
 import type { TResponse } from '$lib/ts';
 
 export type TRESTTabContext = Writable<TRESTTabData> & TRESTTabActions;
@@ -46,14 +46,6 @@ const INITIAL_DATA: TRESTTabData = {
 	current: undefined,
 	tainted: [],
 	results: []
-};
-const DEFAULT_REQUEST: Omit<TRESTTabInfer['context'], 'id'> = {
-	name: 'Untitled',
-	url: 'https://jsonplaceholder.typicode.com/todos/1',
-	method: 'GET',
-	params: [],
-	body: { body: null, contentType: null },
-	headers: []
 };
 
 export function setRESTTabContext(

@@ -70,7 +70,7 @@
 							</span>
 						</Button>
 					</Tooltip.Trigger>
-					<Tooltip.Content side="right" hidden={isMobile} class="select-none">
+					<Tooltip.Content side={isMobile ? 'top' : 'right'} class="select-none">
 						<span>{title}</span>
 					</Tooltip.Content>
 				</Tooltip.Root>

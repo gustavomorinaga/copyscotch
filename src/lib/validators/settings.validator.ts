@@ -35,3 +35,13 @@ export type TSettingsSchema = typeof SettingsSchema;
 export type TSettingsInfer = z.infer<TSettingsSchema>;
 export type TThemeSchema = typeof ThemeSchema;
 export type TThemeInfer = z.infer<TThemeSchema>;
+
+export const DEFAULT_SETTINGS: TSettingsInfer = {
+	backgroundColor: 'system',
+	accentColor: 'green',
+	layout: 'vertical',
+	navigation: 'collapse',
+	sidebar: 'open',
+	sidebarPosition: 'right',
+	lineWrapping: false
+};

@@ -2,8 +2,8 @@
 	import { getRESTTabContext } from '$lib/contexts';
 	import { ToolbarBody } from '$lib/layouts/rest/toolbars/toolbar-body';
 	import { FeedbackBodyEmpty } from '$lib/layouts/rest/feedbacks/feedback-body-empty';
-	import { CodeMirror, type Langs } from '$lib/components/ui/codemirror';
 	import { BodyContentTypeEnum, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
+	import type { Langs } from '$lib/components/ui/codemirror';
 	import type { SuperForm } from 'sveltekit-superforms';
 
 	const { options: contentTypeOptions } = BodyContentTypeEnum;
@@ -15,6 +15,8 @@
 		'text/html': 'html',
 		'text/plain': undefined
 	} as const satisfies Record<TContentTypeOption, Langs>;
+
+	const LAZY_COMPONENTS = [import('$lib/components/ui/codemirror')] as const;
 </script>
 
 <script lang="ts">
@@ -38,7 +40,9 @@
 <ToolbarBody {tabID} {form} />
 
 {#if tab?.context.body.contentType !== null}
-	<CodeMirror editable {lang} bind:value={$formData.body.body} />
+	{#await Promise.all(LAZY_COMPONENTS) then [{ CodeMirror }]}
+		<CodeMirror editable {lang} bind:value={$formData.body.body} />
+	{/await}
 {:else}
 	<FeedbackBodyEmpty />
 {/if}

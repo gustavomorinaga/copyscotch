@@ -55,6 +55,15 @@ export type TRESTRequestSchema = typeof RESTRequestSchema;
 export type TRESTRequestInfer = z.infer<TRESTRequestSchema>;
 export type TRESTHeaderInfer = z.infer<typeof HeaderSchema>;
 
+export const DEFAULT_REQUEST: Omit<TRESTTabInfer['context'], 'id'> = {
+	name: 'Untitled',
+	url: 'https://jsonplaceholder.typicode.com/todos/1',
+	method: 'GET',
+	params: [],
+	body: { body: null, contentType: null },
+	headers: []
+};
+
 export const DEFAULT_HEADER: TRESTHeaderInfer = {
 	key: '',
 	value: '',

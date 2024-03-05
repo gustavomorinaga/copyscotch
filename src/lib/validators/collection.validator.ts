@@ -21,3 +21,17 @@ export type TFolderInfer = z.infer<TFolderSchema> & { folders: Array<TFolderInfe
 export type TFileInfer = TFolderInfer['requests'][number];
 export type TRESTCollectionSchema = typeof RESTCollectionSchema;
 export type TRESTCollectionInfer = z.infer<TRESTCollectionSchema>;
+
+export const DEFAULT_FOLDER: Omit<TFolderInfer, 'id'> = {
+	name: 'Untitled',
+	folders: [],
+	requests: []
+};
+export const DEFAULT_FILE: Omit<TFileInfer, 'id'> = {
+	name: 'Untitled',
+	url: 'https://jsonplaceholder.typicode.com/todos/1',
+	method: 'GET',
+	params: [],
+	body: { body: null, contentType: null },
+	headers: []
+};
