@@ -28,5 +28,5 @@
 	on:pointermove
 >
 	<slot />
-	<ChevronRight class="ml-auto h-4 w-4" />
+	<ChevronRight class="ml-auto h-4 w-4 shrink-0" />
 </ContextMenuPrimitive.SubTrigger>

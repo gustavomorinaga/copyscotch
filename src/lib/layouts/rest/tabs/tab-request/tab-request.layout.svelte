@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
-	import { getRESTContext, getRESTTabContext, getSettingsContext } from '$lib/contexts';
+	import { onMount } from 'svelte';
+	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
 	import {
 		RESTRequestSchema,
 		MethodEnum,
@@ -52,7 +53,6 @@
 			content: import('$lib/layouts/rest/tabs/tab-headers'),
 			disabled: false
 		}
-		// TODO - Add 'body' and 'authorization' tabs
 	] as const satisfies Array<TTab>;
 </script>
 
@@ -62,16 +62,13 @@
 	export let tabID: $$Props['tabID'];
 	const formID: string = `tab-request-${tabID}`;
 
-	const [settingsContext, restContext, tabContext] = [
-		getSettingsContext(),
-		getRESTContext(),
-		getRESTTabContext()
-	];
+	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
 	let tab!: TRESTTabInfer;
 	let currentTab!: TAvailableTabs;
 	let action: TFormAction = 'send';
 	let controller = new AbortController();
+	let toolbarRef!: HTMLElement;
 
 	const form = superForm(defaults(zod(RESTRequestSchema)), {
 		id: formID,
@@ -128,8 +125,6 @@
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
-		const isMainTarget = event.target instanceof HTMLBodyElement;
-		if (!isMainTarget) return;
 		if (!$tabContext.current) return;
 		if ($tabContext.current !== tabID) return;
 
@@ -227,6 +222,10 @@
 			});
 		}
 	}
+
+	onMount(() => {
+		toolbarRef = document.getElementById('main-request-toolbar') as HTMLElement;
+	});
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -238,7 +237,10 @@
 	class="relative flex h-full w-full flex-1 flex-col"
 	use:enhance
 >
-	<Form.Join class="sticky top-0 z-20 flex-initial shrink-0 flex-wrap gap-2 bg-background p-4">
+	<Form.Join
+		id="main-request-toolbar"
+		class="sticky top-0 z-20 flex-initial shrink-0 flex-wrap gap-2 bg-background p-4"
+	>
 		<Form.Join class="min-w-[12rem] flex-auto whitespace-nowrap lg:flex-1">
 			<Form.Field {form} name="method" class="w-32">
 				<Form.Control let:attrs>
@@ -313,7 +315,7 @@
 							class="rounded-r-none"
 							on:click={() => (action = 'save')}
 						>
-							<Save class="mr-2 h-4 w-4" />
+							<Save class="mr-2 h-4 w-4 shrink-0" />
 							<span class="select-none">Save</span>
 						</Form.Button>
 					</Tooltip.Trigger>
@@ -338,7 +340,7 @@
 								aria-label="Options"
 								class="rounded-l-none"
 							>
-								<ChevronDown class="h-4 w-4" />
+								<ChevronDown class="h-4 w-4 shrink-0" />
 								<span class="sr-only select-none">Options</span>
 							</Button>
 						</Tooltip.Trigger>
@@ -354,7 +356,7 @@
 	<Form.Join class="h-full">
 		<Tabs.Root value={currentTab} class="flex flex-1 flex-col">
 			<div
-				class="sticky flex shrink-0 flex-col lg:top-[4.5rem] {$settingsContext.sidebar === 'open'
+				class="sticky flex shrink-0 flex-col lg:top-[4.5rem] {toolbarRef?.offsetHeight > 100
 					? 'top-[7.5rem]'
 					: 'top-[4.5rem]'}"
 			>

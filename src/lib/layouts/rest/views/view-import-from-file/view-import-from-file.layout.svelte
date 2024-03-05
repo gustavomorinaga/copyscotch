@@ -107,7 +107,9 @@
 	use:enhance
 >
 	<div class="mb-2 flex items-center">
-		<CheckCircle class="mr-4 h-6 w-6 {!isInvalid ? 'text-success' : 'text-muted-foreground'}" />
+		<CheckCircle
+			class="mr-4 h-6 w-6 shrink-0 {!isInvalid ? 'text-success' : 'text-muted-foreground'}"
+		/>
 		<span class="select-none text-sm">Import from File</span>
 	</div>
 
@@ -130,7 +132,7 @@
 
 <Dialog.Footer>
 	<Button variant="outline" aria-label="Go Back" on:click={handleCancel}>
-		<ArrowLeft class="h-5 w-5" />
+		<ArrowLeft class="h-5 w-5 shrink-0" />
 		<span class="sr-only select-none">Go Back</span>
 	</Button>
 

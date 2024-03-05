@@ -309,7 +309,10 @@ export function setNewIDs(collections: Array<TFolderInfer>): Array<TFolderInfer>
 	return collections.map((collection) => {
 		const newCollection = { ...collection, id: generateUUID() };
 		newCollection.folders = setNewIDs(collection.folders);
-		newCollection.requests = collection.requests.map((request) => ({ ...request, id: generateUUID() }));
+		newCollection.requests = collection.requests.map((request) => ({
+			...request,
+			id: generateUUID()
+		}));
 		return newCollection;
 	});
 }

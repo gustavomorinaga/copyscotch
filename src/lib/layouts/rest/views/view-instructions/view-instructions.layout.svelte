@@ -18,7 +18,7 @@
 	<span class="mt-4 inline-flex">
 		<Button variant="outline" {...LINKS.github} title={undefined} aria-label="Documentation">
 			<span class="select-none">Documentation</span>
-			<ExternalLink class="ml-2 h-4 w-4" />
+			<ExternalLink class="ml-2 h-4 w-4 shrink-0" />
 		</Button>
 	</span>
 </Center>

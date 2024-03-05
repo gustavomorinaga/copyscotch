@@ -64,7 +64,7 @@
 						class="absolute inset-0 inline-flex shrink-0 animate-ping rounded-full bg-success opacity-75"
 					/>
 					<Dot
-						class="relative inline-flex h-2 w-2 text-success"
+						class="relative inline-flex h-2 w-2 shrink-0 text-success"
 						style="stroke-width: 16"
 						aria-hidden="true"
 						focusable="false"
@@ -91,7 +91,7 @@
 						class="h-6 w-6"
 						on:click={(event) => event.stopPropagation()}
 					>
-						<MoreVertical class="h-4 w-4" />
+						<MoreVertical class="h-4 w-4 shrink-0" />
 						<span class="sr-only">More Options</span>
 					</Button>
 				</Tooltip.Trigger>

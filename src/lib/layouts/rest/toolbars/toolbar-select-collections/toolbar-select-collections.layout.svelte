@@ -29,7 +29,7 @@
 			class="h-8"
 			on:click={handleNewCollection}
 		>
-			<Plus class="mr-2 h-4 w-4" />
+			<Plus class="mr-2 h-4 w-4 shrink-0" />
 			<span class="select-none">New</span>
 		</Button>
 	</div>
@@ -46,7 +46,7 @@
 					disabled={!$restContext.length}
 					on:click={handleCollapseAll}
 				>
-					<MinusSquare class="h-4 w-4" />
+					<MinusSquare class="h-4 w-4 shrink-0" />
 					<span class="sr-only select-none">Collapse All</span>
 				</Button>
 			</Tooltip.Trigger>

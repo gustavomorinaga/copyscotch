@@ -11,4 +11,4 @@
 	export { className as class };
 </script>
 
-<svelte:component this={icon} class={cn('h-3 w-3', className)} {...$$restProps} />
+<svelte:component this={icon} class={cn('h-3 w-3 shrink-0', className)} {...$$restProps} />

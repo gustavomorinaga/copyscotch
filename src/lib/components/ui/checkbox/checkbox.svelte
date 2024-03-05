@@ -28,11 +28,11 @@
 		let:isIndeterminate
 	>
 		{#if isChecked}
-			<CheckCircle class="h-5 w-5" />
+			<CheckCircle class="h-5 w-5 shrink-0" />
 		{:else if isIndeterminate}
-			<Minus class="h-5 w-5" />
+			<Minus class="h-5 w-5 shrink-0" />
 		{:else}
-			<Circle class="h-5 w-5" />
+			<Circle class="h-5 w-5 shrink-0" />
 		{/if}
 	</CheckboxPrimitive.Indicator>
 </CheckboxPrimitive.Root>

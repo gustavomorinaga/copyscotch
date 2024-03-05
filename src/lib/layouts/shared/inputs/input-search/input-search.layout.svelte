@@ -47,7 +47,7 @@
 		disabled={!value}
 		on:click={() => (value = '')}
 	>
-		<X class="h-4 w-4" />
+		<X class="h-4 w-4 shrink-0" />
 		<span class="sr-only select-none">Clean</span>
 	</Button>
 </div>

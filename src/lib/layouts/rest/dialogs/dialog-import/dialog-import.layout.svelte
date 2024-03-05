@@ -57,7 +57,7 @@
 							class="w-full flex-1 justify-start"
 							on:click={() => (currentView = value)}
 						>
-							<svelte:component this={icon} class="mr-4 h-5 w-5" />
+							<svelte:component this={icon} class="mr-4 h-5 w-5 shrink-0" />
 							<span class="select-none">{name}</span>
 						</Button>
 					</li>
@@ -75,7 +75,7 @@
 								class="w-full flex-1 justify-start"
 								on:click={handleExport}
 							>
-								<User class="mr-4 h-5 w-5" />
+								<User class="mr-4 h-5 w-5 shrink-0" />
 								<span class="select-none">Export as JSON</span>
 							</Button>
 						</Tooltip.Trigger>

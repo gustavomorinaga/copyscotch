@@ -51,7 +51,7 @@
 			style="color: hsl(var(--method-{file.method.toLowerCase()}-color) / var(--tw-text-opacity))"
 		>
 			{#if selected}
-				<CheckCircle class="h-5 w-5" />
+				<CheckCircle class="h-5 w-5 shrink-0" />
 			{:else}
 				{file.method}
 			{/if}
@@ -77,7 +77,7 @@
 						class="h-6 w-6"
 						on:click={(event) => event.stopPropagation()}
 					>
-						<MoreVertical class="h-4 w-4" />
+						<MoreVertical class="h-4 w-4 shrink-0" />
 						<span class="sr-only select-none">More Options</span>
 					</Button>
 				</Tooltip.Trigger>

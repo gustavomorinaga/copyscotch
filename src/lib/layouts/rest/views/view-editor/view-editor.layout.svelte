@@ -1,13 +1,13 @@
 <script lang="ts" context="module">
 	import { onMount } from 'svelte';
 	import { getRESTTabContext } from '$lib/contexts';
-	import { Button } from '$lib/components/ui/button';
-	import * as Tooltip from '$lib/components/ui/tooltip';
-	import * as Tabs from '$lib/components/ui/tabs';
 	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
 	import { TabRequest } from '$lib/layouts/rest/tabs/tab-request';
 	import { ContextMenuEditRequest } from '$lib/layouts/rest/context-menus/context-menu-edit-request';
 	import { DialogSaveAs } from '$lib/layouts/rest/dialogs/dialog-save-as';
+	import { Button } from '$lib/components/ui/button';
+	import * as Tooltip from '$lib/components/ui/tooltip';
+	import * as Tabs from '$lib/components/ui/tabs';
 	import { horizontalScroll } from '$lib/directives';
 	import Dot from 'lucide-svelte/icons/dot';
 	import Plus from 'lucide-svelte/icons/plus';
@@ -132,14 +132,17 @@
 									>
 										{#if tab.dirty}
 											<Dot
-												class="absolute inset-auto group-hover/tab-trigger:invisible"
+												class="absolute inset-auto shrink-0 group-hover/tab-trigger:invisible"
 												style="stroke-width: 5"
 												aria-hidden="true"
 												focusable="false"
 											/>
 										{/if}
 
-										<X class="h-4 w-4 {tab.dirty && 'invisible group-hover/tab-trigger:visible'}" />
+										<X
+											class="h-4 w-4 shrink-0 {tab.dirty &&
+												'invisible group-hover/tab-trigger:visible'}"
+										/>
 										<span class="sr-only select-none">
 											{tab.dirty ? 'Close Tab - Unsaved Changes' : 'Close Tab'}
 										</span>
@@ -167,7 +170,7 @@
 					class="mx-3 h-8 w-8 shrink-0"
 					on:click={() => tabContext.add()}
 				>
-					<Plus class="h-4 w-4" />
+					<Plus class="h-4 w-4 shrink-0" />
 					<span class="sr-only select-none">New Tab</span>
 				</Button>
 			</Tooltip.Trigger>

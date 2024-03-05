@@ -5,5 +5,5 @@ export type TImportDialogStore = {
 };
 
 export const dialogImportStore = writable<TImportDialogStore>({
-	open: false,
+	open: false
 });

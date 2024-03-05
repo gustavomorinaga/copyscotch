@@ -12,12 +12,14 @@
 <div
 	role="presentation"
 	tabindex="-1"
-	class="flex h-full cursor-default select-none flex-col"
+	class="flex h-full cursor-default select-none flex-col focus-visible:focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 	on:dblclick={() => tabContext.add()}
 >
 	<Center>
-		<Button size="sm" variant="outline" aria-label="New Request" on:click={() => tabContext.add()}>
-			<Plus class="mr-2 h-4 w-4" />
+		<span aria-hidden="true" class="mb-2 text-8xl opacity-20 grayscale">🛸</span>
+
+		<Button size="lg" variant="outline" aria-label="New Request" on:click={() => tabContext.add()}>
+			<Plus class="mr-2 h-4 w-4 shrink-0" />
 			<span class="select-none">New Request</span>
 		</Button>
 	</Center>

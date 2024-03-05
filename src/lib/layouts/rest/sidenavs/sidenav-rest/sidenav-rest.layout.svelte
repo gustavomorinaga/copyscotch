@@ -43,7 +43,7 @@
 	}
 </script>
 
-<Tabs.Root value={currentTab} orientation="vertical" class="relative flex h-full flex-1 p-0">
+<Tabs.Root value={currentTab} orientation="vertical" class="relative flex h-full w-full flex-1 p-0">
 	<Tabs.List class="gap-2 bg-background p-2">
 		{#each LAZY_TABS as { value, label, icon, disabled }}
 			<Tabs.Trigger
@@ -53,7 +53,7 @@
 				class="p-2 !shadow-none data-[state=active]:text-primary"
 				on:click={() => handleCurrentTab(value)}
 			>
-				<svelte:component this={icon} class="h-5 w-5" />
+				<svelte:component this={icon} class="h-5 w-5 shrink-0" />
 				<span class="sr-only capitalize">{label}</span>
 			</Tabs.Trigger>
 		{/each}

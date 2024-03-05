@@ -36,16 +36,16 @@ Hoppscotch is an open-source API request builder. It helps you create your reque
 
 | Tool/Service                                    | Category                    | Description                                                                                                                     |
 | ----------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| [Vite](https://vitejs.dev/)                     | Build Tools                 | A build tool that provides a faster development experience for modern web projects.                                             |
+| [vite](https://vitejs.dev/)                     | Build Tools                 | A build tool that provides a faster development experience for modern web projects.                                             |
 | [cssnano](https://cssnano.co/)                  | CSS                         | A modular minifier, built on top of the PostCSS ecosystem.                                                                      |
-| [PostCSS](https://postcss.org)                  | CSS                         | A tool for transforming CSS with JavaScript.                                                                                    |
-| [Tailwind CSS](https://tailwindcss.com/)        | CSS                         | A utility-first CSS framework.                                                                                                  |
-| [Superforms](https://superforms.rocks/)         | Form Validation             | A SvelteKit library that gives you a comprehensive solution for server and client validation, and client-side display of forms. |
-| [ESLint](https://eslint.org/)                   | JavaScript/TypeScript Tools | A tool for identifying and reporting on patterns in ECMAScript/JavaScript code.                                                 |
-| [Prettier](https://prettier.io/)                | JavaScript/TypeScript Tools | An opinionated code formatter.                                                                                                  |
-| [TypeScript](https://www.typescriptlang.org/)   | JavaScript/TypeScript Tools | A typed superset of JavaScript that compiles to plain JavaScript.                                                               |
+| [postcss](https://postcss.org)                  | CSS                         | A tool for transforming CSS with JavaScript.                                                                                    |
+| [tailwindcss](https://tailwindcss.com/)         | CSS                         | A utility-first CSS framework.                                                                                                  |
+| [superforms](https://superforms.rocks/)         | Form Validation             | A SvelteKit library that gives you a comprehensive solution for server and client validation, and client-side display of forms. |
+| [eslint](https://eslint.org/)                   | JavaScript/TypeScript Tools | A tool for identifying and reporting on patterns in ECMAScript/JavaScript code.                                                 |
+| [prettier](https://prettier.io/)                | JavaScript/TypeScript Tools | An opinionated code formatter.                                                                                                  |
+| [typescript](https://www.typescriptlang.org/)   | JavaScript/TypeScript Tools | A typed superset of JavaScript that compiles to plain JavaScript.                                                               |
 | [shadcn-svelte](https://www.shadcn-svelte.com/) | UI Components               | Accessible and customizable components that you can copy and paste into your apps.                                              |
-| [SvelteKit](https://kit.svelte.dev/)            | Web Frameworks              | A framework for building high-performance web apps.                                                                             |
+| [sveltekit](https://kit.svelte.dev/)            | Web Frameworks              | A framework for building high-performance web apps.                                                                             |
 
 ## 📜 License
 

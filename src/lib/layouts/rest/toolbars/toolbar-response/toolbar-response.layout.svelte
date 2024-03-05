@@ -63,7 +63,7 @@
 			class="rounded-none"
 			bind:pressed={$settingsContext.lineWrapping}
 		>
-			<WrapText class="h-4 w-4" />
+			<WrapText class="h-4 w-4 shrink-0" />
 			<span class="sr-only select-none">Line Wrapping</span>
 		</Toggle>
 
@@ -78,7 +78,7 @@
 					disabled={clipboardState === 'copied'}
 					on:click={handleClipboard}
 				>
-					<svelte:component this={CLIPBOARD_STATES[clipboardState].icon} class="h-4 w-4" />
+					<svelte:component this={CLIPBOARD_STATES[clipboardState].icon} class="h-4 w-4 shrink-0" />
 					<span class="sr-only select-none">{CLIPBOARD_STATES[clipboardState].label}</span>
 				</Button>
 			</Tooltip.Trigger>

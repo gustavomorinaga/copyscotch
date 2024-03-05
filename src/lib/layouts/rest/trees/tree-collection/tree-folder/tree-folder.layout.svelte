@@ -122,7 +122,7 @@
 									option.action(folder.id);
 								}}
 							>
-								<svelte:component this={option.icon} class="h-4 w-4" />
+								<svelte:component this={option.icon} class="h-4 w-4 shrink-0" />
 								<span class="sr-only select-none">{option.title}</span>
 							</Button>
 						</Tooltip.Trigger>
@@ -133,8 +133,8 @@
 				{/each}
 
 				<DropdownMenuCollectionOptions
-					collection={folder}
 					{type}
+					collection={folder}
 					bind:open={openOptions}
 					let:builder={dropdownBuilder}
 				>
@@ -148,7 +148,7 @@
 								class="h-6 w-6"
 								on:click={(event) => event.stopPropagation()}
 							>
-								<MoreVertical class="h-4 w-4" />
+								<MoreVertical class="h-4 w-4 shrink-0" />
 								<span class="sr-only select-none">More Options</span>
 							</Button>
 						</Tooltip.Trigger>

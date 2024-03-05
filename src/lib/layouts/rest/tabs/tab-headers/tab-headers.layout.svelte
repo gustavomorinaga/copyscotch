@@ -51,7 +51,7 @@
 				<Form.Join class="w-full flex-1 divide-x border-b">
 					<div class="flex h-10 w-10 items-center justify-center">
 						{#if override}
-							<Lock class="h-5 w-5 opacity-50" />
+							<Lock class="h-5 w-5 shrink-0 opacity-50" />
 						{/if}
 					</div>
 
@@ -107,7 +107,7 @@
 							disabled={override}
 							on:click={() => handleRemove(index)}
 						>
-							<Trash class="h-5 w-5" />
+							<Trash class="h-5 w-5 shrink-0" />
 							<span class="sr-only select-none">Remove</span>
 						</Button>
 					</div>
@@ -120,7 +120,7 @@
 								aria-label="Go to Body Tab"
 								on:click={handleRedirect}
 							>
-								<ArrowUpRight class="h-5 w-5" />
+								<ArrowUpRight class="h-5 w-5 shrink-0" />
 								<span class="sr-only select-none">Go to Body Tab</span>
 							</Button>
 						</div>

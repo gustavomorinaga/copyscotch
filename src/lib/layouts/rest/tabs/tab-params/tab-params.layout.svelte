@@ -90,7 +90,7 @@
 							class="rounded-none !text-destructive"
 							on:click={() => handleRemove(index)}
 						>
-							<Trash class="h-5 w-5" />
+							<Trash class="h-5 w-5 shrink-0" />
 							<span class="sr-only select-none">Remove</span>
 						</Button>
 					</div>

@@ -11,5 +11,5 @@
 </script>
 
 <Center>
-	<Loader class={cn('h-4 w-4 animate-spin', className)} {...$$restProps} />
+	<Loader class={cn('h-4 w-4 shrink-0 animate-spin', className)} {...$$restProps} />
 </Center>

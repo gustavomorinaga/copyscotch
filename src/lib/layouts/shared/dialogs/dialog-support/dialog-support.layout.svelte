@@ -40,13 +40,13 @@
 					class="h-fit shrink-0"
 				>
 					<div class="mr-4 inline-flex items-center self-start">
-						<svelte:component this={option.icon} class="mt-0.5 h-5 w-5 text-primary" />
+						<svelte:component this={option.icon} class="mt-0.5 h-5 w-5 shrink-0 text-primary" />
 					</div>
 					<div class="inline-flex flex-1 select-none flex-col items-start truncate">
 						<span class="max-w-[16rem] truncate font-semibold">{option.title}</span>
 						<p class="text-left text-muted-foreground">{option.description}</p>
 					</div>
-					<ChevronRight class="h-5 w-5 text-muted-foreground" />
+					<ChevronRight class="h-5 w-5 shrink-0 text-muted-foreground" />
 				</Button>
 			{/each}
 		</div>
