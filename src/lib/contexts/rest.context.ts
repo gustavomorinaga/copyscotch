@@ -136,7 +136,7 @@ export function setRESTContext(
 				saveData(state);
 				return state;
 			});
-		},
+		}
 	};
 
 	const context = { ...store, ...actions } as TRESTContext;
