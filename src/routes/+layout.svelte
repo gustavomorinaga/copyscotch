@@ -2,20 +2,22 @@
 	import '$lib/styles/app.pcss';
 	import { setSettingsContext } from '$lib/contexts';
 	import { BREAKPOINTS } from '$lib/maps';
+	import { executeParallel } from '$lib/utils';
 	import { Toolbar } from '$lib/layouts/toolbar';
 	import { Footer } from '$lib/layouts/footer';
 	import { Wrapper } from '$lib/layouts/wrapper';
 	import { SidenavRoutes } from '$lib/layouts/shared/sidenavs/sidenav-routes';
-	import { Spinner } from '$lib/components/ui/spinner';
-	import * as Sidenav from '$lib/components/ui/sidenav';
+	import { Metadata } from '$lib/components/metadata';
 	import { ModeWatcher } from '$lib/components/mode-watcher';
 	import { ScreenWatcher, screenStore } from '$lib/components/screen-watcher';
+	import { Spinner } from '$lib/components/ui/spinner';
 	import { ViewTransition } from '$lib/components/view-transition';
-	import { executeParallel } from '$lib/utils';
+	import * as Sidenav from '$lib/components/ui/sidenav';
 
 	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
 </script>
 
+<Metadata />
 <ModeWatcher />
 <ScreenWatcher />
 <ViewTransition />
