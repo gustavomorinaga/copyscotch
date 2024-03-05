@@ -1,13 +1,13 @@
 <script lang="ts" context="module">
 	import { onMount } from 'svelte';
 	import { getRESTTabContext } from '$lib/contexts';
-	import { Button } from '$lib/components/ui/button';
-	import * as Tooltip from '$lib/components/ui/tooltip';
-	import * as Tabs from '$lib/components/ui/tabs';
 	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
 	import { TabRequest } from '$lib/layouts/rest/tabs/tab-request';
 	import { ContextMenuEditRequest } from '$lib/layouts/rest/context-menus/context-menu-edit-request';
 	import { DialogSaveAs } from '$lib/layouts/rest/dialogs/dialog-save-as';
+	import { Button } from '$lib/components/ui/button';
+	import * as Tooltip from '$lib/components/ui/tooltip';
+	import * as Tabs from '$lib/components/ui/tabs';
 	import { horizontalScroll } from '$lib/directives';
 	import Dot from 'lucide-svelte/icons/dot';
 	import Plus from 'lucide-svelte/icons/plus';

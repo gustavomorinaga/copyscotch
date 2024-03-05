@@ -53,7 +53,6 @@
 			content: import('$lib/layouts/rest/tabs/tab-headers'),
 			disabled: false
 		}
-		// TODO - Add 'body' and 'authorization' tabs
 	] as const satisfies Array<TTab>;
 </script>
 
@@ -126,8 +125,6 @@
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
-		const isMainTarget = event.target instanceof HTMLBodyElement;
-		if (!isMainTarget) return;
 		if (!$tabContext.current) return;
 		if ($tabContext.current !== tabID) return;
 
