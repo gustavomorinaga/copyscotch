@@ -1,5 +1,7 @@
 <script lang="ts" context="module">
 	import { dialogImportStore as dialogStore } from '.';
+	import { getRESTContext } from '$lib/contexts';
+	import { exportFile } from '$lib/functions';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';
@@ -21,10 +23,17 @@
 </script>
 
 <script lang="ts">
+	const restContext = getRESTContext();
+
 	let currentView: keyof typeof VIEWS | null = null;
 
 	function handleOpenChange(event: boolean) {
 		if (!event) currentView = null;
+	}
+
+	function handleExport() {
+		const file = JSON.stringify($restContext, null, 2);
+		exportFile(file, 'collections', 'application/json');
 	}
 </script>
 
@@ -64,6 +73,7 @@
 								variant="ghost"
 								role="menuitem"
 								class="w-full flex-1 justify-start"
+								on:click={handleExport}
 							>
 								<User class="mr-4 h-5 w-5" />
 								<span class="select-none">Export as JSON</span>
