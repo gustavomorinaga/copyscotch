@@ -51,7 +51,7 @@
 
 	<Resizable.Pane defaultSize={75} order={sidebarPosition === 'right' ? 1 : 2}>
 		{#if $tabContext.tabs.length}
-			<Resizable.PaneGroup autoSaveId="editor" direction="vertical" class="flex h-full w-full">
+			<Resizable.PaneGroup autoSaveId="editor" direction={layout} class="flex h-full w-full">
 				{#await Promise.all(LAZY_VIEW_COMPONENTS) then [{ ViewEditor }, { ViewResponse }]}
 					<Resizable.Pane defaultSize={1 / 2} minSize={35}>
 						<ViewEditor />
