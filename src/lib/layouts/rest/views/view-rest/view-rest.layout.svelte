@@ -7,7 +7,7 @@
 	import * as Resizable from '$lib/components/ui/resizable';
 
 	const LAZY_VIEW_COMPONENTS = [
-		import('$lib/layouts/rest/views/view-edit'),
+		import('$lib/layouts/rest/views/view-editor'),
 		import('$lib/layouts/rest/views/view-response')
 	] as const;
 
@@ -52,9 +52,9 @@
 	<Resizable.Pane defaultSize={75} order={sidebarPosition === 'right' ? 1 : 2}>
 		{#if $tabContext.tabs.length}
 			<Resizable.PaneGroup autoSaveId="editor" direction="vertical" class="flex h-full w-full">
-				{#await Promise.all(LAZY_VIEW_COMPONENTS) then [{ ViewEdit }, { ViewResponse }]}
+				{#await Promise.all(LAZY_VIEW_COMPONENTS) then [{ ViewEditor }, { ViewResponse }]}
 					<Resizable.Pane defaultSize={1 / 2} minSize={35}>
-						<ViewEdit />
+						<ViewEditor />
 					</Resizable.Pane>
 
 					<Resizable.Handle class="z-30" />
