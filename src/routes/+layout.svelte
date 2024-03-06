@@ -7,16 +7,18 @@
 	import { Footer } from '$lib/layouts/footer';
 	import { Wrapper } from '$lib/layouts/wrapper';
 	import { SidenavRoutes } from '$lib/layouts/shared/sidenavs/sidenav-routes';
+	import { ServiceWorker } from '$lib/components/service-worker';
 	import { Metadata } from '$lib/components/metadata';
 	import { ModeWatcher } from '$lib/components/mode-watcher';
 	import { ScreenWatcher, screenStore } from '$lib/components/screen-watcher';
-	import { Spinner } from '$lib/components/ui/spinner';
 	import { ViewTransition } from '$lib/components/view-transition';
+	import { Spinner } from '$lib/components/ui/spinner';
 	import * as Sidenav from '$lib/components/ui/sidenav';
 
 	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
 </script>
 
+<ServiceWorker />
 <Metadata />
 <ModeWatcher />
 <ScreenWatcher />
