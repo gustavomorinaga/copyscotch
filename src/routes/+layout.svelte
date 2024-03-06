@@ -13,6 +13,7 @@
 	import { ScreenWatcher, screenStore } from '$lib/components/screen-watcher';
 	import { ViewTransition } from '$lib/components/view-transition';
 	import { Spinner } from '$lib/components/ui/spinner';
+	import { Toaster } from '$lib/components/ui/sonner';
 	import * as Sidenav from '$lib/components/ui/sidenav';
 
 	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
@@ -23,6 +24,8 @@
 <ModeWatcher />
 <ScreenWatcher />
 <ViewTransition />
+
+<Toaster position="bottom-center" offset={40} />
 
 <Wrapper class="overflow-hidden">
 	<Toolbar />
