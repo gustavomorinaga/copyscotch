@@ -1,4 +1,4 @@
-export type TShortcut = { key: string; modifier: Array<'ctrl' | 'meta'> };
+export type TShortcut = { key: string; modifier: Array<'ctrl' | 'alt' | 'meta'> };
 
 /**
  * Mapping of keyboard shortcuts to their corresponding key and modifier combinations.
@@ -10,7 +10,7 @@ export const SHORTCUTS = {
 	},
 	newTab: {
 		key: 'n',
-		modifier: ['ctrl']
+		modifier: ['ctrl', 'alt']
 	},
 	send: {
 		key: 'enter',

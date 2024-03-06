@@ -128,7 +128,7 @@
 		if (!$tabContext.current) return;
 		if ($tabContext.current !== tabID) return;
 
-		if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+		if (event.ctrlKey && event.key === 'Enter') {
 			event.preventDefault();
 			if ($submitting) return;
 
@@ -136,7 +136,7 @@
 			document.forms.namedItem(formID)?.requestSubmit();
 		}
 
-		if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+		if (event.ctrlKey && event.key === 's') {
 			event.preventDefault();
 
 			action = 'save';
