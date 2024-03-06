@@ -7,15 +7,22 @@
 </script>
 
 <Center class="select-none bg-background">
-	<Shortcut.Root>
-		<span class="mr-4">Send request</span>
-		{#each SHORTCUTS.send.modifier as modifier}
-			<Shortcut.Key>{modifier}</Shortcut.Key>
-		{/each}
-		<Shortcut.Key>{@html UNICODES[SHORTCUTS.send.key]}</Shortcut.Key>
+	<Shortcut.Root class="mb-4 gap-4">
+		<div class="flex flex-col items-end gap-2 text-right">
+			<span class="flex flex-1 items-center">Send Request</span>
+		</div>
+
+		<div class="flex flex-col gap-2">
+			<div class="inline-flex gap-1">
+				{#each SHORTCUTS.send.modifier as modifier}
+					<Shortcut.Key>{modifier}</Shortcut.Key>
+				{/each}
+				<Shortcut.Key>{@html UNICODES[SHORTCUTS.send.key]}</Shortcut.Key>
+			</div>
+		</div>
 	</Shortcut.Root>
 
-	<span class="mt-4 inline-flex">
+	<span class="inline-flex">
 		<Button variant="outline" {...LINKS.github} title={undefined} aria-label="Documentation">
 			<span class="select-none">Documentation</span>
 			<ExternalLink class="ml-2 h-4 w-4 shrink-0" />

@@ -1,0 +1,32 @@
+{
+	"background_color": "#171717",
+	"description": "Helps you create requests faster, saving precious time on development",
+	"display": "standalone",
+	"icons": [
+		{
+			"sizes": "64x64",
+			"src": "/images/icons/pwa-64x64.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "192x192",
+			"src": "/images/icons/pwa-192x192.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "512x512",
+			"src": "/images/icons/pwa-512x512.png",
+			"type": "image/png"
+		},
+		{
+			"purpose": "maskable",
+			"sizes": "512x512",
+			"src": "/images/icons/maskable-icon-512x512.png",
+			"type": "image/png"
+		}
+	],
+	"name": "Copyscotch",
+	"short_name": "Copyscotch",
+	"start_url": "/",
+	"theme_color": "#181818"
+}
