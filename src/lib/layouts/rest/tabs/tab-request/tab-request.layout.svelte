@@ -155,6 +155,8 @@
 	}
 
 	function handleSend() {
+		if (!$formData.url && !$formData.method) return;
+
 		tabContext.setResult(tabID, { response: undefined, sending: true });
 
 		const url = new URL($formData.url);
@@ -203,6 +205,8 @@
 	}
 
 	function handleSave() {
+		if (!tab.dirty) return;
+
 		const data = $formData as TRESTRequestInfer;
 		const found = restContext.getFile(tabID);
 
