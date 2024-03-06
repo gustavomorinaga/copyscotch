@@ -71,7 +71,7 @@
 		},
 		{
 			label: 'Close All',
-			shortcut: 'X',
+			shortcut: 'A',
 			icon: XOctagon,
 			action: () => {
 				const dirtyTabs = $tabContext.tabs.filter((tab) => tab.dirty);
