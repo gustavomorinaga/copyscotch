@@ -29,6 +29,8 @@
 	<meta property="og:description" content={siteConfig.description} />
 	<meta property="og:site_name" content={siteConfig.name} />
 	<meta property="og:locale" content="EN_US" />
-	<link rel="shortcut icon" href="/favicon-16x16.png" />
-	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/logo.svg" type="image/svg+xml" />
+	<link rel="apple-touch-icon" href="/images/icons/apple-touch-icon-180x180.png" />
+	<link rel="manifest" href="/site.webmanifest" />
 </svelte:head>
