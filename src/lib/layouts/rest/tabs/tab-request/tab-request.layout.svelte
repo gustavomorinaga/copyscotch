@@ -205,10 +205,10 @@
 	}
 
 	function handleSave() {
-		if (!tab.dirty) return;
+		const found = restContext.getFile(tabID);
+		if (found && !tab.dirty) return;
 
 		const data = $formData as TRESTRequestInfer;
-		const found = restContext.getFile(tabID);
 
 		const updateTab = () => {
 			tabContext.update(tabID, $formData);
