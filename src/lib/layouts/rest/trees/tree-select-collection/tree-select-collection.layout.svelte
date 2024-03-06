@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import { treeSelectCollectionStore as treeStore } from '.';
 	import { TreeWrapper } from './tree-wrapper';
 	import type { TRESTCollectionInfer } from '$lib/validators';
@@ -11,15 +11,13 @@
 	let folders: $$Props['collections'] = [];
 	export { folders as collections };
 
-	onMount(() => {
-		return () => {
-			treeStore.set({
-				expand: false,
-				collapse: true,
-				selectedID: undefined,
-				selectedType: undefined
-			});
-		};
+	onDestroy(() => {
+		treeStore.set({
+			expand: false,
+			collapse: true,
+			selectedID: undefined,
+			selectedType: undefined
+		});
 	});
 </script>
 

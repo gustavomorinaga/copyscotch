@@ -29,12 +29,12 @@
 	$: $treeStore.expand = Boolean($searchTerm);
 </script>
 
-<div class="sticky top-[2.0625rem] z-10 inline-flex w-full shrink-0 flex-col">
+<div class="sticky top-[2.350rem] z-10 inline-flex w-full shrink-0 flex-col">
 	<InputSearch class="bg-background" bind:value={$searchTerm} />
 	<Separator orientation="horizontal" />
 </div>
 
-<div class="sticky top-[4.125rem] z-10 inline-flex w-full shrink-0 flex-col">
+<div class="sticky top-[4.675rem] z-10 inline-flex w-full shrink-0 flex-col">
 	<ToolbarSelectCollections />
 	<Separator orientation="horizontal" />
 </div>

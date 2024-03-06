@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import { dialogImportStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-import';
 	import { getRESTContext } from '$lib/contexts';
 	import {
@@ -91,10 +91,8 @@
 		};
 	}
 
-	onMount(() => {
-		return () => {
-			handleCancel();
-		};
+	onDestroy(() => {
+		handleCancel();
 	});
 </script>
 

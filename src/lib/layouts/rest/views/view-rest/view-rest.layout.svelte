@@ -29,7 +29,16 @@
 	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
 	$: openSidenav = isMobile ? false : sidebar === 'open';
 	$: if (isMobile) layout = 'vertical';
+
+	function handleKeydown(event: KeyboardEvent) {
+		if (event.ctrlKey && event.altKey && event.key === 'n') {
+			event.preventDefault();
+			tabContext.add();
+		}
+	}
 </script>
+
+<svelte:window on:keydown={handleKeydown} />
 
 <Resizable.PaneGroup
 	autoSaveId="sidenav"
