@@ -3,11 +3,12 @@
 	import { ToolbarBody } from '$lib/layouts/rest/toolbars/toolbar-body';
 	import { FeedbackBodyEmpty } from '$lib/layouts/rest/feedbacks/feedback-body-empty';
 	import { BodyContentTypeEnum, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
-	import type { Langs } from '$lib/components/ui/codemirror';
+	import type { Langs, Props as TCodeMirror } from '$lib/components/ui/codemirror';
 	import type { SuperForm } from 'sveltekit-superforms';
 
-	const { options: contentTypeOptions } = BodyContentTypeEnum;
+	const CODEMIRROR_CONFIG: TCodeMirror = { editable: true, useTab: true, tabSize: 2 } as const;
 
+	const { options: contentTypeOptions } = BodyContentTypeEnum;
 	type TContentTypeOption = (typeof contentTypeOptions)[number];
 
 	const CONTENT_TYPES_LANGS = {
@@ -32,7 +33,7 @@
 
 	$: ({ form: formData } = form);
 	$: if ($tabContext.tabs) {
-		tab = tabContext.get(tabID) as TRESTTabInfer;
+		tab = tabContext.getTab(tabID) as TRESTTabInfer;
 	}
 	$: if (tab) lang = CONTENT_TYPES_LANGS[tab.context.body.contentType || 'text/plain'];
 </script>
@@ -41,7 +42,7 @@
 
 {#if tab?.context.body.contentType !== null}
 	{#await Promise.all(LAZY_COMPONENTS) then [{ CodeMirror }]}
-		<CodeMirror editable {lang} bind:value={$formData.body.body} />
+		<CodeMirror {...CODEMIRROR_CONFIG} {lang} bind:value={$formData.body.body} />
 	{/await}
 {:else}
 	<FeedbackBodyEmpty />

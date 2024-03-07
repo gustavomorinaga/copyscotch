@@ -32,11 +32,11 @@
 	}
 
 	function handleRedirect() {
-		tabContext.setCurrentTab(tabID, 'body');
+		tabContext.setCurrentInnerTab(tabID, 'body');
 	}
 
 	onMount(() => {
-		if (!hasHeaders) tabContext.update(tabID, { headers: [DEFAULT_HEADER] });
+		if (!hasHeaders) tabContext.updateTab(tabID, { headers: [DEFAULT_HEADER] });
 	});
 </script>
 

@@ -27,7 +27,7 @@
 	}
 
 	function handleAddNew() {
-		tabContext.update(tabID, { params: [...$formData.params, DEFAULT_KEY_VALUE] });
+		tabContext.updateTab(tabID, { params: [...$formData.params, DEFAULT_KEY_VALUE] });
 	}
 
 	onMount(() => {

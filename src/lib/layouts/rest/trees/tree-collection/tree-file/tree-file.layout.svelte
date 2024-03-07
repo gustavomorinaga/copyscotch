@@ -23,7 +23,7 @@
 	function handleOpenFile(event: MouseEvent) {
 		event.stopPropagation();
 		$treeStore.selected = file.id;
-		tabContext.get(file.id) ? tabContext.setCurrent(file.id) : tabContext.add(file);
+		tabContext.getTab(file.id) ? tabContext.setCurrentTab(file.id) : tabContext.addTab(file);
 	}
 </script>
 

@@ -42,7 +42,7 @@
 	$: ({ form: formData } = form);
 
 	$: if ($tabContext.tabs) {
-		tab = tabContext.get(tabID) as TRESTTabInfer;
+		tab = tabContext.getTab(tabID) as TRESTTabInfer;
 		if (tab) $formData = tab.context;
 	}
 
@@ -53,8 +53,8 @@
 
 	function handleOnChange(event: ChangeEvent<TSaveOptionsInfer>) {
 		if (!event.target) return;
-		tabContext.setDirty([tabID], true);
-		tabContext.update(tabID, { name: $formData.name });
+		tabContext.setDirtyTabs([tabID], true);
+		tabContext.updateTab(tabID, { name: $formData.name });
 	}
 </script>
 

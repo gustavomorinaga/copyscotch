@@ -59,11 +59,11 @@
 					restContext.updateFile(request);
 				}
 
-				const tab = tabContext.get(requestID);
+				const tab = tabContext.getTab(requestID);
 				if (!tab) return;
 
-				tabContext.update(requestID, $formData as TRESTRequestInfer);
-				if (!$dialogStore.forceSave) tabContext.setDirty([requestID], true);
+				tabContext.updateTab(requestID, $formData as TRESTRequestInfer);
+				if (!$dialogStore.forceSave) tabContext.setDirtyTabs([requestID], true);
 			}
 		} as const satisfies Record<typeof $dialogStore.mode, () => void>;
 

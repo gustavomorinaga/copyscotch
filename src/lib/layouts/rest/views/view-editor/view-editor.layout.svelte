@@ -31,7 +31,7 @@
 	function handleCurrentTab(event: MouseEvent, tabID: TRESTTabInfer['id']) {
 		event.stopPropagation();
 
-		tabContext.setCurrent(tabID);
+		tabContext.setCurrentTab(tabID);
 		scrollToActiveTab();
 	}
 
@@ -43,13 +43,15 @@
 		const isKeyboardEvent = event instanceof KeyboardEvent && event.key === 'Enter';
 
 		if (isMouseEvent || isKeyboardEvent) {
-			const isDirty = tabContext.get(tabID)?.dirty;
-			isDirty ? tabContext.setTainted([tabID]) : tabContext.close({ ids: [tabID], mode: 'normal' });
+			const isDirty = tabContext.getTab(tabID)?.dirty;
+			isDirty
+				? tabContext.setTaintedTabs([tabID])
+				: tabContext.closeTabs({ ids: [tabID], mode: 'normal' });
 		}
 	}
 
 	function handleEditing(tabID: TRESTTabInfer['id']) {
-		const { context: request } = tabContext.get(tabID) as TRESTTabInfer;
+		const { context: request } = tabContext.getTab(tabID) as TRESTTabInfer;
 		dialogStore.set({ mode: 'edit', open: true, request });
 	}
 
@@ -168,7 +170,7 @@
 					tabindex={0}
 					aria-label="New Tab"
 					class="mx-3 h-8 w-8 shrink-0"
-					on:click={() => tabContext.add()}
+					on:click={() => tabContext.addTab()}
 				>
 					<Plus class="h-4 w-4 shrink-0" />
 					<span class="sr-only select-none">New Tab</span>

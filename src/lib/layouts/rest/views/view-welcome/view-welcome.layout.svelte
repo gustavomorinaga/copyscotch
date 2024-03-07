@@ -18,7 +18,7 @@
 	role="presentation"
 	tabindex="-1"
 	class="flex h-full cursor-default select-none flex-col focus-visible:focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-	on:dblclick={() => tabContext.add()}
+	on:dblclick={() => tabContext.addTab()}
 >
 	<Center>
 		<figure aria-hidden="true" class="mb-2 aspect-square opacity-10 grayscale">

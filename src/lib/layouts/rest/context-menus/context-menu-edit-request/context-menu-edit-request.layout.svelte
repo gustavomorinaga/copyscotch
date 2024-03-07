@@ -38,7 +38,7 @@
 			shortcut: 'R',
 			icon: FileEdit,
 			action: () => {
-				const { context: request } = tabContext.get(tabID) as TRESTTabInfer;
+				const { context: request } = tabContext.getTab(tabID) as TRESTTabInfer;
 				dialogStore.set({ mode: 'edit', open: true, request });
 			}
 		},
@@ -46,15 +46,15 @@
 			label: 'Duplicate',
 			shortcut: 'D',
 			icon: Copy,
-			action: () => tabContext.duplicate(tabID)
+			action: () => tabContext.duplicateTab(tabID)
 		},
 		{
 			label: 'Close',
 			shortcut: 'W',
 			icon: XCircle,
 			action: () => {
-				if (tabContext.get(tabID)?.dirty) tabContext.setTainted([tabID]);
-				else tabContext.close({ ids: [tabID], mode: 'normal' });
+				if (tabContext.getTab(tabID)?.dirty) tabContext.setTaintedTabs([tabID]);
+				else tabContext.closeTabs({ ids: [tabID], mode: 'normal' });
 			}
 		},
 		{
@@ -64,8 +64,8 @@
 			action: () => {
 				const otherTabs = $tabContext.tabs.filter((tab) => tab.id !== tabID);
 				const dirtyTabs = otherTabs.filter((tab) => tab.dirty);
-				if (dirtyTabs.length) tabContext.setTainted(otherTabs.map((tab) => tab.id));
-				else tabContext.close({ ids: [tabID], mode: 'close-others' });
+				if (dirtyTabs.length) tabContext.setTaintedTabs(otherTabs.map((tab) => tab.id));
+				else tabContext.closeTabs({ ids: [tabID], mode: 'close-others' });
 			},
 			showOnlyIf: () => !hasOnlyOneTab
 		},
@@ -75,8 +75,8 @@
 			icon: XOctagon,
 			action: () => {
 				const dirtyTabs = $tabContext.tabs.filter((tab) => tab.dirty);
-				if (dirtyTabs.length) tabContext.setTainted($tabContext.tabs.map((tab) => tab.id));
-				else tabContext.close({ ids: [], mode: 'close-all' });
+				if (dirtyTabs.length) tabContext.setTaintedTabs($tabContext.tabs.map((tab) => tab.id));
+				else tabContext.closeTabs({ ids: [], mode: 'close-all' });
 			},
 			showOnlyIf: () => !hasOnlyOneTab
 		}
