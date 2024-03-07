@@ -15,11 +15,14 @@
 	import CheckCircle from 'lucide-svelte/icons/check-circle';
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
+	import { toast } from 'svelte-sonner';
 
 	type TFormAction = 'import' | 'cancel';
 </script>
 
 <script lang="ts">
+	import { Spinner } from '$lib/components/ui/spinner';
+
 	type $$Props = { onCancel?: () => void };
 
 	export let onCancel: $$Props['onCancel'] = undefined;
@@ -28,6 +31,7 @@
 
 	const formID: string = 'dialog-import';
 	let action: TFormAction = 'import';
+	let loading: boolean = false;
 	let parsedJSON: Array<TRESTCollectionInfer> = [];
 
 	const form = superForm(defaults(zod(FileUploadSchema)), {
@@ -59,9 +63,7 @@
 			() => void
 		>;
 
-		ACTIONS[action]();
-		form.reset();
-		parsedJSON.length = 0;
+		Promise.resolve(ACTIONS[action]()).then(() => (parsedJSON.length = 0));
 	}
 
 	function handleCancel() {
@@ -71,14 +73,22 @@
 	function handleImport() {
 		if (isInvalid) return;
 
-		restContext.import(parsedJSON);
-		parsedJSON.length = 0;
-		dialogStore.set({ open: false });
+		loading = true;
+
+		return new Promise<void>((resolve) => {
+			restContext.import(parsedJSON);
+			setTimeout(() => {
+				loading = false;
+				dialogStore.set({ open: false });
+				toast.success('Collections imported successfully!');
+				resolve();
+			}, 600);
+		});
 	}
 
 	function handleValidateFile(file: File) {
 		const reader = new FileReader();
-		reader.readAsText(file, 'UTF-8');
+		reader.readAsText(file);
 		reader.onload = () => {
 			const content = reader.result as string;
 			const json = JSON.parse(content);
@@ -138,10 +148,15 @@
 		variant="default"
 		form={formID}
 		aria-label="Import"
-		disabled={isInvalid}
+		disabled={isInvalid || loading}
 		class="w-full"
 		on:click={() => (action = 'import')}
 	>
-		<span class="select-none">Import</span>
+		{#if loading}
+			<Spinner class="mr-2" />
+		{/if}
+		<span class="select-none">
+			{loading ? 'Importing...' : 'Import'}
+		</span>
 	</Form.Button>
 </Dialog.Footer>
