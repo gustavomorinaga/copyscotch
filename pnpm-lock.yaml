@@ -15,8 +15,8 @@ dependencies:
     specifier: 0.5.1
     version: 0.5.1(svelte@4.2.12)(sveltekit-superforms@2.8.0)
   lucide-svelte:
-    specifier: 0.349.0
-    version: 0.349.0(svelte@4.2.12)
+    specifier: 0.350.0
+    version: 0.350.0(svelte@4.2.12)
   paneforge:
     specifier: 0.0.2
     version: 0.0.2(svelte@4.2.12)
@@ -29,6 +29,9 @@ dependencies:
   tailwind-variants:
     specifier: 0.2.0
     version: 0.2.0(tailwindcss@3.4.1)
+  vaul-svelte:
+    specifier: ^0.2.4
+    version: 0.2.4(svelte@4.2.12)
   zod:
     specifier: 3.22.4
     version: 3.22.4
@@ -865,6 +868,20 @@ packages:
       '@lezer/common': 1.2.1
     dev: true
 
+  /@melt-ui/svelte@0.68.0(svelte@4.2.12):
+    resolution: {integrity: sha512-/QvA98hnYEodZtHJ71+ocum/WWp30hVNt3F8uiZKnNYwZDaiQYjlyR9AaGKYcZLCe6R68op1mfCzc0kTzJilyA==}
+    peerDependencies:
+      svelte: '>=3 <5'
+    dependencies:
+      '@floating-ui/core': 1.6.0
+      '@floating-ui/dom': 1.6.3
+      '@internationalized/date': 3.5.2
+      dequal: 2.0.3
+      focus-trap: 7.5.4
+      nanoid: 5.0.6
+      svelte: 4.2.12
+    dev: false
+
   /@melt-ui/svelte@0.75.3(svelte@4.2.12):
     resolution: {integrity: sha512-EA2IKn7w9qtzO/M7VEENpphQ9A4az+QDMQbA8SJLuKyu+S8NWliln5y9vvmnx9dZF8GtKtUKuxpwRNyPg5LAOg==}
     peerDependencies:
@@ -1401,7 +1418,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.23.0
-      caniuse-lite: 1.0.30001594
+      caniuse-lite: 1.0.30001596
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -1420,6 +1437,17 @@ packages:
   /binary-extensions@2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
     engines: {node: '>=8'}
+
+  /bits-ui@0.16.0(svelte@4.2.12):
+    resolution: {integrity: sha512-HEkuVDyUG9dTWtKujKpdDsGOe9GRmuYOEF9yGbjVwNazxMQDQa9deUX8vM3ofGBWaJgr1cEu88p38kP5Z5gQ8w==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      '@internationalized/date': 3.5.2
+      '@melt-ui/svelte': 0.68.0(svelte@4.2.12)
+      nanoid: 5.0.6
+      svelte: 4.2.12
+    dev: false
 
   /bits-ui@0.19.5(svelte@4.2.12):
     resolution: {integrity: sha512-jrt0pGZdixtl27VrfzLj5yJxha29CK+6nClZZSoJCL5DlXFT1sluF9NnOSMP48D3kczR5YjpArvCe0BEnGq4jA==}
@@ -1459,8 +1487,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001594
-      electron-to-chromium: 1.4.694
+      caniuse-lite: 1.0.30001596
+      electron-to-chromium: 1.4.695
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
     dev: true
@@ -1507,13 +1535,13 @@ packages:
     resolution: {integrity: sha512-bsTwuIg/BZZK/vreVTYYbSWoe2F+71P7K5QGEX+pT250DZbfU1MQ5prOKpPR+LL6uWKK3KMwMCAS74QB3Um1uw==}
     dependencies:
       browserslist: 4.23.0
-      caniuse-lite: 1.0.30001594
+      caniuse-lite: 1.0.30001596
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
     dev: true
 
-  /caniuse-lite@1.0.30001594:
-    resolution: {integrity: sha512-VblSX6nYqyJVs8DKFMldE2IVCJjZ225LW00ydtUWwh5hk9IfkTOffO6r8gJNsH0qqqeAF8KrbMYA2VEwTlGW5g==}
+  /caniuse-lite@1.0.30001596:
+    resolution: {integrity: sha512-zpkZ+kEr6We7w63ORkoJ2pOfBwBkY/bJrG/UZ90qNb45Isblu8wzDgevEOrRL1r9dWayHjYiiyCMEXPn4DweGQ==}
     dev: true
 
   /chalk@2.4.2:
@@ -1871,8 +1899,8 @@ packages:
   /eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 
-  /electron-to-chromium@1.4.694:
-    resolution: {integrity: sha512-kM3SwvGTYpBFJSc8jm4IYVMIOzDmAGd/Ry96O9elRiM6iEwHKNKhtXyFGzpfMMIGZD84W4/hyaULlMmNVvLQlQ==}
+  /electron-to-chromium@1.4.695:
+    resolution: {integrity: sha512-eMijZmeqPtm774pCZIOrfUHMs/7ls++W1sLhxwqgu8KQ8E2WmMtzwyqOMt0XXUJ3HTIPfuwlfwF+I5cwnfItBA==}
     dev: true
 
   /emoji-regex@8.0.0:
@@ -2602,8 +2630,8 @@ packages:
       yallist: 4.0.0
     dev: true
 
-  /lucide-svelte@0.349.0(svelte@4.2.12):
-    resolution: {integrity: sha512-aOtTEE3Bm1voDCDUaEBqF5ZKLDzUHQtCo6xgSHrjivBETzSA0KLAhUFuug9n685vnYODtbkdlO3xn+zpQiFoYg==}
+  /lucide-svelte@0.350.0(svelte@4.2.12):
+    resolution: {integrity: sha512-y9sKMM2vVrQOGpdKt4CbN8H9zA3tfVCdOWsJU7MQ2F81R2S+RuWbt2HmfpY+AK5xOxkcLbJ0bQa4iZq7VCrDJw==}
     peerDependencies:
       svelte: ^3 || ^4 || ^5.0.0-next.42
     dependencies:
@@ -4141,6 +4169,15 @@ packages:
     engines: {node: '>= 0.10'}
     requiresBuild: true
     optional: true
+
+  /vaul-svelte@0.2.4(svelte@4.2.12):
+    resolution: {integrity: sha512-fsVaCp0YVablpZK7wPq+K/xLdrS0j38m4J3N3HPymKnay3cokytc6psmWaQMKJuyPf1j4Kubu20P8+4L9EeWEQ==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      bits-ui: 0.16.0(svelte@4.2.12)
+      svelte: 4.2.12
+    dev: false
 
   /vite@5.1.5:
     resolution: {integrity: sha512-BdN1xh0Of/oQafhU+FvopafUp6WaYenLU/NFoL5WyJL++GxkNfieKzBhM24H3HVsPQrlAqB7iJYTHabzaRed5Q==}
