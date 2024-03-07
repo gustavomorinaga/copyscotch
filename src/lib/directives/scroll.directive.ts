@@ -8,5 +8,5 @@ export const horizontalScroll = (node: HTMLElement) => {
 		node.scrollTo({ left: node.scrollLeft + event.deltaY, behavior: 'instant' });
 	}
 
-	node.addEventListener('wheel', handleScroll);
+	node.addEventListener('wheel', handleScroll, { passive: true });
 };

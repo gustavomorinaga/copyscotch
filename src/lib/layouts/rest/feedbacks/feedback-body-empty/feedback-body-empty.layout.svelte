@@ -10,7 +10,9 @@
 				src="/images/states/{$mode}/upload_single_file.svg"
 				alt="Empty body"
 				loading="lazy"
-				class="inline-flex h-16 w-16 flex-col object-contain object-center"
+				class="inline-flex flex-col object-contain object-center"
+				width="56"
+				height="56"
 			/>
 			<span class="mt-2 max-w-sm whitespace-normal text-center text-tiny text-muted-foreground">
 				This request does not have a body

@@ -3,8 +3,11 @@
 	import { BREAKPOINTS } from '$lib/maps';
 	import { SidenavREST } from '$lib/layouts/rest/sidenavs/sidenav-rest';
 	import { ViewWelcome } from '$lib/layouts/rest/views/view-welcome';
+	import { Button } from '$lib/components/ui/button';
+	import { Separator } from '$lib/components/ui/separator';
 	import { screenStore } from '$lib/components/screen-watcher';
 	import * as Resizable from '$lib/components/ui/resizable';
+	import ChevronUp from 'lucide-svelte/icons/chevron-up';
 
 	const LAZY_VIEW_COMPONENTS = [
 		import('$lib/layouts/rest/views/view-editor'),
@@ -16,6 +19,8 @@
 		import('$lib/layouts/rest/dialogs/dialog-edit-collection'),
 		import('$lib/layouts/rest/dialogs/dialog-edit-request')
 	] as const;
+
+	const LAZY_MOBILE_COMPONENTS = [import('$lib/components/ui/drawer')] as const;
 </script>
 
 <script lang="ts">
@@ -78,6 +83,30 @@
 		{/if}
 	</Resizable.Pane>
 </Resizable.PaneGroup>
+
+{#if isMobile}
+	{#await Promise.all(LAZY_MOBILE_COMPONENTS) then [Drawer]}
+		<Drawer.Root>
+			<Drawer.Trigger asChild let:builder>
+				<Button
+					builders={[builder]}
+					variant="outline"
+					aria-label="Open REST Navigation"
+					class="mx-auto border-b-0"
+				>
+					<ChevronUp class="h-5 w-5" />
+					<span class="sr-only select-none">Open Navigation</span>
+				</Button>
+			</Drawer.Trigger>
+			<Drawer.Content class="h-[55vh]">
+				<div class="mt-4 flex h-full w-full flex-1 flex-col">
+					<Separator orientation="horizontal" />
+					<SidenavREST />
+				</div>
+			</Drawer.Content>
+		</Drawer.Root>
+	{/await}
+{/if}
 
 {#if $settingsContext.sidebar === 'open' || $tabContext.tabs.length}
 	{#await LAZY_DIALOG_COMPONENTS[0] then { DialogImport }}

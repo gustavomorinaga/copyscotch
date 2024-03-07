@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
 	import { getSettingsContext } from '$lib/contexts';
+	import { BREAKPOINTS } from '$lib/maps';
 	import {
 		ThemeSchema,
 		BackgroundColorEnum,
@@ -8,9 +9,12 @@
 	} from '$lib/validators';
 	import * as Form from '$lib/components/ui/form';
 	import * as RadioGroup from '$lib/components/ui/radio-group';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { Switch } from '$lib/components/ui/switch';
 	import { systemPrefersMode } from '$lib/components/mode-watcher';
+	import { screenStore } from '$lib/components/screen-watcher';
 	import Cloud from 'lucide-svelte/icons/cloud';
+	import HelpCircle from 'lucide-svelte/icons/help-circle';
 	import Monitor from 'lucide-svelte/icons/monitor';
 	import Moon from 'lucide-svelte/icons/moon';
 	import Sun from 'lucide-svelte/icons/sun';
@@ -40,6 +44,7 @@
 	const { enhance } = form;
 	$: ({ form: formData } = form);
 
+	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
 	$: if ($settingsContext) {
 		form.reset({
 			data: {
@@ -142,14 +147,31 @@
 						<Form.Field {form} name="expandNavigation" class="flex items-center gap-2 space-y-0">
 							<Form.Control let:attrs>
 								<Switch {...attrs} includeInput bind:checked={$formData.expandNavigation} />
-								<Form.Label>Expand navigation</Form.Label>
+								<Form.Label class="leading-[normal]">Expand navigation</Form.Label>
 							</Form.Control>
 						</Form.Field>
 
-						<Form.Field {form} name="sidebarOnLeft" class="flex items-center gap-2 space-y-0">
+						<Form.Field {form} name="sidebarOnLeft" class="flex h-4 items-center gap-2 space-y-0">
 							<Form.Control let:attrs>
-								<Switch {...attrs} includeInput bind:checked={$formData.sidebarOnLeft} />
-								<Form.Label>Sidebar on left</Form.Label>
+								<Switch
+									{...attrs}
+									includeInput
+									disabled={isMobile}
+									bind:checked={$formData.sidebarOnLeft}
+								/>
+								<Form.Label class="leading-[normal]">Sidebar on left</Form.Label>
+
+								{#if isMobile}
+									<Tooltip.Root>
+										<Tooltip.Trigger class="ml-4">
+											<HelpCircle class="h-4 w-4 shrink-0" />
+											<span class="sr-only select-none">Help</span>
+										</Tooltip.Trigger>
+										<Tooltip.Content class="select-none">
+											<span>Option only available on desktop.</span>
+										</Tooltip.Content>
+									</Tooltip.Root>
+								{/if}
 							</Form.Control>
 						</Form.Field>
 					</Form.Join>
