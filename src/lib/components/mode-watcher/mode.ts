@@ -59,7 +59,7 @@ export function setInitialMode(defaultMode: Mode, themeColors?: ThemeColors) {
 
 	const defaultSettings: TSettingsInfer = {
 		backgroundColor: 'system',
-		accentColor: 'green',
+		accentColor: 'orange',
 		layout: 'vertical',
 		navigation: 'collapse',
 		sidebar: 'open',
