@@ -32,7 +32,7 @@
 
 	$: ({ form: formData } = form);
 	$: if ($tabContext.tabs) {
-		tab = tabContext.get(tabID) as TRESTTabInfer;
+		tab = tabContext.getTab(tabID) as TRESTTabInfer;
 	}
 	$: if (tab) lang = CONTENT_TYPES_LANGS[tab.context.body.contentType || 'text/plain'];
 </script>

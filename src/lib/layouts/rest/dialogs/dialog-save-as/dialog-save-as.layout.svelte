@@ -9,7 +9,7 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Form from '$lib/components/ui/form';
-	import { defaults, superForm } from 'sveltekit-superforms';
+	import { defaults, superForm, type ChangeEvent } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 
 	type TFormAction = 'save' | 'cancel';
@@ -28,6 +28,7 @@
 		validators: zod(RESTRequestSchema),
 		validationMethod: 'oninput',
 		resetForm: true,
+		onChange: handleOnChange,
 		onSubmit: (input) => {
 			input.cancel();
 			return handleFormSubmit();
@@ -67,10 +68,15 @@
 		} as const satisfies Record<NonNullable<typeof selectedType>, () => void>;
 
 		ACTIONS[selectedType]();
-		tabContext.update(data.id, data);
-		tabContext.setDirty([data.id], false);
+		tabContext.setDirtyTabs([data.id], false);
 		$dialogStore.onSave?.();
-		dialogStore.set({ open: false, request: undefined });
+		dialogStore.set({ open: false, request: undefined, onSave: undefined });
+	}
+
+	function handleOnChange(event: ChangeEvent<TRESTRequestInfer>) {
+		if (!event.target) return;
+		tabContext.setDirtyTabs([$formData.id], true);
+		tabContext.updateTab($formData.id, { name: $formData.name });
 	}
 
 	function handleOpenChange(event: boolean) {

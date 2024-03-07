@@ -27,7 +27,7 @@
 	}
 
 	function handleAddNew() {
-		tabContext.update(tabID, { headers: [...$formData.headers, DEFAULT_HEADER] });
+		tabContext.updateTab(tabID, { headers: [...$formData.headers, DEFAULT_HEADER] });
 	}
 
 	onMount(() => {

@@ -16,19 +16,25 @@ export type TRESTTabDataPersist = {
 	current?: TRESTTabInfer['context']['id'];
 };
 export type TRESTTabActions = {
-	add: (request?: TRESTTabInfer['context']) => void;
-	get: (id: TRESTTabInfer['context']['id']) => TRESTTabInfer | undefined;
-	update: (id: TRESTTabInfer['context']['id'], request: Partial<TRESTTabInfer['context']>) => void;
-	duplicate: (id: TRESTTabInfer['context']['id']) => void;
-	setCurrent: (id?: TRESTTabInfer['context']['id']) => void;
-	setCurrentTab: (id: TRESTTabInfer['context']['id'], tab: TRESTTabInfer['currentTab']) => void;
-	setTainted: (ids?: Array<TRESTTabInfer['context']['id']>) => void;
-	setDirty: (ids: Array<TRESTTabInfer['context']['id']>, dirty: TRESTTabInfer['dirty']) => void;
+	addTab: (request?: TRESTTabInfer['context']) => void;
+	getTab: (id: TRESTTabInfer['context']['id']) => TRESTTabInfer | undefined;
+	updateTab: (
+		id: TRESTTabInfer['context']['id'],
+		request: Partial<TRESTTabInfer['context']>
+	) => void;
+	duplicateTab: (id: TRESTTabInfer['context']['id']) => void;
+	setCurrentTab: (id?: TRESTTabInfer['context']['id']) => void;
+	setCurrentInnerTab: (
+		id: TRESTTabInfer['context']['id'],
+		tab: TRESTTabInfer['currentTab']
+	) => void;
+	setTaintedTabs: (ids?: Array<TRESTTabInfer['context']['id']>) => void;
+	setDirtyTabs: (ids: Array<TRESTTabInfer['context']['id']>, dirty: TRESTTabInfer['dirty']) => void;
 	setResult: (
 		id: TRESTTabInfer['context']['id'],
 		result?: Partial<Pick<TRESTResult, 'response' | 'sending'>>
 	) => void;
-	close: (props: {
+	closeTabs: (props: {
 		ids: Array<TRESTTabInfer['context']['id']>;
 		mode: 'normal' | 'close-others' | 'close-all';
 	}) => void;
@@ -91,7 +97,7 @@ export function setRESTTabContext(
 	}
 
 	const actions: TRESTTabActions = {
-		add: (request) => {
+		addTab: (request) => {
 			let newTab: TRESTTabInfer;
 
 			if (request) {
@@ -119,11 +125,11 @@ export function setRESTTabContext(
 				return state;
 			});
 		},
-		get: (id) => {
+		getTab: (id) => {
 			const { tabs } = get(store);
 			return tabs.find((tab) => tab.id === id);
 		},
-		update: (id, request) => {
+		updateTab: (id, request) => {
 			const { tabs } = get(store);
 			const index = tabs.findIndex((tab) => tab.id === id);
 			if (index === -1) return;
@@ -134,7 +140,7 @@ export function setRESTTabContext(
 				return state;
 			});
 		},
-		duplicate: (id) => {
+		duplicateTab: (id) => {
 			const { tabs } = get(store);
 			const index = tabs.findIndex((tab) => tab.id === id);
 			if (index === -1) return;
@@ -156,7 +162,7 @@ export function setRESTTabContext(
 				return state;
 			});
 		},
-		setCurrent: (id) => {
+		setCurrentTab: (id) => {
 			const { tabs, current } = get(store);
 			const index = tabs.findIndex((tab) => tab.id === id);
 			if (index === -1 || current === id) return;
@@ -167,7 +173,7 @@ export function setRESTTabContext(
 				return state;
 			});
 		},
-		setDirty: (ids, dirty) => {
+		setDirtyTabs: (ids, dirty) => {
 			const { tabs } = get(store);
 			for (const tab of tabs) if (ids.includes(tab.id)) tab.dirty = dirty;
 
@@ -177,7 +183,7 @@ export function setRESTTabContext(
 				return state;
 			});
 		},
-		setCurrentTab(id, tab) {
+		setCurrentInnerTab(id, tab) {
 			const { tabs } = get(store);
 			const index = tabs.findIndex((tab) => tab.id === id);
 			if (index === -1) return;
@@ -188,7 +194,7 @@ export function setRESTTabContext(
 				return state;
 			});
 		},
-		setTainted: (ids) => {
+		setTaintedTabs: (ids) => {
 			if (!ids) {
 				return store.update((state) => {
 					state.tainted = [];
@@ -230,7 +236,7 @@ export function setRESTTabContext(
 				return state;
 			});
 		},
-		close: ({ ids, mode } = { ids: [], mode: 'normal' }) => {
+		closeTabs: ({ ids, mode } = { ids: [], mode: 'normal' }) => {
 			const { current } = get(store);
 			const hasCurrent = current ? ids.includes(current) : false;
 

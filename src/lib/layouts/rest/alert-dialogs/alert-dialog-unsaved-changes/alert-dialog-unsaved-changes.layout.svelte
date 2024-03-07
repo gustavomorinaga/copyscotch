@@ -13,8 +13,8 @@
 	);
 
 	function handleDiscard() {
-		if (dirtyTabs.length === 1) tabContext.close({ ids: $tabContext.tainted, mode: 'normal' });
-		tabContext.setTainted(undefined);
+		if (dirtyTabs.length === 1) tabContext.closeTabs({ ids: $tabContext.tainted, mode: 'normal' });
+		tabContext.setTaintedTabs(undefined);
 	}
 
 	function handleSave() {
@@ -26,20 +26,20 @@
 
 			if (found) {
 				restContext.updateFile(request);
-				tabContext.close({ ids: [request.id], mode: 'normal' });
+				tabContext.closeTabs({ ids: [request.id], mode: 'normal' });
 			} else {
 				dialogStore.set({
 					open: true,
 					request,
-					onSave: () => tabContext.close({ ids: [request.id], mode: 'normal' })
+					onSave: () => tabContext.closeTabs({ ids: [request.id], mode: 'normal' })
 				});
 			}
 		} else if (requests.length > 1) {
 			for (const request of requests) restContext.updateFile(request);
-			tabContext.close({ ids: $tabContext.tainted, mode: 'normal' });
+			tabContext.closeTabs({ ids: $tabContext.tainted, mode: 'normal' });
 		}
 
-		tabContext.setTainted(undefined);
+		tabContext.setTaintedTabs(undefined);
 	}
 </script>
 

@@ -38,12 +38,12 @@
 
 		if (contentTypeHeaderIndex !== -1 && $formData.headers[contentTypeHeaderIndex].override) {
 			$formData.headers[contentTypeHeaderIndex].value = event.value || '';
-			tabContext.update(tabID, {
+			tabContext.updateTab(tabID, {
 				headers: $formData.headers,
 				body: { ...$formData.body, contentType: event.value }
 			});
 		} else {
-			tabContext.update(tabID, { body: { ...$formData.body, contentType: event.value } });
+			tabContext.updateTab(tabID, { body: { ...$formData.body, contentType: event.value } });
 		}
 	}
 
@@ -60,16 +60,16 @@
 		);
 
 		if (headerIndex === -1) {
-			tabContext.update(tabID, { headers: [...$formData.headers, updatedHeader] });
+			tabContext.updateTab(tabID, { headers: [...$formData.headers, updatedHeader] });
 		} else {
-			tabContext.update(tabID, {
+			tabContext.updateTab(tabID, {
 				headers: $formData.headers.map((header, index) =>
 					index === headerIndex ? updatedHeader : header
 				)
 			});
 		}
 
-		tabContext.setCurrentTab(tabID, 'headers');
+		tabContext.setCurrentInnerTab(tabID, 'headers');
 	}
 
 	onMount(() => {

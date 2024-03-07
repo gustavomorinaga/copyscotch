@@ -38,7 +38,7 @@
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.ctrlKey && event.altKey && event.key === 'n') {
 			event.preventDefault();
-			tabContext.add();
+			tabContext.addTab();
 		}
 	}
 </script>
@@ -92,7 +92,7 @@
 					builders={[builder]}
 					variant="outline"
 					aria-label="Open REST Navigation"
-					class="mx-auto border-b-0"
+					class="border-x-0 border-b-0"
 				>
 					<ChevronUp class="h-5 w-5" />
 					<span class="sr-only select-none">Open Navigation</span>

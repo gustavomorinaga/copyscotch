@@ -32,7 +32,7 @@
 	}
 
 	onMount(() => {
-		if (!hasParams) tabContext.update(tabID, { params: [DEFAULT_KEY_VALUE] });
+		if (!hasParams) tabContext.updateTab(tabID, { params: [DEFAULT_KEY_VALUE] });
 	});
 </script>
 

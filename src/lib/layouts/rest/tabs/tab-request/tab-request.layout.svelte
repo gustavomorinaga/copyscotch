@@ -86,7 +86,7 @@
 
 	$: sending = $tabContext.results.find((result) => result.id === tabID)?.sending;
 	$: if ($tabContext.tabs) {
-		tab = tabContext.get(tabID) as TRESTTabInfer;
+		tab = tabContext.getTab(tabID) as TRESTTabInfer;
 		if (tab) {
 			currentTab = tab.currentTab;
 			form.reset({ id: formID, data: tab.context });
@@ -101,7 +101,7 @@
 
 	function handleCurrentTab(value: TAvailableTabs) {
 		currentTab = value;
-		tabContext.setCurrentTab(tabID, value);
+		tabContext.setCurrentInnerTab(tabID, value);
 	}
 
 	function handleOnChange(event: ChangeEvent<TRESTRequestInfer>) {
@@ -118,10 +118,10 @@
 				request = { [path as keyof TRESTRequestInfer]: $formData[path as keyof TRESTRequestInfer] };
 			}
 
-			tabContext.update(tabID, request);
+			tabContext.updateTab(tabID, request);
 		}
 
-		tabContext.setDirty([tabID], true);
+		tabContext.setDirtyTabs([tabID], true);
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
@@ -211,8 +211,8 @@
 		const data = $formData as TRESTRequestInfer;
 
 		const updateTab = () => {
-			tabContext.update(tabID, $formData);
-			tabContext.setDirty([tabID], false);
+			tabContext.updateTab(tabID, $formData);
+			tabContext.setDirtyTabs([tabID], false);
 		};
 
 		if (found) {
@@ -373,7 +373,7 @@
 							class="relative gap-2 px-0 py-2 text-muted-foreground !shadow-none before:absolute before:inset-x-0 before:bottom-0 before:h-[.125rem] before:bg-transparent before:transition-colors data-[state=active]:text-accent-foreground data-[state=active]:before:bg-primary hover:text-accent-foreground"
 							on:click={() => handleCurrentTab(value)}
 						>
-							<span class="capitalize">{label}</span>
+							<span class="select-none capitalize">{label}</span>
 							{#if dynamicCounters[value]}
 								<Badge size="sm" variant="outline" class="!text-foreground">
 									{dynamicCounters[value]}

@@ -11,8 +11,8 @@
 		if (!$dialogStore.requestID) return;
 
 		restContext.removeFile($dialogStore.requestID);
-		tabContext.close({ ids: [$dialogStore.requestID], mode: 'normal' });
-		tabContext.setTainted(undefined);
+		tabContext.closeTabs({ ids: [$dialogStore.requestID], mode: 'normal' });
+		tabContext.setTaintedTabs(undefined);
 		dialogStore.set({ open: false, requestID: undefined });
 	}
 </script>
