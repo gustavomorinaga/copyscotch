@@ -18,12 +18,12 @@ export const SidebarEnum = z.enum(['open', 'closed']);
 export const SidebarPositionEnum = z.enum(['left', 'right']);
 
 export const SettingsSchema = z.object({
-	backgroundColor: BackgroundColorEnum.default('system'),
-	accentColor: AccentColorEnum.default('green'),
-	layout: LayoutEnum.default('vertical'),
-	navigation: NavigationEnum.default('expand'),
-	sidebar: SidebarEnum.default('closed'),
-	sidebarPosition: SidebarPositionEnum.default('right'),
+	backgroundColor: BackgroundColorEnum,
+	accentColor: AccentColorEnum,
+	layout: LayoutEnum,
+	navigation: NavigationEnum,
+	sidebar: SidebarEnum,
+	sidebarPosition: SidebarPositionEnum,
 	lineWrapping: z.boolean()
 });
 
@@ -38,7 +38,7 @@ export type TThemeInfer = z.infer<TThemeSchema>;
 
 export const DEFAULT_SETTINGS: TSettingsInfer = {
 	backgroundColor: 'system',
-	accentColor: 'green',
+	accentColor: 'orange',
 	layout: 'vertical',
 	navigation: 'collapse',
 	sidebar: 'open',

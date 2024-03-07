@@ -6,7 +6,7 @@ import {
 	themeColors
 } from './stores';
 import type { Mode, ThemeColors } from './types';
-import { DEFAULT_SETTINGS, type TSettingsInfer } from '$lib/validators/settings.validator';
+import type { TSettingsInfer } from '$lib/validators/settings.validator';
 
 /** Set the mode to light or dark */
 export function setMode(mode: Mode): void {

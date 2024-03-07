@@ -5,10 +5,10 @@
 
 declare let self: ServiceWorkerGlobalScope;
 
-import { build, files, version } from '$service-worker';
+import { build, files, prerendered, version } from '$service-worker';
 
 const CACHE = `cache-${version}`;
-const ASSETS = [...build, ...files];
+const ASSETS = [...build, ...files, ...prerendered];
 
 // Install service worker
 self.addEventListener('install', (event) => {

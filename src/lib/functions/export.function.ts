@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /**
  * Exports data as a file with the specified filename and type.
  * @param data - The data to be exported.

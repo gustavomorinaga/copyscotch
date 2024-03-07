@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const KeyValueSchema = z.object({
 	key: z.string().max(100),
 	value: z.string().max(100),
-	active: z.boolean().default(true)
+	active: z.boolean()
 });
 
 export type TKeyValueSchema = typeof KeyValueSchema;
