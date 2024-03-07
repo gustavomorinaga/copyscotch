@@ -5,9 +5,9 @@
 	import type { Props as TCodeMirror } from '$lib/components/ui/codemirror';
 
 	const CODEMIRROR_CONFIG: TCodeMirror = {
-		editable: true,
+		editable: false,
 		readonly: true,
-		useTab: false,
+		useTab: true,
 		tabSize: 2,
 		nodebounce: true
 	} as const;
