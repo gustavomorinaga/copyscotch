@@ -25,7 +25,7 @@
 
 <div class="flex flex-col p-2">
 	<Center>
-		<figure class="mt-2 flex max-w-sm select-none flex-col items-center">
+		<figure class="pointer-events-none mt-2 flex max-w-sm select-none flex-col items-center">
 			<img
 				src="/images/states/{$mode}/pack.svg"
 				alt="Folder are empty"
