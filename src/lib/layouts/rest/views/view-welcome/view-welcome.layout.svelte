@@ -21,7 +21,7 @@
 	on:dblclick={() => tabContext.addTab()}
 >
 	<Center>
-		<figure aria-hidden="true" class="mb-2 aspect-square opacity-10 grayscale">
+		<figure aria-hidden="true" class="mb-2 aspect-square opacity-10 grayscale select-none">
 			<img src="/logo.svg" alt="Copyscotch watermark" loading="lazy" width="112" height="112" />
 		</figure>
 
