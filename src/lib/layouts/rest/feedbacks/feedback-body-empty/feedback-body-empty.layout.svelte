@@ -5,7 +5,7 @@
 
 <div class="flex flex-col p-2">
 	<Center>
-		<div class="mt-2 flex max-w-sm select-none flex-col items-center">
+		<figure class="pointer-events-none mt-2 flex max-w-sm select-none flex-col items-center">
 			<img
 				src="/images/states/{$mode}/upload_single_file.svg"
 				alt="Empty body"
@@ -14,9 +14,11 @@
 				width="56"
 				height="56"
 			/>
-			<span class="mt-2 max-w-sm whitespace-normal text-center text-tiny text-muted-foreground">
+			<figcaption
+				class="mt-2 max-w-sm whitespace-normal text-center text-tiny text-muted-foreground"
+			>
 				This request does not have a body
-			</span>
-		</div>
+			</figcaption>
+		</figure>
 	</Center>
 </div>

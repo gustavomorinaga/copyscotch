@@ -21,8 +21,11 @@
 	on:dblclick={() => tabContext.addTab()}
 >
 	<Center>
-		<figure aria-hidden="true" class="mb-2 aspect-square opacity-10 grayscale">
-			<img src="/logo.svg" alt="Watermark" loading="lazy" width="112" height="112" />
+		<figure
+			aria-hidden="true"
+			class="pointer-events-none mb-2 aspect-square select-none opacity-10 grayscale"
+		>
+			<img src="/logo.svg" alt="Copyscotch watermark" loading="lazy" width="112" height="112" />
 		</figure>
 
 		<Shortcut.Root class="mb-4 gap-4">

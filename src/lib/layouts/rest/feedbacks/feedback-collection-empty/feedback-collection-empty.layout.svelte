@@ -25,7 +25,7 @@
 
 <div class="flex flex-col p-2">
 	<Center class="p-2">
-		<div class="mt-2 flex max-w-sm select-none flex-col items-center">
+		<figure class="pointer-events-none mt-2 flex max-w-sm select-none flex-col items-center">
 			<img
 				src="/images/states/{$mode}/pack.svg"
 				alt="Collections are empty"
@@ -34,10 +34,12 @@
 				width="56"
 				height="56"
 			/>
-			<span class="mt-2 max-w-sm whitespace-normal text-center text-tiny text-muted-foreground">
+			<figcaption
+				class="mt-2 max-w-sm whitespace-normal text-center text-tiny text-muted-foreground"
+			>
 				Collections are empty
-			</span>
-		</div>
+			</figcaption>
+		</figure>
 
 		<div class="mt-4 flex flex-col items-center space-y-4">
 			<p class="select-none text-sm text-muted-foreground">Import or create a collection</p>
