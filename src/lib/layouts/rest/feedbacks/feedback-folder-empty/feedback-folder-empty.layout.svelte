@@ -25,7 +25,7 @@
 
 <div class="flex flex-col p-2">
 	<Center>
-		<div class="mt-2 flex max-w-sm select-none flex-col items-center">
+		<figure class="mt-2 flex max-w-sm select-none flex-col items-center">
 			<img
 				src="/images/states/{$mode}/pack.svg"
 				alt="Folder are empty"
@@ -34,10 +34,12 @@
 				width="56"
 				height="56"
 			/>
-			<span class="mt-2 max-w-sm whitespace-normal text-center text-tiny text-muted-foreground">
+			<figcaption
+				class="mt-2 max-w-sm whitespace-normal text-center text-tiny text-muted-foreground"
+			>
 				Folder are empty
-			</span>
-		</div>
+			</figcaption>
+		</figure>
 
 		<div class="mt-4 flex flex-col items-center space-y-4">
 			<div class="flex flex-col items-stretch gap-4">
