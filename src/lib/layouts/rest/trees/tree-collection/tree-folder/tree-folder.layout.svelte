@@ -58,27 +58,34 @@
 
 <script lang="ts">
 	type $$Props = {
-		folder: TFolderInfer & { open?: boolean };
+		folder: TFolderInfer;
 		type: 'collection' | 'folder';
 	};
 
 	export let folder: $$Props['folder'];
 	export let type: $$Props['type'] = 'collection';
+	let open: boolean = false;
 	let openOptions: boolean = false;
 
+	$: status = (open ? 'open' : 'closed') as TFolderStatus;
 	$: selected = $treeStore.selected === folder.id;
-	$: status = (folder.open ? 'open' : 'closed') as TFolderStatus;
-	$: if ($treeStore.collapse) folder.open = false;
-	$: if ($treeStore.expand) folder.open = true;
+	$: if (!$treeStore.collapse) {
+		open = $treeStore.openedFolders.includes(folder.id);
+	} else if ($treeStore.collectionsIDs?.includes(folder.id)) {
+		open = false;
+	}
 
-	function onOpenChange(open: boolean) {
+	function handleOpenChange(open: boolean) {
 		$treeStore.selected = open ? folder.id : undefined;
+		$treeStore.openedFolders = open
+			? [...$treeStore.openedFolders, folder.id]
+			: $treeStore.openedFolders.filter((id) => id !== folder.id);
 		if ($treeStore.expand) $treeStore.expand = false;
 		if ($treeStore.collapse) $treeStore.collapse = false;
 	}
 </script>
 
-<Collapsible.Root class="flex shrink-0 flex-col" bind:open={folder.open} {onOpenChange}>
+<Collapsible.Root class="flex shrink-0 flex-col" {open} onOpenChange={handleOpenChange}>
 	<Collapsible.Trigger asChild let:builder>
 		<div class="group/folder flex flex-1 items-center gap-2">
 			<Button
@@ -88,7 +95,7 @@
 				role="treeitem"
 				aria-label={folder.name}
 				aria-selected={selected}
-				aria-expanded={folder.open}
+				aria-expanded={open}
 				tabindex={selected ? 0 : -1}
 				class="flex flex-1 items-center justify-center px-0"
 			>
@@ -161,7 +168,7 @@
 		</div>
 	</Collapsible.Trigger>
 	<Collapsible.Content class="flex">
-		<TreeExpand bind:open={folder.open} />
+		<TreeExpand {open} />
 		<slot />
 	</Collapsible.Content>
 </Collapsible.Root>

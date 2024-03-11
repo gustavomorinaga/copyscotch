@@ -15,7 +15,7 @@
 	export let type: $$Props['type'] = 'collection';
 </script>
 
-<ul role="group" class="flex flex-col">
+<ul role="group" class="flex shrink-0 flex-col">
 	{#each folders as folder}
 		{@const isFoldersEmpty = !folder.folders.length}
 		{@const isRequestsEmpty = !folder.requests.length}
