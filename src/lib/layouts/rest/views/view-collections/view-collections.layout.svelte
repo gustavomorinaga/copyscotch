@@ -34,7 +34,6 @@
 		const hasTerm = Boolean($searchTerm);
 
 		$treeStore.expand = hasTerm;
-		$treeStore.collapse = !hasTerm;
 		$treeStore.expandedFolders = hasTerm
 			? retrieveNestedFields($filteredCollections, 'folders', 'id')
 			: [];

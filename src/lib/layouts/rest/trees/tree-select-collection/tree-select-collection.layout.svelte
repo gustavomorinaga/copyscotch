@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { onDestroy } from 'svelte';
-	import { treeSelectCollectionStore as treeStore, type TTreeSelectCollectionStore } from './store';
+	import { treeSelectCollectionStore as treeStore } from './store';
 	import { TreeWrapper } from './tree-wrapper';
 	import type { TRESTCollectionInfer } from '$lib/validators';
 </script>
@@ -10,13 +10,6 @@
 
 	let folders: $$Props['collections'] = [];
 	export { folders as collections };
-
-	$: if ($treeStore.collapse) {
-		const arrayField: keyof TTreeSelectCollectionStore = $treeStore.expand
-			? 'expandedFolders'
-			: 'openedFolders';
-		$treeStore[arrayField] = [];
-	}
 
 	onDestroy(() => {
 		treeStore.set({

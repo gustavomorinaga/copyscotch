@@ -2,7 +2,10 @@
 	import { getRESTContext } from '$lib/contexts';
 	import { dialogImportStore } from '$lib/layouts/rest/dialogs/dialog-import';
 	import { dialogEditCollectionStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
-	import { treeSelectCollectionStore as treeStore } from '$lib/layouts/rest/trees/tree-select-collection';
+	import {
+		treeSelectCollectionStore as treeStore,
+		type TTreeSelectCollectionStore
+	} from '$lib/layouts/rest/trees/tree-select-collection';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import FolderDown from 'lucide-svelte/icons/folder-down';
@@ -28,6 +31,10 @@
 
 	function handleCollapseAll() {
 		$treeStore.collapse = true;
+		const arrayField: keyof TTreeSelectCollectionStore = $treeStore.expand
+			? 'expandedFolders'
+			: 'openedFolders';
+		$treeStore[arrayField] = [];
 	}
 </script>
 
