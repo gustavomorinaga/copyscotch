@@ -6,11 +6,15 @@ export type TTreeSelectCollectionStore = {
 	collapse: boolean;
 	selectedID?: TFolderInfer['id'] | TFileInfer['id'];
 	selectedType?: 'folder' | 'file';
+	openedFolders: Array<TFolderInfer['id']>;
+	expandedFolders: Array<TFolderInfer['id']>;
 };
 
 export const treeSelectCollectionStore = writable<TTreeSelectCollectionStore>({
 	expand: false,
 	collapse: true,
 	selectedID: undefined,
-	selectedType: undefined
+	selectedType: undefined,
+	openedFolders: [],
+	expandedFolders: []
 });

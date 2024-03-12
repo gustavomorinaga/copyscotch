@@ -4,14 +4,14 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { open?: boolean };
+	type $$Props = { onOpenChange?: (open: boolean) => void };
 
-	export let open: $$Props['open'] = false;
+	export let onOpenChange: $$Props['onOpenChange'] = undefined;
 	let el: HTMLDivElement;
 
 	function handleCollapse(event: MouseEvent) {
 		event.stopPropagation();
-		open = false;
+		onOpenChange?.(false);
 	}
 
 	onMount(() => {
