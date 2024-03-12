@@ -5,7 +5,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import Dot from 'lucide-svelte/icons/dot';
-	import MoreVertical from 'lucide-svelte/icons/more-vertical';
+	import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical';
 	import type { TRESTRequestInfer } from '$lib/validators';
 </script>
 
@@ -91,7 +91,7 @@
 						class="h-6 w-6"
 						on:click={(event) => event.stopPropagation()}
 					>
-						<MoreVertical class="h-4 w-4 shrink-0" />
+						<EllipsisVertical class="h-4 w-4 shrink-0" />
 						<span class="sr-only">More Options</span>
 					</Button>
 				</Tooltip.Trigger>

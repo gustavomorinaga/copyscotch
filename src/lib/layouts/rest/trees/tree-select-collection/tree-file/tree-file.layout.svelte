@@ -3,8 +3,8 @@
 	import { DropdownMenuRequestOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-request-options';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import CheckCircle from 'lucide-svelte/icons/check-circle';
-	import MoreVertical from 'lucide-svelte/icons/more-vertical';
+	import CheckCircleBig from 'lucide-svelte/icons/circle-check-big';
+	import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical';
 	import type { TRESTRequestInfer } from '$lib/validators';
 </script>
 
@@ -51,7 +51,7 @@
 			style="color: hsl(var(--method-{file.method.toLowerCase()}-color) / var(--tw-text-opacity))"
 		>
 			{#if selected}
-				<CheckCircle class="h-5 w-5 shrink-0" />
+				<CheckCircleBig class="h-5 w-5 shrink-0" />
 			{:else}
 				{file.method}
 			{/if}
@@ -77,7 +77,7 @@
 						class="h-6 w-6"
 						on:click={(event) => event.stopPropagation()}
 					>
-						<MoreVertical class="h-4 w-4 shrink-0" />
+						<EllipsisVertical class="h-4 w-4 shrink-0" />
 						<span class="sr-only select-none">More Options</span>
 					</Button>
 				</Tooltip.Trigger>

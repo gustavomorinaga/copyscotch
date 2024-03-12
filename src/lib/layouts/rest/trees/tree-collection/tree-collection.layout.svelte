@@ -1,7 +1,6 @@
 <script lang="ts" context="module">
 	import { treeCollectionStore as treeStore, type TTreeCollectionStore } from './store';
 	import { TreeWrapper } from './tree-wrapper';
-	import { retrieveNestedFields } from '$lib/utils';
 	import type { TRESTCollectionInfer } from '$lib/validators';
 </script>
 

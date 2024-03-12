@@ -11,12 +11,12 @@
 	import { DropdownMenuCollectionOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-collection-options';
 	import { dialogEditCollectionStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
 	import { dialogEditRequestStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
-	import CheckCircle from 'lucide-svelte/icons/check-circle';
+	import CheckCircleBig from 'lucide-svelte/icons/circle-check-big';
 	import Folder from 'lucide-svelte/icons/folder';
 	import FolderOpen from 'lucide-svelte/icons/folder-open';
 	import FolderPlus from 'lucide-svelte/icons/folder-plus';
 	import FilePlus from 'lucide-svelte/icons/file-plus';
-	import MoreVertical from 'lucide-svelte/icons/more-vertical';
+	import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical';
 	import type { ComponentType } from 'svelte';
 	import type { TFolderInfer } from '$lib/validators';
 
@@ -31,7 +31,7 @@
 	const ICONS = {
 		open: FolderOpen,
 		closed: Folder,
-		selected: CheckCircle
+		selected: CheckCircleBig
 	} as const satisfies Record<TFolderStatus, ComponentType>;
 	const OPTIONS: Array<TFolderOptions> = [
 		{
@@ -185,7 +185,7 @@
 								class="h-6 w-6"
 								on:click={(event) => event.stopPropagation()}
 							>
-								<MoreVertical class="h-4 w-4 shrink-0" />
+								<EllipsisVertical class="h-4 w-4 shrink-0" />
 								<span class="sr-only select-none">More Options</span>
 							</Button>
 						</Tooltip.Trigger>

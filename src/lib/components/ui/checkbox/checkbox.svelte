@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Checkbox as CheckboxPrimitive } from 'bits-ui';
 	import { cn } from '$lib/utils';
-	import CheckCircle from 'lucide-svelte/icons/check-circle';
+	import CheckCircleBig from 'lucide-svelte/icons/circle-check-big';
 	import Circle from 'lucide-svelte/icons/circle';
 	import Minus from 'lucide-svelte/icons/minus';
 
@@ -28,7 +28,7 @@
 		let:isIndeterminate
 	>
 		{#if isChecked}
-			<CheckCircle class="h-5 w-5 shrink-0" />
+			<CheckCircleBig class="h-5 w-5 shrink-0" />
 		{:else if isIndeterminate}
 			<Minus class="h-5 w-5 shrink-0" />
 		{:else}

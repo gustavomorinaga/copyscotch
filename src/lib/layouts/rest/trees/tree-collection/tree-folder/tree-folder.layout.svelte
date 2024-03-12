@@ -12,7 +12,7 @@
 	import FolderOpen from 'lucide-svelte/icons/folder-open';
 	import FolderPlus from 'lucide-svelte/icons/folder-plus';
 	import FilePlus from 'lucide-svelte/icons/file-plus';
-	import MoreVertical from 'lucide-svelte/icons/more-vertical';
+	import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical';
 	import type { ComponentType } from 'svelte';
 	import type { TFolderInfer } from '$lib/validators';
 
@@ -169,7 +169,7 @@
 								class="h-6 w-6"
 								on:click={(event) => event.stopPropagation()}
 							>
-								<MoreVertical class="h-4 w-4 shrink-0" />
+								<EllipsisVertical class="h-4 w-4 shrink-0" />
 								<span class="sr-only select-none">More Options</span>
 							</Button>
 						</Tooltip.Trigger>
