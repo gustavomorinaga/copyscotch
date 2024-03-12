@@ -1,11 +1,11 @@
 <script lang="ts" context="module">
 	import { derived, writable } from 'svelte/store';
 	import { getRESTContext } from '$lib/contexts';
-	import { Separator } from '$lib/components/ui/separator';
+	import { RESTRepository } from '$lib/repositories';
 	import { treeCollectionStore as treeStore } from '$lib/layouts/rest/trees/tree-collection';
 	import { ToolbarCollections } from '$lib/layouts/rest/toolbars/toolbar-collections';
 	import { InputSearch } from '$lib/layouts/shared';
-	import { RESTRepository } from '$lib/repositories';
+	import { Separator } from '$lib/components/ui/separator';
 
 	const LAZY_COMPONENTS = [
 		import('$lib/layouts/rest/trees/tree-collection'),

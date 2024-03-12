@@ -83,25 +83,27 @@ export function filterTree(
 	const isMatch = (text: string) => text.toLowerCase().includes(filterText);
 
 	const filterFolder = (folder: TFolderInfer) => {
-		const filteredFiles = [];
-		const filteredFolders = [];
+		const filteredFiles = folder.requests.filter((request) => isMatch(request.name));
+		const filteredFolders: TFolderInfer[] = folder.folders.reduce(
+			(result: TFolderInfer[], subfolder) => {
+				const filteredSubfolder = filterFolder(subfolder);
+				if (
+					filteredSubfolder.requests.length > 0 ||
+					filteredSubfolder.folders.length > 0 ||
+					isMatch(subfolder.name)
+				) {
+					result.push(filteredSubfolder);
+				}
+				return result;
+			},
+			[]
+		);
 
-		for (const request of folder.requests) {
-			if (isMatch(request.name)) filteredFiles.push(request);
-		}
-
-		for (const subfolder of folder.folders) {
-			if (isMatch(subfolder.name)) filteredFolders.push(subfolder);
-			const filteredSubfolder = filterFolder(subfolder);
-			if (filteredSubfolder.requests.length > 0 || filteredSubfolder.folders.length > 0) {
-				filteredFolders.push(filteredSubfolder);
-			}
-		}
-
-		const filteredFolder = Object.assign({}, folder);
-		filteredFolder.requests = filteredFiles;
-		filteredFolder.folders = filteredFolders;
-		return filteredFolder;
+		return {
+			...folder,
+			requests: filteredFiles,
+			folders: filteredFolders
+		};
 	};
 
 	for (const collection of collections) {

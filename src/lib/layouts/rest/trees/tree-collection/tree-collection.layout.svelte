@@ -1,7 +1,8 @@
 <script lang="ts" context="module">
-	import { treeCollectionStore as treeStore } from './store';
+	import { treeCollectionStore as treeStore, type TTreeCollectionStore } from './store';
 	import { TreeWrapper } from './tree-wrapper';
-	import type { TFolderInfer, TRESTCollectionInfer } from '$lib/validators';
+	import { retrieveNestedFields } from '$lib/utils';
+	import type { TRESTCollectionInfer } from '$lib/validators';
 </script>
 
 <script lang="ts">
@@ -10,21 +11,15 @@
 	let folders: $$Props['collections'] = [];
 	export { folders as collections };
 
-	$: if (folders.length) $treeStore.collectionsIDs = folders.map((folder) => folder.id);
-	$: if ($treeStore.collapse) $treeStore.openedFolders = [];
-	$: if ($treeStore.expand) $treeStore.openedFolders = retrieveFolderIDs(folders);
-
-	function retrieveFolderIDs(folders: Array<TFolderInfer>) {
-		let folderIDs: Array<TFolderInfer['id']> = [];
-
-		function retrieve(folder: TFolderInfer) {
-			folderIDs.push(folder.id);
-			if (folder.folders.length) folder.folders.forEach(retrieve);
+	$: {
+		if ($treeStore.collapse) {
+			const arrayField: keyof TTreeCollectionStore = $treeStore.expand
+				? 'expandedFolders'
+				: 'openedFolders';
+			$treeStore[arrayField] = [];
+		} else if ($treeStore.expand && !$treeStore.expandedFolders.length) {
+			$treeStore.expandedFolders = retrieveNestedFields(folders, 'folders', 'id');
 		}
-
-		folders.forEach(retrieve);
-
-		return [...new Set(folderIDs)];
 	}
 </script>
 

@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { treeCollectionStore as treeStore } from '../store';
+	import { treeCollectionStore as treeStore, type TTreeCollectionStore } from '../store';
 	import { TreeExpand } from '../tree-expand';
 	import { DropdownMenuCollectionOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-collection-options';
 	import { dialogEditCollectionStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
@@ -64,28 +64,35 @@
 
 	export let folder: $$Props['folder'];
 	export let type: $$Props['type'] = 'collection';
-	let open: boolean = false;
+	let openFolder: boolean = false;
 	let openOptions: boolean = false;
 
-	$: status = (open ? 'open' : 'closed') as TFolderStatus;
 	$: selected = $treeStore.selected === folder.id;
-	$: if (!$treeStore.collapse) {
-		open = $treeStore.openedFolders.includes(folder.id);
-	} else if ($treeStore.collectionsIDs?.includes(folder.id)) {
-		open = false;
+	$: if ($treeStore.collapse) {
+		const isCollection = type === 'collection';
+		if (isCollection) openFolder = false;
+	} else if ($treeStore.expand) {
+		openFolder = $treeStore.expandedFolders.includes(folder.id);
+	} else {
+		openFolder = $treeStore.openedFolders.includes(folder.id);
 	}
+	$: status = (openFolder ? 'open' : 'closed') as TFolderStatus;
 
 	function handleOpenChange(open: boolean) {
 		$treeStore.selected = open ? folder.id : undefined;
-		$treeStore.openedFolders = open
-			? [...$treeStore.openedFolders, folder.id]
-			: $treeStore.openedFolders.filter((id) => id !== folder.id);
-		if ($treeStore.expand) $treeStore.expand = false;
 		if ($treeStore.collapse) $treeStore.collapse = false;
+
+		const arrayField: keyof TTreeCollectionStore = $treeStore.expand
+			? 'expandedFolders'
+			: 'openedFolders';
+
+		$treeStore[arrayField] = open
+			? Array.from(new Set([...$treeStore[arrayField], folder.id]))
+			: $treeStore[arrayField].filter((id) => id !== folder.id);
 	}
 </script>
 
-<Collapsible.Root class="flex shrink-0 flex-col" {open} onOpenChange={handleOpenChange}>
+<Collapsible.Root class="flex shrink-0 flex-col" open={openFolder} onOpenChange={handleOpenChange}>
 	<Collapsible.Trigger asChild let:builder>
 		<div class="group/folder flex flex-1 items-center gap-2">
 			<Button
@@ -95,7 +102,7 @@
 				role="treeitem"
 				aria-label={folder.name}
 				aria-selected={selected}
-				aria-expanded={open}
+				aria-expanded={openFolder}
 				tabindex={selected ? 0 : -1}
 				class="flex flex-1 items-center justify-center px-0"
 			>
@@ -168,7 +175,7 @@
 		</div>
 	</Collapsible.Trigger>
 	<Collapsible.Content class="flex">
-		<TreeExpand {open} />
+		<TreeExpand onOpenChange={handleOpenChange} />
 		<slot />
 	</Collapsible.Content>
 </Collapsible.Root>
