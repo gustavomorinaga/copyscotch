@@ -5,10 +5,14 @@ export type TTreeCollectionStore = {
 	expand: boolean;
 	collapse: boolean;
 	selected?: TFolderInfer['id'] | TFileInfer['id'];
+	openedFolders: Array<TFolderInfer['id']>;
+	expandedFolders: Array<TFolderInfer['id']>;
 };
 
 export const treeCollectionStore = writable<TTreeCollectionStore>({
 	expand: false,
-	collapse: true,
-	selected: undefined
+	collapse: false,
+	selected: undefined,
+	openedFolders: [],
+	expandedFolders: []
 });

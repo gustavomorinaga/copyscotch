@@ -12,7 +12,7 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Form from '$lib/components/ui/form';
 	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
-	import CheckCircle from 'lucide-svelte/icons/check-circle';
+	import CheckCircleBig from 'lucide-svelte/icons/circle-check-big';
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { toast } from 'svelte-sonner';
@@ -115,7 +115,7 @@
 	use:enhance
 >
 	<div class="mb-2 flex items-center">
-		<CheckCircle
+		<CheckCircleBig
 			class="mr-4 h-6 w-6 shrink-0 {!isInvalid ? 'text-success' : 'text-muted-foreground'}"
 		/>
 		<span class="select-none text-sm">Import from File</span>

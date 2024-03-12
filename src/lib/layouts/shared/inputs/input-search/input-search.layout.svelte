@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { cn } from '$lib/utils';
+	import { cn, debounce } from '$lib/utils';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import X from 'lucide-svelte/icons/x';
@@ -23,14 +23,14 @@
 		type="search"
 		placeholder="Search"
 		autocomplete="off"
-		bind:value
+		{value}
 		on:blur
 		on:change
 		on:click
 		on:focus
 		on:keydown
 		on:keypress
-		on:keyup
+		on:keyup={debounce((event) => (value = event.target.value))}
 		on:mouseover
 		on:mouseenter
 		on:mouseleave

@@ -14,7 +14,7 @@
 	import { systemPrefersMode } from '$lib/components/mode-watcher';
 	import { screenStore } from '$lib/components/screen-watcher';
 	import Cloud from 'lucide-svelte/icons/cloud';
-	import HelpCircle from 'lucide-svelte/icons/help-circle';
+	import CircleHelp from 'lucide-svelte/icons/circle-help';
 	import Monitor from 'lucide-svelte/icons/monitor';
 	import Moon from 'lucide-svelte/icons/moon';
 	import Sun from 'lucide-svelte/icons/sun';
@@ -164,7 +164,7 @@
 								{#if isMobile}
 									<Tooltip.Root>
 										<Tooltip.Trigger class="ml-4">
-											<HelpCircle class="h-4 w-4 shrink-0" />
+											<CircleHelp class="h-4 w-4 shrink-0" />
 											<span class="sr-only select-none">Help</span>
 										</Tooltip.Trigger>
 										<Tooltip.Content class="select-none">

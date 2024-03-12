@@ -82,29 +82,36 @@ export function filterTree(
 
 	const isMatch = (text: string) => text.toLowerCase().includes(filterText);
 
-	for (const collection of collections) {
-		const filteredFiles = [];
-		const filteredFolders = [];
-		for (const request of collection.requests) {
-			if (isMatch(request.name)) filteredFiles.push(request);
-		}
-		for (const folder of collection.folders) {
-			if (isMatch(folder.name)) filteredFolders.push(folder);
-			const filteredFolderFiles = [];
-			for (const request of folder.requests) {
-				if (isMatch(request.name)) filteredFolderFiles.push(request);
-			}
-			if (filteredFolderFiles.length > 0) {
-				const filteredFolder = Object.assign({}, folder);
-				filteredFolder.requests = filteredFolderFiles;
-				filteredFolders.push(filteredFolder);
-			}
-		}
+	const filterFolder = (folder: TFolderInfer) => {
+		const filteredFiles = folder.requests.filter((request) => isMatch(request.name));
+		const filteredFolders: TFolderInfer[] = folder.folders.reduce(
+			(result: TFolderInfer[], subfolder) => {
+				const filteredSubfolder = filterFolder(subfolder);
+				if (
+					filteredSubfolder.requests.length > 0 ||
+					filteredSubfolder.folders.length > 0 ||
+					isMatch(subfolder.name)
+				) {
+					result.push(filteredSubfolder);
+				}
+				return result;
+			},
+			[]
+		);
 
-		if (filteredFiles.length + filteredFolders.length > 0 || isMatch(collection.name)) {
-			const filteredCollection = Object.assign({}, collection);
-			filteredCollection.requests = filteredFiles;
-			filteredCollection.folders = filteredFolders;
+		return {
+			...folder,
+			requests: filteredFiles,
+			folders: filteredFolders
+		};
+	};
+
+	for (const collection of collections) {
+		const filteredCollection = filterFolder(collection);
+		if (
+			filteredCollection.requests.length + filteredCollection.folders.length > 0 ||
+			isMatch(collection.name)
+		) {
 			filteredCollections.push(filteredCollection);
 		}
 	}

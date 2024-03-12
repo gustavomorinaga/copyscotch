@@ -5,10 +5,10 @@
 	import { ShortcutKey } from '$lib/components/ui/shortcut';
 	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
 	import Copy from 'lucide-svelte/icons/copy';
-	import FileEdit from 'lucide-svelte/icons/file-pen';
-	import XCircle from 'lucide-svelte/icons/x-circle';
-	import XOctagon from 'lucide-svelte/icons/x-octagon';
-	import XSquare from 'lucide-svelte/icons/x-square';
+	import FilePen from 'lucide-svelte/icons/file-pen';
+	import CircleX from 'lucide-svelte/icons/circle-x';
+	import OctagonX from 'lucide-svelte/icons/octagon-x';
+	import SquareX from 'lucide-svelte/icons/square-x';
 	import type { TRESTRequestInfer, TRESTTabInfer } from '$lib/validators';
 	import type { ComponentType } from 'svelte';
 
@@ -36,7 +36,7 @@
 		{
 			label: 'Rename',
 			shortcut: 'R',
-			icon: FileEdit,
+			icon: FilePen,
 			action: () => {
 				const { context: request } = tabContext.getTab(tabID) as TRESTTabInfer;
 				dialogStore.set({ mode: 'edit', open: true, request });
@@ -51,7 +51,7 @@
 		{
 			label: 'Close',
 			shortcut: 'W',
-			icon: XCircle,
+			icon: CircleX,
 			action: () => {
 				if (tabContext.getTab(tabID)?.dirty) tabContext.setTaintedTabs([tabID]);
 				else tabContext.closeTabs({ ids: [tabID], mode: 'normal' });
@@ -60,7 +60,7 @@
 		{
 			label: 'Close Others',
 			shortcut: 'X',
-			icon: XSquare,
+			icon: SquareX,
 			action: () => {
 				const otherTabs = $tabContext.tabs.filter((tab) => tab.id !== tabID);
 				const dirtyTabs = otherTabs.filter((tab) => tab.dirty);
@@ -72,7 +72,7 @@
 		{
 			label: 'Close All',
 			shortcut: 'A',
-			icon: XOctagon,
+			icon: OctagonX,
 			action: () => {
 				const dirtyTabs = $tabContext.tabs.filter((tab) => tab.dirty);
 				if (dirtyTabs.length) tabContext.setTaintedTabs($tabContext.tabs.map((tab) => tab.id));

@@ -7,7 +7,7 @@
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import FolderDown from 'lucide-svelte/icons/folder-down';
 	import Plus from 'lucide-svelte/icons/plus';
-	import MinusSquare from 'lucide-svelte/icons/minus-square';
+	import MinusSquare from 'lucide-svelte/icons/square-minus';
 </script>
 
 <script lang="ts">

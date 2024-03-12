@@ -1,18 +1,22 @@
 <script lang="ts" context="module">
-	import { treeSelectCollectionStore as treeStore } from '../store';
+	import {
+		treeSelectCollectionStore as treeStore,
+		type TTreeSelectCollectionStore
+	} from '../store';
 	import { TreeExpand } from '../tree-expand';
+	import { debounce } from '$lib/utils';
 	import { Button } from '$lib/components/ui/button';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { DropdownMenuCollectionOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-collection-options';
 	import { dialogEditCollectionStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
 	import { dialogEditRequestStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
-	import CheckCircle from 'lucide-svelte/icons/check-circle';
+	import CheckCircleBig from 'lucide-svelte/icons/circle-check-big';
 	import Folder from 'lucide-svelte/icons/folder';
 	import FolderOpen from 'lucide-svelte/icons/folder-open';
 	import FolderPlus from 'lucide-svelte/icons/folder-plus';
 	import FilePlus from 'lucide-svelte/icons/file-plus';
-	import MoreVertical from 'lucide-svelte/icons/more-vertical';
+	import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical';
 	import type { ComponentType } from 'svelte';
 	import type { TFolderInfer } from '$lib/validators';
 
@@ -27,7 +31,7 @@
 	const ICONS = {
 		open: FolderOpen,
 		closed: Folder,
-		selected: CheckCircle
+		selected: CheckCircleBig
 	} as const satisfies Record<TFolderStatus, ComponentType>;
 	const OPTIONS: Array<TFolderOptions> = [
 		{
@@ -60,22 +64,42 @@
 
 <script lang="ts">
 	type $$Props = {
-		folder: TFolderInfer & { open?: boolean };
+		folder: TFolderInfer;
 		type: 'collection' | 'folder';
 	};
 
 	export let folder: $$Props['folder'];
 	export let type: $$Props['type'] = 'collection';
+	let openFolder: boolean = false;
 	let openOptions: boolean = false;
 
 	$: selected = $treeStore.selectedID === folder.id;
-	$: status = (selected ? 'selected' : folder.open ? 'open' : 'closed') as TFolderStatus;
-	$: if ($treeStore.collapse) folder.open = false;
-	$: if ($treeStore.expand) folder.open = true;
+	$: if ($treeStore.collapse) {
+		debounce(() => {
+			const isCollection = type === 'collection';
+			if (isCollection) openFolder = false;
+		}, 0)();
+	} else if ($treeStore.expand) {
+		debounce(() => {
+			openFolder = $treeStore.expandedFolders.includes(folder.id);
+		}, 0)();
+	} else {
+		debounce(() => {
+			openFolder = $treeStore.openedFolders.includes(folder.id);
+		}, 0)();
+	}
+	$: status = (selected ? 'selected' : openFolder ? 'open' : 'closed') as TFolderStatus;
 
-	function onOpenChange() {
-		if ($treeStore.expand) $treeStore.expand = false;
+	function handleOpenChange(open: boolean) {
 		if ($treeStore.collapse) $treeStore.collapse = false;
+
+		const arrayField: keyof TTreeSelectCollectionStore = $treeStore.expand
+			? 'expandedFolders'
+			: 'openedFolders';
+
+		$treeStore[arrayField] = open
+			? Array.from(new Set([...$treeStore[arrayField], folder.id]))
+			: $treeStore[arrayField].filter((id) => id !== folder.id);
 	}
 
 	function handleSelect() {
@@ -90,7 +114,7 @@
 	}
 </script>
 
-<Collapsible.Root class="flex shrink-0 flex-col" bind:open={folder.open} {onOpenChange}>
+<Collapsible.Root class="flex shrink-0 flex-col" open={openFolder} onOpenChange={handleOpenChange}>
 	<Collapsible.Trigger asChild let:builder>
 		<div class="group/folder flex flex-1 items-center gap-2">
 			<Button
@@ -100,7 +124,7 @@
 				role="treeitem"
 				aria-label={folder.name}
 				aria-selected={selected}
-				aria-expanded={folder.open}
+				aria-expanded={openFolder}
 				tabindex={selected ? 0 : -1}
 				class="flex flex-1 items-center justify-center px-0 aria-[selected=true]:text-success aria-[selected=true]:hover:text-success"
 				on:click={handleSelect}
@@ -161,7 +185,7 @@
 								class="h-6 w-6"
 								on:click={(event) => event.stopPropagation()}
 							>
-								<MoreVertical class="h-4 w-4 shrink-0" />
+								<EllipsisVertical class="h-4 w-4 shrink-0" />
 								<span class="sr-only select-none">More Options</span>
 							</Button>
 						</Tooltip.Trigger>
@@ -174,7 +198,7 @@
 		</div>
 	</Collapsible.Trigger>
 	<Collapsible.Content class="flex">
-		<TreeExpand bind:open={folder.open} />
+		<TreeExpand onOpenChange={handleOpenChange} />
 		<slot />
 	</Collapsible.Content>
 </Collapsible.Root>
