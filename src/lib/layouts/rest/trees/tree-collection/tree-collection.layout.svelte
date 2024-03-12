@@ -11,15 +11,11 @@
 	let folders: $$Props['collections'] = [];
 	export { folders as collections };
 
-	$: {
-		if ($treeStore.collapse) {
-			const arrayField: keyof TTreeCollectionStore = $treeStore.expand
-				? 'expandedFolders'
-				: 'openedFolders';
-			$treeStore[arrayField] = [];
-		} else if ($treeStore.expand && !$treeStore.expandedFolders.length) {
-			$treeStore.expandedFolders = retrieveNestedFields(folders, 'folders', 'id');
-		}
+	$: if ($treeStore.collapse) {
+		const arrayField: keyof TTreeCollectionStore = $treeStore.expand
+			? 'expandedFolders'
+			: 'openedFolders';
+		$treeStore[arrayField] = [];
 	}
 </script>
 

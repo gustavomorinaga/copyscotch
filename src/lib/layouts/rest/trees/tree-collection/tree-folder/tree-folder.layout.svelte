@@ -1,6 +1,7 @@
 <script lang="ts" context="module">
 	import { treeCollectionStore as treeStore, type TTreeCollectionStore } from '../store';
 	import { TreeExpand } from '../tree-expand';
+	import { debounce } from '$lib/utils';
 	import { DropdownMenuCollectionOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-collection-options';
 	import { dialogEditCollectionStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
 	import { dialogEditRequestStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
@@ -69,12 +70,18 @@
 
 	$: selected = $treeStore.selected === folder.id;
 	$: if ($treeStore.collapse) {
-		const isCollection = type === 'collection';
-		if (isCollection) openFolder = false;
+		debounce(() => {
+			const isCollection = type === 'collection';
+			if (isCollection) openFolder = false;
+		}, 0)();
 	} else if ($treeStore.expand) {
-		openFolder = $treeStore.expandedFolders.includes(folder.id);
+		debounce(() => {
+			openFolder = $treeStore.expandedFolders.includes(folder.id);
+		}, 0)();
 	} else {
-		openFolder = $treeStore.openedFolders.includes(folder.id);
+		debounce(() => {
+			openFolder = $treeStore.openedFolders.includes(folder.id);
+		}, 0)();
 	}
 	$: status = (openFolder ? 'open' : 'closed') as TFolderStatus;
 

@@ -2,6 +2,7 @@
 	import { derived, writable } from 'svelte/store';
 	import { getRESTContext } from '$lib/contexts';
 	import { RESTRepository } from '$lib/repositories';
+	import { retrieveNestedFields } from '$lib/utils';
 	import { treeCollectionStore as treeStore } from '$lib/layouts/rest/trees/tree-collection';
 	import { ToolbarCollections } from '$lib/layouts/rest/toolbars/toolbar-collections';
 	import { InputSearch } from '$lib/layouts/shared';
@@ -29,7 +30,15 @@
 		return RESTRepository.filterTree($tree, $term);
 	});
 
-	$: $treeStore.expand = Boolean($searchTerm);
+	$: {
+		const hasTerm = Boolean($searchTerm);
+
+		$treeStore.expand = hasTerm;
+		$treeStore.collapse = !hasTerm;
+		$treeStore.expandedFolders = hasTerm
+			? retrieveNestedFields($filteredCollections, 'folders', 'id')
+			: [];
+	}
 </script>
 
 <div class="sticky top-[2.350rem] z-10 inline-flex w-full shrink-0 flex-col">
