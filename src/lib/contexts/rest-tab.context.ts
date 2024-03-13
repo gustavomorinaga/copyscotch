@@ -109,10 +109,10 @@ export function setRESTTabContext(
 					dirty: false
 				};
 			} else {
-				const newTabID = generateUUID();
+				const newID = generateUUID();
 				newTab = {
-					id: newTabID,
-					context: { ...DEFAULT_REQUEST, id: newTabID },
+					id: newID,
+					context: { ...DEFAULT_REQUEST, id: newID },
 					currentTab: 'params',
 					dirty: false
 				};
@@ -146,13 +146,12 @@ export function setRESTTabContext(
 			if (index === -1) return;
 
 			return store.update((state) => {
-				const newTabID = generateUUID();
-				const newRequestID = generateUUID();
+				const newID = generateUUID();
 				const clonedTab = structuredClone(state.tabs[index]);
 				const newTab: TRESTTabInfer = {
 					...clonedTab,
-					id: newTabID,
-					context: { ...clonedTab.context, id: newRequestID },
+					id: newID,
+					context: { ...clonedTab.context, id: newID },
 					currentTab: 'params',
 					dirty: false
 				};
