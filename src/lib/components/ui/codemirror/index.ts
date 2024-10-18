@@ -1,8 +1,8 @@
-import Root from './codemirror.svelte';
 import { html } from '@codemirror/lang-html';
 import { json } from '@codemirror/lang-json';
 import type { ComponentProps } from 'svelte';
 import type { ThemeSpec } from 'svelte-codemirror-editor';
+import Root from './codemirror.svelte';
 
 type Props = ComponentProps<Root>;
 

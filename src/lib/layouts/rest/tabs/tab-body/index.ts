@@ -1,3 +1,1 @@
-import { default as TabBody } from './tab-body.layout.svelte';
-export { TabBody };
-export default TabBody;
+export { default as TabBody } from './tab-body.layout.svelte';
