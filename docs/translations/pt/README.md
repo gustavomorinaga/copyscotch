@@ -34,20 +34,20 @@ Hoppscotch é um construtor de solicitações de API de código aberto. Ele ajud
 
 ## ⚙️ Stack Tecnológico
 
-| Ferramenta/Serviço                                         | Categoria                         | Descrição                                                                                                                                   |
-| ---------------------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| [vite](https://vitejs.dev/)                                | Ferramentas de Build              | Uma ferramenta de build que proporciona uma experiência de desenvolvimento mais rápida para projetos web modernos.                          |
-| [cssnano](https://cssnano.github.io/cssnano/)              | CSS                               | Um minificador modular, construído sobre o ecossistema PostCSS.                                                                             |
-| [postcss](https://postcss.org)                             | CSS                               | Uma ferramenta para transformar CSS com JavaScript.                                                                                         |
-| [tailwindcss](https://tailwindcss.com/)                    | CSS                               | Um framework CSS baseado em utilitários.                                                                                                    |
-| [superforms](https://superforms.rocks/)                    | Validação de Formulários          | Uma biblioteca SvelteKit que oferece uma solução completa para validação no servidor e cliente, além de exibição de formulários no cliente. |
-| [zod](https://zod.dev/)                                    | Validação de Formulários          | Validação de esquemas orientada a TypeScript com inferência de tipos estáticos.                                                             |
-| [eslint](https://eslint.org/)                              | Ferramentas JavaScript/TypeScript | Uma ferramenta para identificar e relatar padrões em código ECMAScript/JavaScript.                                                          |
-| [prettier](https://prettier.io/)                           | Ferramentas JavaScript/TypeScript | Um formatador de código opinativo.                                                                                                          |
-| [typescript](https://www.typescriptlang.org/)              | Ferramentas JavaScript/TypeScript | Um superconjunto tipado de JavaScript que compila para JavaScript puro.                                                                     |
-| [shadcn-svelte](https://www.shadcn-svelte.com/)            | Componentes de UI                 | Componentes acessíveis e personalizáveis que você pode copiar e colar em seus apps.                                                         |
-| [virtua](https://github.com/inokawa/virtua/)               | Componentes de UI                 | Um componente de lista virtual (e grid) rápido e pequeno, sem configuração, para frameworks.                                                |
-| [sveltekit](https://kit.svelte.dev/)                       | Frameworks Web                    | Um framework para construir aplicativos web de alto desempenho.                                                                             |
+| Ferramenta/Serviço                              | Categoria                         | Descrição                                                                                                                                   |
+| ----------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| [vite](https://vitejs.dev/)                     | Ferramentas de Build              | Uma ferramenta de build que proporciona uma experiência de desenvolvimento mais rápida para projetos web modernos.                          |
+| [cssnano](https://cssnano.github.io/cssnano/)   | CSS                               | Um minificador modular, construído sobre o ecossistema PostCSS.                                                                             |
+| [postcss](https://postcss.org)                  | CSS                               | Uma ferramenta para transformar CSS com JavaScript.                                                                                         |
+| [tailwindcss](https://tailwindcss.com/)         | CSS                               | Um framework CSS baseado em utilitários.                                                                                                    |
+| [superforms](https://superforms.rocks/)         | Validação de Formulários          | Uma biblioteca SvelteKit que oferece uma solução completa para validação no servidor e cliente, além de exibição de formulários no cliente. |
+| [zod](https://zod.dev/)                         | Validação de Formulários          | Validação de esquemas orientada a TypeScript com inferência de tipos estáticos.                                                             |
+| [eslint](https://eslint.org/)                   | Ferramentas JavaScript/TypeScript | Uma ferramenta para identificar e relatar padrões em código ECMAScript/JavaScript.                                                          |
+| [prettier](https://prettier.io/)                | Ferramentas JavaScript/TypeScript | Um formatador de código opinativo.                                                                                                          |
+| [typescript](https://www.typescriptlang.org/)   | Ferramentas JavaScript/TypeScript | Um superconjunto tipado de JavaScript que compila para JavaScript puro.                                                                     |
+| [shadcn-svelte](https://www.shadcn-svelte.com/) | Componentes de UI                 | Componentes acessíveis e personalizáveis que você pode copiar e colar em seus apps.                                                         |
+| [virtua](https://github.com/inokawa/virtua/)    | Componentes de UI                 | Um componente de lista virtual (e grid) rápido e pequeno, sem configuração, para frameworks.                                                |
+| [sveltekit](https://kit.svelte.dev/)            | Frameworks Web                    | Um framework para construir aplicativos web de alto desempenho.                                                                             |
 
 ## 📜 Licença
 
