@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable ts/no-explicit-any */
 import type { ComponentType } from 'svelte';
 
 export type TTab = {

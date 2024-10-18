@@ -8,7 +8,7 @@ export function setTheme(theme: TThemeInfer['accentColor']) {
 	const { options: accentOptions } = AccentColorEnum;
 	const rootEl = document.documentElement;
 
-	rootEl.dataset['accent'] = accentOptions.includes(theme) ? theme : 'green';
+	rootEl.dataset.accent = accentOptions.includes(theme) ? theme : 'green';
 }
 
 export function setBackground(background: TThemeInfer['backgroundColor']) {

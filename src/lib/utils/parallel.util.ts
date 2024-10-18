@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable ts/no-explicit-any */
 
 /**
  * Executes an array of functions in parallel and returns an array of their results.

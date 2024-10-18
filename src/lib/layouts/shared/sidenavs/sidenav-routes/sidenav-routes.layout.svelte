@@ -1,13 +1,13 @@
 <script lang="ts" context="module">
+	import type { ComponentType } from 'svelte';
+	import Link2 from 'lucide-svelte/icons/link-2';
+	import Settings from 'lucide-svelte/icons/settings';
 	import { page } from '$app/stores';
 	import { getSettingsContext } from '$lib/contexts';
 	import { BREAKPOINTS } from '$lib/maps';
 	import { Button } from '$lib/components/ui/button';
 	import { screenStore } from '$lib/components/screen-watcher';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import Link2 from 'lucide-svelte/icons/link-2';
-	import Settings from 'lucide-svelte/icons/settings';
-	import type { ComponentType } from 'svelte';
 
 	type TRoute = {
 		title: string;

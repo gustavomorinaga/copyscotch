@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable ts/no-explicit-any */
 
 /**
  * Debounces a callback function, ensuring that it is only called after a specified delay
