@@ -1,8 +1,9 @@
 import { fontFamily } from 'tailwindcss/defaultTheme';
+import TailwindScrollbar from 'tailwind-scrollbar';
 
 /** @type {import('tailwindcss').Config} */
 const config = {
-	plugins: [require('tailwind-scrollbar')],
+	plugins: [TailwindScrollbar],
 	darkMode: ['class'],
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	safelist: ['dark'],
@@ -67,6 +68,9 @@ const config = {
 				tiny: '0.750rem'
 			}
 		}
+	},
+	future: {
+		hoverOnlyWhenSupported: true
 	}
 };
 
