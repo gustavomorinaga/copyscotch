@@ -1,8 +1,8 @@
 <script lang="ts">
-	import CodeMirror from 'svelte-codemirror-editor';
-	import { cn } from '$lib/utils';
-	import { langs, theme, type Langs } from '.';
 	import type { ComponentProps } from 'svelte';
+	import { langs, theme, type Langs } from '.';
+	import { cn } from '$lib/utils';
+	import CodeMirror from 'svelte-codemirror-editor';
 
 	type $$Props = Omit<ComponentProps<CodeMirror>, 'lang'> & { lang?: Langs };
 

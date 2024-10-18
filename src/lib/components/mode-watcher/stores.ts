@@ -1,14 +1,12 @@
-import { writable, derived } from 'svelte/store';
-import { withoutTransition } from './without-transition';
-import { INITIAL_DATA as SETTINGS_INITIAL_DATA } from '$lib/contexts';
+import { derived, writable } from 'svelte/store';
 import type { Mode, ThemeColors } from './types';
+import { withoutTransition } from './without-transition';
 import type { TSettingsInfer } from '$lib/validators';
+import { INITIAL_DATA as SETTINGS_INITIAL_DATA } from '$lib/contexts';
 
 // saves having to branch for server vs client
 const noopStorage = {
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	getItem: (_key: string) => null,
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	setItem: (_key: string, _value: string) => {}
 };
 
