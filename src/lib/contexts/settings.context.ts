@@ -1,6 +1,6 @@
-import { browser } from '$app/environment';
 import { getContext, setContext } from 'svelte';
-import { writable, type StartStopNotifier, type Writable } from 'svelte/store';
+import { type StartStopNotifier, type Writable, writable } from 'svelte/store';
+import { browser } from '$app/environment';
 import { setBackground, setTheme } from '$lib/utils';
 import { DEFAULT_SETTINGS, type TSettingsInfer } from '$lib/validators';
 

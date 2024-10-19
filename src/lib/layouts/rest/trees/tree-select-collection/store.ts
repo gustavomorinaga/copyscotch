@@ -1,5 +1,5 @@
-import type { TFolderInfer, TFileInfer } from '$lib/validators';
 import { writable } from 'svelte/store';
+import type { TFileInfer, TFolderInfer } from '$lib/validators';
 
 export type TTreeSelectCollectionStore = {
 	expand: boolean;

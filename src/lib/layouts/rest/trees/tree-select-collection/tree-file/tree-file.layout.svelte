@@ -1,10 +1,10 @@
 <script lang="ts" context="module">
+	import CheckCircleBig from 'lucide-svelte/icons/circle-check-big';
+	import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical';
 	import { treeSelectCollectionStore as treeStore } from '../store';
 	import { DropdownMenuRequestOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-request-options';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import CheckCircleBig from 'lucide-svelte/icons/circle-check-big';
-	import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical';
 	import type { TRESTRequestInfer } from '$lib/validators';
 </script>
 

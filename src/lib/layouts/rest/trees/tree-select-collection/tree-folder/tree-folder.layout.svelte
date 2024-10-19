@@ -1,7 +1,14 @@
 <script lang="ts" context="module">
+	import type { ComponentType } from 'svelte';
+	import CheckCircleBig from 'lucide-svelte/icons/circle-check-big';
+	import Folder from 'lucide-svelte/icons/folder';
+	import FolderOpen from 'lucide-svelte/icons/folder-open';
+	import FolderPlus from 'lucide-svelte/icons/folder-plus';
+	import FilePlus from 'lucide-svelte/icons/file-plus';
+	import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical';
 	import {
-		treeSelectCollectionStore as treeStore,
-		type TTreeSelectCollectionStore
+		type TTreeSelectCollectionStore,
+		treeSelectCollectionStore as treeStore
 	} from '../store';
 	import { TreeExpand } from '../tree-expand';
 	import { debounce } from '$lib/utils';
@@ -11,13 +18,6 @@
 	import { DropdownMenuCollectionOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-collection-options';
 	import { dialogEditCollectionStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
 	import { dialogEditRequestStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
-	import CheckCircleBig from 'lucide-svelte/icons/circle-check-big';
-	import Folder from 'lucide-svelte/icons/folder';
-	import FolderOpen from 'lucide-svelte/icons/folder-open';
-	import FolderPlus from 'lucide-svelte/icons/folder-plus';
-	import FilePlus from 'lucide-svelte/icons/file-plus';
-	import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical';
-	import type { ComponentType } from 'svelte';
 	import type { TFolderInfer } from '$lib/validators';
 
 	type TFolderStatus = 'open' | 'closed' | 'selected';

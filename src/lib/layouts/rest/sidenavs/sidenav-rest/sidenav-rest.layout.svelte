@@ -1,38 +1,44 @@
 <script lang="ts" context="module">
+	import Folder from 'lucide-svelte/icons/folder';
+	import Layers from 'lucide-svelte/icons/layers';
+	import Clock from 'lucide-svelte/icons/clock';
 	import { Separator } from '$lib/components/ui/separator';
 	import { Spinner } from '$lib/components/ui/spinner';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
 	import * as Tabs from '$lib/components/ui/tabs';
-	import Folder from 'lucide-svelte/icons/folder';
-	import Layers from 'lucide-svelte/icons/layers';
-	import Clock from 'lucide-svelte/icons/clock';
 	import type { TTab } from '$lib/ts';
-
-	type TAvailableTabs = (typeof LAZY_TABS)[number]['value'];
 
 	const LAZY_TABS = [
 		{
 			value: 'collections',
 			label: 'Collections',
 			icon: Folder,
-			content: import('$lib/layouts/rest/tabs/tab-collections'),
+			content: import('$lib/layouts/rest/tabs/tab-collections').then(
+				(module) => module.TabCollections
+			),
 			disabled: false
 		},
 		{
 			value: 'environments',
 			label: 'Environments',
 			icon: Layers,
-			content: import('$lib/layouts/rest/feedbacks/feedback-collection-empty'),
+			content: import('$lib/layouts/rest/feedbacks/feedback-collection-empty').then(
+				(module) => module.FeedbackCollectionEmpty
+			),
 			disabled: true
 		},
 		{
 			value: 'history',
 			label: 'History',
 			icon: Clock,
-			content: import('$lib/layouts/rest/feedbacks/feedback-collection-empty'),
+			content: import('$lib/layouts/rest/feedbacks/feedback-collection-empty').then(
+				(module) => module.FeedbackCollectionEmpty
+			),
 			disabled: true
 		}
 	] as const satisfies Array<TTab>;
+
+	type TAvailableTabs = (typeof LAZY_TABS)[number]['value'];
 </script>
 
 <script lang="ts">
@@ -78,7 +84,7 @@
 				{#await content}
 					<Spinner />
 				{:then module}
-					<svelte:component this={module.default} />
+					<svelte:component this={module} />
 				{/await}
 			</Tabs.Content>
 		{/each}

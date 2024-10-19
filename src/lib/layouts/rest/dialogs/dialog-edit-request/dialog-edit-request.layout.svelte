@@ -1,12 +1,12 @@
 <script lang="ts" context="module">
+	import { defaults, superForm } from 'sveltekit-superforms';
+	import { zod } from 'sveltekit-superforms/adapters';
 	import { dialogEditRequestStore as dialogStore } from '.';
 	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
 	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/validators';
 	import { Input } from '$lib/components/ui/input';
 	import * as Form from '$lib/components/ui/form';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import { defaults, superForm } from 'sveltekit-superforms';
-	import { zod } from 'sveltekit-superforms/adapters';
 
 	type TFormAction = 'save' | 'cancel';
 </script>

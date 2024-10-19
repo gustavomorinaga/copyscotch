@@ -1,5 +1,11 @@
 <script lang="ts" context="module">
-	import { treeCollectionStore as treeStore, type TTreeCollectionStore } from '../store';
+	import Folder from 'lucide-svelte/icons/folder';
+	import FolderOpen from 'lucide-svelte/icons/folder-open';
+	import FolderPlus from 'lucide-svelte/icons/folder-plus';
+	import FilePlus from 'lucide-svelte/icons/file-plus';
+	import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical';
+	import type { ComponentType } from 'svelte';
+	import { type TTreeCollectionStore, treeCollectionStore as treeStore } from '../store';
 	import { TreeExpand } from '../tree-expand';
 	import { debounce } from '$lib/utils';
 	import { DropdownMenuCollectionOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-collection-options';
@@ -8,12 +14,6 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Collapsible from '$lib/components/ui/collapsible';
-	import Folder from 'lucide-svelte/icons/folder';
-	import FolderOpen from 'lucide-svelte/icons/folder-open';
-	import FolderPlus from 'lucide-svelte/icons/folder-plus';
-	import FilePlus from 'lucide-svelte/icons/file-plus';
-	import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical';
-	import type { ComponentType } from 'svelte';
 	import type { TFolderInfer } from '$lib/validators';
 
 	type TFolderStatus = 'open' | 'closed';

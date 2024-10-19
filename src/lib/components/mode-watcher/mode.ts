@@ -1,9 +1,9 @@
 import {
-	localStorageKey,
-	userPrefersMode,
-	systemPrefersMode,
 	derivedMode,
-	themeColors
+	localStorageKey,
+	systemPrefersMode,
+	themeColors,
+	userPrefersMode
 } from './stores';
 import type { Mode, ThemeColors } from './types';
 import type { TSettingsInfer } from '$lib/validators/settings.validator';

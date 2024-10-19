@@ -1,4 +1,4 @@
-import { RESPONSE_TYPES } from '$lib/maps';
+import type { RESPONSE_TYPES } from '$lib/maps';
 import type { TResponse } from '$lib/ts';
 
 type TResponseType = (typeof RESPONSE_TYPES)[number];

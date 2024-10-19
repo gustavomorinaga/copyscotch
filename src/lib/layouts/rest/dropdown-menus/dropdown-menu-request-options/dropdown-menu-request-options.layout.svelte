@@ -1,10 +1,10 @@
 <script lang="ts" context="module">
-	import { alertDialogRequestDeletionStore as requestDeletionDialogStore } from '$lib/layouts/rest/alert-dialogs/alert-dialog-request-deletion';
-	import { dialogEditRequestStore as requestDialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import Edit from 'lucide-svelte/icons/square-pen';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import type { ComponentType } from 'svelte';
+	import { alertDialogRequestDeletionStore as requestDeletionDialogStore } from '$lib/layouts/rest/alert-dialogs/alert-dialog-request-deletion';
+	import { dialogEditRequestStore as requestDialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import type { TRESTRequestInfer } from '$lib/validators';
 
 	type TFileMenuOption = {

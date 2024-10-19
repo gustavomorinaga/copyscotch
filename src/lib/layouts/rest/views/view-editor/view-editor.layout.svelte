@@ -1,5 +1,9 @@
 <script lang="ts" context="module">
+	import type { CustomEventHandler } from 'bits-ui';
 	import { onMount } from 'svelte';
+	import Dot from 'lucide-svelte/icons/dot';
+	import Plus from 'lucide-svelte/icons/plus';
+	import X from 'lucide-svelte/icons/x';
 	import { getRESTTabContext } from '$lib/contexts';
 	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
 	import { TabRequest } from '$lib/layouts/rest/tabs/tab-request';
@@ -9,13 +13,12 @@
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { horizontalScroll } from '$lib/directives';
-	import Dot from 'lucide-svelte/icons/dot';
-	import Plus from 'lucide-svelte/icons/plus';
-	import X from 'lucide-svelte/icons/x';
 	import type { TRESTTabInfer } from '$lib/validators';
 
 	const LAZY_ALERT_DIALOG_COMPONENTS = [
-		import('$lib/layouts/rest/alert-dialogs/alert-dialog-unsaved-changes')
+		import('$lib/layouts/rest/alert-dialogs/alert-dialog-unsaved-changes').then(
+			(module) => module.AlertDialogUnsavedChanges
+		)
 	] as const;
 </script>
 
@@ -28,7 +31,10 @@
 
 	$: dirtyTabs = $tabContext.tabs.filter((tab) => tab.dirty);
 
-	function handleCurrentTab(event: MouseEvent, tabID: TRESTTabInfer['id']) {
+	function handleCurrentTab(
+		event: CustomEventHandler<MouseEvent, HTMLButtonElement>,
+		tabID: TRESTTabInfer['id']
+	) {
 		event.stopPropagation();
 
 		tabContext.setCurrentTab(tabID);
@@ -196,7 +202,7 @@
 {#if dirtyTabs.length}
 	{#await Promise.all(LAZY_ALERT_DIALOG_COMPONENTS) then loadedComponents}
 		{#each loadedComponents as component}
-			<svelte:component this={component.default} />
+			<svelte:component this={component} />
 		{/each}
 	{/await}
 {/if}

@@ -1,16 +1,16 @@
 <script lang="ts" context="module">
+	import FolderDown from 'lucide-svelte/icons/folder-down';
+	import Plus from 'lucide-svelte/icons/plus';
+	import MinusSquare from 'lucide-svelte/icons/square-minus';
 	import { getRESTContext } from '$lib/contexts';
 	import { dialogImportStore } from '$lib/layouts/rest/dialogs/dialog-import';
 	import { dialogEditCollectionStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
 	import {
-		treeCollectionStore as treeStore,
-		type TTreeCollectionStore
+		type TTreeCollectionStore,
+		treeCollectionStore as treeStore
 	} from '$lib/layouts/rest/trees/tree-collection';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import FolderDown from 'lucide-svelte/icons/folder-down';
-	import Plus from 'lucide-svelte/icons/plus';
-	import MinusSquare from 'lucide-svelte/icons/square-minus';
 </script>
 
 <script lang="ts">

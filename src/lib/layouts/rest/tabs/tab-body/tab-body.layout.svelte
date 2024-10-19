@@ -1,22 +1,19 @@
 <script lang="ts" context="module">
+	import type { SuperForm } from 'sveltekit-superforms';
 	import { getRESTTabContext } from '$lib/contexts';
 	import { ToolbarBody } from '$lib/layouts/rest/toolbars/toolbar-body';
 	import { FeedbackBodyEmpty } from '$lib/layouts/rest/feedbacks/feedback-body-empty';
 	import { BodyContentTypeEnum, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
 	import type { Langs, Props as TCodeMirror } from '$lib/components/ui/codemirror';
-	import type { SuperForm } from 'sveltekit-superforms';
+
+	type TContentTypeOption = (typeof BodyContentTypeEnum.options)[number];
 
 	const CODEMIRROR_CONFIG: TCodeMirror = { editable: true, useTab: true, tabSize: 2 } as const;
-
-	const { options: contentTypeOptions } = BodyContentTypeEnum;
-	type TContentTypeOption = (typeof contentTypeOptions)[number];
-
 	const CONTENT_TYPES_LANGS = {
 		'application/json': 'json',
 		'text/html': 'html',
 		'text/plain': undefined
 	} as const satisfies Record<TContentTypeOption, Langs>;
-
 	const LAZY_COMPONENTS = [import('$lib/components/ui/codemirror')] as const;
 </script>
 

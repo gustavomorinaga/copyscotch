@@ -1,5 +1,7 @@
 <script lang="ts" context="module">
 	import { onMount } from 'svelte';
+	import Trash from 'lucide-svelte/icons/trash';
+	import type { SuperForm } from 'sveltekit-superforms';
 	import { getRESTTabContext } from '$lib/contexts';
 	import { ToolbarParams } from '$lib/layouts/rest/toolbars/toolbar-params';
 	import { Button } from '$lib/components/ui/button';
@@ -7,8 +9,6 @@
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Form from '$lib/components/ui/form';
 	import { DEFAULT_KEY_VALUE, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
-	import Trash from 'lucide-svelte/icons/trash';
-	import type { SuperForm } from 'sveltekit-superforms';
 
 	const LAZY_COMPONENTS = [
 		import('$lib/layouts/rest/feedbacks/feedback-parameters-empty')
@@ -28,7 +28,6 @@
 
 	function handleRemove(index: number) {
 		$formData.params.splice(index, 1);
-		$formData.params = $formData.params;
 	}
 
 	onMount(() => {

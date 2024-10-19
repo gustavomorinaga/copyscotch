@@ -1,25 +1,25 @@
 <script lang="ts" context="module">
-	import { getSettingsContext } from '$lib/contexts';
-	import { BREAKPOINTS } from '$lib/maps';
-	import {
-		ThemeSchema,
-		BackgroundColorEnum,
-		AccentColorEnum,
-		type TThemeInfer
-	} from '$lib/validators';
-	import * as Form from '$lib/components/ui/form';
-	import * as RadioGroup from '$lib/components/ui/radio-group';
-	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { Switch } from '$lib/components/ui/switch';
-	import { systemPrefersMode } from '$lib/components/mode-watcher';
-	import { screenStore } from '$lib/components/screen-watcher';
-	import Cloud from 'lucide-svelte/icons/cloud';
 	import CircleHelp from 'lucide-svelte/icons/circle-help';
+	import Cloud from 'lucide-svelte/icons/cloud';
 	import Monitor from 'lucide-svelte/icons/monitor';
 	import Moon from 'lucide-svelte/icons/moon';
 	import Sun from 'lucide-svelte/icons/sun';
-	import { defaults, superForm, type ChangeEvent } from 'sveltekit-superforms';
+	import { type ChangeEvent, defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
+	import { systemPrefersMode } from '$lib/components/mode-watcher';
+	import { screenStore } from '$lib/components/screen-watcher';
+	import * as Form from '$lib/components/ui/form';
+	import * as RadioGroup from '$lib/components/ui/radio-group';
+	import { Switch } from '$lib/components/ui/switch';
+	import * as Tooltip from '$lib/components/ui/tooltip';
+	import { getSettingsContext } from '$lib/contexts';
+	import { BREAKPOINTS } from '$lib/maps';
+	import {
+		AccentColorEnum,
+		BackgroundColorEnum,
+		type TThemeInfer,
+		ThemeSchema
+	} from '$lib/validators';
 
 	const THEME_ICONS = { system: Monitor, light: Sun, dark: Cloud, black: Moon } as const;
 

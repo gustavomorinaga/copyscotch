@@ -1,9 +1,9 @@
-import { browser } from '$app/environment';
 import { getContext, setContext } from 'svelte';
-import { get, writable, type StartStopNotifier, type Writable } from 'svelte/store';
+import { type StartStopNotifier, type Writable, get, writable } from 'svelte/store';
+import { browser } from '$app/environment';
 import { RESTRepository } from '$lib/repositories';
 import { generateUUID } from '$lib/utils';
-import { DEFAULT_FOLDER, DEFAULT_FILE, type TFolderInfer, type TFileInfer } from '$lib/validators';
+import { DEFAULT_FILE, DEFAULT_FOLDER, type TFileInfer, type TFolderInfer } from '$lib/validators';
 
 type TRESTContext = Writable<TRESTData> & TRESTActions;
 type TRESTData = Array<TFolderInfer>;

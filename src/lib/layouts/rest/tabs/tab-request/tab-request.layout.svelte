@@ -1,13 +1,17 @@
 <script lang="ts" context="module">
 	import { onMount } from 'svelte';
+	import ChevronDown from 'lucide-svelte/icons/chevron-down';
+	import Save from 'lucide-svelte/icons/save';
+	import { type ChangeEvent, type SuperForm, defaults, superForm } from 'sveltekit-superforms';
+	import { zod } from 'sveltekit-superforms/adapters';
 	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
 	import {
-		RESTRequestSchema,
 		MethodEnum,
+		RESTRequestSchema,
 		RequestTabsEnum,
+		type TKeyValueMapped,
 		type TRESTRequestInfer,
-		type TRESTTabInfer,
-		type TKeyValueMapped
+		type TRESTTabInfer
 	} from '$lib/validators';
 	import { fetcher } from '$lib/functions';
 	import { dialogSaveAsStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-save-as';
@@ -23,10 +27,6 @@
 	import * as Form from '$lib/components/ui/form';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { REGEXES, SHORTCUTS, UNICODES } from '$lib/maps';
-	import ChevronDown from 'lucide-svelte/icons/chevron-down';
-	import Save from 'lucide-svelte/icons/save';
-	import { defaults, superForm, type ChangeEvent, type SuperForm } from 'sveltekit-superforms';
-	import { zod } from 'sveltekit-superforms/adapters';
 	import type { TTab } from '$lib/ts';
 
 	type TFormAction = 'send' | 'cancel' | 'save';
@@ -38,19 +38,19 @@
 		{
 			value: 'params',
 			label: 'parameters',
-			content: import('$lib/layouts/rest/tabs/tab-params'),
+			content: import('$lib/layouts/rest/tabs/tab-params').then((module) => module.TabParams),
 			disabled: false
 		},
 		{
 			value: 'body',
 			label: 'body',
-			content: import('$lib/layouts/rest/tabs/tab-body'),
+			content: import('$lib/layouts/rest/tabs/tab-body').then((module) => module.TabBody),
 			disabled: false
 		},
 		{
 			value: 'headers',
 			label: 'headers',
-			content: import('$lib/layouts/rest/tabs/tab-headers'),
+			content: import('$lib/layouts/rest/tabs/tab-headers').then((module) => module.TabHeaders),
 			disabled: false
 		}
 	] as const satisfies Array<TTab>;
@@ -304,7 +304,10 @@
 						{#each SHORTCUTS.send.modifier as modifier}
 							<Shortcut.Key>{modifier}</Shortcut.Key>
 						{/each}
-						<Shortcut.Key>{@html UNICODES[SHORTCUTS.send.key]}</Shortcut.Key>
+						<Shortcut.Key>
+							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+							{@html UNICODES[SHORTCUTS.send.key]}
+						</Shortcut.Key>
 					</Shortcut.Root>
 				</Tooltip.Content>
 			</Tooltip.Root>
@@ -391,7 +394,7 @@
 					{#await content}
 						<Spinner />
 					{:then module}
-						<svelte:component this={module.default} {tabID} {form} />
+						<svelte:component this={module} {tabID} {form} />
 					{/await}
 				</Tabs.Content>
 			{/each}

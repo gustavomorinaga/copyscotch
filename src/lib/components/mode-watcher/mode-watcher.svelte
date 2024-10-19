@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { TSettingsInfer } from '$lib/validators';
 	import { onMount } from 'svelte';
 	import {
 		localStorageKey,
@@ -11,6 +10,7 @@
 	} from './mode';
 	import { isValidMode } from './stores';
 	import type { Mode, ThemeColors } from './types';
+	import type { TSettingsInfer } from '$lib/validators';
 
 	export let track = true;
 	export let defaultMode: Mode = 'system';
@@ -41,6 +41,10 @@
 		<meta name="theme-color" content={themeColors.dark} />
 	{/if}
 
-	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-	{@html `<script nonce="%sveltekit.nonce%">(${setInitialMode.toString()})(${args});</script>`}
+	<!-- eslint-disable-next-line svelte/no-at-html-tags prefer-template -->
+	{@html `<script nonce="%sveltekit.nonce%">(` +
+		setInitialMode.toString() +
+		`)(` +
+		JSON.stringify(args) +
+		`);</script>`}
 </svelte:head>

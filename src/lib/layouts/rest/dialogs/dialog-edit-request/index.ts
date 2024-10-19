@@ -1,2 +1,2 @@
 export * from './store';
-export { default as Dialog } from './dialog-edit-request.layout.svelte';
+export { default as DialogEditRequest } from './dialog-edit-request.layout.svelte';

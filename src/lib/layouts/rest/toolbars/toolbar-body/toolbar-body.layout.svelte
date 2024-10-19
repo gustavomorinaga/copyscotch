@@ -1,5 +1,7 @@
 <script lang="ts" context="module">
 	import { onMount } from 'svelte';
+	import RefreshCw from 'lucide-svelte/icons/refresh-cw';
+	import type { SuperForm } from 'sveltekit-superforms';
 	import { getRESTTabContext } from '$lib/contexts';
 	import {
 		BodyContentTypeEnum,
@@ -12,8 +14,6 @@
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Form from '$lib/components/ui/form';
 	import * as Select from '$lib/components/ui/select';
-	import RefreshCw from 'lucide-svelte/icons/refresh-cw';
-	import type { SuperForm } from 'sveltekit-superforms';
 
 	const { options: contentTypes } = BodyContentTypeEnum;
 </script>

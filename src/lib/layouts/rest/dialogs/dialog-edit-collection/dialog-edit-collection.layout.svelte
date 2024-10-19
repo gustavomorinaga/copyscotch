@@ -1,13 +1,13 @@
 <script lang="ts" context="module">
-	import { dialogEditCollectionStore as dialogStore, type TCollectionDialogStore } from '.';
+	import { defaults, superForm } from 'sveltekit-superforms';
+	import { zod } from 'sveltekit-superforms/adapters';
+	import { type TCollectionDialogStore, dialogEditCollectionStore as dialogStore } from '.';
 	import { getRESTContext } from '$lib/contexts';
 	import { generateUUID } from '$lib/utils';
 	import { RESTBaseFolderSchema, type TRESTCollectionInfer } from '$lib/validators';
 	import { Input } from '$lib/components/ui/input';
 	import * as Form from '$lib/components/ui/form';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import { defaults, superForm } from 'sveltekit-superforms';
-	import { zod } from 'sveltekit-superforms/adapters';
 
 	type TFormAction = 'save' | 'cancel';
 	type TDialogProp = Record<

@@ -1,12 +1,12 @@
 <script lang="ts" context="module">
-	import { getSettingsContext, getRESTTabContext, type TRESTResult } from '$lib/contexts';
-	import { Button } from '$lib/components/ui/button';
-	import { Toggle } from '$lib/components/ui/toggle';
-	import * as Tooltip from '$lib/components/ui/tooltip';
 	import Check from 'lucide-svelte/icons/check';
 	import Copy from 'lucide-svelte/icons/copy';
 	import WrapText from 'lucide-svelte/icons/wrap-text';
 	import type { ComponentType } from 'svelte';
+	import { type TRESTResult, getRESTTabContext, getSettingsContext } from '$lib/contexts';
+	import { Button } from '$lib/components/ui/button';
+	import { Toggle } from '$lib/components/ui/toggle';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 
 	type TClipboardState = 'default' | 'copied';
 

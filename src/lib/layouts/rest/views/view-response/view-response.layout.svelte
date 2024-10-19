@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getSettingsContext, getRESTTabContext, type TRESTResult } from '$lib/contexts';
+	import { type TRESTResult, getRESTTabContext, getSettingsContext } from '$lib/contexts';
 	import { ViewInstructions } from '$lib/layouts/rest/views/view-instructions';
 	import { Spinner } from '$lib/components/ui/spinner';
 	import type { Props as TCodeMirror } from '$lib/components/ui/codemirror';

@@ -1,2 +1,2 @@
 export * from './store';
-export { default as Dialog } from './dialog-save-as.layout.svelte';
+export { default as DialogSaveAs } from './dialog-save-as.layout.svelte';

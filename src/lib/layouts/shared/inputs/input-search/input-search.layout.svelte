@@ -1,9 +1,9 @@
 <script lang="ts" context="module">
+	import type { ComponentProps } from 'svelte';
+	import X from 'lucide-svelte/icons/x';
 	import { cn, debounce } from '$lib/utils';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
-	import X from 'lucide-svelte/icons/x';
-	import type { ComponentProps } from 'svelte';
 </script>
 
 <script lang="ts">

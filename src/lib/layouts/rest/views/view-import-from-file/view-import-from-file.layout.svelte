@@ -1,5 +1,10 @@
 <script lang="ts" context="module">
 	import { onDestroy } from 'svelte';
+	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
+	import CheckCircleBig from 'lucide-svelte/icons/circle-check-big';
+	import { defaults, superForm } from 'sveltekit-superforms';
+	import { toast } from 'svelte-sonner';
+	import { zod } from 'sveltekit-superforms/adapters';
 	import { dialogImportStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-import';
 	import { getRESTContext } from '$lib/contexts';
 	import {
@@ -11,11 +16,6 @@
 	import { Input } from '$lib/components/ui/input';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Form from '$lib/components/ui/form';
-	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
-	import CheckCircleBig from 'lucide-svelte/icons/circle-check-big';
-	import { defaults, superForm } from 'sveltekit-superforms';
-	import { zod } from 'sveltekit-superforms/adapters';
-	import { toast } from 'svelte-sonner';
 
 	type TFormAction = 'import' | 'cancel';
 </script>
@@ -95,7 +95,7 @@
 
 			try {
 				parsedJSON = RESTCollectionSchema.array().parse(json);
-			} catch (error) {
+			} catch {
 				$errors.file = ['Invalid JSON file, please try again'];
 			}
 		};

@@ -1,4 +1,5 @@
 <script lang="ts" context="module">
+	import ChevronUp from 'lucide-svelte/icons/chevron-up';
 	import { getRESTContext, getRESTTabContext, getSettingsContext } from '$lib/contexts';
 	import { BREAKPOINTS } from '$lib/maps';
 	import { SidenavREST } from '$lib/layouts/rest/sidenavs/sidenav-rest';
@@ -7,7 +8,6 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { screenStore } from '$lib/components/screen-watcher';
 	import * as Resizable from '$lib/components/ui/resizable';
-	import ChevronUp from 'lucide-svelte/icons/chevron-up';
 
 	const LAZY_VIEW_COMPONENTS = [
 		import('$lib/layouts/rest/views/view-editor'),

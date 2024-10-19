@@ -1,16 +1,16 @@
 <script lang="ts" context="module">
 	import { onDestroy } from 'svelte';
-	import { getRESTTabContext } from '$lib/contexts';
-	import * as ContextMenu from '$lib/components/ui/context-menu';
-	import { ShortcutKey } from '$lib/components/ui/shortcut';
-	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
 	import Copy from 'lucide-svelte/icons/copy';
 	import FilePen from 'lucide-svelte/icons/file-pen';
 	import CircleX from 'lucide-svelte/icons/circle-x';
 	import OctagonX from 'lucide-svelte/icons/octagon-x';
 	import SquareX from 'lucide-svelte/icons/square-x';
-	import type { TRESTRequestInfer, TRESTTabInfer } from '$lib/validators';
 	import type { ComponentType } from 'svelte';
+	import type { TRESTRequestInfer, TRESTTabInfer } from '$lib/validators';
+	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
+	import { ShortcutKey } from '$lib/components/ui/shortcut';
+	import * as ContextMenu from '$lib/components/ui/context-menu';
+	import { getRESTTabContext } from '$lib/contexts';
 
 	type TEditRequestCTXMenuOption = {
 		label: string;

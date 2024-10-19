@@ -1,13 +1,13 @@
 <script lang="ts" context="module">
-	import { alertDialogCollectionDeletionStore as collectionDeletionDialogStore } from '$lib/layouts/rest/alert-dialogs/alert-dialog-collection-deletion';
-	import { dialogEditCollectionStore as collectionDialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
-	import { dialogEditRequestStore as requestDialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import Edit from 'lucide-svelte/icons/square-pen';
 	import FilePlus from 'lucide-svelte/icons/file-plus';
 	import FolderPlus from 'lucide-svelte/icons/folder-plus';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import type { ComponentType } from 'svelte';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import { dialogEditRequestStore as requestDialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
+	import { dialogEditCollectionStore as collectionDialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
+	import { alertDialogCollectionDeletionStore as collectionDeletionDialogStore } from '$lib/layouts/rest/alert-dialogs/alert-dialog-collection-deletion';
 	import type { TRESTCollectionInfer } from '$lib/validators';
 	import type { TCollectionDialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
 

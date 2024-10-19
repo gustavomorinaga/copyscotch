@@ -1,9 +1,9 @@
 <script lang="ts" context="module">
+	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import { Button } from '$lib/components/ui/button';
 	import { Center } from '$lib/components/ui/center';
 	import * as Shortcut from '$lib/components/ui/shortcut';
 	import { LINKS, SHORTCUTS, UNICODES } from '$lib/maps';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
 </script>
 
 <Center class="select-none bg-background">
@@ -17,7 +17,10 @@
 				{#each SHORTCUTS.send.modifier as modifier}
 					<Shortcut.Key>{modifier}</Shortcut.Key>
 				{/each}
-				<Shortcut.Key>{@html UNICODES[SHORTCUTS.send.key]}</Shortcut.Key>
+				<Shortcut.Key>
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+					{@html UNICODES[SHORTCUTS.send.key]}
+				</Shortcut.Key>
 			</div>
 		</div>
 	</Shortcut.Root>

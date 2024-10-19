@@ -1,10 +1,10 @@
 <script lang="ts" context="module">
+	import type { ComponentType } from 'svelte';
+	import ChevronRight from 'lucide-svelte/icons/chevron-right';
+	import Github from 'lucide-svelte/icons/github';
 	import { LINKS } from '$lib/maps';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import ChevronRight from 'lucide-svelte/icons/chevron-right';
-	import Github from 'lucide-svelte/icons/github';
-	import type { ComponentType } from 'svelte';
 
 	type TOption = (typeof LINKS)[keyof typeof LINKS] & {
 		description: string;

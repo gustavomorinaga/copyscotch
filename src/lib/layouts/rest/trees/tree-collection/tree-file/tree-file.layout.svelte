@@ -1,11 +1,11 @@
 <script lang="ts" context="module">
+	import Dot from 'lucide-svelte/icons/dot';
+	import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical';
 	import { getRESTTabContext } from '$lib/contexts';
 	import { treeCollectionStore as treeStore } from '$lib/layouts/rest/trees/tree-collection';
 	import { DropdownMenuRequestOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-request-options';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import Dot from 'lucide-svelte/icons/dot';
-	import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical';
 	import type { TRESTRequestInfer } from '$lib/validators';
 </script>
 

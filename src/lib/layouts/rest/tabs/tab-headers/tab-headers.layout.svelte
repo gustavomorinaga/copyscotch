@@ -1,5 +1,9 @@
 <script lang="ts" context="module">
 	import { onMount } from 'svelte';
+	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
+	import Lock from 'lucide-svelte/icons/lock';
+	import Trash from 'lucide-svelte/icons/trash';
+	import type { SuperForm } from 'sveltekit-superforms';
 	import { getRESTTabContext } from '$lib/contexts';
 	import { ToolbarHeaders } from '$lib/layouts/rest/toolbars/toolbar-headers';
 	import { Button } from '$lib/components/ui/button';
@@ -7,10 +11,6 @@
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Form from '$lib/components/ui/form';
 	import { DEFAULT_HEADER, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
-	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
-	import Lock from 'lucide-svelte/icons/lock';
-	import Trash from 'lucide-svelte/icons/trash';
-	import type { SuperForm } from 'sveltekit-superforms';
 
 	const LAZY_COMPONENTS = [import('$lib/layouts/rest/feedbacks/feedback-headers-empty')] as const;
 </script>
@@ -28,7 +28,6 @@
 
 	function handleRemove(index: number) {
 		$formData.headers.splice(index, 1);
-		$formData.headers = $formData.headers;
 	}
 
 	function handleRedirect() {

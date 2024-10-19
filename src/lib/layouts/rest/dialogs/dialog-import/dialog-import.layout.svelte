@@ -1,4 +1,7 @@
 <script lang="ts" context="module">
+	import FolderPlus from 'lucide-svelte/icons/folder-plus';
+	import User from 'lucide-svelte/icons/user';
+	import type { ComponentType } from 'svelte';
 	import { dialogImportStore as dialogStore } from '.';
 	import { getRESTContext } from '$lib/contexts';
 	import { exportFile } from '$lib/functions';
@@ -6,9 +9,6 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import FolderPlus from 'lucide-svelte/icons/folder-plus';
-	import User from 'lucide-svelte/icons/user';
-	import type { ComponentType } from 'svelte';
 
 	type TView = { value: string; name: string; icon: ComponentType; view: Promise<any> };
 
