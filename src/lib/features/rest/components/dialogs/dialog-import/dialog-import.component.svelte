@@ -29,11 +29,14 @@
 
 	let currentView: keyof typeof VIEWS | null = null;
 
+	$: hasSavedCollections = $restContext?.length > 0;
+
 	function handleOpenChange(event: boolean) {
 		if (!event) currentView = null;
 	}
 
 	function handleExport() {
+		if (!hasSavedCollections) return;
 		const file = JSON.stringify($restContext, null, 2);
 		exportFile(file, 'collections', 'application/json');
 	}
@@ -74,6 +77,7 @@
 								builders={[builder]}
 								variant="ghost"
 								role="menuitem"
+								disabled={!hasSavedCollections}
 								class="w-full flex-1 justify-start"
 								on:click={handleExport}
 							>
