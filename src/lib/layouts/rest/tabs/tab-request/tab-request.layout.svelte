@@ -26,7 +26,9 @@
 	import * as Select from '$lib/components/ui/select';
 	import * as Form from '$lib/components/ui/form';
 	import * as Tabs from '$lib/components/ui/tabs';
-	import { REGEXES, SHORTCUTS, UNICODES } from '$lib/maps';
+	import { REGEXES } from '$lib/constants/regexes';
+	import { SHORTCUTS } from '$lib/constants/shortcuts';
+	import { UNICODES } from '$lib/constants/unicodes';
 	import type { TTab } from '$lib/ts';
 
 	type TFormAction = 'send' | 'cancel' | 'save';

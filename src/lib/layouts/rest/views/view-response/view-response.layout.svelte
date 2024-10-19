@@ -4,6 +4,7 @@
 	import { ViewInstructions } from '$lib/layouts/rest/views/view-instructions';
 	import { Spinner } from '$lib/components/ui/spinner';
 	import type { Props as TCodeMirror } from '$lib/components/ui/codemirror';
+	import type { RESPONSE_TYPES } from '$lib/constants/responses';
 
 	const CODEMIRROR_CONFIG: TCodeMirror = {
 		editable: false,
@@ -13,11 +14,11 @@
 		nodebounce: true
 	} as const;
 
-	const RESPONSE_TYPES: Record<string, TCodeMirror['lang']> = {
+	const LANGUAGE_RESPONSE: Record<string, TCodeMirror['lang']> = {
 		'application/json': 'json',
 		'text/html': 'html',
 		'text/plain': undefined
-	} as const;
+	} as const satisfies Record<(typeof RESPONSE_TYPES)[number], TCodeMirror['lang']>;
 
 	const LAZY_COMPONENTS = [
 		import('$lib/components/ui/codemirror'),
@@ -56,7 +57,7 @@
 
 				<CodeMirror
 					{...CODEMIRROR_CONFIG}
-					lang={RESPONSE_TYPES[result.response.blob.type]}
+					lang={LANGUAGE_RESPONSE[result.response.blob.type]}
 					lineWrapping={$settingsContext.lineWrapping}
 					{value}
 				/>

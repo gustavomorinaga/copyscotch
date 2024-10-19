@@ -3,7 +3,9 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Center } from '$lib/components/ui/center';
 	import * as Shortcut from '$lib/components/ui/shortcut';
-	import { LINKS, SHORTCUTS, UNICODES } from '$lib/maps';
+	import { LINKS } from '$lib/constants/links';
+	import { SHORTCUTS } from '$lib/constants/shortcuts';
+	import { UNICODES } from '$lib/constants/unicodes';
 </script>
 
 <Center class="select-none bg-background">

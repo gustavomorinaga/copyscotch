@@ -2,7 +2,7 @@
 	import '$lib/styles/app.pcss';
 	import { siteConfig as config } from '$lib/configs/site';
 	import { setSettingsContext } from '$lib/contexts/settings';
-	import { BREAKPOINTS } from '$lib/maps';
+	import { BREAKPOINTS } from '$lib/constants/breakpoints';
 	import { executeParallel } from '$lib/utils';
 	import { Toolbar } from '$lib/layouts/toolbar';
 	import { Footer } from '$lib/layouts/footer';

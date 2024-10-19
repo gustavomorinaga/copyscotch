@@ -4,7 +4,7 @@
 	import Settings from 'lucide-svelte/icons/settings';
 	import { page } from '$app/stores';
 	import { getSettingsContext } from '$lib/contexts/settings';
-	import { BREAKPOINTS } from '$lib/maps';
+	import { BREAKPOINTS } from '$lib/constants/breakpoints';
 	import { Button } from '$lib/components/ui/button';
 	import { screenStore } from '$lib/components/screen-watcher';
 	import * as Tooltip from '$lib/components/ui/tooltip';

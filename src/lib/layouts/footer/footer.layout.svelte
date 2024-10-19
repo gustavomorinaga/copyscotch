@@ -12,7 +12,7 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { Button } from '$lib/components/ui/button';
 	import { screenStore } from '$lib/components/screen-watcher';
-	import { BREAKPOINTS } from '$lib/maps';
+	import { BREAKPOINTS } from '$lib/constants/breakpoints';
 	import { getSettingsContext } from '$lib/contexts/settings';
 	import type { TSettingsInfer } from '$lib/validators';
 

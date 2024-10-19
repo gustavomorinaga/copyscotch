@@ -13,7 +13,7 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { getSettingsContext } from '$lib/contexts/settings';
-	import { BREAKPOINTS } from '$lib/maps';
+	import { BREAKPOINTS } from '$lib/constants/breakpoints';
 	import {
 		AccentColorEnum,
 		BackgroundColorEnum,
