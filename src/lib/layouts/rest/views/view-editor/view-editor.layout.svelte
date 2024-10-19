@@ -12,7 +12,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Tabs from '$lib/components/ui/tabs';
-	import { horizontalScroll } from '$lib/directives';
+	import { horizontalScroll } from '$lib/actions/scroll';
 	import type { TRESTTabInfer } from '$lib/validators';
 
 	const LAZY_ALERT_DIALOG_COMPONENTS = [
