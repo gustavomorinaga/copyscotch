@@ -60,7 +60,7 @@
 					size="icon"
 					variant="text"
 					aria-label="Import / Export"
-					class="mx-2 h-[2.250rem] w-6"
+					class="mx-2 h-[2.250rem] w-7"
 					on:click={handleImportExport}
 				>
 					<FolderDown class="h-4 w-4 shrink-0" />
@@ -79,7 +79,7 @@
 					size="icon"
 					variant="text"
 					aria-label="Collapse All"
-					class="mx-2 h-[2.250rem] w-6"
+					class="mx-2 h-[2.250rem] w-7"
 					disabled={!$restContext.length}
 					on:click={handleCollapseAll}
 				>
