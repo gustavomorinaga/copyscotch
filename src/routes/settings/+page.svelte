@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ViewSettings } from '$lib/layouts/settings/views/view-settings';
+	import { ViewSettings } from '$lib/features/settings/views/view-settings';
 </script>
 
 <ViewSettings />
