@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '$lib/styles/app.pcss';
+	import { siteConfig as config } from '$lib/configs/site';
 	import { setSettingsContext } from '$lib/contexts/settings';
 	import { BREAKPOINTS } from '$lib/maps';
 	import { executeParallel } from '$lib/utils';
@@ -20,7 +21,7 @@
 </script>
 
 <ServiceWorker />
-<Metadata />
+<Metadata {config} />
 <ModeWatcher />
 <ScreenWatcher />
 <ViewTransition />

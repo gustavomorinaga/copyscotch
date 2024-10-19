@@ -1,7 +1,10 @@
-export const siteConfig = {
+import type { TMetadataConfig } from '$lib/components/metadata';
+
+export const siteConfig: TMetadataConfig = {
 	name: 'Copyscotch',
 	url: 'https://copyscotch.vercel.app',
 	ogImage: 'https://copyscotch.vercel.app/images/banner.png',
+	ogType: 'website',
 	description: 'Helps you create requests faster, saving precious time on development.',
 	author: 'gustavomorinaga',
 	links: {
@@ -10,5 +13,3 @@ export const siteConfig = {
 	},
 	keywords: `API,HTTP,SPA,REST,Developer,Tools,shadcn,Svelte,SvelteKit,TailwindCSS,Melt UI,Bit UI`
 };
-
-export type SiteConfig = typeof siteConfig;
