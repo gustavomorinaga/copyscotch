@@ -20,12 +20,12 @@ export async function fetcher(url: RequestInfo | URL, init?: RequestInit) {
 	const [raw, json] = await Promise.all(promises);
 
 	const result = {
-		ok: response.ok,
-		status: response.status,
-		headers: response.headers,
 		blob,
-		raw,
+		headers: response.headers,
 		json,
+		ok: response.ok,
+		raw,
+		status: response.status,
 		time
 	} satisfies TResponse;
 

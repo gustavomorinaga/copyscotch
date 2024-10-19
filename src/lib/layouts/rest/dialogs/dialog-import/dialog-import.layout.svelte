@@ -4,7 +4,7 @@
 	import type { ComponentType } from 'svelte';
 	import { dialogImportStore as dialogStore } from '.';
 	import { getRESTContext } from '$lib/contexts/rest';
-	import { exportFile } from '$lib/functions';
+	import { exportFile } from '$lib/functions/export';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';

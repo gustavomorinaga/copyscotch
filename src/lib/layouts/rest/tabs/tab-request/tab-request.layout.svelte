@@ -13,7 +13,7 @@
 		type TRESTRequestInfer,
 		type TRESTTabInfer
 	} from '$lib/validators';
-	import { fetcher } from '$lib/functions';
+	import { fetcher } from '$lib/functions/fetcher';
 	import { dialogSaveAsStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-save-as';
 	import { PopoverSaveOptions } from '$lib/layouts/rest/popovers/popover-save-options';
 	import { Button } from '$lib/components/ui/button';
