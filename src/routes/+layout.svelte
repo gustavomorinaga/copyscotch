@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '$lib/styles/app.pcss';
-	import { setSettingsContext } from '$lib/contexts';
+	import { setSettingsContext } from '$lib/contexts/settings';
 	import { BREAKPOINTS } from '$lib/maps';
 	import { executeParallel } from '$lib/utils';
 	import { Toolbar } from '$lib/layouts/toolbar';

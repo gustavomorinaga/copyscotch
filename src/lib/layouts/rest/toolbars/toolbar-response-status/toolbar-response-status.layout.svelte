@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import httpStatus, { type HttpStatus } from 'http-status';
-	import { type TRESTResult, getRESTTabContext } from '$lib/contexts';
+	import { type TRESTResult, getRESTTabContext } from '$lib/contexts/rest';
 	import { formatBytes } from '$lib/utils';
 
 	type TStatus = 'success' | 'error';

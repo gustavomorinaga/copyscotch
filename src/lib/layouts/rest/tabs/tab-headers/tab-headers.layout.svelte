@@ -4,7 +4,7 @@
 	import Lock from 'lucide-svelte/icons/lock';
 	import Trash from 'lucide-svelte/icons/trash';
 	import type { SuperForm } from 'sveltekit-superforms';
-	import { getRESTTabContext } from '$lib/contexts';
+	import { getRESTTabContext } from '$lib/contexts/rest';
 	import { ToolbarHeaders } from '$lib/layouts/rest/toolbars/toolbar-headers';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';

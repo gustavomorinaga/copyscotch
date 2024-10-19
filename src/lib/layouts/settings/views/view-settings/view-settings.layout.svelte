@@ -12,7 +12,7 @@
 	import * as RadioGroup from '$lib/components/ui/radio-group';
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { getSettingsContext } from '$lib/contexts';
+	import { getSettingsContext } from '$lib/contexts/settings';
 	import { BREAKPOINTS } from '$lib/maps';
 	import {
 		AccentColorEnum,

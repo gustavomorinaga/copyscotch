@@ -2,7 +2,7 @@
 	import { type ChangeEvent, defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { dialogSaveAsStore as dialogStore } from '.';
-	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
+	import { getRESTContext, getRESTTabContext } from '$lib/contexts/rest';
 	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/validators';
 	import { ViewSelectCollections } from '$lib/layouts/rest/views/view-select-collections';
 	import { treeSelectCollectionStore as treeStore } from '$lib/layouts/rest/trees/tree-select-collection';

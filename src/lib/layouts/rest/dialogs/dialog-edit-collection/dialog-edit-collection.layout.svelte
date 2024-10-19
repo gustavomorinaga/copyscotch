@@ -2,7 +2,7 @@
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { type TCollectionDialogStore, dialogEditCollectionStore as dialogStore } from '.';
-	import { getRESTContext } from '$lib/contexts';
+	import { getRESTContext } from '$lib/contexts/rest';
 	import { generateUUID } from '$lib/utils';
 	import { RESTBaseFolderSchema, type TRESTCollectionInfer } from '$lib/validators';
 	import { Input } from '$lib/components/ui/input';

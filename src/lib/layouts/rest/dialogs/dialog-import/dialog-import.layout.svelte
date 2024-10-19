@@ -3,7 +3,7 @@
 	import User from 'lucide-svelte/icons/user';
 	import type { ComponentType } from 'svelte';
 	import { dialogImportStore as dialogStore } from '.';
-	import { getRESTContext } from '$lib/contexts';
+	import { getRESTContext } from '$lib/contexts/rest';
 	import { exportFile } from '$lib/functions';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';

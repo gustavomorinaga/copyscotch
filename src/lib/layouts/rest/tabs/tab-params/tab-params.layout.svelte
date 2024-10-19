@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import Trash from 'lucide-svelte/icons/trash';
 	import type { SuperForm } from 'sveltekit-superforms';
-	import { getRESTTabContext } from '$lib/contexts';
+	import { getRESTTabContext } from '$lib/contexts/rest';
 	import { ToolbarParams } from '$lib/layouts/rest/toolbars/toolbar-params';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';

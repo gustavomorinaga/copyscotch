@@ -13,7 +13,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { screenStore } from '$lib/components/screen-watcher';
 	import { BREAKPOINTS } from '$lib/maps';
-	import { getSettingsContext } from '$lib/contexts';
+	import { getSettingsContext } from '$lib/contexts/settings';
 	import type { TSettingsInfer } from '$lib/validators';
 
 	type TSettingOption = { icon: ComponentType; title: string; tooltip?: string };

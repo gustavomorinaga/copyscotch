@@ -1,6 +1,7 @@
 <script lang="ts" context="module">
 	import ChevronUp from 'lucide-svelte/icons/chevron-up';
-	import { getRESTContext, getRESTTabContext, getSettingsContext } from '$lib/contexts';
+	import { getRESTContext, getRESTTabContext } from '$lib/contexts/rest';
+	import { getSettingsContext } from '$lib/contexts/settings';
 	import { BREAKPOINTS } from '$lib/maps';
 	import { SidenavREST } from '$lib/layouts/rest/sidenavs/sidenav-rest';
 	import { ViewWelcome } from '$lib/layouts/rest/views/view-welcome';

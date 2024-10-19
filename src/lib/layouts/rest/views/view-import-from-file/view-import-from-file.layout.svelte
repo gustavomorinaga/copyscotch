@@ -6,7 +6,7 @@
 	import { toast } from 'svelte-sonner';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { dialogImportStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-import';
-	import { getRESTContext } from '$lib/contexts';
+	import { getRESTContext } from '$lib/contexts/rest';
 	import {
 		FileUploadSchema,
 		RESTCollectionSchema,

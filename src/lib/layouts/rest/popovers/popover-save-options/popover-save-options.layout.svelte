@@ -3,7 +3,7 @@
 	import { type ChangeEvent, defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { z } from 'zod';
-	import { getRESTTabContext } from '$lib/contexts';
+	import { getRESTTabContext } from '$lib/contexts/rest';
 	import { dialogSaveAsStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-save-as';
 	import { Input } from '$lib/components/ui/input';
 	import * as Popover from '$lib/components/ui/popover';

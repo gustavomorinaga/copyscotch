@@ -3,7 +3,7 @@
 	import Link2 from 'lucide-svelte/icons/link-2';
 	import Settings from 'lucide-svelte/icons/settings';
 	import { page } from '$app/stores';
-	import { getSettingsContext } from '$lib/contexts';
+	import { getSettingsContext } from '$lib/contexts/settings';
 	import { BREAKPOINTS } from '$lib/maps';
 	import { Button } from '$lib/components/ui/button';
 	import { screenStore } from '$lib/components/screen-watcher';

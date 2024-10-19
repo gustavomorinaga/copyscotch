@@ -2,7 +2,7 @@ import { derived, writable } from 'svelte/store';
 import type { Mode, ThemeColors } from './types';
 import { withoutTransition } from './without-transition';
 import type { TSettingsInfer } from '$lib/validators';
-import { INITIAL_DATA as SETTINGS_INITIAL_DATA } from '$lib/contexts';
+import { INITIAL_DATA as SETTINGS_INITIAL_DATA } from '$lib/contexts/settings';
 
 // saves having to branch for server vs client
 const noopStorage = {

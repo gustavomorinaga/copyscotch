@@ -4,7 +4,7 @@
 	import Save from 'lucide-svelte/icons/save';
 	import { type ChangeEvent, type SuperForm, defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
+	import { getRESTContext, getRESTTabContext } from '$lib/contexts/rest';
 	import {
 		MethodEnum,
 		RESTRequestSchema,

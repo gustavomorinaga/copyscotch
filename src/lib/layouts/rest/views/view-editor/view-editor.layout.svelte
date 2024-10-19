@@ -4,7 +4,7 @@
 	import Dot from 'lucide-svelte/icons/dot';
 	import Plus from 'lucide-svelte/icons/plus';
 	import X from 'lucide-svelte/icons/x';
-	import { getRESTTabContext } from '$lib/contexts';
+	import { getRESTTabContext } from '$lib/contexts/rest';
 	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
 	import { TabRequest } from '$lib/layouts/rest/tabs/tab-request';
 	import { ContextMenuEditRequest } from '$lib/layouts/rest/context-menus/context-menu-edit-request';

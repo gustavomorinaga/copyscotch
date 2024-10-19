@@ -10,7 +10,7 @@
 	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
 	import { ShortcutKey } from '$lib/components/ui/shortcut';
 	import * as ContextMenu from '$lib/components/ui/context-menu';
-	import { getRESTTabContext } from '$lib/contexts';
+	import { getRESTTabContext } from '$lib/contexts/rest';
 
 	type TEditRequestCTXMenuOption = {
 		label: string;

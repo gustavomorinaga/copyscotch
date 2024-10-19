@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { alertDialogRequestDeletionStore as dialogStore } from '.';
-	import { getRESTContext, getRESTTabContext } from '$lib/contexts';
+	import { getRESTContext, getRESTTabContext } from '$lib/contexts/rest';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 </script>
 

@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { alertDialogCollectionDeletionStore as dialogStore } from '.';
-	import { getRESTContext } from '$lib/contexts';
+	import { getRESTContext } from '$lib/contexts/rest';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 </script>
 

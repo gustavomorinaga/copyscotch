@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { getRESTTabContext } from '$lib/contexts';
+	import { getRESTTabContext } from '$lib/contexts/rest';
 	import { SHORTCUTS, type TShortcut } from '$lib/maps';
 	import { Center } from '$lib/components/ui/center';
 	import * as Shortcut from '$lib/components/ui/shortcut';

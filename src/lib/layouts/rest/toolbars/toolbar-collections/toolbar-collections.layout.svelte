@@ -2,7 +2,7 @@
 	import FolderDown from 'lucide-svelte/icons/folder-down';
 	import Plus from 'lucide-svelte/icons/plus';
 	import MinusSquare from 'lucide-svelte/icons/square-minus';
-	import { getRESTContext } from '$lib/contexts';
+	import { getRESTContext } from '$lib/contexts/rest';
 	import { dialogImportStore } from '$lib/layouts/rest/dialogs/dialog-import';
 	import { dialogEditCollectionStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
 	import {

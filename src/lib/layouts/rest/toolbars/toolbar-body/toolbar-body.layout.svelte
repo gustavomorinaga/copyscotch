@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import RefreshCw from 'lucide-svelte/icons/refresh-cw';
 	import type { SuperForm } from 'sveltekit-superforms';
-	import { getRESTTabContext } from '$lib/contexts';
+	import { getRESTTabContext } from '$lib/contexts/rest';
 	import {
 		BodyContentTypeEnum,
 		type TRESTHeaderInfer,
