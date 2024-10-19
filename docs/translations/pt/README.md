@@ -46,7 +46,6 @@ Hoppscotch é um construtor de solicitações de API de código aberto. Ele ajud
 | [prettier](https://prettier.io/)                | Ferramentas JavaScript/TypeScript | Um formatador de código opinativo.                                                                                                          |
 | [typescript](https://www.typescriptlang.org/)   | Ferramentas JavaScript/TypeScript | Um superconjunto tipado de JavaScript que compila para JavaScript puro.                                                                     |
 | [shadcn-svelte](https://www.shadcn-svelte.com/) | Componentes de UI                 | Componentes acessíveis e personalizáveis que você pode copiar e colar em seus apps.                                                         |
-| [virtua](https://github.com/inokawa/virtua/)    | Componentes de UI                 | Um componente de lista virtual (e grid) rápido e pequeno, sem configuração, para frameworks.                                                |
 | [sveltekit](https://kit.svelte.dev/)            | Frameworks Web                    | Um framework para construir aplicativos web de alto desempenho.                                                                             |
 
 ## 📜 Licença

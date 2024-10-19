@@ -46,7 +46,6 @@ Hoppscotch is an open-source API request builder. It helps you create your reque
 | [prettier](https://prettier.io/)                | JavaScript/TypeScript Tools | An opinionated code formatter.                                                                                                  |
 | [typescript](https://www.typescriptlang.org/)   | JavaScript/TypeScript Tools | A typed superset of JavaScript that compiles to plain JavaScript.                                                               |
 | [shadcn-svelte](https://www.shadcn-svelte.com/) | UI Components               | Accessible and customizable components that you can copy and paste into your apps.                                              |
-| [virtua](https://github.com/inokawa/virtua/)    | UI Components               | A zero-config, fast and small virtual list (and grid) component for frameworks.                                                 |
 | [sveltekit](https://kit.svelte.dev/)            | Web Frameworks              | A framework for building high-performance web apps.                                                                             |
 
 ## 📜 License
