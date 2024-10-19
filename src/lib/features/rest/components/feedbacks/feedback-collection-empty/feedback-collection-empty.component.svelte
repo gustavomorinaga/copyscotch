@@ -42,7 +42,9 @@
 		</figure>
 
 		<div class="mt-4 flex flex-col items-center space-y-4">
-			<p class="select-none text-sm text-muted-foreground">Import or create a collection</p>
+			<p class="select-none text-center text-sm text-muted-foreground">
+				Import or create a collection
+			</p>
 			<div class="flex flex-col items-stretch gap-4">
 				<Button aria-label="Import Collection" class="w-40" on:click={handleImport}>
 					<FolderDown class="mr-2 h-4 w-4 shrink-0" />

@@ -251,7 +251,7 @@
 >
 	<Form.Join
 		id="main-request-toolbar"
-		class="sticky top-0 z-20 flex-initial shrink-0 flex-wrap gap-2 bg-background p-4"
+		class="sticky top-0 z-30 flex-initial shrink-0 flex-wrap gap-2 bg-background p-4"
 	>
 		<Form.Join class="min-w-[12rem] flex-auto whitespace-nowrap lg:flex-1">
 			<Form.Field {form} name="method" class="w-32">
@@ -371,9 +371,8 @@
 	<Form.Join class="h-full">
 		<Tabs.Root value={currentTab} class="flex flex-1 flex-col">
 			<div
-				class="sticky flex shrink-0 flex-col lg:top-[4.5rem] {toolbarRef?.offsetHeight > 100
-					? 'top-[7.5rem]'
-					: 'top-[4.5rem]'}"
+				data-wrap-items={toolbarRef?.offsetHeight > 100}
+				class="sticky top-[4.5rem] z-20 flex shrink-0 flex-col data-[wrap-items=true]:top-[7.5rem] lg:top-[4.5rem]"
 			>
 				<Tabs.List class="flex !h-auto shrink-0 gap-8 bg-background px-4 py-0">
 					{#each LAZY_TABS as { value, label, disabled }}
