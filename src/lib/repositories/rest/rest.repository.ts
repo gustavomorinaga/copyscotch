@@ -1,4 +1,4 @@
-import { generateUUID } from '$lib/utils';
+import { generateUUID } from '$lib/utils/uuid';
 import type { TFileInfer, TFolderInfer } from '$lib/validators';
 
 /**

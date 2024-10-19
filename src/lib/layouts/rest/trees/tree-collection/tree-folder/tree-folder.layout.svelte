@@ -7,7 +7,7 @@
 	import type { ComponentType } from 'svelte';
 	import { type TTreeCollectionStore, treeCollectionStore as treeStore } from '../store';
 	import { TreeExpand } from '../tree-expand';
-	import { debounce } from '$lib/utils';
+	import { debounce } from '$lib/utils/debounce';
 	import { DropdownMenuCollectionOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-collection-options';
 	import { dialogEditCollectionStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
 	import { dialogEditRequestStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';

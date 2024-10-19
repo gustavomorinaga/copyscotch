@@ -11,7 +11,7 @@
 		treeSelectCollectionStore as treeStore
 	} from '../store';
 	import { TreeExpand } from '../tree-expand';
-	import { debounce } from '$lib/utils';
+	import { debounce } from '$lib/utils/debounce';
 	import { Button } from '$lib/components/ui/button';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Tooltip from '$lib/components/ui/tooltip';

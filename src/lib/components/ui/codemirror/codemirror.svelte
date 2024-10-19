@@ -2,7 +2,7 @@
 	import type { ComponentProps } from 'svelte';
 	import CodeMirror from 'svelte-codemirror-editor';
 	import { type Langs, langs, theme } from '.';
-	import { cn } from '$lib/utils';
+	import { cn } from '$lib/utils/ui';
 
 	type $$Props = Omit<ComponentProps<CodeMirror>, 'lang'> & { lang?: Langs };
 

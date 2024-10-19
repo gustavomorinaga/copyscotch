@@ -29,7 +29,7 @@
 	import { REGEXES } from '$lib/constants/regexes';
 	import { SHORTCUTS } from '$lib/constants/shortcuts';
 	import { UNICODES } from '$lib/constants/unicodes';
-	import type { TTab } from '$lib/ts';
+	import type { TTab } from '$lib/ts/types';
 
 	type TFormAction = 'send' | 'cancel' | 'save';
 	type TAvailableTabs = (typeof RequestTabsEnum.options)[number];

@@ -2,7 +2,7 @@
 	import { derived, writable } from 'svelte/store';
 	import { getRESTContext } from '$lib/contexts/rest';
 	import { RESTRepository } from '$lib/repositories/rest';
-	import { retrieveNestedFields } from '$lib/utils';
+	import { retrieveNestedFields } from '$lib/utils/mapper';
 	import { FeedbackNotFound } from '$lib/layouts/shared/feedbacks/feedback-not-found';
 	import { InputSearch } from '$lib/layouts/shared/inputs/input-search';
 	import { treeSelectCollectionStore as treeStore } from '$lib/layouts/rest/trees/tree-select-collection';

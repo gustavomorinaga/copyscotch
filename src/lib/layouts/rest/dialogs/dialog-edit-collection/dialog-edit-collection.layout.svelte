@@ -3,7 +3,7 @@
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { type TCollectionDialogStore, dialogEditCollectionStore as dialogStore } from '.';
 	import { getRESTContext } from '$lib/contexts/rest';
-	import { generateUUID } from '$lib/utils';
+	import { generateUUID } from '$lib/utils/uuid';
 	import { RESTBaseFolderSchema, type TRESTCollectionInfer } from '$lib/validators';
 	import { Input } from '$lib/components/ui/input';
 	import * as Form from '$lib/components/ui/form';

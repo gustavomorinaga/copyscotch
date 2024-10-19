@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import type { HTMLAttributes } from 'svelte/elements';
-	import { cn } from '$lib/utils';
+	import { cn } from '$lib/utils/ui';
 </script>
 
 <script lang="ts">

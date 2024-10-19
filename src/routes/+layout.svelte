@@ -3,7 +3,7 @@
 	import { siteConfig as config } from '$lib/configs/site';
 	import { setSettingsContext } from '$lib/contexts/settings';
 	import { BREAKPOINTS } from '$lib/constants/breakpoints';
-	import { executeParallel } from '$lib/utils';
+	import { executeParallel } from '$lib/utils/parallel';
 	import { Toolbar } from '$lib/layouts/toolbar';
 	import { Footer } from '$lib/layouts/footer';
 	import { Wrapper } from '$lib/layouts/wrapper';
