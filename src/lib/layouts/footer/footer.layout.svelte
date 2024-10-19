@@ -14,7 +14,7 @@
 	import { screenStore } from '$lib/components/screen-watcher';
 	import { BREAKPOINTS } from '$lib/constants/breakpoints';
 	import { getSettingsContext } from '$lib/contexts/settings';
-	import type { TSettingsInfer } from '$lib/validators';
+	import type { TSettingsInfer } from '$lib/schemas/settings';
 
 	type TSettingOption = { icon: ComponentType; title: string; tooltip?: string };
 

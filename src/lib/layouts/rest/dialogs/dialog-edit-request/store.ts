@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
-import type { TRESTCollectionInfer, TRESTRequestInfer } from '$lib/validators';
+import type { TRESTCollectionInfer } from '$lib/schemas/collection';
+import type { TRESTRequestInfer } from '$lib/schemas/rest';
 
 export type TRequestDialogStore = {
 	open: boolean;

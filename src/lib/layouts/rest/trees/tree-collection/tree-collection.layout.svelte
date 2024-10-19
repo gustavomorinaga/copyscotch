@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { TreeWrapper } from './tree-wrapper';
-	import type { TRESTCollectionInfer } from '$lib/validators';
+	import type { TRESTCollectionInfer } from '$lib/schemas/collection';
 </script>
 
 <script lang="ts">

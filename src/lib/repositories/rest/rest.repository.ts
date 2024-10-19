@@ -1,5 +1,5 @@
 import { generateUUID } from '$lib/utils/uuid';
-import type { TFileInfer, TFolderInfer } from '$lib/validators';
+import type { TFileInfer, TFolderInfer } from '$lib/schemas/collection';
 
 /**
  * Finds a folder in an array of folders based on a given search term.

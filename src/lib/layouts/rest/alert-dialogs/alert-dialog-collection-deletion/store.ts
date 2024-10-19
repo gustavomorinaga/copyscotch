@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { TRESTCollectionInfer } from '$lib/validators';
+import type { TRESTCollectionInfer } from '$lib/schemas/collection';
 
 export type TCollectionDeletionDialogStore = {
 	open: boolean;

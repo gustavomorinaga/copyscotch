@@ -7,7 +7,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { DEFAULT_HEADER, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
+	import { DEFAULT_HEADER, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/schemas/rest';
 </script>
 
 <script lang="ts">

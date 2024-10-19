@@ -14,7 +14,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Collapsible from '$lib/components/ui/collapsible';
-	import type { TFolderInfer } from '$lib/validators';
+	import type { TFolderInfer } from '$lib/schemas/collection';
 
 	type TFolderStatus = 'open' | 'closed';
 	type TFolderOptions = {

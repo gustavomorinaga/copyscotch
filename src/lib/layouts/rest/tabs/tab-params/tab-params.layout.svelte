@@ -8,7 +8,8 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Form from '$lib/components/ui/form';
-	import { DEFAULT_KEY_VALUE, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
+	import { DEFAULT_KEY_VALUE } from '$lib/schemas/key-value';
+	import type { TRESTRequestInfer, TRESTTabInfer } from '$lib/schemas/rest';
 
 	const LAZY_COMPONENTS = [
 		import('$lib/layouts/rest/feedbacks/feedback-parameters-empty')

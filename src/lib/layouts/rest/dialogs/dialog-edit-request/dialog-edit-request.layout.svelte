@@ -3,7 +3,7 @@
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { dialogEditRequestStore as dialogStore } from '.';
 	import { getRESTContext, getRESTTabContext } from '$lib/contexts/rest';
-	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/validators';
+	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/schemas/rest';
 	import { Input } from '$lib/components/ui/input';
 	import * as Form from '$lib/components/ui/form';
 	import * as Dialog from '$lib/components/ui/dialog';

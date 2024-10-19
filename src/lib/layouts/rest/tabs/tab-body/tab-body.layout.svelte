@@ -3,7 +3,11 @@
 	import { getRESTTabContext } from '$lib/contexts/rest';
 	import { ToolbarBody } from '$lib/layouts/rest/toolbars/toolbar-body';
 	import { FeedbackBodyEmpty } from '$lib/layouts/rest/feedbacks/feedback-body-empty';
-	import { BodyContentTypeEnum, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
+	import {
+		BodyContentTypeEnum,
+		type TRESTRequestInfer,
+		type TRESTTabInfer
+	} from '$lib/schemas/rest';
 	import type { Langs, Props as TCodeMirror } from '$lib/components/ui/codemirror';
 
 	type TContentTypeOption = (typeof BodyContentTypeEnum.options)[number];

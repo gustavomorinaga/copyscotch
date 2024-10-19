@@ -10,7 +10,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Form from '$lib/components/ui/form';
-	import { DEFAULT_HEADER, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/validators';
+	import { DEFAULT_HEADER, type TRESTRequestInfer, type TRESTTabInfer } from '$lib/schemas/rest';
 
 	const LAZY_COMPONENTS = [import('$lib/layouts/rest/feedbacks/feedback-headers-empty')] as const;
 </script>

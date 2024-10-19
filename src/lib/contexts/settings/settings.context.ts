@@ -2,7 +2,7 @@ import { getContext, setContext } from 'svelte';
 import { type StartStopNotifier, type Writable, writable } from 'svelte/store';
 import { browser } from '$app/environment';
 import { setBackground, setTheme } from '$lib/utils/theme';
-import { DEFAULT_SETTINGS, type TSettingsInfer } from '$lib/validators';
+import { DEFAULT_SETTINGS, type TSettingsInfer } from '$lib/schemas/settings';
 
 type TSettingsContext = Writable<TSettingsData> & TSettingsActions;
 type TSettingsData = TSettingsInfer;

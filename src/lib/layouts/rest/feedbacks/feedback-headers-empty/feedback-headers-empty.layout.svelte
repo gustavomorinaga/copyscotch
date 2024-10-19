@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import Plus from 'lucide-svelte/icons/plus';
 	import type { SuperForm } from 'sveltekit-superforms';
-	import { DEFAULT_HEADER, type TRESTRequestInfer } from '$lib/validators';
+	import { DEFAULT_HEADER, type TRESTRequestInfer } from '$lib/schemas/rest';
 	import { Center } from '$lib/components/ui/center';
 	import { Button } from '$lib/components/ui/button';
 	import { mode } from '$lib/components/mode-watcher';

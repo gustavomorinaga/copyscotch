@@ -13,7 +13,7 @@
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { horizontalScroll } from '$lib/actions/scroll';
-	import type { TRESTTabInfer } from '$lib/validators';
+	import type { TRESTTabInfer } from '$lib/schemas/rest';
 
 	const LAZY_ALERT_DIALOG_COMPONENTS = [
 		import('$lib/layouts/rest/alert-dialogs/alert-dialog-unsaved-changes').then(

@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import { AccentColorEnum, type TThemeInfer } from '$lib/validators';
+import { AccentColorEnum, type TThemeInfer } from '$lib/schemas/settings';
 import { setMode } from '$lib/components/mode-watcher';
 
 export function setTheme(theme: TThemeInfer['accentColor']) {

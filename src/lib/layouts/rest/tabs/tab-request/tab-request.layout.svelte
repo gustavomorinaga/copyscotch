@@ -5,14 +5,14 @@
 	import { type ChangeEvent, type SuperForm, defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { getRESTContext, getRESTTabContext } from '$lib/contexts/rest';
+	import type { TKeyValueMapped } from '$lib/schemas/key-value';
 	import {
 		MethodEnum,
 		RESTRequestSchema,
 		RequestTabsEnum,
-		type TKeyValueMapped,
 		type TRESTRequestInfer,
 		type TRESTTabInfer
-	} from '$lib/validators';
+	} from '$lib/schemas/rest';
 	import { fetcher } from '$lib/functions/fetcher';
 	import { dialogSaveAsStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-save-as';
 	import { PopoverSaveOptions } from '$lib/layouts/rest/popovers/popover-save-options';

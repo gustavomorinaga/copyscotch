@@ -6,7 +6,7 @@
 	import OctagonX from 'lucide-svelte/icons/octagon-x';
 	import SquareX from 'lucide-svelte/icons/square-x';
 	import type { ComponentType } from 'svelte';
-	import type { TRESTRequestInfer, TRESTTabInfer } from '$lib/validators';
+	import type { TRESTRequestInfer, TRESTTabInfer } from '$lib/schemas/rest';
 	import { dialogEditRequestStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
 	import { ShortcutKey } from '$lib/components/ui/shortcut';
 	import * as ContextMenu from '$lib/components/ui/context-menu';

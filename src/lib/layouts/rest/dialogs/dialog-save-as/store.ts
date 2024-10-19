@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { TRESTRequestInfer } from '$lib/validators';
+import type { TRESTRequestInfer } from '$lib/schemas/rest';
 
 export type TSaveAsDialogStore = {
 	open: boolean;

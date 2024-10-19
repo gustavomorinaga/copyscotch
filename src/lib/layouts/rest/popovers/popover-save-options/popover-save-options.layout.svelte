@@ -8,7 +8,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Form from '$lib/components/ui/form';
-	import { RESTRequestSchema, type TRESTTabInfer } from '$lib/validators';
+	import { RESTRequestSchema, type TRESTTabInfer } from '$lib/schemas/rest';
 
 	const SaveOptionsSchema = RESTRequestSchema.pick({ name: true });
 	type TSaveOptionsInfer = z.infer<typeof SaveOptionsSchema>;

@@ -4,7 +4,7 @@
 	import { type TCollectionDialogStore, dialogEditCollectionStore as dialogStore } from '.';
 	import { getRESTContext } from '$lib/contexts/rest';
 	import { generateUUID } from '$lib/utils/uuid';
-	import { RESTBaseFolderSchema, type TRESTCollectionInfer } from '$lib/validators';
+	import { RESTBaseFolderSchema, type TRESTCollectionInfer } from '$lib/schemas/collection';
 	import { Input } from '$lib/components/ui/input';
 	import * as Form from '$lib/components/ui/form';
 	import * as Dialog from '$lib/components/ui/dialog';

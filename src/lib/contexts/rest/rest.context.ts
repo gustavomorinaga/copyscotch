@@ -3,7 +3,12 @@ import { type StartStopNotifier, type Writable, get, writable } from 'svelte/sto
 import { browser } from '$app/environment';
 import { RESTRepository } from '$lib/repositories/rest';
 import { generateUUID } from '$lib/utils/uuid';
-import { DEFAULT_FILE, DEFAULT_FOLDER, type TFileInfer, type TFolderInfer } from '$lib/validators';
+import {
+	DEFAULT_FILE,
+	DEFAULT_FOLDER,
+	type TFileInfer,
+	type TFolderInfer
+} from '$lib/schemas/collection';
 
 type TRESTContext = Writable<TRESTData> & TRESTActions;
 type TRESTData = Array<TFolderInfer>;

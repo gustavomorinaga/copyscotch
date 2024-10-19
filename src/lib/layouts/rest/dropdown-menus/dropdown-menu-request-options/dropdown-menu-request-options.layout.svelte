@@ -5,7 +5,7 @@
 	import { alertDialogRequestDeletionStore as requestDeletionDialogStore } from '$lib/layouts/rest/alert-dialogs/alert-dialog-request-deletion';
 	import { dialogEditRequestStore as requestDialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import type { TRESTRequestInfer } from '$lib/validators';
+	import type { TRESTRequestInfer } from '$lib/schemas/rest';
 
 	type TFileMenuOption = {
 		label: string;

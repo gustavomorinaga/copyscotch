@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const BackgroundColorEnum = z.enum(['system', 'light', 'dark', 'black']);
+
 export const AccentColorEnum = z.enum([
 	'green',
 	'teal',
@@ -13,8 +14,11 @@ export const AccentColorEnum = z.enum([
 	'pink'
 ]);
 export const LayoutEnum = z.enum(['horizontal', 'vertical']);
+
 export const NavigationEnum = z.enum(['collapse', 'expand']);
+
 export const SidebarEnum = z.enum(['open', 'closed']);
+
 export const SidebarPositionEnum = z.enum(['left', 'right']);
 
 export const SettingsSchema = z.object({
@@ -27,12 +31,13 @@ export const SettingsSchema = z.object({
 	lineWrapping: z.boolean()
 });
 
+export type TSettingsSchema = typeof SettingsSchema;
+export type TSettingsInfer = z.infer<TSettingsSchema>;
+
 export const ThemeSchema = SettingsSchema.pick({ backgroundColor: true, accentColor: true }).extend(
 	{ expandNavigation: z.boolean(), sidebarOnLeft: z.boolean() }
 );
 
-export type TSettingsSchema = typeof SettingsSchema;
-export type TSettingsInfer = z.infer<TSettingsSchema>;
 export type TThemeSchema = typeof ThemeSchema;
 export type TThemeInfer = z.infer<TThemeSchema>;
 

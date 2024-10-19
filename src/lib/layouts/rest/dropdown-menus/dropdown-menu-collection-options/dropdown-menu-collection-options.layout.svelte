@@ -8,7 +8,7 @@
 	import { dialogEditRequestStore as requestDialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
 	import { dialogEditCollectionStore as collectionDialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
 	import { alertDialogCollectionDeletionStore as collectionDeletionDialogStore } from '$lib/layouts/rest/alert-dialogs/alert-dialog-collection-deletion';
-	import type { TRESTCollectionInfer } from '$lib/validators';
+	import type { TRESTCollectionInfer } from '$lib/schemas/collection';
 	import type { TCollectionDialogStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
 
 	type TFolderMenuOption = {

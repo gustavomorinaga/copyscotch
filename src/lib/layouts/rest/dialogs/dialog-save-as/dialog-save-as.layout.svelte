@@ -3,7 +3,7 @@
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { dialogSaveAsStore as dialogStore } from '.';
 	import { getRESTContext, getRESTTabContext } from '$lib/contexts/rest';
-	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/validators';
+	import { RESTRequestSchema, type TRESTRequestInfer } from '$lib/schemas/rest';
 	import { ViewSelectCollections } from '$lib/layouts/rest/views/view-select-collections';
 	import { treeSelectCollectionStore as treeStore } from '$lib/layouts/rest/trees/tree-select-collection';
 	import { Input } from '$lib/components/ui/input';

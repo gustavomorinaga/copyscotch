@@ -7,11 +7,8 @@
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { dialogImportStore as dialogStore } from '$lib/layouts/rest/dialogs/dialog-import';
 	import { getRESTContext } from '$lib/contexts/rest';
-	import {
-		FileUploadSchema,
-		RESTCollectionSchema,
-		type TRESTCollectionInfer
-	} from '$lib/validators';
+	import { RESTCollectionSchema, type TRESTCollectionInfer } from '$lib/schemas/collection';
+	import { FileUploadSchema } from '$lib/schemas/file-upload';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import * as Dialog from '$lib/components/ui/dialog';

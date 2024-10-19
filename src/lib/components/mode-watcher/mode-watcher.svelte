@@ -10,7 +10,7 @@
 	} from './mode';
 	import { isValidMode } from './stores';
 	import type { Mode, ThemeColors } from './types';
-	import type { TSettingsInfer } from '$lib/validators';
+	import type { TSettingsInfer } from '$lib/schemas';
 
 	export let track = true;
 	export let defaultMode: Mode = 'system';

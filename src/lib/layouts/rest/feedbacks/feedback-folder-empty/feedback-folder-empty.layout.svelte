@@ -4,7 +4,7 @@
 	import { Center } from '$lib/components/ui/center';
 	import { Button } from '$lib/components/ui/button';
 	import { mode } from '$lib/components/mode-watcher';
-	import type { TFolderInfer } from '$lib/validators';
+	import type { TFolderInfer } from '$lib/schemas/collection';
 </script>
 
 <script lang="ts">

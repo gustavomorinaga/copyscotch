@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { KeyValueSchema } from '$lib/validators';
+import { KeyValueSchema } from '$lib/schemas/key-value';
 
 export const MethodEnum = z.enum([
 	'GET',
@@ -25,6 +25,8 @@ export const BodyContentTypeEnum = z.enum([
 
 export const HeaderSchema = KeyValueSchema.extend({ override: z.boolean() });
 
+export type TRESTHeaderInfer = z.infer<typeof HeaderSchema>;
+
 export const RequestTabsEnum = z.enum(['params', 'body', 'headers', 'auth']);
 
 export const BodySchema = z.object({
@@ -42,6 +44,9 @@ export const RESTRequestSchema = z.object({
 	headers: HeaderSchema.array()
 });
 
+export type TRESTRequestSchema = typeof RESTRequestSchema;
+export type TRESTRequestInfer = z.infer<TRESTRequestSchema>;
+
 export const RESTTabSchema = z.object({
 	id: z.string().uuid(),
 	context: RESTRequestSchema,
@@ -51,9 +56,6 @@ export const RESTTabSchema = z.object({
 
 export type TRESTTabSchema = typeof RESTTabSchema;
 export type TRESTTabInfer = z.infer<TRESTTabSchema>;
-export type TRESTRequestSchema = typeof RESTRequestSchema;
-export type TRESTRequestInfer = z.infer<TRESTRequestSchema>;
-export type TRESTHeaderInfer = z.infer<typeof HeaderSchema>;
 
 export const DEFAULT_REQUEST: Omit<TRESTTabInfer['context'], 'id'> = {
 	name: 'Untitled',

@@ -2,7 +2,7 @@
 	import { TreeFolder } from '../tree-folder';
 	import { TreeFile } from '../tree-file';
 	import { FeedbackFolderEmpty } from '$lib/layouts/rest/feedbacks/feedback-folder-empty';
-	import type { TRESTCollectionInfer } from '$lib/validators';
+	import type { TRESTCollectionInfer } from '$lib/schemas/collection';
 </script>
 
 <script lang="ts">

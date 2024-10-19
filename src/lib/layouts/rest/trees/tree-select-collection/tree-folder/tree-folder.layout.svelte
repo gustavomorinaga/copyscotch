@@ -18,7 +18,7 @@
 	import { DropdownMenuCollectionOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-collection-options';
 	import { dialogEditCollectionStore } from '$lib/layouts/rest/dialogs/dialog-edit-collection';
 	import { dialogEditRequestStore } from '$lib/layouts/rest/dialogs/dialog-edit-request';
-	import type { TFolderInfer } from '$lib/validators';
+	import type { TFolderInfer } from '$lib/schemas/collection';
 
 	type TFolderStatus = 'open' | 'closed' | 'selected';
 	type TFolderOptions = {

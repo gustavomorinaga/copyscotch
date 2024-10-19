@@ -6,7 +6,7 @@
 	import { DropdownMenuRequestOptions } from '$lib/layouts/rest/dropdown-menus/dropdown-menu-request-options';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import type { TRESTRequestInfer } from '$lib/validators';
+	import type { TRESTRequestInfer } from '$lib/schemas/rest';
 </script>
 
 <script lang="ts">

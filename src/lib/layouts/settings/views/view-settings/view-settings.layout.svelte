@@ -19,7 +19,7 @@
 		BackgroundColorEnum,
 		type TThemeInfer,
 		ThemeSchema
-	} from '$lib/validators';
+	} from '$lib/schemas/settings';
 
 	const THEME_ICONS = { system: Monitor, light: Sun, dark: Cloud, black: Moon } as const;
 

@@ -2,7 +2,7 @@ import { getContext, setContext } from 'svelte';
 import { type StartStopNotifier, type Writable, get, writable } from 'svelte/store';
 import { browser } from '$app/environment';
 import { generateUUID } from '$lib/utils/uuid';
-import { DEFAULT_REQUEST, type TRESTTabInfer } from '$lib/validators';
+import { DEFAULT_REQUEST, type TRESTTabInfer } from '$lib/schemas/rest';
 import type { TResponse } from '$lib/ts';
 
 export type TRESTTabContext = Writable<TRESTTabData> & TRESTTabActions;
