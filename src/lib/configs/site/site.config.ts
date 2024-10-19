@@ -1,5 +1,8 @@
 import type { TMetadataConfig } from '$lib/components/metadata';
 
+/**
+ * Configuration object for the site metadata.
+ */
 export const siteConfig: TMetadataConfig = {
 	name: 'Copyscotch',
 	url: 'https://copyscotch.vercel.app',

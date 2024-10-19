@@ -13,14 +13,54 @@ import {
 type TRESTContext = Writable<TRESTData> & TRESTActions;
 type TRESTData = Array<TFolderInfer>;
 type TRESTActions = {
+	/**
+	 * Get a folder by ID
+	 * @param id - The ID of the folder to get
+	 * @returns The folder object if found
+	 */
 	getFolder: (id: TFolderInfer['id']) => TFolderInfer | undefined;
+	/**
+	 * Get a file by ID
+	 * @param id - The ID of the file to get
+	 * @returns The file object if found
+	 */
 	getFile: (id: TFileInfer['id']) => TFileInfer | undefined;
+	/**
+	 * Create a new folder
+	 * @param folder - The folder object to create
+	 * @param parentID - The ID of the parent folder
+	 */
 	createFolder: (folder: TFolderInfer, parentID?: TFolderInfer['id']) => void;
+	/**
+	 * Create a new file
+	 * @param file - The file object to create
+	 * @param parentID - The ID of the parent folder
+	 */
 	createFile: (file: TFileInfer, parentID: TFolderInfer['id']) => void;
+	/**
+	 * Update a folder by ID
+	 * @param folder - The folder object to update
+	 */
 	updateFolder: (folder: TFolderInfer) => void;
+	/**
+	 * Update a file by ID
+	 * @param file - The file object to update
+	 */
 	updateFile: (file: TFileInfer) => void;
+	/**
+	 * Remove a folder by ID
+	 * @param id - The ID of the folder to remove
+	 */
 	removeFolder: (id: TFolderInfer['id']) => void;
+	/**
+	 * Remove a file by ID
+	 * @param id - The ID of the file to remove
+	 */
 	removeFile: (id: TFileInfer['id']) => void;
+	/**
+	 * Import data into the collection
+	 * @param data - The data to import
+	 */
 	import: (data: TRESTData) => void;
 };
 
@@ -28,6 +68,11 @@ const CTX = Symbol('REST_COLLECTION_CTX');
 const STORAGE_KEY = 'collectionsREST';
 const INITIAL_DATA: TRESTData = [];
 
+/**
+ * Set the REST context
+ * @param initialData - The initial data to set
+ * @param start - The start notifier to use
+ */
 export function setRESTContext(
 	initialData: Partial<TRESTData> = INITIAL_DATA,
 	start: StartStopNotifier<TRESTData> = () => {}
@@ -152,4 +197,8 @@ export function setRESTContext(
 	return setContext(CTX, context);
 }
 
+/**
+ * Get the REST context
+ * @returns The REST context
+ */
 export const getRESTContext = () => getContext<TRESTContext>(CTX);

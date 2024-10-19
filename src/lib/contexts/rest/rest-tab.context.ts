@@ -16,24 +16,71 @@ export type TRESTTabDataPersist = {
 	current?: TRESTTabInfer['context']['id'];
 };
 export type TRESTTabActions = {
+	/**
+	 * Add a new tab to the state
+	 * @param request - The request object to add
+	 */
 	addTab: (request?: TRESTTabInfer['context']) => void;
+	/**
+	 * Get a tab by ID
+	 * @param id - The ID of the tab to get
+	 * @returns The tab object if found
+	 */
 	getTab: (id: TRESTTabInfer['context']['id']) => TRESTTabInfer | undefined;
+	/**
+	 * Update a tab by ID
+	 * @param id - The ID of the tab to update
+	 * @param request - The request object to update
+	 */
 	updateTab: (
 		id: TRESTTabInfer['context']['id'],
 		request: Partial<TRESTTabInfer['context']>
 	) => void;
+	/**
+	 * Duplicate a tab by ID
+	 * @param id - The ID of the tab to duplicate
+	 */
 	duplicateTab: (id: TRESTTabInfer['context']['id']) => void;
+	/**
+	 * Set the current tab by ID
+	 * @param id - The ID of the tab to set as current
+	 */
 	setCurrentTab: (id?: TRESTTabInfer['context']['id']) => void;
+	/**
+	 * Set the current inner tab by ID
+	 * @param id - The ID of the tab to set the inner tab for
+	 * @param tab - The inner tab to set
+	 */
 	setCurrentInnerTab: (
 		id: TRESTTabInfer['context']['id'],
 		tab: TRESTTabInfer['currentTab']
 	) => void;
+	/**
+	 * Set the tainted state of tabs by ID
+	 * @param ids - The IDs of the tabs to set tainted
+	 */
 	setTaintedTabs: (ids?: Array<TRESTTabInfer['context']['id']>) => void;
+	/**
+	 * Set the dirty state of tabs by ID
+	 * @param ids - The IDs of the tabs to set dirty
+	 * @param dirty - The dirty state to set
+	 */
 	setDirtyTabs: (ids: Array<TRESTTabInfer['context']['id']>, dirty: TRESTTabInfer['dirty']) => void;
+	/**
+	 * Set the result of a tab by ID
+	 * @param id - The ID of the tab to set the result for
+	 * @param result - The result object to set
+	 */
 	setResult: (
 		id: TRESTTabInfer['context']['id'],
 		result?: Partial<Pick<TRESTResult, 'response' | 'sending'>>
 	) => void;
+	/**
+	 * Close tabs by ID
+	 * @param props - The props object
+	 * @param props.ids - The IDs of the tabs to close
+	 * @param props.mode - The mode to close the tabs in
+	 */
 	closeTabs: (props: {
 		ids: Array<TRESTTabInfer['context']['id']>;
 		mode: 'normal' | 'close-others' | 'close-all';
@@ -54,6 +101,12 @@ const INITIAL_DATA: TRESTTabData = {
 	results: []
 };
 
+/**
+ * Set the REST tab context
+ * @param initialData - The initial data to set
+ * @param start - The start notifier to set
+ * @returns The REST tab context
+ */
 export function setRESTTabContext(
 	initialData: Partial<TRESTTabData> = INITIAL_DATA,
 	start: StartStopNotifier<TRESTTabData> = () => {}
@@ -277,4 +330,8 @@ export function setRESTTabContext(
 	return setContext(CTX, context);
 }
 
+/**
+ * Get the REST tab context
+ * @returns The REST tab context
+ */
 export const getRESTTabContext = () => getContext<TRESTTabContext>(CTX);

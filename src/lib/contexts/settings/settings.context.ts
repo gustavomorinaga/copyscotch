@@ -7,6 +7,10 @@ import { DEFAULT_SETTINGS, type TSettingsInfer } from '$lib/schemas/settings';
 type TSettingsContext = Writable<TSettingsData> & TSettingsActions;
 type TSettingsData = TSettingsInfer;
 type TSettingsActions = {
+	/**
+	 * Save the settings
+	 * @param settings - The settings to save
+	 */
 	save: (settings: Partial<TSettingsData>) => void;
 };
 
@@ -14,6 +18,12 @@ const CTX = Symbol('SETTINGS_CTX');
 const STORAGE_KEY = 'settings';
 export const INITIAL_DATA: TSettingsData = DEFAULT_SETTINGS;
 
+/**
+ * Set the settings context
+ * @param initialData - Initial data
+ * @param start - The start notifier to use
+ * @returns The settings context
+ */
 export function setSettingsContext(
 	initialData: Partial<TSettingsData> = INITIAL_DATA,
 	start: StartStopNotifier<TSettingsData> = () => {}
@@ -72,4 +82,8 @@ export function setSettingsContext(
 	return setContext(CTX, context);
 }
 
+/**
+ * Get the settings context
+ * @returns The settings context
+ */
 export const getSettingsContext = () => getContext<TSettingsContext>(CTX);
