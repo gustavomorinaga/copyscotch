@@ -63,13 +63,18 @@
 
 	function setTablistScroll() {
 		tablistRef = document.getElementById(tablistID) as HTMLElement;
-		horizontalScroll(tablistRef);
+		horizontalScroll(tablistRef.parentElement as HTMLElement);
 		scrollToActiveTab();
 	}
 
 	function scrollToActiveTab() {
-		activeTabRef = tablistRef.querySelector('[data-state="active"]') as HTMLElement;
-		activeTabRef.scrollIntoView({ inline: 'center', behavior: 'smooth' });
+		requestAnimationFrame(() => {
+			activeTabRef = tablistRef.querySelector('[data-state="active"]') as HTMLElement;
+			tablistRef.parentElement?.scrollTo({
+				behavior: 'smooth',
+				left: activeTabRef.offsetLeft - activeTabRef.offsetWidth
+			});
+		});
 	}
 
 	onMount(() => {
@@ -82,89 +87,93 @@
 	activateOnFocus={false}
 	class="relative flex h-full w-full flex-1 flex-col"
 >
-	<Tabs.List
-		id={tablistID}
-		class="relative flex !h-auto min-h-12 touch-pan-x justify-start overflow-x-auto overflow-y-hidden scroll-smooth rounded-none p-0 pr-16 sm:overflow-x-hidden"
+	<div
+		class="relative flex shrink-0 touch-pan-x items-center overflow-x-auto overflow-y-hidden scroll-smooth bg-muted pr-16 scrollbar-thumb-background"
 	>
-		{#each $tabContext.tabs as tab}
-			{@const tabID = tab.id}
+		<Tabs.List
+			id={tablistID}
+			class="flex !h-auto min-h-12 shrink-0 justify-start rounded-none bg-transparent p-0"
+		>
+			{#each $tabContext.tabs as tab}
+				{@const tabID = tab.id}
 
-			<ContextMenuEditRequest {tabID}>
-				<div
-					class="inline-flex"
-					role="presentation"
-					aria-hidden="true"
-					on:dblclick={() => handleEditing(tabID)}
-				>
-					<Tabs.Trigger
-						class="group/tab-trigger relative h-12 min-w-52 shrink-0 items-center justify-between gap-2 px-5 !shadow-none before:absolute before:inset-x-0 before:top-0 before:h-[.125rem] before:bg-transparent before:transition-colors data-[state=active]:before:bg-primary"
-						aria-label="{tab.context.name} Tab"
-						value={tabID}
-						on:click={(event) => handleCurrentTab(event, tabID)}
+				<ContextMenuEditRequest {tabID}>
+					<div
+						class="inline-flex"
+						role="presentation"
+						aria-hidden="true"
+						on:dblclick={() => handleEditing(tabID)}
 					>
-						<div
-							class="my-auto inline-flex select-none items-baseline justify-center self-baseline"
+						<Tabs.Trigger
+							class="group/tab-trigger relative h-12 min-w-52 shrink-0 items-center justify-between gap-2 px-5 !shadow-none before:absolute before:inset-x-0 before:top-0 before:h-[.125rem] before:bg-transparent before:transition-colors data-[state=active]:before:bg-primary"
+							aria-label="{tab.context.name} Tab"
+							value={tabID}
+							on:click={(event) => handleCurrentTab(event, tabID)}
 						>
-							<span
-								class="block text-left text-tiny font-medium uppercase"
-								style="color: hsl(var(--method-{tab.context.method.toLowerCase()}-color) / var(--tw-text-opacity))"
+							<div
+								class="my-auto inline-flex select-none items-baseline justify-center self-baseline"
 							>
-								{tab.context.method}
-							</span>
-						</div>
+								<span
+									class="block text-left text-tiny font-medium uppercase"
+									style="color: hsl(var(--method-{tab.context.method.toLowerCase()}-color) / var(--tw-text-opacity))"
+								>
+									{tab.context.method}
+								</span>
+							</div>
 
-						<div
-							class="my-auto inline-flex select-none items-baseline justify-center self-baseline"
-						>
-							<span class="block w-32 truncate text-left text-sm font-semibold">
-								{tab.context.name}
-							</span>
-						</div>
+							<div
+								class="my-auto inline-flex select-none items-baseline justify-center self-baseline"
+							>
+								<span class="block w-32 truncate text-left text-sm font-semibold">
+									{tab.context.name}
+								</span>
+							</div>
 
-						<div
-							class="inline-flex select-none items-baseline justify-center group-hover/tab-trigger:visible"
-							class:invisible={!tab.dirty}
-						>
-							<Tooltip.Root>
-								<Tooltip.Trigger asChild let:builder>
-									<Button
-										builders={[builder]}
-										size="icon"
-										variant="text"
-										role="button"
-										tabindex={-1}
-										aria-label={tab.dirty ? 'Close Tab - Unsaved Changes' : 'Close Tab'}
-										class="relative h-6 w-6"
-										on:click={(event) => handleCloseTab(event, tabID)}
-										on:keydown={(event) => handleCloseTab(event, tabID)}
-									>
-										{#if tab.dirty}
-											<Dot
-												class="absolute inset-auto shrink-0 group-hover/tab-trigger:invisible"
-												style="stroke-width: 5"
-												aria-hidden="true"
-												focusable="false"
+							<div
+								class="inline-flex select-none items-baseline justify-center group-hover/tab-trigger:visible"
+								class:invisible={!tab.dirty}
+							>
+								<Tooltip.Root>
+									<Tooltip.Trigger asChild let:builder>
+										<Button
+											builders={[builder]}
+											size="icon"
+											variant="text"
+											role="button"
+											tabindex={-1}
+											aria-label={tab.dirty ? 'Close Tab - Unsaved Changes' : 'Close Tab'}
+											class="relative h-6 w-6"
+											on:click={(event) => handleCloseTab(event, tabID)}
+											on:keydown={(event) => handleCloseTab(event, tabID)}
+										>
+											{#if tab.dirty}
+												<Dot
+													class="absolute inset-auto shrink-0 group-hover/tab-trigger:invisible"
+													style="stroke-width: 5"
+													aria-hidden="true"
+													focusable="false"
+												/>
+											{/if}
+
+											<X
+												class="h-4 w-4 shrink-0 {tab.dirty &&
+													'invisible group-hover/tab-trigger:visible'}"
 											/>
-										{/if}
-
-										<X
-											class="h-4 w-4 shrink-0 {tab.dirty &&
-												'invisible group-hover/tab-trigger:visible'}"
-										/>
-										<span class="sr-only select-none">
-											{tab.dirty ? 'Close Tab - Unsaved Changes' : 'Close Tab'}
-										</span>
-									</Button>
-								</Tooltip.Trigger>
-								<Tooltip.Content side="top" class="select-none">
-									<span>Close</span>
-								</Tooltip.Content>
-							</Tooltip.Root>
-						</div>
-					</Tabs.Trigger>
-				</div>
-			</ContextMenuEditRequest>
-		{/each}
+											<span class="sr-only select-none">
+												{tab.dirty ? 'Close Tab - Unsaved Changes' : 'Close Tab'}
+											</span>
+										</Button>
+									</Tooltip.Trigger>
+									<Tooltip.Content side="top" class="select-none">
+										<span>Close</span>
+									</Tooltip.Content>
+								</Tooltip.Root>
+							</div>
+						</Tabs.Trigger>
+					</div>
+				</ContextMenuEditRequest>
+			{/each}
+		</Tabs.List>
 
 		<Tooltip.Root>
 			<Tooltip.Trigger asChild let:builder>
@@ -172,7 +181,6 @@
 					builders={[builder]}
 					size="icon"
 					variant="ghost"
-					role="button"
 					tabindex={0}
 					aria-label="New Tab"
 					class="mx-3 h-8 w-8 shrink-0"
@@ -186,7 +194,7 @@
 				<span>New</span>
 			</Tooltip.Content>
 		</Tooltip.Root>
-	</Tabs.List>
+	</div>
 
 	{#each $tabContext.tabs as tab}
 		{@const tabID = tab.id}

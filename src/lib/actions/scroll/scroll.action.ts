@@ -1,12 +1,13 @@
 /**
  * Enables horizontal scrolling behavior on the specified HTML element.
  * @param node - The HTML element to enable horizontal scrolling on.
+ * @param velocity - The velocity of the scroll. Default is 10.
  */
-export function horizontalScroll(node: HTMLElement) {
+export function horizontalScroll(node: HTMLElement, velocity = 10) {
 	function handleScroll(event: WheelEvent) {
 		event.preventDefault();
-		node.scrollTo({ left: node.scrollLeft + event.deltaY, behavior: 'instant' });
+		node.scrollLeft += event.deltaY * velocity;
 	}
 
-	node.addEventListener('wheel', handleScroll, { passive: true });
+	node.addEventListener('wheel', handleScroll, { passive: false });
 }
