@@ -1,7 +1,7 @@
 import { getContext, setContext } from 'svelte';
 import { type StartStopNotifier, type Writable, get, writable } from 'svelte/store';
 import { browser } from '$app/environment';
-import { RESTRepository } from '$lib/repositories';
+import { RESTRepository } from '$lib/repositories/rest';
 import { generateUUID } from '$lib/utils';
 import { DEFAULT_FILE, DEFAULT_FOLDER, type TFileInfer, type TFolderInfer } from '$lib/validators';
 

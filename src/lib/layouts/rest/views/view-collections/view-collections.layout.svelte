@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import { derived, writable } from 'svelte/store';
 	import { getRESTContext } from '$lib/contexts/rest';
-	import { RESTRepository } from '$lib/repositories';
+	import { RESTRepository } from '$lib/repositories/rest';
 	import { retrieveNestedFields } from '$lib/utils';
 	import { treeCollectionStore as treeStore } from '$lib/layouts/rest/trees/tree-collection';
 	import { ToolbarCollections } from '$lib/layouts/rest/toolbars/toolbar-collections';

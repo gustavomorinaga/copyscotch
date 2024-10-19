@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import { derived, writable } from 'svelte/store';
 	import { getRESTContext } from '$lib/contexts/rest';
-	import { RESTRepository } from '$lib/repositories';
+	import { RESTRepository } from '$lib/repositories/rest';
 	import { retrieveNestedFields } from '$lib/utils';
 	import { FeedbackNotFound } from '$lib/layouts/shared/feedbacks/feedback-not-found';
 	import { InputSearch } from '$lib/layouts/shared/inputs/input-search';
