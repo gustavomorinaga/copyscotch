@@ -1,9 +1,9 @@
 <script lang="ts">
+	import House from 'lucide-svelte/icons/house';
+	import RefreshCw from 'lucide-svelte/icons/refresh-cw';
 	import { page } from '$app/stores';
 	import { mode } from '$lib/components/mode-watcher';
 	import { Button } from '$lib/components/ui/button';
-	import Home from 'lucide-svelte/icons/home';
-	import RefreshCw from 'lucide-svelte/icons/refresh-cw';
 
 	function handleReload() {
 		return location.reload();
@@ -23,7 +23,7 @@
 
 	<div class="mt-4 inline-flex gap-2">
 		<Button size="sm" variant="secondary" href="/" aria-label="Go to Home Page">
-			<Home class="mr-2 h-4 w-4 shrink-0" />
+			<House class="mr-2 h-4 w-4 shrink-0" />
 			<span class="select-none">Home</span>
 		</Button>
 		<Button size="sm" variant="secondary" aria-label="Reload Page" on:click={handleReload}>

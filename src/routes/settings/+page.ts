@@ -1,4 +1,4 @@
-export const load = async () => {
+export async function load() {
 	const title = 'Settings';
 	return { title };
-};
+}

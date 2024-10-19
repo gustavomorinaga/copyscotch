@@ -3,9 +3,9 @@
 /// <reference lib="esnext" />
 /// <reference lib="webworker" />
 
-declare let self: ServiceWorkerGlobalScope;
-
 import { build, files, prerendered, version } from '$service-worker';
+
+declare let self: ServiceWorkerGlobalScope;
 
 const CACHE = `cache-${version}`;
 const ASSETS = [...build, ...files, ...prerendered];
