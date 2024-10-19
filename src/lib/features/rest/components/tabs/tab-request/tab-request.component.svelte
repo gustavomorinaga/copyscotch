@@ -262,6 +262,8 @@
 					>
 						<Select.Trigger
 							{...attrs}
+							type="button"
+							role="combobox"
 							class="relative rounded-l-md rounded-r-none bg-input font-semibold focus:z-10"
 						>
 							<Select.Value />
