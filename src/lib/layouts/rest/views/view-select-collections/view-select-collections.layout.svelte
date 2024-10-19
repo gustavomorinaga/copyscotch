@@ -11,9 +11,15 @@
 	import { Separator } from '$lib/components/ui/separator';
 
 	const LAZY_COMPONENTS = [
-		import('$lib/layouts/rest/trees/tree-select-collection'),
-		import('$lib/layouts/rest/alert-dialogs/alert-dialog-collection-deletion'),
-		import('$lib/layouts/rest/alert-dialogs/alert-dialog-request-deletion')
+		import('$lib/layouts/rest/trees/tree-select-collection').then(
+			(module) => module.TreeSelectCollection
+		),
+		import('$lib/layouts/rest/alert-dialogs/alert-dialog-collection-deletion').then(
+			(module) => module.AlertDialogCollectionDeletion
+		),
+		import('$lib/layouts/rest/alert-dialogs/alert-dialog-request-deletion').then(
+			(module) => module.AlertDialogRequestDeletion
+		)
 	] as const;
 </script>
 
@@ -48,11 +54,11 @@
 </div>
 
 {#if $filteredCollections.length}
-	{#await Promise.all(LAZY_COMPONENTS) then [{ TreeSelectCollection }, ...loadedComponents]}
+	{#await Promise.all(LAZY_COMPONENTS) then [TreeSelectCollection, ...loadedComponents]}
 		<TreeSelectCollection collections={$filteredCollections} />
 
 		{#each loadedComponents as component}
-			<svelte:component this={component.default} />
+			<svelte:component this={component} />
 		{/each}
 	{/await}
 {:else if $searchTerm}

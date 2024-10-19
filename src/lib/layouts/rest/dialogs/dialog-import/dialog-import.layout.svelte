@@ -17,7 +17,9 @@
 			value: 'import-from-file',
 			name: 'Import from Copyscotch',
 			icon: FolderPlus,
-			view: import('$lib/layouts/rest/views/view-import-from-file')
+			view: import('$lib/layouts/rest/views/view-import-from-file').then(
+				(module) => module.ViewImportFromFile
+			)
 		}
 	} as const satisfies Record<string, TView>;
 </script>
@@ -87,7 +89,7 @@
 			</ul>
 		{:else}
 			{#await VIEWS[currentView].view then view}
-				<svelte:component this={view.default} onCancel={() => (currentView = null)} />
+				<svelte:component this={view} onCancel={() => (currentView = null)} />
 			{/await}
 		{/if}
 	</Dialog.Content>

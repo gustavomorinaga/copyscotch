@@ -1,2 +1,2 @@
 export * from './store';
-export { default as Tree } from './tree-collection.layout.svelte';
+export { default as TreeCollection } from './tree-collection.layout.svelte';
