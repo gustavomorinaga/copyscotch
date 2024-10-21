@@ -377,18 +377,18 @@
 				class="sticky top-[4.5rem] z-20 flex shrink-0 flex-col data-[wrap-items=true]:top-[7.5rem] lg:top-[4.5rem]"
 			>
 				<Tabs.List class="flex !h-auto shrink-0 gap-8 bg-background px-4 py-0">
-					{#each LAZY_TABS as { value, label, disabled }}
+					{#each LAZY_TABS as tab (tab.value)}
 						<Tabs.Trigger
-							{value}
-							{disabled}
-							aria-label="{label} Tab"
+							value={tab.value}
+							disabled={tab.disabled}
+							aria-label="{tab.label} Tab"
 							class="relative gap-2 px-0 py-2 text-muted-foreground !shadow-none before:absolute before:inset-x-0 before:bottom-0 before:h-[.125rem] before:bg-transparent before:transition-colors data-[state=active]:text-accent-foreground data-[state=active]:before:bg-primary hover:text-accent-foreground"
-							on:click={() => handleCurrentTab(value)}
+							on:click={() => handleCurrentTab(tab.value)}
 						>
-							<span class="select-none capitalize">{label}</span>
-							{#if dynamicCounters[value]}
+							<span class="select-none capitalize">{tab.label}</span>
+							{#if dynamicCounters[tab.value]}
 								<Badge size="sm" variant="outline" class="!text-foreground">
-									{dynamicCounters[value]}
+									{dynamicCounters[tab.value]}
 								</Badge>
 							{/if}
 						</Tabs.Trigger>
@@ -398,9 +398,9 @@
 				<Separator orientation="horizontal" />
 			</div>
 
-			{#each LAZY_TABS as { value, content }}
-				<Tabs.Content {value} class="m-0 h-full w-full">
-					{#await content}
+			{#each LAZY_TABS as tab (tab.value)}
+				<Tabs.Content value={tab.value} class="m-0 h-full w-full">
+					{#await tab.content}
 						<Spinner />
 					{:then module}
 						<svelte:component this={module} {tabID} {form} />

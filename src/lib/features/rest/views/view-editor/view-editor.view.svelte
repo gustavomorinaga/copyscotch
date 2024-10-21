@@ -94,7 +94,7 @@
 			id={tablistID}
 			class="flex !h-auto min-h-12 shrink-0 justify-start rounded-none bg-transparent p-0"
 		>
-			{#each $tabContext.tabs as tab}
+			{#each $tabContext.tabs as tab (tab.id)}
 				{@const tabID = tab.id}
 
 				<ContextMenuEditRequest {tabID}>
@@ -191,7 +191,7 @@
 		</Tooltip.Root>
 	</div>
 
-	{#each $tabContext.tabs as tab}
+	{#each $tabContext.tabs as tab (tab.id)}
 		{@const tabID = tab.id}
 
 		<Tabs.Content value={tabID} class="m-0 h-full overflow-y-auto bg-background">

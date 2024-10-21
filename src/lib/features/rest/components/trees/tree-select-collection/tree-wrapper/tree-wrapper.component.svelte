@@ -16,7 +16,7 @@
 </script>
 
 <ul role="group" class="flex shrink-0 flex-col">
-	{#each folders as folder}
+	{#each folders as folder (folder.id)}
 		{@const isEmpty = !folder.folders.length && !folder.requests.length}
 
 		<li class="flex shrink-0 flex-col">
@@ -33,7 +33,7 @@
 							</li>
 						{/if}
 
-						{#each folder.requests as request}
+						{#each folder.requests as request (request.id)}
 							<li class="flex">
 								<TreeFile file={request} />
 							</li>

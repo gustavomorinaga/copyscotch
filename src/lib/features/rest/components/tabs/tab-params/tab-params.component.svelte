@@ -28,7 +28,7 @@
 	$: hasParams = $formData.params.length > 0;
 
 	function handleRemove(index: number) {
-		$formData.params.splice(index, 1);
+		$formData.params = $formData.params.filter((_, i) => i !== index);
 	}
 
 	onMount(() => {
@@ -40,7 +40,7 @@
 
 {#if hasParams}
 	<ul class="flex w-full flex-1 flex-col">
-		{#each $formData.params as { key, value, active }, index}
+		{#each $formData.params as param, index}
 			{@const order = index + 1}
 
 			<li class="flex w-full flex-1">
@@ -53,7 +53,7 @@
 								{...attrs}
 								placeholder="Parameter {order}"
 								class="inline-flex w-full flex-1 rounded-none border-none !ring-transparent !ring-offset-transparent"
-								bind:value={key}
+								bind:value={param.key}
 							/>
 						</Form.Control>
 					</Form.Field>
@@ -64,7 +64,7 @@
 								{...attrs}
 								placeholder="Value {order}"
 								class="inline-flex w-full flex-1 rounded-none border-none !ring-transparent !ring-offset-transparent"
-								bind:value
+								bind:value={param.value}
 							/>
 						</Form.Control>
 					</Form.Field>
@@ -73,12 +73,14 @@
 						<Form.Control let:attrs>
 							<Checkbox
 								{...attrs}
-								aria-label={active ? 'Turn Off' : 'Turn On'}
+								aria-label={param.active ? 'Turn Off' : 'Turn On'}
 								class="flex h-full w-10 items-center justify-center !border-none !bg-transparent !text-success"
-								bind:checked={active}
+								bind:checked={param.active}
 							/>
-							<span class="sr-only">{active ? 'Turn Off' : 'Turn On'}</span>
-							<input name={attrs.name} value={active} hidden />
+							<span class="sr-only select-none">
+								{param.active ? 'Turn Off' : 'Turn On'}
+							</span>
+							<input name={attrs.name} value={param.active} hidden />
 						</Form.Control>
 					</Form.Field>
 

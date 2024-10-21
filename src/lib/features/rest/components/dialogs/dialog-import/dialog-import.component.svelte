@@ -9,6 +9,7 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Dialog from '$lib/components/ui/dialog';
+	import { View } from 'lucide-svelte';
 
 	type TView = { value: string; name: string; icon: ComponentType; view: Promise<any> };
 
@@ -54,16 +55,16 @@
 
 		{#if !currentView}
 			<ul role="menu" class="flex flex-col gap-2">
-				{#each Object.values(VIEWS) as { name, value, icon }}
+				{#each Object.values(VIEWS) as view (view.value)}
 					<li class="contents">
 						<Button
 							variant="ghost"
 							role="menuitem"
 							class="w-full flex-1 justify-start"
-							on:click={() => (currentView = value)}
+							on:click={() => (currentView = view.value)}
 						>
-							<svelte:component this={icon} class="mr-4 h-5 w-5 shrink-0" />
-							<span class="select-none">{name}</span>
+							<svelte:component this={view.icon} class="mr-4 h-5 w-5 shrink-0" />
+							<span class="select-none">{view.name}</span>
 						</Button>
 					</li>
 				{/each}

@@ -51,16 +51,16 @@
 
 <Tabs.Root value={currentTab} orientation="vertical" class="relative flex h-full w-full flex-1 p-0">
 	<Tabs.List class="gap-2 bg-background p-2">
-		{#each LAZY_TABS as { value, label, icon, disabled }}
+		{#each LAZY_TABS as tab (tab.value)}
 			<Tabs.Trigger
-				{value}
-				{disabled}
-				aria-label="{label} Tab"
+				value={tab.value}
+				disabled={tab.disabled}
+				aria-label="{tab.label} Tab"
 				class="p-2 !shadow-none data-[state=active]:text-primary"
-				on:click={() => handleCurrentTab(value)}
+				on:click={() => handleCurrentTab(tab.value)}
 			>
-				<svelte:component this={icon} class="h-5 w-5 shrink-0" />
-				<span class="sr-only capitalize">{label}</span>
+				<svelte:component this={tab.icon} class="h-5 w-5 shrink-0" />
+				<span class="sr-only capitalize">{tab.label}</span>
 			</Tabs.Trigger>
 		{/each}
 	</Tabs.List>
@@ -79,9 +79,9 @@
 			<Separator orientation="horizontal" />
 		</div>
 
-		{#each LAZY_TABS as { value, content }}
-			<Tabs.Content {value} class="m-0 h-full w-full">
-				{#await content}
+		{#each LAZY_TABS as tab (tab.value)}
+			<Tabs.Content value={tab.value} class="m-0 h-full w-full">
+				{#await tab.content}
 					<Spinner />
 				{:then module}
 					<svelte:component this={module} />
