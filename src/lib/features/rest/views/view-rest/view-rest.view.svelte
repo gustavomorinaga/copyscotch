@@ -24,6 +24,7 @@
 	const LAZY_MOBILE_COMPONENTS = [import('$lib/components/ui/drawer')] as const;
 </script>
 
+<!-- svelte-ignore reactive_declaration_non_reactive_property -->
 <script lang="ts">
 	const [settingsContext, restContext, tabContext] = [
 		getSettingsContext(),

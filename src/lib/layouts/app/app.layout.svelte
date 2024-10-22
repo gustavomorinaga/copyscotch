@@ -12,6 +12,7 @@
 	import * as Sidenav from '$lib/components/ui/sidenav';
 </script>
 
+<!-- svelte-ignore reactive_declaration_non_reactive_property -->
 <script lang="ts">
 	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
 </script>

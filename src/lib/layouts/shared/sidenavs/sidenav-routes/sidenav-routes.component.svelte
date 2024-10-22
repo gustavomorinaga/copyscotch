@@ -29,6 +29,7 @@
 	] as const satisfies Array<TRoute>;
 </script>
 
+<!-- svelte-ignore reactive_declaration_non_reactive_property -->
 <script lang="ts">
 	const settingsContext = getSettingsContext();
 

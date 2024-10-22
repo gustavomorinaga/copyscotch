@@ -62,7 +62,7 @@
 				>
 					<div
 						class="absolute inset-0 inline-flex shrink-0 animate-ping rounded-full bg-success opacity-75"
-					/>
+					></div>
 					<Dot
 						class="relative inline-flex h-2 w-2 shrink-0 text-success"
 						style="stroke-width: 16"

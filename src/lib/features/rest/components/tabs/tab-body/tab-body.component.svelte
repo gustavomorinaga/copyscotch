@@ -21,6 +21,7 @@
 	const LAZY_COMPONENTS = [import('$lib/components/ui/codemirror')] as const;
 </script>
 
+<!-- svelte-ignore reactive_declaration_non_reactive_property -->
 <script lang="ts">
 	type $$Props = { tabID: TRESTTabInfer['id']; form: SuperForm<TRESTRequestInfer> };
 
