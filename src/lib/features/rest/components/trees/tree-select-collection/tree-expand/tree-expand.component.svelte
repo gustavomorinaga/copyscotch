@@ -1,13 +1,17 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { onMount } from 'svelte';
 	import { Separator } from '$lib/components/ui/separator';
 </script>
 
 <script lang="ts">
-	type $$Props = { onOpenChange?: (open: boolean) => void };
+	
 
-	export let onOpenChange: $$Props['onOpenChange'] = undefined;
-	let el: HTMLDivElement;
+	interface Props {
+		onOpenChange?: (open: boolean) => void;
+	}
+
+	let { onOpenChange = undefined }: Props = $props();
+	let el: HTMLDivElement = $state();
 
 	function handleCollapse(event: MouseEvent) {
 		event.stopPropagation();

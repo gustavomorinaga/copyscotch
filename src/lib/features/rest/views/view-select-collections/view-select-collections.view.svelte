@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { derived, writable } from 'svelte/store';
 	import { getRESTContext } from '$lib/contexts/rest';
 	import { RESTRepository } from '$lib/repositories/rest';
@@ -24,6 +24,8 @@
 </script>
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	const restContext = getRESTContext();
 
 	const searchTerm = writable('');
@@ -33,14 +35,14 @@
 		return RESTRepository.filterTree($tree, $term);
 	});
 
-	$: {
+	run(() => {
 		const hasTerm = Boolean($searchTerm);
 
 		$treeStore.expand = hasTerm;
 		$treeStore.expandedFolders = hasTerm
 			? retrieveNestedFields($filteredCollections, 'folders', 'id')
 			: [];
-	}
+	});
 </script>
 
 <div class="sticky top-[2.350rem] z-10 inline-flex w-full shrink-0 flex-col">
@@ -58,7 +60,8 @@
 		<TreeSelectCollection collections={$filteredCollections} />
 
 		{#each loadedComponents as component}
-			<svelte:component this={component} />
+			{@const SvelteComponent = component}
+			<SvelteComponent />
 		{/each}
 	{/await}
 {:else if $searchTerm}

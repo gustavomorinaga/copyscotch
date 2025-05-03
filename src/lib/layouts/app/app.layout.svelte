@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import '$lib/styles/app.pcss';
 	import { setSettingsContext } from '$lib/contexts/settings';
 	import { BREAKPOINTS } from '$lib/constants/breakpoints';
@@ -12,9 +12,13 @@
 	import * as Sidenav from '$lib/components/ui/sidenav';
 </script>
 
-<!-- svelte-ignore reactive_declaration_non_reactive_property -->
 <script lang="ts">
-	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
+	let isMobile = $derived($screenStore.innerWidth < BREAKPOINTS.sm);
 </script>
 
 <Wrapper class="overflow-hidden">
@@ -33,7 +37,7 @@
 				</Sidenav.Nav>
 				<Sidenav.Separator orientation={isMobile ? 'horizontal' : 'vertical'} />
 				<Sidenav.Content class="[view-transition-name:content]">
-					<slot />
+					{@render children?.()}
 				</Sidenav.Content>
 			</Sidenav.Root>
 		</main>

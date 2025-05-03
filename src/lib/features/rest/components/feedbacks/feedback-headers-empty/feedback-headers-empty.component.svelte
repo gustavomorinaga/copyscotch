@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import Plus from 'lucide-svelte/icons/plus';
 	import type { SuperForm } from 'sveltekit-superforms';
 	import { DEFAULT_HEADER, type TRESTRequestInfer } from '$lib/schemas/rest';
@@ -8,11 +8,15 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { form: SuperForm<TRESTRequestInfer> };
+	
 
-	export let form: $$Props['form'];
+	interface Props {
+		form: SuperForm<TRESTRequestInfer>;
+	}
 
-	$: ({ form: formData } = form);
+	let { form }: Props = $props();
+
+	let { form: formData } = $derived(form);
 
 	function handleAddNew() {
 		$formData.headers = [...$formData.headers, DEFAULT_HEADER];

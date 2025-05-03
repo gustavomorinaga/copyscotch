@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import type { SuperForm } from 'sveltekit-superforms';
 	import { getRESTTabContext } from '$lib/contexts/rest';
 	import { ToolbarBody } from '$lib/features/rest/components/toolbars/toolbar-body';
@@ -23,19 +23,29 @@
 
 <!-- svelte-ignore reactive_declaration_non_reactive_property -->
 <script lang="ts">
-	type $$Props = { tabID: TRESTTabInfer['id']; form: SuperForm<TRESTRequestInfer> };
+	import { run } from 'svelte/legacy';
 
-	export let tabID: $$Props['tabID'];
-	export let form: $$Props['form'];
+	
+
+	interface Props {
+		tabID: TRESTTabInfer['id'];
+		form: SuperForm<TRESTRequestInfer>;
+	}
+
+	let { tabID, form }: Props = $props();
 
 	const tabContext = getRESTTabContext();
 
-	let tab!: TRESTTabInfer;
-	let lang!: Langs;
+	let tab!: TRESTTabInfer = $state();
+	let lang!: Langs = $state();
 
-	$: ({ form: formData } = form);
-	$: if ($tabContext.tabs) tab = tabContext.getTab(tabID) as TRESTTabInfer;
-	$: if (tab) lang = CONTENT_TYPES_LANGS[tab.context.body.contentType || 'text/plain'];
+	let { form: formData } = $derived(form);
+	run(() => {
+		if ($tabContext.tabs) tab = tabContext.getTab(tabID) as TRESTTabInfer;
+	});
+	run(() => {
+		if (tab) lang = CONTENT_TYPES_LANGS[tab.context.body.contentType || 'text/plain'];
+	});
 </script>
 
 <ToolbarBody {tabID} {form} />

@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { onMount } from 'svelte';
 	import Plus from 'lucide-svelte/icons/plus';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
@@ -12,16 +12,20 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { tabID: TRESTTabInfer['id']; form: SuperForm<TRESTRequestInfer> };
+	
 
-	export let tabID: $$Props['tabID'];
-	export let form: $$Props['form'];
+	interface Props {
+		tabID: TRESTTabInfer['id'];
+		form: SuperForm<TRESTRequestInfer>;
+	}
+
+	let { tabID, form }: Props = $props();
 
 	const tabContext = getRESTTabContext();
 
-	let toolbarRef!: HTMLElement;
+	let toolbarRef!: HTMLElement = $state();
 
-	$: ({ form: formData } = form);
+	let { form: formData } = $derived(form);
 
 	function handleClearAll() {
 		$formData.params.length = 0;
@@ -53,36 +57,40 @@
 
 		<div class="flex">
 			<Tooltip.Root>
-				<Tooltip.Trigger asChild let:builder>
-					<Button
-						builders={[builder]}
-						size="icon"
-						variant="text"
-						aria-label="Clear All Parameters"
-						on:click={handleClearAll}
-					>
-						<Trash2 class="h-4 w-4 shrink-0" />
-						<span class="sr-only select-none">Clear All</span>
-					</Button>
-				</Tooltip.Trigger>
+				<Tooltip.Trigger asChild >
+					{#snippet children({ builder })}
+										<Button
+							builders={[builder]}
+							size="icon"
+							variant="text"
+							aria-label="Clear All Parameters"
+							on:click={handleClearAll}
+						>
+							<Trash2 class="h-4 w-4 shrink-0" />
+							<span class="sr-only select-none">Clear All</span>
+						</Button>
+														{/snippet}
+								</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">
 					<span>Clear All</span>
 				</Tooltip.Content>
 			</Tooltip.Root>
 
 			<Tooltip.Root>
-				<Tooltip.Trigger asChild let:builder>
-					<Button
-						builders={[builder]}
-						size="icon"
-						variant="text"
-						aria-label="Add New Parameter"
-						on:click={handleAddNew}
-					>
-						<Plus class="h-4 w-4 shrink-0" />
-						<span class="sr-only select-none">Add New</span>
-					</Button>
-				</Tooltip.Trigger>
+				<Tooltip.Trigger asChild >
+					{#snippet children({ builder })}
+										<Button
+							builders={[builder]}
+							size="icon"
+							variant="text"
+							aria-label="Add New Parameter"
+							on:click={handleAddNew}
+						>
+							<Plus class="h-4 w-4 shrink-0" />
+							<span class="sr-only select-none">Add New</span>
+						</Button>
+														{/snippet}
+								</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">
 					<span>Add New</span>
 				</Tooltip.Content>

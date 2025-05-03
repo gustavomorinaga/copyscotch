@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { onDestroy } from 'svelte';
 	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
 	import CheckCircleBig from 'lucide-svelte/icons/circle-check-big';
@@ -20,15 +20,19 @@
 <script lang="ts">
 	import { Spinner } from '$lib/components/ui/spinner';
 
-	type $$Props = { onCancel?: () => void };
+	
 
-	export let onCancel: $$Props['onCancel'] = undefined;
+	interface Props {
+		onCancel?: () => void;
+	}
+
+	let { onCancel = undefined }: Props = $props();
 
 	const restContext = getRESTContext();
 
 	const formID: string = 'dialog-import';
-	let action: TFormAction = 'import';
-	let loading: boolean = false;
+	let action: TFormAction = $state('import');
+	let loading: boolean = $state(false);
 	let parsedJSON: Array<TRESTCollectionInfer> = [];
 
 	const form = superForm(defaults(zod(FileUploadSchema)), {
@@ -45,8 +49,8 @@
 	});
 
 	const { enhance } = form;
-	$: ({ form: formData, errors, allErrors } = form);
-	$: isInvalid = Boolean($allErrors.length) || !$formData.file;
+	let { form: formData, errors, allErrors } = $derived(form);
+	let isInvalid = $derived(Boolean($allErrors.length) || !$formData.file);
 
 	function handleOnInput(event: Event) {
 		const target = event.target as HTMLInputElement;
@@ -119,19 +123,21 @@
 	</div>
 
 	<Form.Field {form} name="file" class="ml-10 flex shrink-0 flex-col">
-		<Form.Control let:attrs>
-			<div class="rounded border border-dashed border-border">
-				<Input
-					{...attrs}
-					type="file"
-					accept="application/json"
-					class="h-auto cursor-pointer p-4 text-muted-foreground transition file:mr-2 file:cursor-pointer file:rounded file:border-0 file:bg-secondary file:px-4 file:py-2 file:text-muted-foreground file:transition hover:text-accent-foreground file:hover:bg-secondary/80 file:hover:text-accent-foreground"
-					on:input={handleOnInput}
-				/>
-			</div>
+		<Form.Control >
+			{#snippet children({ attrs })}
+						<div class="rounded border border-dashed border-border">
+					<Input
+						{...attrs}
+						type="file"
+						accept="application/json"
+						class="h-auto cursor-pointer p-4 text-muted-foreground transition file:mr-2 file:cursor-pointer file:rounded file:border-0 file:bg-secondary file:px-4 file:py-2 file:text-muted-foreground file:transition hover:text-accent-foreground file:hover:bg-secondary/80 file:hover:text-accent-foreground"
+						on:input={handleOnInput}
+					/>
+				</div>
 
-			<Form.FieldErrors />
-		</Form.Control>
+				<Form.FieldErrors />
+								{/snippet}
+				</Form.Control>
 	</Form.Field>
 </form>
 

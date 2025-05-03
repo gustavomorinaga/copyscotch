@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import ChevronUp from 'lucide-svelte/icons/chevron-up';
 	import { getRESTContext, getRESTTabContext } from '$lib/contexts/rest';
 	import { getSettingsContext } from '$lib/contexts/settings';
@@ -32,10 +32,13 @@
 		getRESTTabContext()
 	];
 
-	$: ({ layout, sidebar, sidebarPosition } = $settingsContext);
-	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
-	$: openSidenav = isMobile ? false : sidebar === 'open';
-	$: if (isMobile) layout = 'vertical';
+	let { layout, sidebar, sidebarPosition } = settingsContext;
+	let isMobile = $derived($screenStore.innerWidth < BREAKPOINTS.sm);
+	let openSidenav = $derived(isMobile ? false : sidebar === 'open');
+
+	$effect(() => {
+		if (isMobile) settingsContext.save({ layout: 'vertical' });
+	});
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.ctrlKey && event.altKey && event.key === 'n') {
@@ -45,7 +48,7 @@
 	}
 </script>
 
-<svelte:window on:keydown={handleKeydown} />
+<svelte:window onkeydown={handleKeydown} />
 
 <Resizable.PaneGroup
 	autoSaveId="sidenav"
@@ -70,13 +73,13 @@
 			<Resizable.PaneGroup autoSaveId="editor" direction={layout} class="flex h-full w-full">
 				{#await Promise.all(LAZY_VIEW_COMPONENTS) then [{ ViewEditor }, { ViewResponse }]}
 					<Resizable.Pane defaultSize={1 / 2} minSize={35}>
-						<ViewEditor />
+						<!-- <ViewEditor /> -->
 					</Resizable.Pane>
 
 					<Resizable.Handle class="z-30" />
 
 					<Resizable.Pane defaultSize={1 / 2} minSize={25}>
-						<ViewResponse />
+						<!-- <ViewResponse /> -->
 					</Resizable.Pane>
 				{/await}
 			</Resizable.PaneGroup>
@@ -110,19 +113,19 @@
 	{/await}
 {/if}
 
-{#if $settingsContext.sidebar === 'open' || $tabContext.tabs.length}
+{#if settingsContext.sidebar === 'open' || $tabContext.tabs.length}
 	{#await LAZY_DIALOG_COMPONENTS[0] then { DialogImport }}
 		<DialogImport />
 	{/await}
 {/if}
 
-{#if $settingsContext.sidebar === 'open' || $tabContext.tabs.length}
+{#if settingsContext.sidebar === 'open' || $tabContext.tabs.length}
 	{#await LAZY_DIALOG_COMPONENTS[1] then { DialogEditCollection }}
 		<DialogEditCollection />
 	{/await}
 {/if}
 
-{#if ($settingsContext.sidebar === 'open' && $restContext.length) || $tabContext.tabs.length}
+{#if (settingsContext.sidebar === 'open' && $restContext.length) || $tabContext.tabs.length}
 	{#await LAZY_DIALOG_COMPONENTS[2] then { DialogEditRequest }}
 		<DialogEditRequest />
 	{/await}

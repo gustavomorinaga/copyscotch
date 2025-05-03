@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { TreeFolder } from '$lib/features/rest/components/trees/tree-select-collection/tree-folder';
 	import { TreeFile } from '$lib/features/rest/components/trees/tree-select-collection/tree-file';
 	import { FeedbackFolderEmpty } from '$lib/features/rest/components/feedbacks/feedback-folder-empty';
@@ -6,13 +6,15 @@
 </script>
 
 <script lang="ts">
-	type $$Props = {
+	import Tree_wrapper_component from './tree-wrapper.component.svelte';
+	
+
+	interface Props {
 		folders: Array<TRESTCollectionInfer>;
 		type: 'collection' | 'folder';
-	};
+	}
 
-	export let folders: $$Props['folders'] = [];
-	export let type: $$Props['type'] = 'collection';
+	let { folders = [], type = 'collection' }: Props = $props();
 </script>
 
 <ul role="group" class="flex shrink-0 flex-col">
@@ -29,7 +31,7 @@
 					{:else}
 						{#if folder.folders.length}
 							<li class="flex flex-col">
-								<svelte:self type="folder" folders={folder.folders} />
+								<Tree_wrapper_component type="folder" folders={folder.folders} />
 							</li>
 						{/if}
 

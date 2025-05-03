@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import CircleHelp from 'lucide-svelte/icons/circle-help';
 	import Cloud from 'lucide-svelte/icons/cloud';
 	import Monitor from 'lucide-svelte/icons/monitor';
@@ -28,6 +28,8 @@
 </script>
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	const settingsContext = getSettingsContext();
 
 	const formID: string = 'view-settings';
@@ -42,19 +44,21 @@
 	});
 
 	const { enhance } = form;
-	$: ({ form: formData } = form);
+	let { form: formData } = $derived(form);
 
-	$: isMobile = $screenStore.innerWidth < BREAKPOINTS.sm;
-	$: if ($settingsContext) {
-		form.reset({
-			data: {
-				backgroundColor: $settingsContext.backgroundColor,
-				accentColor: $settingsContext.accentColor,
-				expandNavigation: $settingsContext.navigation === 'expand',
-				sidebarOnLeft: $settingsContext.sidebarPosition === 'left'
-			}
-		});
-	}
+	let isMobile = $derived($screenStore.innerWidth < BREAKPOINTS.sm);
+	run(() => {
+		if ($settingsContext) {
+			form.reset({
+				data: {
+					backgroundColor: $settingsContext.backgroundColor,
+					accentColor: $settingsContext.accentColor,
+					expandNavigation: $settingsContext.navigation === 'expand',
+					sidebarOnLeft: $settingsContext.sidebarPosition === 'left'
+				}
+			});
+		}
+	});
 
 	function handleOnChange(event: ChangeEvent<TThemeInfer>) {
 		if (!event.paths.length) return;
@@ -81,98 +85,111 @@
 			</header>
 
 			<div class="space-y-8 sm:p-8 md:col-span-2">
-				<Form.Fieldset {form} name="backgroundColor" let:value>
-					<Form.Legend class="mb-0 select-none">Background</Form.Legend>
-					<span class="mb-4 select-none text-sm capitalize text-muted-foreground">
-						{value}
+				<Form.Fieldset {form} name="backgroundColor" >
+					{#snippet children({ value })}
+										<Form.Legend class="mb-0 select-none">Background</Form.Legend>
+						<span class="mb-4 select-none text-sm capitalize text-muted-foreground">
+							{value}
 
-						{#if value === 'system'}
-							({$systemPrefersMode || 'light'})
-						{/if}
-					</span>
+							{#if value === 'system'}
+								({$systemPrefersMode || 'light'})
+							{/if}
+						</span>
 
-					<RadioGroup.Root
-						bind:value={$formData.backgroundColor}
-						orientation="horizontal"
-						class="flex flex-1"
-					>
-						{#each backgroundOptions as option}
-							<Form.Control let:attrs>
-								<Form.Label
-									class="inline-flex shrink-0 cursor-pointer rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-accent-foreground [&:has([data-state=checked])]:bg-accent [&:has([data-state=checked])]:text-primary"
-								>
-									<RadioGroup.Item {...attrs} value={option} class="!sr-only" />
-									<svelte:component this={THEME_ICONS[option]} class="h-5 w-5 shrink-0" />
-									<span class="sr-only capitalize">{option}</span>
-								</Form.Label>
-							</Form.Control>
-						{/each}
-					</RadioGroup.Root>
-				</Form.Fieldset>
+						<RadioGroup.Root
+							bind:value={$formData.backgroundColor}
+							orientation="horizontal"
+							class="flex flex-1"
+						>
+							{#each backgroundOptions as option}
+								<Form.Control >
+									{#snippet children({ attrs })}
+																<Form.Label
+											class="inline-flex shrink-0 cursor-pointer rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-accent-foreground [&:has([data-state=checked])]:bg-accent [&:has([data-state=checked])]:text-primary"
+										>
+											<RadioGroup.Item {...attrs} value={option} class="!sr-only" />
+											{@const SvelteComponent = THEME_ICONS[option]}
+									<SvelteComponent class="h-5 w-5 shrink-0" />
+											<span class="sr-only capitalize">{option}</span>
+										</Form.Label>
+																								{/snippet}
+														</Form.Control>
+							{/each}
+						</RadioGroup.Root>
+														{/snippet}
+								</Form.Fieldset>
 
-				<Form.Fieldset {form} name="accentColor" let:value>
-					<Form.Legend class="mb-0 select-none">Accent Color</Form.Legend>
-					<span class="mb-4 select-none text-sm capitalize text-muted-foreground">{value}</span>
+				<Form.Fieldset {form} name="accentColor" >
+					{#snippet children({ value })}
+										<Form.Legend class="mb-0 select-none">Accent Color</Form.Legend>
+						<span class="mb-4 select-none text-sm capitalize text-muted-foreground">{value}</span>
 
-					<RadioGroup.Root
-						bind:value={$formData.accentColor}
-						orientation="horizontal"
-						class="flex flex-1 flex-wrap"
-					>
-						{#each accentOptions as option}
-							{@const color = `hsl(var(--${option}) / 1)`}
+						<RadioGroup.Root
+							bind:value={$formData.accentColor}
+							orientation="horizontal"
+							class="flex flex-1 flex-wrap"
+						>
+							{#each accentOptions as option}
+								{@const color = `hsl(var(--${option}) / 1)`}
 
-							<Form.Control let:attrs>
-								<Form.Label
-									for={attrs.id}
-									class="inline-flex shrink-0 cursor-pointer rounded-md p-2 transition-colors hover:bg-muted [&:has([data-state=checked])]:bg-accent"
-								>
-									<RadioGroup.Item
-										{...attrs}
-										value={option}
-										class="h-5 w-5 shrink-0"
-										style="color: {color}; border-color: {color};"
-									/>
-									<span class="sr-only capitalize">{option}</span>
-								</Form.Label>
-							</Form.Control>
-						{/each}
-					</RadioGroup.Root>
-				</Form.Fieldset>
+								<Form.Control >
+									{#snippet children({ attrs })}
+																<Form.Label
+											for={attrs.id}
+											class="inline-flex shrink-0 cursor-pointer rounded-md p-2 transition-colors hover:bg-muted [&:has([data-state=checked])]:bg-accent"
+										>
+											<RadioGroup.Item
+												{...attrs}
+												value={option}
+												class="h-5 w-5 shrink-0"
+												style="color: {color}; border-color: {color};"
+											/>
+											<span class="sr-only capitalize">{option}</span>
+										</Form.Label>
+																								{/snippet}
+														</Form.Control>
+							{/each}
+						</RadioGroup.Root>
+														{/snippet}
+								</Form.Fieldset>
 
 				<fieldset>
 					<legend class="mb-4 select-none text-sm font-medium">Layout</legend>
 
 					<Form.Join class="flex-col gap-4">
 						<Form.Field {form} name="expandNavigation" class="flex items-center gap-2 space-y-0">
-							<Form.Control let:attrs>
-								<Switch {...attrs} includeInput bind:checked={$formData.expandNavigation} />
-								<Form.Label class="leading-[normal]">Expand navigation</Form.Label>
-							</Form.Control>
+							<Form.Control >
+								{#snippet children({ attrs })}
+																<Switch {...attrs} includeInput bind:checked={$formData.expandNavigation} />
+									<Form.Label class="leading-[normal]">Expand navigation</Form.Label>
+																							{/snippet}
+														</Form.Control>
 						</Form.Field>
 
 						<Form.Field {form} name="sidebarOnLeft" class="flex h-4 items-center gap-2 space-y-0">
-							<Form.Control let:attrs>
-								<Switch
-									{...attrs}
-									includeInput
-									disabled={isMobile}
-									bind:checked={$formData.sidebarOnLeft}
-								/>
-								<Form.Label class="leading-[normal]">Sidebar on left</Form.Label>
+							<Form.Control >
+								{#snippet children({ attrs })}
+																<Switch
+										{...attrs}
+										includeInput
+										disabled={isMobile}
+										bind:checked={$formData.sidebarOnLeft}
+									/>
+									<Form.Label class="leading-[normal]">Sidebar on left</Form.Label>
 
-								{#if isMobile}
-									<Tooltip.Root>
-										<Tooltip.Trigger class="ml-4">
-											<CircleHelp class="h-4 w-4 shrink-0" />
-											<span class="sr-only select-none">Help</span>
-										</Tooltip.Trigger>
-										<Tooltip.Content class="select-none">
-											<span>Option only available on desktop.</span>
-										</Tooltip.Content>
-									</Tooltip.Root>
-								{/if}
-							</Form.Control>
+									{#if isMobile}
+										<Tooltip.Root>
+											<Tooltip.Trigger class="ml-4">
+												<CircleHelp class="h-4 w-4 shrink-0" />
+												<span class="sr-only select-none">Help</span>
+											</Tooltip.Trigger>
+											<Tooltip.Content class="select-none">
+												<span>Option only available on desktop.</span>
+											</Tooltip.Content>
+										</Tooltip.Root>
+									{/if}
+																							{/snippet}
+														</Form.Control>
 						</Form.Field>
 					</Form.Join>
 				</fieldset>

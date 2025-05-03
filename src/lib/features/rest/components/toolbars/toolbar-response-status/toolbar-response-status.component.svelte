@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import httpStatus, { type HttpStatus } from 'http-status';
 	import { type TRESTResult, getRESTTabContext } from '$lib/contexts/rest';
 	import { formatBytes } from '$lib/utils/formatter';
@@ -15,9 +15,9 @@
 		return 'error';
 	}
 
-	$: result = $tabContext.results.find(({ id }) => id === $tabContext.current) as TRESTResult;
-	$: status = getStatusType(result?.response?.status);
-	$: statusCode = httpStatus[result?.response?.status as keyof HttpStatus];
+	let result = $derived($tabContext.results.find(({ id }) => id === $tabContext.current) as TRESTResult);
+	let status = $derived(getStatusType(result?.response?.status));
+	let statusCode = $derived(httpStatus[result?.response?.status as keyof HttpStatus]);
 </script>
 
 <div

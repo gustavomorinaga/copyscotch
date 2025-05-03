@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import Plus from 'lucide-svelte/icons/plus';
 	import { dialogEditCollectionStore as dialogStore } from '$lib/features/rest/components/dialogs/dialog-edit-collection';
 	import { Center } from '$lib/components/ui/center';
@@ -8,9 +8,13 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { folder: TFolderInfer };
+	
 
-	export let folder: $$Props['folder'];
+	interface Props {
+		folder: TFolderInfer;
+	}
+
+	let { folder }: Props = $props();
 
 	function handleNewFolder() {
 		dialogStore.set({

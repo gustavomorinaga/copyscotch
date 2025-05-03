@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import Dot from 'lucide-svelte/icons/dot';
 	import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical';
 	import { getRESTTabContext } from '$lib/contexts/rest';
@@ -10,15 +10,19 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { file: TRESTRequestInfer };
+	
 
-	export let file: $$Props['file'];
-	let openOptions: boolean = false;
+	interface Props {
+		file: TRESTRequestInfer;
+	}
+
+	let { file }: Props = $props();
+	let openOptions: boolean = $state(false);
 
 	const tabContext = getRESTTabContext();
 
-	$: current = $tabContext.current === file.id;
-	$: selected = $treeStore.selected === file.id;
+	let current = $derived($tabContext.current === file.id);
+	let selected = $derived($treeStore.selected === file.id);
 
 	function handleOpenFile(event: MouseEvent) {
 		event.stopPropagation();
@@ -41,7 +45,7 @@
 	<div
 		role="presentation"
 		class="flex flex-1 items-center justify-center"
-		on:contextmenu={(event) => {
+		oncontextmenu={(event) => {
 			event.preventDefault();
 			openOptions = true;
 		}}
@@ -79,26 +83,30 @@
 		<DropdownMenuRequestOptions
 			request={file}
 			bind:open={openOptions}
-			let:builder={dropdownBuilder}
+			
 		>
-			<Tooltip.Root>
-				<Tooltip.Trigger asChild let:builder={tooltipBuilder}>
-					<Button
-						builders={[dropdownBuilder, tooltipBuilder]}
-						size="icon"
-						variant="text"
-						aria-label="More Options"
-						class="h-6 w-6"
-						on:click={(event) => event.stopPropagation()}
-					>
-						<EllipsisVertical class="h-4 w-4 shrink-0" />
-						<span class="sr-only">More Options</span>
-					</Button>
-				</Tooltip.Trigger>
-				<Tooltip.Content side="top" class="select-none">
-					<span>More</span>
-				</Tooltip.Content>
-			</Tooltip.Root>
-		</DropdownMenuRequestOptions>
+			{#snippet children({ builder: dropdownBuilder })}
+						<Tooltip.Root>
+					<Tooltip.Trigger asChild >
+						{#snippet children({ builder: tooltipBuilder })}
+										<Button
+								builders={[dropdownBuilder, tooltipBuilder]}
+								size="icon"
+								variant="text"
+								aria-label="More Options"
+								class="h-6 w-6"
+								on:click={(event) => event.stopPropagation()}
+							>
+								<EllipsisVertical class="h-4 w-4 shrink-0" />
+								<span class="sr-only">More Options</span>
+							</Button>
+															{/snippet}
+								</Tooltip.Trigger>
+					<Tooltip.Content side="top" class="select-none">
+						<span>More</span>
+					</Tooltip.Content>
+				</Tooltip.Root>
+								{/snippet}
+				</DropdownMenuRequestOptions>
 	</div>
 </Button>

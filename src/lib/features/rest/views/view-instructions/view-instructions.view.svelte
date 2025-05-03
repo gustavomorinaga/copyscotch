@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import { Button } from '$lib/components/ui/button';
 	import { Center } from '$lib/components/ui/center';

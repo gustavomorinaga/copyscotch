@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import Folder from 'lucide-svelte/icons/folder';
 	import Layers from 'lucide-svelte/icons/layers';
 	import Clock from 'lucide-svelte/icons/clock';
@@ -42,7 +42,7 @@
 </script>
 
 <script lang="ts">
-	let currentTab: TAvailableTabs = 'collections';
+	let currentTab: TAvailableTabs = $state('collections');
 
 	function handleCurrentTab(value: TAvailableTabs) {
 		currentTab = value;
@@ -59,7 +59,7 @@
 				class="p-2 !shadow-none data-[state=active]:text-primary"
 				on:click={() => handleCurrentTab(tab.value)}
 			>
-				<svelte:component this={tab.icon} class="h-5 w-5 shrink-0" />
+				<tab.icon class="h-5 w-5 shrink-0" />
 				<span class="sr-only capitalize">{tab.label}</span>
 			</Tabs.Trigger>
 		{/each}
@@ -84,7 +84,8 @@
 				{#await tab.content}
 					<Spinner />
 				{:then module}
-					<svelte:component this={module} />
+					{@const SvelteComponent = module}
+					<SvelteComponent />
 				{/await}
 			</Tabs.Content>
 		{/each}

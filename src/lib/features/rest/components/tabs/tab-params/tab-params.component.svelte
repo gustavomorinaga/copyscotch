@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { onMount } from 'svelte';
 	import Trash from 'lucide-svelte/icons/trash';
 	import type { SuperForm } from 'sveltekit-superforms';
@@ -17,15 +17,19 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { tabID: TRESTTabInfer['id']; form: SuperForm<TRESTRequestInfer> };
+	
 
-	export let tabID: $$Props['tabID'];
-	export let form: $$Props['form'];
+	interface Props {
+		tabID: TRESTTabInfer['id'];
+		form: SuperForm<TRESTRequestInfer>;
+	}
+
+	let { tabID, form }: Props = $props();
 
 	const tabContext = getRESTTabContext();
 
-	$: ({ form: formData } = form);
-	$: hasParams = $formData.params.length > 0;
+	let { form: formData } = $derived(form);
+	let hasParams = $derived($formData.params.length > 0);
 
 	function handleRemove(index: number) {
 		$formData.params = $formData.params.filter((_, i) => i !== index);
@@ -48,40 +52,46 @@
 					<div class="flex h-10 w-10 items-center justify-center"></div>
 
 					<Form.Field {form} name="params[{index}].key" class="flex w-full flex-1">
-						<Form.Control let:attrs>
-							<Input
-								{...attrs}
-								placeholder="Parameter {order}"
-								class="inline-flex w-full flex-1 rounded-none border-none !ring-transparent !ring-offset-transparent"
-								bind:value={param.key}
-							/>
-						</Form.Control>
+						<Form.Control >
+							{#snippet children({ attrs })}
+														<Input
+									{...attrs}
+									placeholder="Parameter {order}"
+									class="inline-flex w-full flex-1 rounded-none border-none !ring-transparent !ring-offset-transparent"
+									bind:value={param.key}
+								/>
+																				{/snippet}
+												</Form.Control>
 					</Form.Field>
 
 					<Form.Field {form} name="params[{index}].value" class="flex w-full flex-1">
-						<Form.Control let:attrs>
-							<Input
-								{...attrs}
-								placeholder="Value {order}"
-								class="inline-flex w-full flex-1 rounded-none border-none !ring-transparent !ring-offset-transparent"
-								bind:value={param.value}
-							/>
-						</Form.Control>
+						<Form.Control >
+							{#snippet children({ attrs })}
+														<Input
+									{...attrs}
+									placeholder="Value {order}"
+									class="inline-flex w-full flex-1 rounded-none border-none !ring-transparent !ring-offset-transparent"
+									bind:value={param.value}
+								/>
+																				{/snippet}
+												</Form.Control>
 					</Form.Field>
 
 					<Form.Field {form} name="params[{index}].active" class="flex items-center justify-center">
-						<Form.Control let:attrs>
-							<Checkbox
-								{...attrs}
-								aria-label={param.active ? 'Turn Off' : 'Turn On'}
-								class="flex h-full w-10 items-center justify-center !border-none !bg-transparent !text-success"
-								bind:checked={param.active}
-							/>
-							<span class="sr-only select-none">
-								{param.active ? 'Turn Off' : 'Turn On'}
-							</span>
-							<input name={attrs.name} value={param.active} hidden />
-						</Form.Control>
+						<Form.Control >
+							{#snippet children({ attrs })}
+														<Checkbox
+									{...attrs}
+									aria-label={param.active ? 'Turn Off' : 'Turn On'}
+									class="flex h-full w-10 items-center justify-center !border-none !bg-transparent !text-success"
+									bind:checked={param.active}
+								/>
+								<span class="sr-only select-none">
+									{param.active ? 'Turn Off' : 'Turn On'}
+								</span>
+								<input name={attrs.name} value={param.active} hidden />
+																				{/snippet}
+												</Form.Control>
 					</Form.Field>
 
 					<div class="flex items-center justify-center">

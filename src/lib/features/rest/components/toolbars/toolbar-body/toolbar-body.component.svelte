@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { onMount } from 'svelte';
 	import RefreshCw from 'lucide-svelte/icons/refresh-cw';
 	import type { SuperForm } from 'sveltekit-superforms';
@@ -19,19 +19,23 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { tabID: TRESTTabInfer['id']; form: SuperForm<TRESTRequestInfer> };
+	
 
-	export let tabID: $$Props['tabID'];
-	export let form: $$Props['form'];
+	interface Props {
+		tabID: TRESTTabInfer['id'];
+		form: SuperForm<TRESTRequestInfer>;
+	}
+
+	let { tabID, form }: Props = $props();
 
 	const tabContext = getRESTTabContext();
 
-	let toolbarRef!: HTMLElement;
+	let toolbarRef!: HTMLElement = $state();
 
-	$: ({ form: formData } = form);
-	$: contentTypeHeaderIndex = $formData.headers.findIndex(
+	let { form: formData } = $derived(form);
+	let contentTypeHeaderIndex = $derived($formData.headers.findIndex(
 		({ key }) => key.toLowerCase() === 'content-type'
-	);
+	));
 
 	function handleContentTypeChange(event?: Select.Selected<(typeof contentTypes)[number] | null>) {
 		if (!event) return;
@@ -92,46 +96,50 @@
 			</span>
 
 			<Form.Field {form} name="method" class="min-w-20">
-				<Form.Control let:attrs>
-					<Select.Root
-						selected={{
-							value: $formData.body?.contentType,
-							label: $formData.body?.contentType || 'None'
-						}}
-						onSelectedChange={handleContentTypeChange}
-					>
-						<Select.Trigger
-							{...attrs}
-							class="relative border-none font-semibold !ring-transparent !ring-offset-transparent"
+				<Form.Control >
+					{#snippet children({ attrs })}
+										<Select.Root
+							selected={{
+								value: $formData.body?.contentType,
+								label: $formData.body?.contentType || 'None'
+							}}
+							onSelectedChange={handleContentTypeChange}
 						>
-							<Select.Value />
-						</Select.Trigger>
-						<Select.Content class="!min-w-64">
-							{#each [null, ...contentTypes] as contentType}
-								<Select.Item value={contentType}>
-									{contentType || 'None'}
-								</Select.Item>
-							{/each}
-						</Select.Content>
-					</Select.Root>
-					<input hidden name={attrs.name} bind:value={$formData.method} />
-				</Form.Control>
+							<Select.Trigger
+								{...attrs}
+								class="relative border-none font-semibold !ring-transparent !ring-offset-transparent"
+							>
+								<Select.Value />
+							</Select.Trigger>
+							<Select.Content class="!min-w-64">
+								{#each [null, ...contentTypes] as contentType}
+									<Select.Item value={contentType}>
+										{contentType || 'None'}
+									</Select.Item>
+								{/each}
+							</Select.Content>
+						</Select.Root>
+						<input hidden name={attrs.name} bind:value={$formData.method} />
+														{/snippet}
+								</Form.Control>
 			</Form.Field>
 
 			<Tooltip.Root>
-				<Tooltip.Trigger asChild let:builder>
-					<Button
-						builders={[builder]}
-						size="sm"
-						variant="secondary"
-						aria-label="Override Content Type"
-						class="h-6"
-						on:click={handleOverrideContentType}
-					>
-						<RefreshCw class="mr-2 h-4 w-4 shrink-0" />
-						<span class="select-none capitalize">Override</span>
-					</Button>
-				</Tooltip.Trigger>
+				<Tooltip.Trigger asChild >
+					{#snippet children({ builder })}
+										<Button
+							builders={[builder]}
+							size="sm"
+							variant="secondary"
+							aria-label="Override Content Type"
+							class="h-6"
+							on:click={handleOverrideContentType}
+						>
+							<RefreshCw class="mr-2 h-4 w-4 shrink-0" />
+							<span class="select-none capitalize">Override</span>
+						</Button>
+														{/snippet}
+								</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">
 					<span>
 						Set <code class="bg-accent px-1">Content-Type</code>

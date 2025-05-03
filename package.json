@@ -4,7 +4,7 @@
 	"private": true,
 	"type": "module",
 	"license": "MIT",
-	"description": "My self implementation of Hoppscotch API Client",
+	"description": "A SvelteKit implementation of Hoppscotch",
 	"author": {
 		"name": "Gustavo Morinaga",
 		"email": "me@gustavomorinaga.dev",
@@ -15,10 +15,10 @@
 		"url": "https://github.com/gustavomorinaga/copyscotch"
 	},
 	"engines": {
-		"pnpm": ">=9",
-		"node": ">=18"
+		"pnpm": ">=10",
+		"node": ">=22"
 	},
-	"packageManager": "pnpm@9.12.2",
+	"packageManager": "pnpm@10.8.0",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
