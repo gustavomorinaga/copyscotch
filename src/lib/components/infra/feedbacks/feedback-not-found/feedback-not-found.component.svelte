@@ -3,9 +3,9 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { term?: string };
+	type $$Props = { term: string };
 
-	export let term: $$Props['term'] = undefined;
+	export let term: $$Props['term'];
 </script>
 
 <div class="flex select-none flex-col items-center justify-center p-4">
