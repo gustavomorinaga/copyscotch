@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { getRESTContext, getRESTTabContext } from '$lib/contexts/rest';
 	import { dialogSaveAsStore as dialogStore } from '$lib/features/rest/components/dialogs/dialog-save-as';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
@@ -7,10 +7,10 @@
 <script lang="ts">
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
-	$: open = $tabContext.tainted?.length > 0;
-	$: dirtyTabs = $tabContext.tabs.filter(
+	let open = $derived($tabContext.tainted?.length > 0);
+	let dirtyTabs = $derived($tabContext.tabs.filter(
 		(tab) => tab.dirty && $tabContext.tainted?.includes(tab.id)
-	);
+	));
 
 	function handleDiscard() {
 		if (dirtyTabs.length === 1) tabContext.closeTabs({ ids: $tabContext.tainted, mode: 'normal' });

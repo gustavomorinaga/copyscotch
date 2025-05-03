@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import FolderDown from 'lucide-svelte/icons/folder-down';
 	import Plus from 'lucide-svelte/icons/plus';
 	import { dialogImportStore } from '$lib/features/rest/components/dialogs/dialog-import';

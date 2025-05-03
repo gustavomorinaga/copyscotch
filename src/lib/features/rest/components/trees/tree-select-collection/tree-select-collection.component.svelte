@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { onDestroy } from 'svelte';
 	import { treeSelectCollectionStore as treeStore } from './store';
 	import { TreeWrapper } from './tree-wrapper';
@@ -6,10 +6,14 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { collections: Array<TRESTCollectionInfer> };
+	
 
-	let folders: $$Props['collections'] = [];
-	export { folders as collections };
+	interface Props {
+		collections: Array<TRESTCollectionInfer>;
+	}
+
+	let { collections = [] }: Props = $props();
+	
 
 	onDestroy(() => {
 		treeStore.set({

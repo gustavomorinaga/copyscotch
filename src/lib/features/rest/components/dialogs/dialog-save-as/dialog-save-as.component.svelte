@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { type ChangeEvent, defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { dialogSaveAsStore as dialogStore } from '.';
@@ -16,10 +16,12 @@
 </script>
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
 	const formID: string = 'dialog-save-as';
-	let action: TFormAction = 'save';
+	let action: TFormAction = $state('save');
 
 	const form = superForm(defaults(zod(RESTRequestSchema)), {
 		id: formID,
@@ -36,11 +38,13 @@
 	});
 
 	const { enhance } = form;
-	$: ({ form: formData, allErrors } = form);
+	let { form: formData, allErrors } = $derived(form);
 
-	$: isInvalid =
-		Boolean($allErrors.length) || ![$formData.name, $treeStore.selectedID].every(Boolean);
-	$: form.reset({ id: formID, data: $dialogStore.request });
+	let isInvalid =
+		$derived(Boolean($allErrors.length) || ![$formData.name, $treeStore.selectedID].every(Boolean));
+	run(() => {
+		form.reset({ id: formID, data: $dialogStore.request });
+	});
 
 	function handleFormSubmit() {
 		const ACTIONS = { cancel: handleCancel, save: handleSave } as const satisfies Record<
@@ -102,10 +106,12 @@
 			use:enhance
 		>
 			<Form.Field {form} name="name" class="flex shrink-0 flex-col">
-				<Form.Control let:attrs>
-					<Form.Label>Name</Form.Label>
-					<Input {...attrs} type="text" autocomplete="off" bind:value={$formData.name} />
-				</Form.Control>
+				<Form.Control >
+					{#snippet children({ attrs })}
+										<Form.Label>Name</Form.Label>
+						<Input {...attrs} type="text" autocomplete="off" bind:value={$formData.name} />
+														{/snippet}
+								</Form.Control>
 			</Form.Field>
 
 			<fieldset class="mt-4 flex h-full flex-1 flex-col">

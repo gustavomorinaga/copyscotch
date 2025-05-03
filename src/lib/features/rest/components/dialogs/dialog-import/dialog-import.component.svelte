@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import FolderPlus from 'lucide-svelte/icons/folder-plus';
 	import User from 'lucide-svelte/icons/user';
 	import type { ComponentType } from 'svelte';
@@ -28,9 +28,9 @@
 <script lang="ts">
 	const restContext = getRESTContext();
 
-	let currentView: keyof typeof VIEWS | null = null;
+	let currentView: keyof typeof VIEWS | null = $state(null);
 
-	$: hasSavedCollections = $restContext?.length > 0;
+	let hasSavedCollections = $derived($restContext?.length > 0);
 
 	function handleOpenChange(event: boolean) {
 		if (!event) currentView = null;
@@ -63,7 +63,7 @@
 							class="w-full flex-1 justify-start"
 							on:click={() => (currentView = view.value)}
 						>
-							<svelte:component this={view.icon} class="mr-4 h-5 w-5 shrink-0" />
+							<view.icon class="mr-4 h-5 w-5 shrink-0" />
 							<span class="select-none">{view.name}</span>
 						</Button>
 					</li>
@@ -73,19 +73,21 @@
 
 				<li class="contents">
 					<Tooltip.Root>
-						<Tooltip.Trigger asChild let:builder>
-							<Button
-								builders={[builder]}
-								variant="ghost"
-								role="menuitem"
-								disabled={!hasSavedCollections}
-								class="w-full flex-1 justify-start"
-								on:click={handleExport}
-							>
-								<User class="mr-4 h-5 w-5 shrink-0" />
-								<span class="select-none">Export as JSON</span>
-							</Button>
-						</Tooltip.Trigger>
+						<Tooltip.Trigger asChild >
+							{#snippet children({ builder })}
+														<Button
+									builders={[builder]}
+									variant="ghost"
+									role="menuitem"
+									disabled={!hasSavedCollections}
+									class="w-full flex-1 justify-start"
+									on:click={handleExport}
+								>
+									<User class="mr-4 h-5 w-5 shrink-0" />
+									<span class="select-none">Export as JSON</span>
+								</Button>
+																				{/snippet}
+												</Tooltip.Trigger>
 						<Tooltip.Content side="top" class="select-none">
 							<span>Download File</span>
 						</Tooltip.Content>
@@ -94,7 +96,8 @@
 			</ul>
 		{:else}
 			{#await VIEWS[currentView].view then view}
-				<svelte:component this={view} onCancel={() => (currentView = null)} />
+				{@const SvelteComponent = view}
+				<SvelteComponent onCancel={() => (currentView = null)} />
 			{/await}
 		{/if}
 	</Dialog.Content>

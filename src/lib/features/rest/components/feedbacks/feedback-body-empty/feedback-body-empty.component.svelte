@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { Center } from '$lib/components/ui/center';
 	import { mode } from '$lib/components/mode-watcher';
 </script>

@@ -1,11 +1,15 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import Search from 'lucide-svelte/icons/search';
 </script>
 
 <script lang="ts">
-	type $$Props = { term?: string };
+	
 
-	export let term: $$Props['term'] = undefined;
+	interface Props {
+		term?: string;
+	}
+
+	let { term = undefined }: Props = $props();
 </script>
 
 <div class="flex select-none flex-col items-center justify-center p-4">

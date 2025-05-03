@@ -1,13 +1,17 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { TreeWrapper } from './tree-wrapper';
 	import type { TRESTCollectionInfer } from '$lib/schemas/collection';
 </script>
 
 <script lang="ts">
-	type $$Props = { collections: Array<TRESTCollectionInfer> };
+	
 
-	let folders: $$Props['collections'] = [];
-	export { folders as collections };
+	interface Props {
+		collections: Array<TRESTCollectionInfer>;
+	}
+
+	let { collections = [] }: Props = $props();
+	
 </script>
 
 <div role="tree" class="-ml-2 flex flex-col p-2">

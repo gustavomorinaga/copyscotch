@@ -2,13 +2,17 @@
 	import type { TMetadata, TMetadataConfig } from '.';
 	import { page } from '$app/stores';
 
-	export let config: TMetadataConfig;
+	interface Props {
+		config: TMetadataConfig;
+	}
 
-	$: metadata = $page.data?.metadata as TMetadata | undefined;
-	$: title = metadata?.title ? `${config.name} - ${metadata.title}` : config.name;
-	$: description = metadata?.description || config.description;
-	$: ogImage = metadata?.ogImage || config.ogImage;
-	$: ogType = metadata?.ogType || config.ogType;
+	let { config }: Props = $props();
+
+	let metadata = $derived($page.data?.metadata as TMetadata | undefined);
+	let title = $derived(metadata?.title ? `${config.name} - ${metadata.title}` : config.name);
+	let description = $derived(metadata?.description || config.description);
+	let ogImage = $derived(metadata?.ogImage || config.ogImage);
+	let ogType = $derived(metadata?.ogType || config.ogType);
 </script>
 
 <svelte:head>

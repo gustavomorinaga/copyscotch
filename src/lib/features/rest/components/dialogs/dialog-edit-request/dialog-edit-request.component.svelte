@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { dialogEditRequestStore as dialogStore } from '.';
@@ -12,10 +12,12 @@
 </script>
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
 	const formID = 'dialog-edit-request';
-	let action: TFormAction = 'save';
+	let action: TFormAction = $state('save');
 
 	const form = superForm(defaults(zod(RESTRequestSchema)), {
 		id: formID,
@@ -31,10 +33,12 @@
 	});
 
 	const { enhance } = form;
-	$: ({ form: formData, allErrors } = form);
+	let { form: formData, allErrors } = $derived(form);
 
-	$: isInvalid = Boolean($allErrors.length) || !$formData.name;
-	$: form.reset({ id: formID, data: $dialogStore.request });
+	let isInvalid = $derived(Boolean($allErrors.length) || !$formData.name);
+	run(() => {
+		form.reset({ id: formID, data: $dialogStore.request });
+	});
 
 	function handleCancel() {
 		dialogStore.set({ mode: 'create', open: false, collectionID: '', request: undefined });
@@ -108,17 +112,19 @@
 
 		<form id={formID} method="POST" action="?/{action}" use:enhance>
 			<Form.Field {form} name="name">
-				<Form.Control let:attrs>
-					<Form.Label>Name</Form.Label>
-					<Input
-						{...attrs}
-						type="text"
-						autocomplete="off"
-						placeholder="Request name..."
-						bind:value={$formData.name}
-						on:keydown={handleKeydownSubmit}
-					/>
-				</Form.Control>
+				<Form.Control >
+					{#snippet children({ attrs })}
+										<Form.Label>Name</Form.Label>
+						<Input
+							{...attrs}
+							type="text"
+							autocomplete="off"
+							placeholder="Request name..."
+							bind:value={$formData.name}
+							on:keydown={handleKeydownSubmit}
+						/>
+														{/snippet}
+								</Form.Control>
 			</Form.Field>
 		</form>
 

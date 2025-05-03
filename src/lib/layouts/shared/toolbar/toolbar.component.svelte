@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import LifeBuoy from 'lucide-svelte/icons/life-buoy';
 	// import UploadCloud from 'lucide-svelte/icons/upload-cloud';
 	import { page } from '$app/stores';
@@ -9,7 +9,7 @@
 </script>
 
 <script lang="ts">
-	$: isRootPage = $page.url.pathname === '/';
+	let isRootPage = $derived($page.url.pathname === '/');
 </script>
 
 <header
@@ -30,24 +30,28 @@
 
 	<div class="col-span-2 flex items-center justify-between gap-x-2">
 		<div class="ml-auto">
-			<DialogSupport let:builder={triggerBuilder}>
-				<Tooltip.Root>
-					<Tooltip.Trigger asChild let:builder={tooltipBuilder}>
-						<Button
-							builders={[triggerBuilder, tooltipBuilder]}
-							size="icon"
-							variant="ghost"
-							aria-label="Support Options"
-						>
-							<LifeBuoy class="h-5 w-5 shrink-0" />
-							<span class="sr-only select-none">Support</span>
-						</Button>
-					</Tooltip.Trigger>
-					<Tooltip.Content side="bottom" class="select-none">
-						<span>Support</span>
-					</Tooltip.Content>
-				</Tooltip.Root>
-			</DialogSupport>
+			<DialogSupport >
+				{#snippet children({ builder: triggerBuilder })}
+								<Tooltip.Root>
+						<Tooltip.Trigger asChild >
+							{#snippet children({ builder: tooltipBuilder })}
+												<Button
+									builders={[triggerBuilder, tooltipBuilder]}
+									size="icon"
+									variant="ghost"
+									aria-label="Support Options"
+								>
+									<LifeBuoy class="h-5 w-5 shrink-0" />
+									<span class="sr-only select-none">Support</span>
+								</Button>
+																		{/snippet}
+										</Tooltip.Trigger>
+						<Tooltip.Content side="bottom" class="select-none">
+							<span>Support</span>
+						</Tooltip.Content>
+					</Tooltip.Root>
+											{/snippet}
+						</DialogSupport>
 		</div>
 	</div>
 

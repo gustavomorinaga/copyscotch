@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { onDestroy } from 'svelte';
 	import Copy from 'lucide-svelte/icons/copy';
 	import FilePen from 'lucide-svelte/icons/file-pen';
@@ -22,15 +22,20 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { tabID: TRESTRequestInfer['id'] };
+	import { run } from 'svelte/legacy';
 
-	export let tabID: $$Props['tabID'];
-	let open = false;
+	
+
+	interface Props {
+		tabID: TRESTRequestInfer['id'];
+		children?: import('svelte').Snippet;
+	}
+
+	let { tabID, children }: Props = $props();
+	let open = $state(false);
 
 	const tabContext = getRESTTabContext();
 
-	$: hasOnlyOneTab = $tabContext.tabs.length === 1;
-	$: open ? handleAddWindowEvents() : handleRemoveWindowEvents();
 
 	const OPTIONS = [
 		{
@@ -106,18 +111,22 @@
 	onDestroy(() => {
 		handleRemoveWindowEvents();
 	});
+	let hasOnlyOneTab = $derived($tabContext.tabs.length === 1);
+	run(() => {
+		open ? handleAddWindowEvents() : handleRemoveWindowEvents();
+	});
 </script>
 
 <ContextMenu.Root bind:open>
 	<ContextMenu.Trigger class="min-w-fit">
-		<slot />
+		{@render children?.()}
 	</ContextMenu.Trigger>
 	<ContextMenu.Content class="w-64">
 		{#each OPTIONS as option}
 			{#if !option.showOnlyIf || option.showOnlyIf()}
 				<ContextMenu.Item inset on:click={option.action}>
 					{#if option.icon}
-						<svelte:component this={option.icon} class="mr-2 h-4 w-4 shrink-0" />
+						<option.icon class="mr-2 h-4 w-4 shrink-0" />
 					{/if}
 
 					<span>{option.label}</span>

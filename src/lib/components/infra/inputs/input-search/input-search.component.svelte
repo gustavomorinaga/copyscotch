@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import type { ComponentProps } from 'svelte';
 	import X from 'lucide-svelte/icons/x';
 	import { debounce } from '$lib/utils/debounce';
@@ -10,9 +10,14 @@
 <script lang="ts">
 	type $$Props = ComponentProps<Input>;
 
-	let className: $$Props['class'] = undefined;
-	export let value: $$Props['value'] = undefined;
-	export { className as class };
+	interface Props {
+		class?: $$Props['class'];
+		value?: $$Props['value'];
+		[key: string]: any
+	}
+
+	let { class: className = undefined, value = $bindable(undefined), ...rest }: Props = $props();
+	
 </script>
 
 <div class="relative inline-flex w-full flex-1 items-center">
@@ -37,7 +42,7 @@
 		on:mouseleave
 		on:paste
 		on:input
-		{...$$restProps}
+		{...rest}
 	/>
 
 	<Button

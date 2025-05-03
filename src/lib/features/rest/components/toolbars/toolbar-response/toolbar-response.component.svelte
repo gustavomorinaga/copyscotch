@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import Check from 'lucide-svelte/icons/check';
 	import Copy from 'lucide-svelte/icons/copy';
 	import WrapText from 'lucide-svelte/icons/wrap-text';
@@ -27,9 +27,9 @@
 <script lang="ts">
 	const [settingsContext, tabContext] = [getSettingsContext(), getRESTTabContext()];
 
-	let clipboardState: TClipboardState = 'default';
+	let clipboardState: TClipboardState = $state('default');
 
-	$: result = $tabContext.results.find(({ id }) => id === $tabContext.current) as TRESTResult;
+	let result = $derived($tabContext.results.find(({ id }) => id === $tabContext.current) as TRESTResult);
 
 	function handleClipboard() {
 		const { replacer, space } = CLIPBOARD_CONFIG;
@@ -69,20 +69,23 @@
 		</Toggle>
 
 		<Tooltip.Root closeOnPointerDown={false}>
-			<Tooltip.Trigger asChild let:builder>
-				<Button
-					builders={[builder]}
-					size="sm"
-					variant="text"
-					aria-label="Copy Response"
-					class="rounded-none"
-					disabled={clipboardState === 'copied'}
-					on:click={handleClipboard}
-				>
-					<svelte:component this={CLIPBOARD_STATES[clipboardState].icon} class="h-4 w-4 shrink-0" />
-					<span class="sr-only select-none">{CLIPBOARD_STATES[clipboardState].label}</span>
-				</Button>
-			</Tooltip.Trigger>
+			<Tooltip.Trigger asChild >
+				{#snippet children({ builder })}
+								<Button
+						builders={[builder]}
+						size="sm"
+						variant="text"
+						aria-label="Copy Response"
+						class="rounded-none"
+						disabled={clipboardState === 'copied'}
+						on:click={handleClipboard}
+					>
+						{@const SvelteComponent = CLIPBOARD_STATES[clipboardState].icon}
+					<SvelteComponent class="h-4 w-4 shrink-0" />
+						<span class="sr-only select-none">{CLIPBOARD_STATES[clipboardState].label}</span>
+					</Button>
+											{/snippet}
+						</Tooltip.Trigger>
 			<Tooltip.Content side="top" class="select-none">
 				<span>{CLIPBOARD_STATES[clipboardState].label}</span>
 			</Tooltip.Content>

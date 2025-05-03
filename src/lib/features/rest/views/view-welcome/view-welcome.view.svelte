@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { getRESTTabContext } from '$lib/contexts/rest';
 	import { SHORTCUTS, type TShortcut } from '$lib/constants/shortcuts';
 	import { Center } from '$lib/components/ui/center';
@@ -18,7 +18,7 @@
 	role="presentation"
 	tabindex="-1"
 	class="flex h-full cursor-default select-none flex-col focus-visible:focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-	on:dblclick={() => tabContext.addTab()}
+	ondblclick={() => tabContext.addTab()}
 >
 	<Center>
 		<figure

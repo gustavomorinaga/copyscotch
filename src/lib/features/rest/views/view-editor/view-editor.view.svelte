@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import type { CustomEventHandler } from 'bits-ui';
 	import { onMount } from 'svelte';
 	import Dot from 'lucide-svelte/icons/dot';
@@ -29,7 +29,7 @@
 	let tablistRef: HTMLElement;
 	let activeTabRef: HTMLElement;
 
-	$: dirtyTabs = $tabContext.tabs.filter((tab) => tab.dirty);
+	let dirtyTabs = $derived($tabContext.tabs.filter((tab) => tab.dirty));
 
 	function handleCurrentTab(
 		event: CustomEventHandler<MouseEvent, HTMLButtonElement>,
@@ -98,7 +98,7 @@
 				{@const tabID = tab.id}
 
 				<ContextMenuEditRequest {tabID}>
-					<div class="inline-flex" role="presentation" on:dblclick={() => handleEditing(tabID)}>
+					<div class="inline-flex" role="presentation" ondblclick={() => handleEditing(tabID)}>
 						<Tabs.Trigger
 							class="group/tab-trigger relative h-12 min-w-52 shrink-0 items-center justify-between gap-2 px-5 !shadow-none before:absolute before:inset-x-0 before:top-0 before:h-[.125rem] before:bg-transparent before:transition-colors data-[state=active]:before:bg-primary"
 							aria-label="{tab.context.name} Tab"
@@ -129,36 +129,38 @@
 								class:invisible={!tab.dirty}
 							>
 								<Tooltip.Root>
-									<Tooltip.Trigger asChild let:builder>
-										<Button
-											builders={[builder]}
-											size="icon"
-											variant="text"
-											role="button"
-											tabindex={-1}
-											aria-label={tab.dirty ? 'Close Tab - Unsaved Changes' : 'Close Tab'}
-											class="relative h-6 w-6"
-											on:click={(event) => handleCloseTab(event, tabID)}
-											on:keydown={(event) => handleCloseTab(event, tabID)}
-										>
-											{#if tab.dirty}
-												<Dot
-													class="absolute inset-auto shrink-0 group-hover/tab-trigger:invisible"
-													style="stroke-width: 5"
-													aria-hidden="true"
-													focusable="false"
-												/>
-											{/if}
+									<Tooltip.Trigger asChild >
+										{#snippet children({ builder })}
+																				<Button
+												builders={[builder]}
+												size="icon"
+												variant="text"
+												role="button"
+												tabindex={-1}
+												aria-label={tab.dirty ? 'Close Tab - Unsaved Changes' : 'Close Tab'}
+												class="relative h-6 w-6"
+												on:click={(event) => handleCloseTab(event, tabID)}
+												on:keydown={(event) => handleCloseTab(event, tabID)}
+											>
+												{#if tab.dirty}
+													<Dot
+														class="absolute inset-auto shrink-0 group-hover/tab-trigger:invisible"
+														style="stroke-width: 5"
+														aria-hidden="true"
+														focusable="false"
+													/>
+												{/if}
 
-											<X
-												class="h-4 w-4 shrink-0 {tab.dirty &&
-													'invisible group-hover/tab-trigger:visible'}"
-											/>
-											<span class="sr-only select-none">
-												{tab.dirty ? 'Close Tab - Unsaved Changes' : 'Close Tab'}
-											</span>
-										</Button>
-									</Tooltip.Trigger>
+												<X
+													class="h-4 w-4 shrink-0 {tab.dirty &&
+														'invisible group-hover/tab-trigger:visible'}"
+												/>
+												<span class="sr-only select-none">
+													{tab.dirty ? 'Close Tab - Unsaved Changes' : 'Close Tab'}
+												</span>
+											</Button>
+																													{/snippet}
+																		</Tooltip.Trigger>
 									<Tooltip.Content side="top" class="select-none">
 										<span>Close</span>
 									</Tooltip.Content>
@@ -171,20 +173,22 @@
 		</Tabs.List>
 
 		<Tooltip.Root>
-			<Tooltip.Trigger asChild let:builder>
-				<Button
-					builders={[builder]}
-					size="icon"
-					variant="ghost"
-					tabindex={0}
-					aria-label="New Tab"
-					class="mx-3 h-8 w-8 shrink-0"
-					on:click={() => tabContext.addTab()}
-				>
-					<Plus class="h-4 w-4 shrink-0" />
-					<span class="sr-only select-none">New Tab</span>
-				</Button>
-			</Tooltip.Trigger>
+			<Tooltip.Trigger asChild >
+				{#snippet children({ builder })}
+								<Button
+						builders={[builder]}
+						size="icon"
+						variant="ghost"
+						tabindex={0}
+						aria-label="New Tab"
+						class="mx-3 h-8 w-8 shrink-0"
+						on:click={() => tabContext.addTab()}
+					>
+						<Plus class="h-4 w-4 shrink-0" />
+						<span class="sr-only select-none">New Tab</span>
+					</Button>
+											{/snippet}
+						</Tooltip.Trigger>
 			<Tooltip.Content side="top" class="select-none">
 				<span>New</span>
 			</Tooltip.Content>
@@ -205,7 +209,8 @@
 {#if dirtyTabs.length}
 	{#await Promise.all(LAZY_ALERT_DIALOG_COMPONENTS) then loadedComponents}
 		{#each loadedComponents as component}
-			<svelte:component this={component} />
+			{@const SvelteComponent = component}
+			<SvelteComponent />
 		{/each}
 	{/await}
 {/if}

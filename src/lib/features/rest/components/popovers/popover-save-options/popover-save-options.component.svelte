@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import FolderPlus from 'lucide-svelte/icons/folder-plus';
 	import { type ChangeEvent, defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
@@ -15,12 +15,19 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { tabID: TRESTTabInfer['id'] };
+	import { run } from 'svelte/legacy';
 
-	export let tabID: $$Props['tabID'];
+	
+
+	interface Props {
+		tabID: TRESTTabInfer['id'];
+		children?: import('svelte').Snippet<[any]>;
+	}
+
+	let { tabID, children }: Props = $props();
 	const formID: string = `save-options-${tabID}`;
-	let tab: TRESTTabInfer;
-	let open: boolean = false;
+	let tab: TRESTTabInfer = $state();
+	let open: boolean = $state(false);
 
 	const tabContext = getRESTTabContext();
 
@@ -39,12 +46,14 @@
 	});
 
 	const { enhance } = form;
-	$: ({ form: formData } = form);
+	let { form: formData } = $derived(form);
 
-	$: if ($tabContext.tabs) {
-		tab = tabContext.getTab(tabID) as TRESTTabInfer;
-		if (tab) $formData = tab.context;
-	}
+	run(() => {
+		if ($tabContext.tabs) {
+			tab = tabContext.getTab(tabID) as TRESTTabInfer;
+			if (tab) $formData = tab.context;
+		}
+	});
 
 	function handleFormSubmit() {
 		dialogStore.set({ open: true, request: tab.context });
@@ -59,22 +68,26 @@
 </script>
 
 <Popover.Root bind:open disableFocusTrap>
-	<Popover.Trigger asChild let:builder>
-		<slot {builder} />
-	</Popover.Trigger>
+	<Popover.Trigger asChild >
+		{#snippet children({ builder })}
+				{@render children?.({ builder, })}
+					{/snippet}
+		</Popover.Trigger>
 	<Popover.Content align="end" side="bottom" sideOffset={8} class="w-60 bg-background">
 		<form id={formID} method="POST" class="flex flex-col gap-2" use:enhance>
 			<Form.Field {form} name="name">
-				<Form.Control let:attrs>
-					<Input
-						{...attrs}
-						type="text"
-						autocomplete="off"
-						placeholder="Request Name"
-						class="bg-input"
-						bind:value={$formData.name}
-					/>
-				</Form.Control>
+				<Form.Control >
+					{#snippet children({ attrs })}
+										<Input
+							{...attrs}
+							type="text"
+							autocomplete="off"
+							placeholder="Request Name"
+							class="bg-input"
+							bind:value={$formData.name}
+						/>
+														{/snippet}
+								</Form.Control>
 			</Form.Field>
 
 			<Form.Button size="sm" variant="ghost" aria-label="Save As">

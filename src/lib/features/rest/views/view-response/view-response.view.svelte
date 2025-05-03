@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { type TRESTResult, getRESTTabContext } from '$lib/contexts/rest';
 	import { getSettingsContext } from '$lib/contexts/settings';
 	import { ViewInstructions } from '$lib/features/rest/views/view-instructions';
@@ -30,19 +30,19 @@
 <script lang="ts">
 	const [settingsContext, tabContext] = [getSettingsContext(), getRESTTabContext()];
 
-	$: result = $tabContext.results.find(({ id }) => id === $tabContext.current) as TRESTResult;
-	$: isSending = result?.sending;
-	$: hasResponse = Boolean(result?.response);
-	$: value = hasResponse
-		? result.response.json
-			? formatBody(result.response.json)
-			: result.response.raw
-		: undefined;
 
 	function formatBody(body: any) {
 		const replacer = null;
 		return JSON.stringify(body, replacer, CODEMIRROR_CONFIG.tabSize);
 	}
+	let result = $derived($tabContext.results.find(({ id }) => id === $tabContext.current) as TRESTResult);
+	let isSending = $derived(result?.sending);
+	let hasResponse = $derived(Boolean(result?.response));
+	let value = $derived(hasResponse
+		? result.response.json
+			? formatBody(result.response.json)
+			: result.response.raw
+		: undefined);
 </script>
 
 <section class="relative flex h-full flex-1 flex-col overflow-y-auto">

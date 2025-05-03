@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { onMount } from 'svelte';
 	import ChevronDown from 'lucide-svelte/icons/chevron-down';
 	import Save from 'lucide-svelte/icons/save';
@@ -65,18 +65,24 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { tabID: TRESTTabInfer['id'] };
+	import { run } from 'svelte/legacy';
 
-	export let tabID: $$Props['tabID'];
+	
+
+	interface Props {
+		tabID: TRESTTabInfer['id'];
+	}
+
+	let { tabID }: Props = $props();
 	const formID: string = `tab-request-${tabID}`;
 
 	const [restContext, tabContext] = [getRESTContext(), getRESTTabContext()];
 
-	let tab!: TRESTTabInfer;
-	let currentTab!: TAvailableTabs;
-	let action: TFormAction = 'send';
+	let tab!: TRESTTabInfer = $state();
+	let currentTab!: TAvailableTabs = $state();
+	let action: TFormAction = $state('send');
 	let controller = new AbortController();
-	let toolbarRef!: HTMLElement;
+	let toolbarRef!: HTMLElement = $state();
 
 	const form = superForm(defaults(zod(RESTRequestSchema)), {
 		id: formID,
@@ -90,22 +96,24 @@
 	}) as SuperForm<TRESTRequestInfer>;
 
 	const { enhance } = form;
-	$: ({ form: formData, submitting } = form);
+	let { form: formData, submitting } = $derived(form);
 
-	$: sending = $tabContext.results.find((result) => result.id === tabID)?.sending;
-	$: if ($tabContext.tabs) {
-		tab = tabContext.getTab(tabID) as TRESTTabInfer;
-		if (tab) {
-			currentTab = tab.currentTab;
-			form.reset({ id: formID, data: tab.context });
+	let sending = $derived($tabContext.results.find((result) => result.id === tabID)?.sending);
+	run(() => {
+		if ($tabContext.tabs) {
+			tab = tabContext.getTab(tabID) as TRESTTabInfer;
+			if (tab) {
+				currentTab = tab.currentTab;
+				form.reset({ id: formID, data: tab.context });
+			}
 		}
-	}
-	$: countActiveParams = $formData.params.filter((param) => param.active && param.key).length;
-	$: countActiveHeaders = $formData.headers.filter((header) => header.active && header.key).length;
-	$: dynamicCounters = { params: countActiveParams, headers: countActiveHeaders } as Record<
+	});
+	let countActiveParams = $derived($formData.params.filter((param) => param.active && param.key).length);
+	let countActiveHeaders = $derived($formData.headers.filter((header) => header.active && header.key).length);
+	let dynamicCounters = $derived({ params: countActiveParams, headers: countActiveHeaders } as Record<
 		TAvailableTabs,
 		number
-	>;
+	>);
 
 	function handleCurrentTab(value: TAvailableTabs) {
 		currentTab = value;
@@ -240,7 +248,7 @@
 	});
 </script>
 
-<svelte:window on:keydown={handleKeydown} />
+<svelte:window onkeydown={handleKeydown} />
 
 <form
 	id={formID}
@@ -255,59 +263,65 @@
 	>
 		<Form.Join class="min-w-[12rem] flex-auto whitespace-nowrap lg:flex-1">
 			<Form.Field {form} name="method" class="w-32">
-				<Form.Control let:attrs>
-					<Select.Root
-						selected={{ value: $formData.method, label: $formData.method }}
-						onSelectedChange={(v) => v && ($formData.method = v.value)}
-					>
-						<Select.Trigger
-							{...attrs}
-							type="button"
-							role="combobox"
-							class="relative rounded-l-md rounded-r-none bg-input font-semibold focus:z-10"
+				<Form.Control >
+					{#snippet children({ attrs })}
+										<Select.Root
+							selected={{ value: $formData.method, label: $formData.method }}
+							onSelectedChange={(v) => v && ($formData.method = v.value)}
 						>
-							<Select.Value />
-						</Select.Trigger>
-						<Select.Content>
-							{#each methodOptions as method}
-								<Select.Item
-									value={method}
-									style="color: hsl(var(--method-{method.toLowerCase()}-color) / var(--tw-text-opacity))"
-								>
-									{method}
-								</Select.Item>
-							{/each}
-						</Select.Content>
-					</Select.Root>
-					<input hidden name={attrs.name} bind:value={$formData.method} />
-				</Form.Control>
+							<Select.Trigger
+								{...attrs}
+								type="button"
+								role="combobox"
+								class="relative rounded-l-md rounded-r-none bg-input font-semibold focus:z-10"
+							>
+								<Select.Value />
+							</Select.Trigger>
+							<Select.Content>
+								{#each methodOptions as method}
+									<Select.Item
+										value={method}
+										style="color: hsl(var(--method-{method.toLowerCase()}-color) / var(--tw-text-opacity))"
+									>
+										{method}
+									</Select.Item>
+								{/each}
+							</Select.Content>
+						</Select.Root>
+						<input hidden name={attrs.name} bind:value={$formData.method} />
+														{/snippet}
+								</Form.Control>
 			</Form.Field>
 
 			<Form.Field {form} name="url" class="flex-1">
-				<Form.Control let:attrs>
-					<Input
-						{...attrs}
-						type="url"
-						placeholder="URL"
-						class="relative rounded-l-none rounded-r-md border-none bg-input focus:z-10"
-						bind:value={$formData.url}
-					/>
-				</Form.Control>
+				<Form.Control >
+					{#snippet children({ attrs })}
+										<Input
+							{...attrs}
+							type="url"
+							placeholder="URL"
+							class="relative rounded-l-none rounded-r-md border-none bg-input focus:z-10"
+							bind:value={$formData.url}
+						/>
+														{/snippet}
+								</Form.Control>
 			</Form.Field>
 		</Form.Join>
 
 		<Form.Join class="flex-auto gap-2 lg:flex-none">
 			<Tooltip.Root>
-				<Tooltip.Trigger asChild let:builder>
-					<Form.Button
-						builders={[builder]}
-						aria-label={sending ? 'Cancel Request' : 'Send Request'}
-						class="flex-1 sm:w-24"
-						on:click={() => (action = sending ? 'cancel' : 'send')}
-					>
-						<span class="select-none capitalize">{sending ? 'Cancel' : 'Send'}</span>
-					</Form.Button>
-				</Tooltip.Trigger>
+				<Tooltip.Trigger asChild >
+					{#snippet children({ builder })}
+										<Form.Button
+							builders={[builder]}
+							aria-label={sending ? 'Cancel Request' : 'Send Request'}
+							class="flex-1 sm:w-24"
+							on:click={() => (action = sending ? 'cancel' : 'send')}
+						>
+							<span class="select-none capitalize">{sending ? 'Cancel' : 'Send'}</span>
+						</Form.Button>
+														{/snippet}
+								</Tooltip.Trigger>
 				<Tooltip.Content side="top" class="select-none">
 					<Shortcut.Root>
 						<span class="mr-4">Send request</span>
@@ -324,18 +338,20 @@
 
 			<Form.Join class="flex-none">
 				<Tooltip.Root>
-					<Tooltip.Trigger asChild let:builder>
-						<Form.Button
-							builders={[builder]}
-							variant="secondary"
-							aria-label="Save Request"
-							class="rounded-r-none"
-							on:click={() => (action = 'save')}
-						>
-							<Save class="mr-2 h-4 w-4 shrink-0" />
-							<span class="select-none">Save</span>
-						</Form.Button>
-					</Tooltip.Trigger>
+					<Tooltip.Trigger asChild >
+						{#snippet children({ builder })}
+												<Form.Button
+								builders={[builder]}
+								variant="secondary"
+								aria-label="Save Request"
+								class="rounded-r-none"
+								on:click={() => (action = 'save')}
+							>
+								<Save class="mr-2 h-4 w-4 shrink-0" />
+								<span class="select-none">Save</span>
+							</Form.Button>
+																	{/snippet}
+										</Tooltip.Trigger>
 					<Tooltip.Content side="top" class="select-none">
 						<Shortcut.Root>
 							<span class="mr-4">Save</span>
@@ -347,25 +363,29 @@
 					</Tooltip.Content>
 				</Tooltip.Root>
 
-				<PopoverSaveOptions {tabID} let:builder={popoverBuilder}>
-					<Tooltip.Root>
-						<Tooltip.Trigger asChild let:builder={tooltipBuilder}>
-							<Button
-								builders={[popoverBuilder, tooltipBuilder]}
-								size="icon"
-								variant="secondary"
-								aria-label="Options"
-								class="rounded-l-none"
-							>
-								<ChevronDown class="h-4 w-4 shrink-0" />
-								<span class="sr-only select-none">Options</span>
-							</Button>
-						</Tooltip.Trigger>
-						<Tooltip.Content side="top" class="select-none">
-							<span>Options</span>
-						</Tooltip.Content>
-					</Tooltip.Root>
-				</PopoverSaveOptions>
+				<PopoverSaveOptions {tabID} >
+					{#snippet children({ builder: popoverBuilder })}
+										<Tooltip.Root>
+							<Tooltip.Trigger asChild >
+								{#snippet children({ builder: tooltipBuilder })}
+														<Button
+										builders={[popoverBuilder, tooltipBuilder]}
+										size="icon"
+										variant="secondary"
+										aria-label="Options"
+										class="rounded-l-none"
+									>
+										<ChevronDown class="h-4 w-4 shrink-0" />
+										<span class="sr-only select-none">Options</span>
+									</Button>
+																					{/snippet}
+												</Tooltip.Trigger>
+							<Tooltip.Content side="top" class="select-none">
+								<span>Options</span>
+							</Tooltip.Content>
+						</Tooltip.Root>
+														{/snippet}
+								</PopoverSaveOptions>
 			</Form.Join>
 		</Form.Join>
 	</Form.Join>
@@ -403,7 +423,8 @@
 					{#await tab.content}
 						<Spinner />
 					{:then module}
-						<svelte:component this={module} {tabID} {form} />
+						{@const SvelteComponent = module}
+						<SvelteComponent {tabID} {form} />
 					{/await}
 				</Tabs.Content>
 			{/each}

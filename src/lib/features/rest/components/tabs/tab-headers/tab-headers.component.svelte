@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { onMount } from 'svelte';
 	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
 	import Lock from 'lucide-svelte/icons/lock';
@@ -18,15 +18,19 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { tabID: TRESTTabInfer['id']; form: SuperForm<TRESTRequestInfer> };
+	
 
-	export let tabID: $$Props['tabID'];
-	export let form: $$Props['form'];
+	interface Props {
+		tabID: TRESTTabInfer['id'];
+		form: SuperForm<TRESTRequestInfer>;
+	}
+
+	let { tabID, form }: Props = $props();
 
 	const tabContext = getRESTTabContext();
 
-	$: ({ form: formData } = form);
-	$: hasHeaders = $formData.headers.length > 0;
+	let { form: formData } = $derived(form);
+	let hasHeaders = $derived($formData.headers.length > 0);
 
 	function handleRemove(index: number) {
 		$formData.headers = $formData.headers.filter((_, i) => i !== index);
@@ -57,27 +61,31 @@
 					</div>
 
 					<Form.Field {form} name="headers[{index}].key" class="flex w-full flex-1">
-						<Form.Control let:attrs>
-							<Input
-								{...attrs}
-								placeholder="Header {order}"
-								class="inline-flex w-full flex-1 rounded-none border-none !ring-transparent !ring-offset-transparent"
-								disabled={header.override}
-								bind:value={header.key}
-							/>
-						</Form.Control>
+						<Form.Control >
+							{#snippet children({ attrs })}
+														<Input
+									{...attrs}
+									placeholder="Header {order}"
+									class="inline-flex w-full flex-1 rounded-none border-none !ring-transparent !ring-offset-transparent"
+									disabled={header.override}
+									bind:value={header.key}
+								/>
+																				{/snippet}
+												</Form.Control>
 					</Form.Field>
 
 					<Form.Field {form} name="headers[{index}].value" class="flex w-full flex-1">
-						<Form.Control let:attrs>
-							<Input
-								{...attrs}
-								placeholder="Value {order}"
-								class="inline-flex w-full flex-1 rounded-none border-none !ring-transparent !ring-offset-transparent"
-								disabled={header.override}
-								bind:value={header.value}
-							/>
-						</Form.Control>
+						<Form.Control >
+							{#snippet children({ attrs })}
+														<Input
+									{...attrs}
+									placeholder="Value {order}"
+									class="inline-flex w-full flex-1 rounded-none border-none !ring-transparent !ring-offset-transparent"
+									disabled={header.override}
+									bind:value={header.value}
+								/>
+																				{/snippet}
+												</Form.Control>
 					</Form.Field>
 
 					{#if !header.override}
@@ -86,18 +94,20 @@
 							name="headers[{index}].active"
 							class="flex items-center justify-center"
 						>
-							<Form.Control let:attrs>
-								<Checkbox
-									{...attrs}
-									aria-label={header.active ? 'Turn Off' : 'Turn On'}
-									class="flex h-full w-10 items-center justify-center !border-none !bg-transparent !text-success"
-									bind:checked={header.active}
-								/>
-								<span class="sr-only select-none">
-									{header.active ? 'Turn Off' : 'Turn On'}
-								</span>
-								<input name={attrs.name} value={header.active} hidden />
-							</Form.Control>
+							<Form.Control >
+								{#snippet children({ attrs })}
+																<Checkbox
+										{...attrs}
+										aria-label={header.active ? 'Turn Off' : 'Turn On'}
+										class="flex h-full w-10 items-center justify-center !border-none !bg-transparent !text-success"
+										bind:checked={header.active}
+									/>
+									<span class="sr-only select-none">
+										{header.active ? 'Turn Off' : 'Turn On'}
+									</span>
+									<input name={attrs.name} value={header.active} hidden />
+																							{/snippet}
+														</Form.Control>
 						</Form.Field>
 					{/if}
 

@@ -1,8 +1,4 @@
-import { writable } from 'svelte/store';
-
-export type ScreenStore = Pick<Window, 'innerWidth' | 'innerHeight'>;
-
-export const screenStore = writable<ScreenStore>({
-	innerWidth: 0,
-	innerHeight: 0
-});
+export class ScreenStore {
+	innerWidth = $state<Window['innerWidth']>(0);
+	innerHeight = $state<Window['innerHeight']>(0);
+}

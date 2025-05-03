@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import Edit from 'lucide-svelte/icons/square-pen';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import type { ComponentType } from 'svelte';
@@ -16,10 +16,15 @@
 </script>
 
 <script lang="ts">
-	type $$Props = { request: TRESTRequestInfer; open?: boolean };
+	
 
-	export let request: $$Props['request'];
-	export let open: $$Props['open'] = false;
+	interface Props {
+		request: TRESTRequestInfer;
+		open?: boolean;
+		children?: import('svelte').Snippet<[any]>;
+	}
+
+	let { request, open = $bindable(false), children }: Props = $props();
 
 	const OPTIONS = [
 		{
@@ -38,13 +43,15 @@
 </script>
 
 <DropdownMenu.Root bind:open>
-	<DropdownMenu.Trigger let:builder>
-		<slot {builder} />
-	</DropdownMenu.Trigger>
+	<DropdownMenu.Trigger >
+		{#snippet children({ builder })}
+				{@render children?.({ builder, })}
+					{/snippet}
+		</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-64">
 		{#each OPTIONS as option}
 			<DropdownMenu.Item inset on:click={option.action}>
-				<svelte:component this={option.icon} class="mr-2 h-4 w-4 shrink-0" />
+				<option.icon class="mr-2 h-4 w-4 shrink-0" />
 				{option.label}
 			</DropdownMenu.Item>
 		{/each}

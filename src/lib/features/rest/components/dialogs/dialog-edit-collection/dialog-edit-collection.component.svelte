@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { type TCollectionDialogStore, dialogEditCollectionStore as dialogStore } from '.';
@@ -35,11 +35,14 @@
 	} as const;
 </script>
 
+<!-- svelte-ignore reactive_declaration_non_reactive_property -->
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	const restContext = getRESTContext();
 
 	const formID = 'dialog-edit-collection';
-	let action: TFormAction = 'save';
+	let action: TFormAction = $state('save');
 
 	const form = superForm(defaults(zod(RESTBaseFolderSchema)), {
 		id: formID,
@@ -54,11 +57,13 @@
 	});
 
 	const { enhance } = form;
-	$: ({ form: formData, allErrors } = form);
+	let { form: formData, allErrors } = $derived(form);
 
-	$: isInvalid = Boolean($allErrors.length) || !$formData.name;
-	$: form.reset({ id: formID, data: $dialogStore.collection });
-	$: ({ title } = DIALOG_PROPS[$dialogStore.type][$dialogStore.mode]);
+	let isInvalid = $derived(Boolean($allErrors.length) || !$formData.name);
+	run(() => {
+		form.reset({ id: formID, data: $dialogStore.collection });
+	});
+	let { title } = $derived(DIALOG_PROPS[$dialogStore.type][$dialogStore.mode]);
 
 	function handleCancel() {
 		dialogStore.set({ mode: 'create', type: 'collection', open: false, collection: undefined });
@@ -129,17 +134,19 @@
 
 		<form id={formID} method="POST" action="?/{action}" use:enhance>
 			<Form.Field {form} name="name">
-				<Form.Control let:attrs>
-					<Form.Label>Name</Form.Label>
-					<Input
-						{...attrs}
-						type="text"
-						autocomplete="off"
-						placeholder="Collection name..."
-						bind:value={$formData.name}
-						on:keydown={handleKeydownSubmit}
-					/>
-				</Form.Control>
+				<Form.Control >
+					{#snippet children({ attrs })}
+										<Form.Label>Name</Form.Label>
+						<Input
+							{...attrs}
+							type="text"
+							autocomplete="off"
+							placeholder="Collection name..."
+							bind:value={$formData.name}
+							on:keydown={handleKeydownSubmit}
+						/>
+														{/snippet}
+								</Form.Control>
 			</Form.Field>
 		</form>
 

@@ -1,4 +1,14 @@
-<script lang="ts" context="module">
+<script>
+	/**
+	 * @typedef {Object} Props
+	 * @property {import('svelte').Snippet} [children]
+	 */
+
+	/** @type {Props} */
+	let { children } = $props();
+</script>
+
+<script lang="ts" module>
 	import '$lib/styles/app.pcss';
 	import { siteConfig as config } from '$lib/configs/site';
 	import { ServiceWorker } from '$lib/components/service-worker';
@@ -17,5 +27,5 @@
 <ViewTransition />
 <Toaster position="bottom-center" offset={40} />
 <AppLayout>
-	<slot />
+	{@render children?.()}
 </AppLayout>

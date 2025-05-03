@@ -1,4 +1,14 @@
-<script lang="ts" context="module">
+<script>
+	/**
+	 * @typedef {Object} Props
+	 * @property {import('svelte').Snippet<[any]>} [children]
+	 */
+
+	/** @type {Props} */
+	let { children } = $props();
+</script>
+
+<script lang="ts" module>
 	import type { ComponentType } from 'svelte';
 	import ChevronRight from 'lucide-svelte/icons/chevron-right';
 	import Github from 'lucide-svelte/icons/github';
@@ -21,9 +31,11 @@
 </script>
 
 <Dialog.Root closeOnOutsideClick={false}>
-	<Dialog.Trigger asChild let:builder>
-		<slot {builder} />
-	</Dialog.Trigger>
+	<Dialog.Trigger asChild >
+		{#snippet children({ builder })}
+				{@render children?.({ builder, })}
+					{/snippet}
+		</Dialog.Trigger>
 	<Dialog.Content class="sm:max-w-md">
 		<Dialog.Header>
 			<Dialog.Title>Support</Dialog.Title>
@@ -40,7 +52,7 @@
 					class="h-fit shrink-0"
 				>
 					<div class="mr-4 inline-flex items-center self-start">
-						<svelte:component this={option.icon} class="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+						<option.icon class="mt-0.5 h-5 w-5 shrink-0 text-primary" />
 					</div>
 					<div class="inline-flex flex-1 select-none flex-col items-start truncate">
 						<span class="max-w-[16rem] truncate font-semibold">{option.title}</span>
